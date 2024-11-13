@@ -17,7 +17,7 @@
                             transformar tu empresa o apoya el crecimiento de
                             nuestros nuevos líderes tech.
                         </p>
-                        <button class="btn-primary max-w-[188px] h-14 px-6 flex items-center gap-x-2">
+                        <button class="btn-primary max-w-[188px] h-14 px-6 flex items-center gap-x-2 z-30">
                             Contactanos
                             <img src="/src/assets/img/icons/happyFace.svg" alt="">
                         </button>

@@ -1,5 +1,6 @@
 [data-theme="light"] {
-	--color-primary: red !important;
+	--color-primary: #02D9A4 !important;
+	--color-primary-action: #005C45 !important;
 	--color-secondary: theme("colors.indigo.500");
 	--color-text: theme("colors.gray.900");
 	--color-text-offset: theme("colors.gray.600");
@@ -10,21 +11,26 @@
 
 /* Tailwind */
 
-.gradient-text {
-  @apply bg-clip-text text-transparent;
-  @apply bg-gradient-to-br from-[#19F5BF] from-10% to-[#2CA2FF] to-100%;
-}
-
-.btn-primary {
-  @apply rounded-full bg-[#5E3AE2] text-white border border-white hover:bg-[#3314A3] transition-all duration-300;
-}
-
-/* [data-theme="dark"] {
-  --color-primary: #f2f2f2;
+[data-theme="dark"] {
+  --color-primary: #02D9A4;
+  --color-primary-action: #005C45 !important;
   --color-secondary: theme("colors.indigo.400");
   --color-text: theme("colors.gray.50");
   --color-text-offset: theme("colors.gray.400");
   --color-background: theme("colors.gray.900");
   --color-background-offset: theme("colors.gray.800");
   --color-border: theme("colors.gray.50" / 10%);
-} */
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent;
+  @apply bg-gradient-to-br from-[#19F5BF] from-10% to-[#2CA2FF] to-100%;
+}
+
+.btn-primary {
+  @apply rounded-full bg-primary text-[#004232]   hover:bg-[#00AA80] transition-all duration-300;
+}
+
+.btn-outline {
+  @apply rounded-full border text-primary border-primary;
+}
