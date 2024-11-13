@@ -1,5 +1,5 @@
 <template>
-	<main class="h-full w-full">
+	<main class="overflow-auto h-full w-full">
 		<article class="w-full h-full">
 			<section class="flex flex-col mx-8 lg:mx-32 pt-4 h-full gap-y-8">
 				<img src="/src/assets/logoCampus.svg" alt="" class="object-cover w-[156px] h-[48px]">
