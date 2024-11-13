@@ -4,6 +4,7 @@ input {
 	border-radius: 8px;
 	border: 1px solid #D7D6DC;
 	padding-left: 10px;
+	font-size: 16px;
 }
 
 input:focus, input:hover {
