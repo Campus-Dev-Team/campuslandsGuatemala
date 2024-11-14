@@ -1,70 +1,37 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import LayoutNavbar from "../layouts/LayoutNavbar.astro";
 import Card from "../components/Card.astro";
 import NavBar from "../components/navBar.vue";
-import Intro from "../components/intro.vue";
-import Testimonials from "../components/testimonials.vue";
+// import Testimonials from "../components/testimonials.vue";
 import Location from "../components/location.vue";
 import Faq from "../components/faq.vue";
 import ContactUs from "../components/contactUs.vue";
 import "~/styles/index.css";
----
 
-<NavBar />
-<nav class="bg-transparent p-4">
-	<div class="max-w-7xl mx-auto flex justify-between items-center">
-		<div class="text-white text-2xl font-bold">
-			<a href="/">
-				<img
-					src="/src/assets/logoCampus.svg"
-					alt=""
-					height="60"
-					class="max-h-[60px]"
-				/>
-			</a>
-		</div>
-		<div class="hidden md:flex space-x-6">
-			<a href="/emplea" class="text-white hover:text-gray-200">Emplea</a>
-			<a href="/patrocina" class="text-white hover:text-gray-200">Patrocina</a>
-			<a href="#" class="text-white hover:text-gray-200">Se un Camper</a>
-			<a href="#" class="text-white hover:text-gray-200">Nosotros</a>
-			<a href="#" class="text-white hover:text-gray-200">Comunidad</a>
-		</div>
-		<div class="md:hidden flex items-center">
-			<button
-				@click="toggleMobileMenu"
-				class="text-white focus:outline-none"
-			>
-				<svg
-					class="w-6 h-6"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M4 6h16M4 12h16M4 18h16"></path>
-				</svg>
-			</button>
+import { Image } from 'astro:assets';
+import myImage from '~/assets/img/campers/campers-home-final.png';
+import joinOurComunity from '~/assets/img/card.png';
+
+import Intro from "../components/home/intro.astro";
+import Testimonials from "../components/home/testimonials.vue";
+// import Testimonials from "../components/home/testimonials.astro";
+---
+<LayoutNavbar title="Campuslands">
+	<Intro />
+	<div class="bg-gradient-to-r from-[#2F10A2] from-5% via-[#130640] via-28% to-[#260D84] to-62%">
+		<Testimonials id="testimonials-section" client:load />
+		<div class="max-w-[1130px] mx-auto py-10">
+			<Image
+				src={joinOurComunity}
+				alt="Unete a nuestra comunidad"
+			/>
 		</div>
 	</div>
-	<div v-if="isMobileMenuOpen" class="md:hidden">
-		<div class="space-y-4 px-4 py-2">
-			<a href="/emplea" class="text-white hover:text-gray-200">Emplea</a>
-			<a href="/patrocina" class="text-white hover:text-gray-200">Patrocina</a>
-			<a href="#" class="text-white hover:text-gray-200">Se un Camper</a>
-			<a href="#" class="text-white hover:text-gray-200">Nosotros</a>
-			<a href="#" class="text-white hover:text-gray-200">Comunidad</a>
-		</div>
-	</div>
-</nav>
-<Intro />
-<Testimonials client:load />
+</LayoutNavbar>
+
+<!-- <Testimonials client:load />
 <Location client:load />
-<ContactUs client:load />
+<ContactUs client:load /> -->
 
 <style>
 	main {

@@ -1,5 +1,5 @@
 <template>
-    <section class="testimonials overflow-hidden py-10 relative bg-gradient-to-r from-[#2F10A2] from-5% via-[#130640] via-28% to-[#260D84] to-62%">
+    <section class="testimonials overflow-hidden py-10 mt-1 relative">
         <!-- companies -->
         <p class="text-white text-center mb-10">Estas compañías confían en nuestro talento para impulsar su éxito</p>
         <div class="flex flex-wrap gap-6 mx-auto max-w-[1150px]">
@@ -101,7 +101,7 @@
             </button>
         </div>
         <!-- habilidades -->
-        <div class="indicators max-w-[934px] mx-auto mt-40 mb-20">
+        <div class="indicators max-w-[934px] mx-auto my-10">
             <div class="flex flex-col gap-y-8 text-center mb-16">
                 <p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto"> Construyendo el futuro del talento tech en Colombia</p>
                 <p class="text-white max-w-[730px] mx-auto"> Conecta con el talento que tu empresa necesita. En Campuslands formamos desarrolladores preparados para los retos de la industria tech. </p>
@@ -132,9 +132,6 @@
                 <img src="/src/assets/img/habilidadesBlandas3.png" alt="" class="mx-auto">
             </div>
         </div>
-        <div class="max-w-[1130px] mx-auto">
-            <img src="/src/assets/img/card.png" alt="">
-        </div>
         <!-- building future -->
         <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
         <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
@@ -163,7 +160,7 @@ const companies = [
     },
     {
         id: 3,
-        img: '/src/assets/img/companies/Pensemos.svg',
+        img: '/src/assets/img/companies/Pensemos1.svg',
         alt: 'Pensemos - Logo',
     },
     {

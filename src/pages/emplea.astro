@@ -1,5 +1,5 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import LayoutNavbar from "../layouts/LayoutNavbar.astro";
 import Card from "../components/Card.astro";
 import NavBar from "../components/navBar.vue";
 import Intro from "../components/emplea/intro.vue";
@@ -9,11 +9,9 @@ import Faq from "../components/faq.vue";
 import ContactUs from "../components/contactUs.vue";
 import "~/styles/index.css";
 ---
-
-<div>
-	<NavBar />
-	<Intro client:load />
-</div>
+<LayoutNavbar title="Campuslands">
+	<Intro />
+</LayoutNavbar>
 
 <style>
 	main {
