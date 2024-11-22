@@ -9,6 +9,7 @@ export default {
 		extend: {
 			colors: {
 				primary: "var(--color-primary)",
+				primary_action: "var(--color-primary-action)",
 				secondary: "var(--color-secondary)",
 			},
 		},

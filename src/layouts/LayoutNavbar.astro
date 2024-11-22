@@ -1,0 +1,128 @@
+---
+import { Image } from 'astro:assets';
+import { AstroFont } from "astro-font";
+
+import NavBar from '~/components/navBar.vue';
+import iconCampus from '../assets/logoCampus.svg'
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/campusIco.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+		<title>{title}</title>
+		<AstroFont
+			config={[
+				{
+					name: "Poppins",
+					src: [
+						{
+							style: 'normal',
+							weight: '400',
+							path: '/public/fonts/Poppins-Regular.ttf'
+						},
+						{
+							style: 'medium',
+							weight: '500',
+							path: './public/fonts/Afacad-Medium.woff2'
+						},
+					],
+					preload: false,
+					display: "swap",
+					selector: "body",
+					fallback: "sans-serif",
+				},
+			]}
+		/>
+	</head>
+	<body>
+		<nav class="bg-transparent p-4">
+			<div class="max-w-7xl mx-auto flex justify-between items-center">
+				<div class="text-white text-2xl font-bold">
+					<a href="/">
+						<img
+							src="/src/assets/logoCampus.svg"
+							alt=""
+							height="60"
+							class="max-h-[60px]"
+						/>
+					</a>
+				</div>
+				<div class="hidden md:flex space-x-6">
+					<a href="/emplea" aria-label="Impulsa a tu equipo" class="text-white hover:text-gray-200">Emplea</a>
+					<a href="/patrocina" aria-label="Patrocina nuestros Campers" class="text-white hover:text-gray-200">Patrocina</a>
+					<a href="#" class="text-white hover:text-gray-200">Se un Camper</a>
+					<a href="#" class="text-white hover:text-gray-200">Nosotros</a>
+					<a href="#" class="text-white hover:text-gray-200">Comunidad</a>
+				</div> 
+				<div class="md:hidden flex items-center">
+					<button
+						@click="toggleMobileMenu"
+						class="text-white focus:outline-none"
+					>
+						<svg
+							class="w-6 h-6"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16M4 18h16"></path>
+						</svg>
+					</button>
+				</div>
+			</div>
+			<div v-if="isMobileMenuOpen" class="md:hidden">
+				<div class="space-y-4 px-4 py-2">
+					<a href="/emplea" class="text-white hover:text-gray-200">Emplea</a>
+					<a href="/patrocina" class="text-white hover:text-gray-200">Patrocina</a>
+					<a href="#" class="text-white hover:text-gray-200">Se un Camper</a>
+					<a href="#" class="text-white hover:text-gray-200">Nosotros</a>
+					<a href="#" class="text-white hover:text-gray-200">Comunidad</a>
+				</div>
+			</div>
+		</nav>
+		<slot />
+	</body>
+</html>
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+	}
+	html {
+		font-family: 'Poppins', sans-serif;
+  		font-weight: 400;
+		background: #13151a;
+	}
+	code {
+		font-family:
+			Menlo,
+			Monaco,
+			Lucida Console,
+			Liberation Mono,
+			DejaVu Sans Mono,
+			Bitstream Vera Sans Mono,
+			Courier New,
+			monospace;
+	}
+</style>

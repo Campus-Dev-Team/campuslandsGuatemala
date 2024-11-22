@@ -1,5 +1,5 @@
 <template>
-    <section class="testimonials overflow-hidden py-10 relative bg-gradient-to-r from-[#2F10A2] from-5% via-[#130640] via-28% to-[#260D84] to-62%">
+    <section class="testimonials overflow-hidden py-10 mt-1 relative">
         <!-- companies -->
         <p class="text-white text-center mb-10">Estas compañías confían en nuestro talento para impulsar su éxito</p>
         <div class="flex flex-wrap gap-6 mx-auto max-w-[1150px]">
@@ -46,7 +46,6 @@
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
                             <img src="/src/assets/img/icons/indicators/contratados.svg" alt="" class="size-10">
-                            <p class="text-white font-bold text-[40px]">500+</p>
                             <p class="text-white font-bold text-[40px] countup">500+</p>
                         </div>
                         <p class="text-center text-white font-semibold">Nuestros Campers contratados en empresas</p>
@@ -54,14 +53,14 @@
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
                             <img src="/src/assets/img/icons/indicators/inscritos.svg" alt="" class="size-10">
-                            <p class="text-white font-bold text-[40px]">2000+</p>
+                            <p class="text-white font-bold text-[40px] countup">2000+</p>
                         </div>
                         <p class="text-center text-white font-semibold">Campers inscritos en Colombia</p>
                     </div>
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
                             <img src="/src/assets/img/icons/indicators/patrocinadores.svg" alt="" class="size-10">
-                            <p class="text-white font-bold text-[40px]">50+</p>
+                            <p class="text-white font-bold text-[40px] countup">50+</p>
                         </div>
                         <p class="text-center text-white font-semibold">Patrocinadores apoyando el crecimiento de
                             nuestros Campers</p>
@@ -71,7 +70,7 @@
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
                             <img src="/src/assets/img/icons/indicators/empresas.svg" alt="" class="size-10">
-                            <p class="text-white font-bold text-[40px]">100+</p>
+                            <p class="text-white font-bold text-[40px] countup">100+</p>
                         </div>
                         <p class="text-center text-white font-semibold">Empresas han confiado en el talento formado en
                             Campuslands</p>
@@ -79,7 +78,7 @@
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
                             <img src="/src/assets/img/icons/indicators/graduados.svg" alt="" class="size-10">
-                            <p class="text-white font-bold text-[40px]">80%</p>
+                            <p class="text-white font-bold text-[40px] countup">80%</p>
                         </div>
                         <p class="text-center text-white font-semibold">De los Campers se especializa en las tecnologías
                             más demandadas del mercado</p>
@@ -87,7 +86,7 @@
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
                             <img src="/src/assets/img/icons/indicators/contratadosMeses.svg" alt="" class="size-10">
-                            <p class="text-white font-bold text-[40px]">90%</p>
+                            <p class="text-white font-bold text-[40px] countup">90%</p>
                         </div>
                         <p class="text-center text-white font-semibold">De los Campers son contratados en los primeros 3
                             meses.</p>
@@ -98,34 +97,40 @@
                 comienza con el mejor talento. Únete a la red de empleadores que confían en el futuro tech.</p>
             <button class="btn-primary max-w-[297px] mx-auto h-14 px-6 flex items-center gap-x-2">
                 Emplea nuestros Campers
-                <img src="/img/icons/arm.svg" alt="">
+                <img src="/src/assets/img/icons/arm.svg" alt="">
             </button>
         </div>
-        <!-- building -->
-        <div class="indicators max-w-[934px] mx-auto mt-40 mb-20">
+        <!-- habilidades -->
+        <div class="indicators max-w-[934px] mx-auto my-10">
             <div class="flex flex-col gap-y-8 text-center mb-16">
                 <p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto"> Construyendo el futuro del talento tech en Colombia</p>
                 <p class="text-white max-w-[730px] mx-auto"> Conecta con el talento que tu empresa necesita. En Campuslands formamos desarrolladores preparados para los retos de la industria tech. </p>
             </div>
-            <div class="flex max-w-[555px] gap-x-[10px] mx-auto border bg-[#5E3AE2] border-white rounded-full p-2 mb-10">
-                <div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-[#8366EA] h-9 w-[196px] bg-[#240D77] text-white">
+            <div class="flex max-w-[555px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10">
+                <div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white" :class="`${tabHabilidadesTecnicas ? 'bg-primary_action' : ''}`" @click="activeTab('tabHabilidadesTecnicas')">
                     Habilidades técnicas
                 </div>
-                <div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-[#8366EA] h-9 w-[196px] text-white">
+                <div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white" :class="`${tabHerramientas ? 'bg-primary_action' : ''}`" @click="activeTab('tabHerramientas')">
                     Herramientas
                 </div>
-                <div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-[#8366EA] h-9 w-[196px] text-white">
+                <div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white" :class="`${tabHabilidadesBlandas ? 'bg-primary_action' : ''}`" @click="activeTab('tabHabilidadesBlandas')">
                     Habilidades blandas
                 </div>
             </div>
-            <div class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
+            <div v-if="tabHabilidadesTecnicas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
                 <img src="/src/assets/img/group1.png" alt="">
                 <img src="/src/assets/img/group2.png" alt="">
                 <img src="/src/assets/img/group3.png" alt="">
             </div>
-        </div>
-        <div class="max-w-[1130px] mx-auto">
-            <img src="/src/assets/img/card.png" alt="">
+            <div v-if="tabHerramientas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
+                <img src="/src/assets/img/herramientas1.png" alt="" class="mx-auto">
+                <img src="/src/assets/img/herramientas2.png" alt="" class="mx-auto">
+            </div>
+            <div v-if="tabHabilidadesBlandas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
+                <img src="/src/assets/img/habilidadesBlandas1.png" alt="" class="mx-auto">
+                <img src="/src/assets/img/habilidadesBlandas2.png" alt="" class="mx-auto">
+                <img src="/src/assets/img/habilidadesBlandas3.png" alt="" class="mx-auto">
+            </div>
         </div>
         <!-- building future -->
         <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
@@ -137,6 +142,10 @@
 import { onMounted, ref } from "vue"
 
 const currentIndex = ref(0)
+
+const tabHabilidadesTecnicas = ref(true)
+const tabHerramientas = ref(false)
+const tabHabilidadesBlandas = ref(false)
 
 const companies = [
     {
@@ -151,7 +160,7 @@ const companies = [
     },
     {
         id: 3,
-        img: '/src/assets/img/companies/Pensemos.svg',
+        img: '/src/assets/img/companies/Pensemos1.svg',
         alt: 'Pensemos - Logo',
     },
     {
@@ -197,6 +206,25 @@ function nextSlide(params) {
 function name(params) {
     currentIndex.value = (currentIndex.value - 1 + campers.value.length) % campers.value.length;
 }
+
+function activeTab(tab) {
+    if (tab == 'tabHabilidadesTecnicas') {
+        tabHabilidadesTecnicas.value = true
+        tabHerramientas.value = false
+        tabHabilidadesBlandas.value = false
+    } else if (tab == 'tabHerramientas') {
+        tabHabilidadesTecnicas.value = false
+        tabHerramientas.value = true
+        tabHabilidadesBlandas.value = false
+    } else if (tab == 'tabHabilidadesBlandas') {
+        tabHabilidadesTecnicas.value = false
+        tabHerramientas.value = false
+        tabHabilidadesBlandas.value = true
+    }
+}
+
+
+
 
 </script>
 
