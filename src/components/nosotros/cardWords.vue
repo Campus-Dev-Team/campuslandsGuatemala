@@ -1,0 +1,22 @@
+<template>
+	<div class="flex flex-col items-center rounded-[40px] w-[208px] shadow-[0_0_32px_0_#00000066] backdrop-blur-[200px] bg-gradient-to-b from-[#FFFFFF1F] to-[#8484841F] mx-auto md:m-0 gap-y-3 px-4 py-10">
+		<slot />
+		<p class="gradient-text text-lg font-semibold">{{ title }}</p>
+		<p class="text-white text-sm text-center">{{ description }}</p>
+	</div>
+</template>
+
+<script setup>
+
+const props = defineProps({
+	title: {
+		type: String,
+		default: 'Innovación'
+	},
+	description: {
+		type: String,
+		default: 'Buscar soluciones creativas y originales, adaptarse rápidamente a los cambios y promover la mejora continua.'
+	}
+})
+
+</script>
