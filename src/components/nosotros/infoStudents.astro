@@ -1,0 +1,32 @@
+---
+import { Image } from 'astro:assets';
+import Solvo from '~/assets/img/companies/Solvo.svg'
+import QNT from '~/assets/img/companies/QNT.svg'
+import Pensemos from '~/assets/img/companies/Pensemos1.svg'
+import GalapagoAgroConsultores from '~/assets/img/companies/GalapagoAgroConsultores.svg'
+import Applus from '~/assets/img/companies/Applus.svg'
+import Grafosoft from '~/assets/img/companies/Grafosoft.svg'
+import Students from '~/assets/img/nosotros/students.png'
+---
+
+<section class="from-8% relative h-[740px] bg-gradient-to-br from-[#000033] from-0% via-[#000080] via-53% to-[#000066] to-100% py-5">
+	<div class="flex justify-center items-center gap-16 min-h-[740px] mx-4">
+		<div class="flex flex-col w-[432px] gap-y-3">
+			<p class="gradient-text font-extrabold !leading-[1.6] text-4xl text-center md:text-[40px] md:text-start"> Comprometidos con el futuro de nuestros jóvenes talentos </p>
+			<p class="text-white text-sm text-center md:text-base md:text-start">Somos un equipo comprometido con la capacitación de jóvenes talentos y la conexión de sus habilidades con oportunidades en la industria tecnológica.</p>
+			<p class="text-white text-sm text-center md:text-start mt-6">Compañías que confían en nuestro talento</p>
+			<div class="flex flex-col block md:hidden gap-y-6">
+				<Image src={Students} alt="estudiantes" class="hidden min-[1200px]:block w-[614px] h-[514px]" />
+			</div>
+			<div class="flex flex-wrap justify-between rounded-2xl w-[336px] shadow-[0_0_32px_0_#00000066] backdrop-blur-[200px] bg-gradient-to-b from-[#FFFFFF1F] to-[#8484841F] mx-auto md:m-0 gap-y-3 p-6">
+				<Image src={Solvo} alt="Empresa solve" class="h-7 w-[75px]" />
+				<Image src={QNT} alt="Empresa QNT" class="h-7 w-[76px]" />
+				<Image src={Pensemos} alt="Empresa Pensemos" class="h-7 w-[76px]" />
+				<Image src={GalapagoAgroConsultores} alt="Empresa Galapago" class="h-7 w-[90px]" />
+				<Image src={Applus} alt="Empresa Applus" class="h-7 w-[90px]" />
+				<Image src={Grafosoft} alt="Empresa Grafosoft" class="h-7 w-[90px]" />
+			</div>
+		</div>
+		<Image src={Students} alt="estudiantes" class="hidden min-[1200px]:block w-[614px] h-[514px]" />
+	</div>
+</section>
