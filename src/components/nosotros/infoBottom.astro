@@ -6,15 +6,16 @@ import TrabajoEquipo from '~/assets/img/icons/indicators/trabajo-equipo.svg'
 import Medalla from '~/assets/img/icons/indicators/medalla.svg'
 import Flexibilidad from '~/assets/img/icons/indicators/flexibilidad.svg'
 import Transparencia from '~/assets/img/icons/indicators/transparencia.svg'
+import ArrowGreenRight from '~/assets/img/icons/arrow-green-right.svg'
 ---
 
 
 <section class="flex flex-col gap-6 my-8">
-	<div class="flex flex-col items-center mx-auto gap-6 w-[691px]">
-		<p class="gradient-text font-extrabold text-2xl mx-auto text-center">Lo que nos mueve</p>
-		<p class="font-semibold text-white !leading-[1.6] text-lg mx-auto text-center">Más que palabras, nuestros valores son el motor de nuestra cultura. Conoce las creencias que nos guían hacia un futuro audaz y responsable.</p>
+	<div class="flex flex-col items-center mx-auto gap-6 mt-6 w-[328px] md:w-[691px]">
+		<p class="gradient-text font-extrabold text-2xl md:text-[32px] mx-auto text-center">Lo que nos mueve</p>
+		<p class="font-semibold text-white !leading-[1.6] text-sm md:text-lg mx-auto text-center">Más que palabras, nuestros valores son el motor de nuestra cultura. Conoce las creencias que nos guían hacia un futuro audaz y responsable.</p>
 	</div>
-	<div class="flex mx-auto gap-x-6 max-w-[1126px]">
+	<div class="flex xl:justify-center mx-auto overflow-auto hidden-scroll gap-x-6 p-4 w-full md:max-w-[1190px]">
 		<CardWords>
 			<Image src={Cohete} alt="cohete" />
 		</CardWords>
@@ -32,3 +33,28 @@ import Transparencia from '~/assets/img/icons/indicators/transparencia.svg'
 		</CardWords>
 	</div>
 </section>
+<section class="flex flex-col items-center mx-auto gap-6 w-[410px] md:w-[691px] my-8">
+	<p class="gradient-text text-2xl md:text-[32px] mx-auto text-center font-semibold md:font-bold md:px-14">Creciendo juntos: La fundación de Campuslands y su impacto</p>
+	<p class="font-semibold text-white !leading-[1.6] md:font-semibold text-sm md:text-lg mx-auto text-center">Campuslands nació para conectar el talento joven con el mundo laboral, transformando la educación en tecnología desde el primer día.</p>
+</section>
+<section class="flex items-center justify-center relative flex-col lg:flex-row mx-auto w-[328px] lg:w-[820px] gap-6 lg:gap-14">
+	<button class="flex items-center justify-center btn-primary shrink-0 rounded-full size-8 z-[2]" />
+	<div class="rounded-full min-w-[48px] h-[48px] lg:min-w-[72px] lg:h-[72px] backdrop-blur-2xl bg-gradient-to-b from-[#FFFFFF1F] to-[#8484841F] z-[2]" />
+	<div class="flex flex-col justify-center gap-6 backdrop-blur-2xl bg-gradient-to-b from-[#FFFFFF1F] to-[#8484841F] rounded-[40px] px-6 h-[320px] w-[240px] lg:w-[320px] z-[2]">
+		<p class="gradient-text text-sm lg:text-lg text-center font-semibold">2020 Inicio de una visión.
+			Fundación de Campuslands</p>
+		<p class="text-[10px] lg:text-sm text-white text-center">Campuslands nace con la misión de transformar la formación de programadores, ofreciendo una plataforma innovadora para la educación tecnológica y conectando a estudiantes con oportunidades laborales.</p>
+	</div>
+	<div class="flex items-center justify-center rounded-full backdrop-blur-2xl min-w-[48px] h-[48px] lg:min-w-[72px] lg:h-[72px] bg-gradient-to-b from-[#FFFFFF1F] to-[#8484841F] z-[2]">
+		<p class="text-white font-semibold text-sm  lg:text-base">{ 2021 }</p>
+	</div>
+	<button class="flex items-center justify-center btn-primary shrink-0 rounded-full size-8 z-[2]">
+		<Image src={ArrowGreenRight} alt="agendar" class="min-w-5 !size-5 shrink-0">
+	</button>
+	<div class="absolute bg-gradient-to-b hidden lg:block top-[49%] left-[8%] from-[#61B9FF] to-[#02D9A4] h-1 w-[85%]" />
+	<div class="absolute bg-gradient-to-b block lg:hidden top-[4%] left-[163px] from-[#61B9FF] to-[#02D9A4] h-[95%] w-1" />
+</div>
+
+<style>
+
+</style>
