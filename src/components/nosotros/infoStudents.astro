@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import Solvo from '~/assets/img/companies/Solvo.svg'
 import QNT from '~/assets/img/companies/QNT.svg'
 import Pensemos from '~/assets/img/companies/Pensemos1.svg'
@@ -12,6 +11,8 @@ import StudentsTwo from '~/assets/img/nosotros/students-two.png'
 import agenda from '~/assets/img/icons/agenda.svg'
 import whatsapp from '~/assets/img/icons/whatsapp.svg'
 import StudentsThree from '~/assets/img/nosotros/students-three.png'
+import AHref from './aHref.vue'
+import { Image } from 'astro:assets';
 
 ---
 
@@ -21,7 +22,9 @@ import StudentsThree from '~/assets/img/nosotros/students-three.png'
 		<p class="text-white text-sm text-center md:text-base md:text-start">Somos un equipo comprometido con la capacitación de jóvenes talentos y la conexión de sus habilidades con oportunidades en la industria tecnológica.</p>
 		<div class="flex-col items-center flex min-[1200px]:hidden gap-y-6">
 			<Image src={Students} alt="estudiantes" class="w-[312px] h-[276px]" />
-			<Image src={circleArrowDown} alt="estudiantes" class="icon-circle-arrow w-[32px] h-[40px]" />
+			<AHref client:load isRef="#students-two">
+				<Image src={circleArrowDown} alt="icon arrow" class="icon-circle-arrow w-[32px] h-[40px]" />
+			</AHref>
 		</div>
 		<p class="text-white text-sm text-center md:text-start mt-6">Compañías que confían en nuestro talento</p>
 		<div class="flex flex-wrap justify-between rounded-2xl w-[336px] shadow-[0_0_32px_0_#00000066] backdrop-blur-[200px] bg-gradient-to-b from-[#FFFFFF1F] to-[#8484841F] mx-auto md:m-0 gap-y-3 p-6">
@@ -35,7 +38,7 @@ import StudentsThree from '~/assets/img/nosotros/students-three.png'
 	</div>
 	<Image src={Students} alt="estudiantes" class="hidden min-[1200px]:block w-[614px] h-[514px]" />
 </section>
-<section class="flex justify-center items-center flex-col-reverse min-[1200px]:flex-row mt-8 gap-16 min-h-[352px]">
+<section id="students-two" class="flex justify-center items-center flex-col-reverse min-[1200px]:flex-row mt-8 gap-16 min-h-[352px]">
 	<Image src={StudentsTwo} alt="estudiantes" class="w-[328px] h-[236px] md:w-[488px] md:h-[352px]" />
 	<div class="flex flex-col gap-y-5 max-w-[328px] md:max-w-[471px]">
 		<p class="gradient-text font-extrabold !leading-[1.6] text-2xl mx-auto w-[328px] text-center md:text-[32px] md:w-full md:text-start"> Nuestra misión:
