@@ -11,7 +11,9 @@ import instagram from '~/assets/img/icons/Instagram.svg'
 import linkedin from '~/assets/img/icons/LinkedIn.svg'
 import youtube from '~/assets/img/icons/YouTube.svg'
 
+
 const { title } = Astro.props;
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -52,19 +54,19 @@ const { title } = Astro.props;
 		/>
 	</head>
 	<body>
-		<nav class="bg-transparent sticky top-0 z-[3] p-4">
-			<div class="max-w-7xl mx-auto flex justify-between items-center">
+		<nav class="navbar bg-transparent sticky top-0 z-[35] p-4">
+			<div class=" max-w-7xl mx-auto flex justify-between items-center h-16">
 				<div class="text-white text-2xl font-bold">
 					<a href="/">
 						<Image src={logoCampus} alt="logoCampus" height="60" class="max-h-[60px]" />
 					</a>
 				</div>
-				<div class="hidden md:flex space-x-6">
-					<a href="/emplea" aria-label="Impulsa a tu equipo" class="text-white hover:text-gray-200">Emplea</a>
-					<a href="/patrocina" aria-label="Patrocina nuestros Campers" class="text-white hover:text-gray-200">Patrocina</a>
-					<a href="#" class="text-white hover:text-gray-200">Se un Camper</a>
-					<a href="/nosotros" class="text-white hover:text-gray-200">Nosotros</a>
-					<a href="#" class="text-white hover:text-gray-200">Comunidad</a>
+				<div class="content-redirects items-center hidden md:flex h-full">
+					<a href="/emplea" aria-label="Impulsa a tu equipo" class={ currentPath === '/emplea' ? 'active' : 'text-white hover:text-gray-200'}>Emplea</a>
+					<a href="/patrocina" aria-label="Patrocina nuestros Campers" class={ currentPath === '/patrocina' ? 'active' : 'text-white hover:text-gray-200'}>Patrocina</a>
+					<a href="#" class={ currentPath === '#' ? 'active' : '' }>Se un Camper</a>
+					<a href="/nosotros" class={ currentPath === '/nosotros' ? 'active' : 'text-white hover:text-gray-200' }>Nosotros</a>
+					<a href="#" class={ currentPath === '#' ? 'active' : 'text-white hover:text-gray-200' }>Comunidad</a>
 				</div>
 				<div class="md:hidden flex items-center">
 					<button
@@ -142,6 +144,30 @@ const { title } = Astro.props;
 	</body>
 </html>
 <style is:global>
+	nav.navbar {
+		animation: bgHeader auto linear both;
+		animation-timeline: scroll();
+		animation-range: 0 200px;
+		.content-redirects{
+			a {
+				height: 100%;
+				display: flex;
+				align-items: center;
+				padding: 0 17px;
+				font-weight: 600;
+			}
+			a.active {
+				color: #02D9A4;
+				border-bottom: 1px solid #02D9A4;
+			}
+		}
+	}
+
+	@keyframes bgHeader {
+		from { background: #00008000; }
+		to { background: #000066; }
+	}
+
 	:root {
 		--accent: 136, 58, 234;
 		--accent-light: 224, 204, 250;
