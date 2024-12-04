@@ -62,11 +62,11 @@ const currentPath = Astro.url.pathname;
 					</a>
 				</div>
 				<div class="content-redirects items-center hidden md:flex h-full">
-					<a href="/emplea" aria-label="Impulsa a tu equipo" class={ currentPath === '/emplea' ? 'active' : 'text-white hover:text-gray-200'}>Emplea</a>
-					<a href="/patrocina" aria-label="Patrocina nuestros Campers" class={ currentPath === '/patrocina' ? 'active' : 'text-white hover:text-gray-200'}>Patrocina</a>
-					<a href="#" class={ currentPath === '#' ? 'active' : '' }>Se un Camper</a>
-					<a href="/nosotros" class={ currentPath === '/nosotros' ? 'active' : 'text-white hover:text-gray-200' }>Nosotros</a>
-					<a href="#" class={ currentPath === '#' ? 'active' : 'text-white hover:text-gray-200' }>Comunidad</a>
+					<a href="/emplea" aria-label="Impulsa a tu equipo" class={ currentPath.includes('/emplea') ? 'active' : 'text-white hover:text-gray-200'}>Emplea</a>
+					<a href="/patrocina" aria-label="Patrocina nuestros Campers" class={ currentPath.includes('/patrocina') ? 'active' : 'text-white hover:text-gray-200'}>Patrocina</a>
+					<a href="#" class={ currentPath.includes('#') ? 'active' : '' }>Se un Camper</a>
+					<a href="/nosotros" class={ currentPath.includes('/nosotros') ? 'active' : 'text-white hover:text-gray-200' }>Nosotros</a>
+					<a href="#" class={ currentPath.includes('#') ? 'active' : 'text-white hover:text-gray-200' }>Comunidad</a>
 				</div>
 				<div class="md:hidden flex items-center">
 					<button
