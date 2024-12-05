@@ -1,19 +1,17 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import LayoutNavbar from "../layouts/LayoutNavbar.astro";
 import Card from "../components/Card.astro";
 import NavBar from "../components/navBar.vue";
 import Intro from "../components/patrocinar/intro.vue";
-import Testimonials from "../components/testimonials.vue";
 import Location from "../components/location.vue";
 import Faq from "../components/faq.vue";
 import ContactUs from "../components/contactUs.vue";
 import "~/styles/index.css";
 ---
 
-<div>
-	<NavBar />
+<LayoutNavbar title="Campuslands">
 	<Intro client:load />
-</div>
+</LayoutNavbar>
 
 <style>
 	main {
