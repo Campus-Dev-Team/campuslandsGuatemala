@@ -1,25 +1,16 @@
 ---
 import LayoutNavbar from "../layouts/LayoutNavbar.astro";
+import Card from "../components/Card.astro";
+import NavBar from "../components/navBar.vue";
+import Intro from "../components/emplea/intro.vue";
+import Testimonials from "../components/testimonials.vue";
+import Location from "../components/location.vue";
+import Faq from "../components/faq.vue";
+import ContactUs from "../components/contactUs.vue";
 import "~/styles/index.css";
-
-import { Image } from 'astro:assets';
-import myImage from '~/assets/img/campers/campers-home-final.png';
-import joinOurComunity from '~/assets/img/card.png';
-
-import Intro from "../components/home/intro.astro";
-import Testimonials from "../components/home/testimonials.astro";
 ---
 <LayoutNavbar title="Campuslands">
 	<Intro />
-	<div class="bg-gradient-to-r from-[#00004F] from-5% via-[#000080] via-58% to-[#00001A] to-100%">
-		<Testimonials id="testimonials-section" />
-		<div class="max-w-[1130px] mx-auto py-10">
-			<Image
-				src={joinOurComunity}
-				alt="Unete a nuestra comunidad"
-			/>
-		</div>
-	</div>
 </LayoutNavbar>
 
 <style>
