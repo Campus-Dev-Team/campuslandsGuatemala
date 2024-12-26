@@ -2,9 +2,9 @@
 	<main class="overflow-auto h-full w-full">
 		<article class="w-full h-full">
 			<section class="flex flex-col mx-8 lg:ms-32 pt-4 h-full gap-y-8">
-				<img src="/src/assets/logoCampus.svg" alt="" class="object-cover w-[156px] h-[48px]">
+				<img src="/logoCampus.svg" alt="" class="object-cover w-[156px] h-[48px]">
 				<div class="flex items-center w-fit cursor-pointer gap-x-2">
-					<img src="/src/assets/img/icons/arrow-left.svg" class="size-[25px] lg:size-[16px]" />
+					<img src="/img/icons/arrow-left.svg" class="size-[25px] lg:size-[16px]" />
 					<p class="font-semibold hidden lg:block text-sm">Regresar</p>
 				</div>
 				<div class="flex justify-center items-center h-full gap-x-[100px]">
@@ -17,11 +17,11 @@
 						<input :value="model.email" class="w-full" placeholder="Correo de contacto" />
 						<p class="font-semibold mt-5 pb-1">Teléfono de contacto</p>
 						<input :value="model.cell" class="w-full" placeholder="Tu número de telefónico" />
-						<button class="flex items-center justify-center w-full primary mt-5 mb-2 gap-x-4 h-14">Enviar <img src="/src/assets/img/icons/arrow-right.svg" alt="" class="hidden lg:block size-5"></button>
+						<button class="flex items-center justify-center w-full primary mt-5 mb-2 gap-x-4 h-14">Enviar <img src="/img/icons/arrow-right.svg" alt="" class="hidden lg:block size-5"></button>
 						<p class="text-white text-center text-[10px]">*Al solicitar tu visita, aceptas el tratamiento de tus datos personales</p>
 					</div>
 					<div class="relative block max-[1265px]:hidden w-[584px] h-[514px]">
-						<img src="/src/assets/img/campers/camper-skills.png" class="absolute top-[-160px] min-w-[584px]" />
+						<img src="/img/campers/camper-skills.png" class="absolute top-[-160px] min-w-[584px]" />
 					</div>
 				</div>
 			</section>

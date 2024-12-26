@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="text-white text-2xl font-bold">
                 <a href="/">
-                    <img src="/src/assets/logoCampus.svg" alt="" height="60" class="max-h-[60px]" />
+                    <img src="/logoCampus.svg" alt="" height="60" class="max-h-[60px]" />
                 </a>
             </div>
             <div class="hidden md:flex space-x-6">

@@ -1,7 +1,7 @@
 <template>
     <section class="principal from-8% relative h-[740px] bg-gradient-to-br from-[#16074A] to-[#3311B0] to-60%">
         <div class="flex items-center justify-center size-8 absolute left-[50%] bottom-0 bg-white z-20 rounded-full bounce-top">
-            <img src="/src/assets/img/icons/arrow-down.svg" alt="">
+            <img src="/img/icons/arrow-down.svg" alt="">
         </div>
         <div class="relative mx-auto flex h-full w-full lg:max-w-[740px] px-4">
             <div class="my-auto w-4/12">
@@ -19,13 +19,13 @@
                         </p>
                         <button class="btn-primary max-w-[188px] h-14 px-6 flex items-center gap-x-2 z-30">
                             Contactanos
-                            <img src="/src/assets/img/icons/happyFace.svg" alt="">
+                            <img src="/img/icons/happyFace.svg" alt="">
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-        <img src="/src/assets/img/campers/campers-home.png" alt="" class="bg-students" >
+        <img src="/img/campers/campers-home.png" alt="" class="bg-students" >
     </section>
 </template>
 

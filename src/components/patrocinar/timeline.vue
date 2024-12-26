@@ -8,11 +8,11 @@
                 <div class="flex gap-x-6">
                     <button class="btn-primary max-w-[216px] h-14 px-6 font-semibold flex items-center gap-x-2">
                         Agenda tu visita
-                        <img src="/src/assets/img/icons/agenda.svg" alt="">
+                        <img src="/img/icons/agenda.svg" alt="">
                     </button>
                     <button class="btn-outline  max-w-[252px] h-14 px-6 font-semibold flex items-center gap-x-2">
                         <p class="text-primary">Chatea con nosotros</p>
-                        <img src="/src/assets/img/icons/whatsapp.svg" alt="">
+                        <img src="/img/icons/whatsapp.svg" alt="">
                     </button>
                 </div>
             </div>
@@ -32,8 +32,8 @@
                 </div>
             </div>
         </div>
-        <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
-        <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
+        <img src="/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
+        <img src="/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
     </section>
 </template>
 
