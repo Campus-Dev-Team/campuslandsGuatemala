@@ -1,5 +1,5 @@
 <template>
-    <section class="testimonials overflow-hidden py-10 mt-1 relative">
+    <section class="testimonials overflow-hidden py-10 relative">
         <!-- companies -->
         <p class="text-white text-center mb-10">Estas compañías confían en nuestro talento para impulsar su éxito</p>
         <div class="flex flex-wrap gap-6 mx-auto max-w-[1150px]">
