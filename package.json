@@ -1,0 +1,24 @@
+{
+    "name": "campus-landing-astro",
+    "type": "module",
+    "version": "0.0.1",
+    "scripts": {
+        "dev": "astro dev",
+        "start": "astro dev",
+        "build": "astro build",
+        "preview": "astro preview",
+        "astro": "astro"
+    },
+    "dependencies": {
+        "@astrojs/sitemap": "^3.2.1",
+        "@astrojs/tailwind": "^5.1.2",
+        "@astrojs/vue": "^4.5.2",
+        "astro": "^4.16.10",
+        "astro-font": "^0.1.81",
+        "astro-icon": "^1.1.2",
+        "autoprefixer": "^10.4.20",
+        "postcss": "^8.4.47",
+        "tailwindcss": "^3.4.14",
+        "vue": "^3.5.12"
+    }
+}

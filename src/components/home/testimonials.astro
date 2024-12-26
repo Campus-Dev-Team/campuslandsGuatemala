@@ -1,0 +1,130 @@
+---
+import { Image } from 'astro:assets';
+import AlliedCompanies from '../alliedCompanies.astro';
+import SliderTestimonials from '../sliderTestimonials.astro';
+import BuildingFuture from '../buildingFuture.astro';
+---
+<!-- bg-gradient-to-r from-[#2F10A2] from-5% via-[#130640] via-28% to-[#260D84] to-62% -->
+<section class="testimonials overflow-hidden py-10 relative ">
+	<AlliedCompanies />
+	<SliderTestimonials />
+	<BuildingFuture />
+	<div class="indicators max-w-[934px] mx-auto mt-40 mb-20">
+		<div class="flex flex-col gap-y-8 text-center mb-16">
+			<p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto"> Construyendo el futuro del talento tech en Colombia</p>
+			<p class="text-white max-w-[730px] mx-auto"> Conecta con el talento que tu empresa necesita. En Campuslands formamos desarrolladores preparados para los retos de la industria tech. </p>
+		</div>
+		<div class="flex max-w-[555px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10">
+			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white" :class="`${tabHabilidadesTecnicas ? 'bg-primary_action' : ''}`" @click="activeTab('tabHabilidadesTecnicas')">
+				Habilidades técnicas
+			</div>
+			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white" :class="`${tabHerramientas ? 'bg-primary_action' : ''}`" @click="activeTab('tabHerramientas')">
+				Herramientas
+			</div>
+			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white" :class="`${tabHabilidadesBlandas ? 'bg-primary_action' : ''}`" @click="activeTab('tabHabilidadesBlandas')">
+				Habilidades blandas
+			</div>
+		</div>
+		<div v-if="tabHabilidadesTecnicas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
+			<img src="/src/assets/img/group1.png" alt="">
+			<img src="/src/assets/img/group2.png" alt="">
+			<img src="/src/assets/img/group3.png" alt="">
+		</div>
+		<div v-if="tabHerramientas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
+			<img src="/src/assets/img/herramientas1.png" alt="" class="mx-auto">
+			<img src="/src/assets/img/herramientas2.png" alt="" class="mx-auto">
+		</div>
+		<div v-if="tabHabilidadesBlandas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
+			<img src="/src/assets/img/habilidadesBlandas1.png" alt="" class="mx-auto">
+			<img src="/src/assets/img/habilidadesBlandas2.png" alt="" class="mx-auto">
+			<img src="/src/assets/img/habilidadesBlandas3.png" alt="" class="mx-auto">
+		</div>
+	</div>
+	<div class="max-w-[1130px] mx-auto">
+		<img src="/src/assets/img/card.png" alt="">
+	</div>
+	<img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
+	<img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
+</section>
+
+<!-- <script>
+import { onMounted, ref } from "vue"
+
+const currentIndex = ref(0)
+
+const tabHabilidadesTecnicas = ref(true)
+const tabHerramientas = ref(false)
+const tabHabilidadesBlandas = ref(false)
+
+const campers = ref([
+    { image: '/src/assets/img/campers/camper1.png', alt: 'Image 1', caption: 'First Image' },
+    { image: '/src/assets/img/campers/camper2.png', alt: 'Image 1', caption: 'First Image' },
+    { image: '/src/assets/img/campers/camper3.png', alt: 'Image 2', caption: 'Second Image' },
+    { image: '/src/assets/img/campers/camper4.png', alt: 'Image 2', caption: 'Second Image' },
+    { image: '/src/assets/img/campers/camper5.png', alt: 'Image 3', caption: 'Third Image' },
+    { image: '/src/assets/img/campers/camper6.png', alt: 'Image 3', caption: 'Third Image' },
+    { image: '/src/assets/img/campers/camper7.png', alt: 'Image 3', caption: 'Third Image' },
+    { image: '/src/assets/img/campers/camper8.png', alt: 'Image 3', caption: 'Third Image' },
+])
+
+// onMounted(() => {
+//     setInterval(nextSlide(), 3000);
+// })
+
+function nextSlide(params) {
+    currentIndex.value = (currentIndex.value + 1) % campers.value.length;
+}
+function name(params) {
+    currentIndex.value = (currentIndex.value - 1 + campers.value.length) % campers.value.length;
+}
+
+function activeTab(tab) {
+    if (tab == 'tabHabilidadesTecnicas') {
+        tabHabilidadesTecnicas.value = true
+        tabHerramientas.value = false
+        tabHabilidadesBlandas.value = false
+    } else if (tab == 'tabHerramientas') {
+        tabHabilidadesTecnicas.value = false
+        tabHerramientas.value = true
+        tabHabilidadesBlandas.value = false
+    } else if (tab == 'tabHabilidadesBlandas') {
+        tabHabilidadesTecnicas.value = false
+        tabHerramientas.value = false
+        tabHabilidadesBlandas.value = true
+    }
+}
+
+
+
+
+</script> -->
+
+<style scoped>
+
+.countup {
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    display: inline-block;
+    position: relative;
+    animation: count 10s forwards;
+    /* 2s animation duration */
+}
+
+@keyframes count {
+    0% {
+        content: "0";
+        /* Initial state */
+    }
+
+    50% {
+        content: "50";
+        /* Halfway state */
+    }
+
+    100% {
+        content: "100";
+        /* Final state */
+    }
+}
+</style>

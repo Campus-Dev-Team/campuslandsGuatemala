@@ -1,0 +1,97 @@
+---
+import Solvo from '~/assets/img/companies/Solvo.svg'
+import QNT from '~/assets/img/companies/QNT.svg'
+import Pensemos from '~/assets/img/companies/Pensemos1.svg'
+import GalapagoAgroConsultores from '~/assets/img/companies/GalapagoAgroConsultores.svg'
+import Applus from '~/assets/img/companies/Applus.svg'
+import Grafosoft from '~/assets/img/companies/Grafosoft.svg'
+import Students from '~/assets/img/nosotros/students.png'
+import circleArrowDown from '~/assets/img/icons/circle-arrow-down.svg'
+import StudentsTwo from '~/assets/img/nosotros/students-two.png'
+import agenda from '~/assets/img/icons/agenda.svg'
+import whatsapp from '~/assets/img/icons/whatsapp.svg'
+import StudentsThree from '~/assets/img/nosotros/students-three.png'
+import AHref from './aHref.vue'
+import { Image } from 'astro:assets';
+
+---
+
+<section class="flex justify-center items-center gap-16 min-h-[740px] mx-4">
+	<div class="flex flex-col w-[432px] gap-y-3">
+		<p class="gradient-text font-extrabold !leading-[1.6] text-4xl text-center md:text-[40px] md:text-start"> Comprometidos con el futuro de nuestros jóvenes talentos </p>
+		<p class="text-white text-sm text-center md:text-base md:text-start">Somos un equipo comprometido con la capacitación de jóvenes talentos y la conexión de sus habilidades con oportunidades en la industria tecnológica.</p>
+		<div class="flex-col items-center flex min-[1200px]:hidden gap-y-6">
+			<Image src={Students} alt="estudiantes" class="w-[312px] h-[276px]" />
+			<AHref client:load isRef="#students-two">
+				<Image src={circleArrowDown} alt="icon arrow" class="icon-circle-arrow w-[32px] h-[40px]" />
+			</AHref>
+		</div>
+		<p class="text-white text-sm text-center md:text-start mt-6">Compañías que confían en nuestro talento</p>
+		<div class="flex flex-wrap justify-between rounded-2xl w-[336px] shadow-[0_0_32px_0_#00000066] backdrop-blur-[200px] bg-gradient-to-b from-[#FFFFFF1F] to-[#8484841F] mx-auto md:m-0 gap-y-3 p-6">
+			<Image src={Solvo} alt="Empresa solve" class="h-7 w-[75px]" />
+			<Image src={QNT} alt="Empresa QNT" class="h-7 w-[76px]" />
+			<Image src={Pensemos} alt="Empresa Pensemos" class="h-7 w-[76px]" />
+			<Image src={GalapagoAgroConsultores} alt="Empresa Galapago" class="h-7 w-[90px]" />
+			<Image src={Applus} alt="Empresa Applus" class="h-7 w-[90px]" />
+			<Image src={Grafosoft} alt="Empresa Grafosoft" class="h-7 w-[90px]" />
+		</div>
+	</div>
+	<Image src={Students} alt="estudiantes" class="hidden min-[1200px]:block w-[614px] h-[514px]" />
+</section>
+<section id="students-two" class="flex justify-center items-center flex-col-reverse min-[1200px]:flex-row mt-8 gap-16 min-h-[352px]">
+	<Image src={StudentsTwo} alt="estudiantes" class="w-[328px] h-[236px] md:w-[488px] md:h-[352px]" />
+	<div class="flex flex-col gap-y-5 max-w-[328px] md:max-w-[471px]">
+		<p class="gradient-text font-extrabold !leading-[1.6] text-2xl mx-auto w-[328px] text-center md:text-[32px] md:w-full md:text-start"> Nuestra misión:
+			Transformar talento
+		</p>
+		<p class="text-white text-sm text-center md:text-base md:text-start">Empoderar a jóvenes de diversos contextos mediante una educación tecnológica accesible, desarrollando sus habilidades en programación, inglés y competencias sociales para abrirles puertas a oportunidades laborales de alto impacto.</p>
+		<div class="flex items-center justify-between flex-col md:flex-row gap-x-4">
+			<button class="btn-primary w-full mb-6 md:max-w-[216px] md:mb-0 h-14 px-6 flex items-center justify-center gap-x-2 z-30">
+				Agenda tu visita
+				<Image src={agenda} alt="agendar" class="hidden md:block">
+			</button>
+			<button class="btn-outline !text-sm w-full md:max-w-[231px] h-14 px-6 flex items-center justify-center gap-x-2 z-30">
+				Chatea con nosotros
+				<Image src={whatsapp} alt="whatsapp" class="hidden md:block">
+			</button>
+		</div>
+	</div>
+</section>
+<section class="flex justify-center items-center flex-col  min-[1200px]:flex-row mt-16 gap-16 min-h-[352px]">
+	<div class="flex flex-col gap-y-5 max-w-[328px] md:max-w-[471px]">
+		<p class="gradient-text font-extrabold !leading-[1.6] text-2xl mx-auto w-[328px] text-center md:text-[32px] md:w-full md:text-start">
+			La Visión que Nos Guía
+		</p>
+		<p class="text-white text-sm text-center md:text-base md:text-start">Crear una comunidad global de talentos digitales, donde jóvenes de todas partes accedan a las herramientas necesarias para un futuro próspero y significativo, contribuyendo a un nuevo estrato social digital.</p>
+		<div class="flex items-center justify-between flex-col md:flex-row gap-x-4">
+			<button class="btn-primary w-full mb-6 md:max-w-[216px] md:mb-0 h-14 px-6 flex items-center justify-center gap-x-2 z-30">
+				Agenda tu visita
+				<Image src={agenda} alt="agendar" class="hidden md:block">
+			</button>
+			<button class="btn-outline !text-sm w-full md:max-w-[231px] h-14 px-6 flex items-center justify-center gap-x-2 z-30">
+				Chatea con nosotros
+				<Image src={whatsapp} alt="whatsapp" class="hidden md:block">
+			</button>
+		</div>
+	</div>
+	<Image src={StudentsThree} alt="estudiantes" class="w-[328px] h-[236px] md:w-[488px] md:h-[352px]" />
+</section>
+
+<style>
+.icon-circle-arrow {
+	animation: move-circle 2s infinite;
+}
+
+@keyframes move-circle {
+	0% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(20px);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
+
+</style>

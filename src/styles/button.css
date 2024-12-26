@@ -1,0 +1,112 @@
+button {
+	padding: 0 16px;
+	border-radius: 80px;
+}
+
+
+/* primary */
+button.primary {
+	background-color: #02D9A4;
+	color: #004232;
+}
+
+button.primary:hover {
+	background-color: #00AA80;
+	color: #004232;
+}
+
+button.primary:active {
+	background-color: #007558;
+	color: #FBFAFF;
+}
+
+/* secondary */
+button.secondary {
+	border: 2px solid #02D9A4;
+	background-color: transparent;
+	color: #02D9A4;
+}
+
+button.secondary:hover {
+	border-color:#02D9A4;
+	background-color: #DFFBF4;
+	color: #02D9A4;
+}
+
+button.secondary:active {
+	border-color: #02D9A4;
+	background-color: #008F6C;
+	color: #7FF5D8;
+}
+
+/* Disabled - Primary, Secondary */
+button.primary[disabled], button.secondary[disabled]{
+	border-color: #BCBAC4;
+	background-color: #BCBAC4;
+	color: #FBFAFF;
+}
+
+/* Tertiary */
+button.tertiary {
+	border: 2px solid #004232;
+	background-color: transparent;
+	color: #004232;
+}
+
+button.tertiary:hover {
+	border-color:#004232;
+	background-color: #DFFBF4;
+	color: #004232;
+}
+
+button.tertiary:active {
+	border-color: #004232;
+	background-color: #02D9A4;
+	color: #004232;
+}
+
+/* Disabled - Tertiary */
+button.tertiary[disabled]{
+	border-color: #BCBAC4;
+	background-color: transparent;
+	color: #BCBAC4;
+}
+
+/* Ghost */
+button.ghost {
+	background-color: transparent;
+	color: #02D9A4;
+}
+
+button.ghost:hover {
+	background-color: #DFFBF4;
+	color: #02D9A4;
+}
+
+button.ghost:active {
+	background-color: #02D9A4;
+	color: #004232 ;
+}
+
+/* Disabled - Ghost */
+button.ghost[disabled]{
+	background-color: transparent;
+	color: #BCBAC4;
+}
+
+
+/* sizes */
+button[size="large"]{
+	height: 48px;
+}
+
+button {
+	height: 40px;
+	font-weight: 600;
+	transition: all 200ms ease-in-out;
+}
+
+button[size="small"]{
+	height: 36px;
+	font-size: 14px;
+}
