@@ -1,6 +1,6 @@
 <template>
     <!-- <section class="principal from-8% relative h-[740px]" style="background: linear-gradient(350.82deg, #000033 -9.65%, #000080 45.47%, #000066 94.52%);"> -->
-    <section class="principal from-8% relative h-[740px] bg-gradient-to-br from-[#000033] from-0% via-[#000080] via-53% to-[#000066] to-100%" >
+    <section class="principal from-8% relative bg-gradient-to-br from-[#000033] from-0% via-[#000080] via-53% to-[#000066] to-100%" >
         <div class="relative mx-auto flex h-full w-full lg:max-w-[1140px] px-4">
             <div class="my-auto w-6/12">
                 <div class="items-center justify-center gap-2 self-end sm:gap-4 sm:self-auto sm:justify-self-end">
@@ -9,10 +9,12 @@
                         <p class="leading-6 text-white text-base">
                             En Campuslands formamos desarrolladores que se ajustan a tus proyectos. Conecta con talento listo para transformar tu empresa o apoya el crecimiento de nuestros nuevos líderes tech.
                         </p>
-                        <button class="btn-primary max-w-[300px] h-14 px-6 flex items-center justify-center gap-x-2 z-30">
-                            Emplea nuestros Campers
-                            <img src="/img/icons/happyFace.svg" alt="">
-                        </button>
+                        <a href="/patrocinar">
+                            <button class="btn-primary max-w-[320px] h-14 px-6 flex items-center justify-center gap-x-2 z-30">
+                                Patrocina nuestros Campers
+                                <img src="/img/icons/happyFace.svg" alt="">
+                            </button>
+                        </a>
                         <img src="/img/companies/Logos.png" alt="empresas que confian en nuestro talento">
                     </div>
                 </div>

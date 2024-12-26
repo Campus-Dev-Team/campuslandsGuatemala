@@ -3,10 +3,12 @@
 		<article class="w-full h-full">
 			<section class="flex flex-col mx-8 md:mx-32 h-full gap-y-8 pt-4">
 				<img src="/logoCampus.svg" alt="" class="object-cover w-[156px] h-[48px]">
-				<div class="flex items-center w-fit cursor-pointer gap-x-2">
-					<img src="/img/icons/arrow-left.svg" class="size-[25px] lg:size-[16px]" />
-					<p class="font-semibold hidden lg:block text-sm">Regresar</p>
-				</div>
+				<a href="/patrocina">
+					<div class="flex items-center w-fit cursor-pointer gap-x-2">
+						<img src="/img/icons/arrow-left.svg" class="size-[25px] lg:size-[16px]" />
+						<p class="font-semibold hidden lg:block text-sm">Regresar</p>
+					</div>
+				</a>
 				<div class="flex items-center justify-center lg:hidden gap-x-6 mb-2">
 					<div :class="['flex items-center rounded-full transition-all duration-75 ease-linear w-fit font-semibold px-6 h-10', viewDonate ? 'text-[#004232] bg-[#02D9A4]': 'cursor-pointer text-[#DFFBF4] hover:bg-[#B0F7E6] hover:text-[#004232]']" @click="showViewDonate">
 						<p>Hacer donación</p>
