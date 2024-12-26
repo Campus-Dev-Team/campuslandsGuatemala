@@ -11,17 +11,17 @@
                         </p>
                         <button class="btn-primary max-w-[300px] h-14 px-6 flex items-center justify-center gap-x-2 z-30">
                             Emplea nuestros Campers
-                            <img src="/src/assets/img/icons/happyFace.svg" alt="">
+                            <img src="/img/icons/happyFace.svg" alt="">
                         </button>
-                        <img src="/src/assets/img/companies/Logos.png" alt="empresas que confian en nuestro talento">
+                        <img src="/img/companies/Logos.png" alt="empresas que confian en nuestro talento">
                     </div>
                 </div>
             </div>
-			<img src="/src/assets/img/sponsor/patrocinar-home.png" alt="" class="bg-studentsss my-auto" width="765" height="530" style="width: 765px; height: 530px;">
+			<img src="/img/sponsor/patrocinar-home.png" alt="" class="bg-studentsss my-auto" width="765" height="530" style="width: 765px; height: 530px;">
         </div>
         <div class="bg-gradient-to-r from-[#00001A] from-0% via-[#000066] via-26% to-[#000080] to-75%">
              <div class="max-w-[1130px] mx-auto py-40">
-                 <img src="/src/assets/img/sponsor/banner.png" alt="">
+                 <img src="/img/sponsor/banner.png" alt="">
              </div>
          </div>
         <!-- tecnologias -->
@@ -32,9 +32,9 @@
                      <p class="text-white mx-auto"> Los Campers están preparados para enfrentar los desafíos tecnológicos actuales. Nuestra formación intensiva les permite dominar las siguientes tecnologías clave:</p>
                  </div>
                  <div class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
-                     <img src="/src/assets/img/group1.png" alt="">
-                     <img src="/src/assets/img/group2.png" alt="">
-                     <img src="/src/assets/img/group3.png" alt="">
+                     <img src="/img/group1.png" alt="">
+                     <img src="/img/group2.png" alt="">
+                     <img src="/img/group3.png" alt="">
                  </div>
              </div>
          </div>

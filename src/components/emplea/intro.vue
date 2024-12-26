@@ -11,13 +11,13 @@
                         </p>
                         <button class="btn-primary max-w-[300px] h-14 px-6 flex items-center justify-center gap-x-2 z-30">
                             Emplea nuestros Campers
-                            <img src="/src/assets/img/icons/happyFace.svg" alt="">
+                            <img src="/img/icons/happyFace.svg" alt="">
                         </button>
-                        <img src="/src/assets/img/companies/Logos.png" alt="empresas que confian en nuestro talento">
+                        <img src="/img/companies/Logos.png" alt="empresas que confian en nuestro talento">
                     </div>
                 </div>
             </div>
-			<img src="/src/assets/img/emplea/empleas-home.png" alt="" class="bg-students min-w-[429px] lg:min-w-[70%] xl:min-h-[649px]">
+			<img src="/img/emplea/empleas-home.png" alt="" class="bg-students min-w-[429px] lg:min-w-[70%] xl:min-h-[649px]">
         </div>
         <Timeline />
         <Benefits />
@@ -29,9 +29,9 @@
                      <p class="text-white mx-auto"> Los Campers están preparados para enfrentar los desafíos tecnológicos actuales. Nuestra formación intensiva les permite dominar las siguientes tecnologías clave:</p>
                  </div>
                  <div class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
-                     <img src="/src/assets/img/group1.png" alt="">
-                     <img src="/src/assets/img/group2.png" alt="">
-                     <img src="/src/assets/img/group3.png" alt="">
+                     <img src="/img/group1.png" alt="">
+                     <img src="/img/group2.png" alt="">
+                     <img src="/img/group3.png" alt="">
                  </div>
              </div>
          </div>

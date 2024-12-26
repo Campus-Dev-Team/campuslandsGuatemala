@@ -11,7 +11,7 @@
             <!-- <div v-for="item in campers" :key="item.id" class="flex"> -->
             <div class="flex gap-x-12">
                 <div>
-                    <img src="/src/assets/img/campers/camper1.png" alt="" class="w-[340px]">
+                    <img src="/img/campers/camper1.png" alt="" class="w-[340px]">
                 </div>
                 <div class="testimonial-info relative my-auto ms-20 max-w-[400px]">
                     <img src="'/src/assets/img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
@@ -24,10 +24,10 @@
                     </div>
                     <div class="flex justify-between w-[120px] mt-8">
                         <div class="flex items-center justify-center size-10 min-w-10 rounded-full bg-[#CBBFF8]">
-                            <img src="/src/assets/img/icons/arrow-left.svg" alt="">
+                            <img src="/img/icons/arrow-left.svg" alt="">
                         </div>
                         <div class="flex items-center justify-center size-10 min-w-10 rounded-full bg-[#CBBFF8]">
-                            <img src="/src/assets/img/icons/arrow-right.svg" alt="">
+                            <img src="/img/icons/arrow-right.svg" alt="">
                         </div>
                     </div>
                 </div>
@@ -45,21 +45,21 @@
                 <div class="flex flex-wrap justify-between">
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
-                            <img src="/src/assets/img/icons/indicators/contratados.svg" alt="" class="size-10">
+                            <img src="/img/icons/indicators/contratados.svg" alt="" class="size-10">
                             <p class="text-white font-bold text-[40px] countup">500+</p>
                         </div>
                         <p class="text-center text-white font-semibold">Nuestros Campers contratados en empresas</p>
                     </div>
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
-                            <img src="/src/assets/img/icons/indicators/inscritos.svg" alt="" class="size-10">
+                            <img src="/img/icons/indicators/inscritos.svg" alt="" class="size-10">
                             <p class="text-white font-bold text-[40px] countup">2000+</p>
                         </div>
                         <p class="text-center text-white font-semibold">Campers inscritos en Colombia</p>
                     </div>
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
-                            <img src="/src/assets/img/icons/indicators/patrocinadores.svg" alt="" class="size-10">
+                            <img src="/img/icons/indicators/patrocinadores.svg" alt="" class="size-10">
                             <p class="text-white font-bold text-[40px] countup">50+</p>
                         </div>
                         <p class="text-center text-white font-semibold">Patrocinadores apoyando el crecimiento de
@@ -69,7 +69,7 @@
                 <div class="flex flex-wrap justify-between">
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
-                            <img src="/src/assets/img/icons/indicators/empresas.svg" alt="" class="size-10">
+                            <img src="/img/icons/indicators/empresas.svg" alt="" class="size-10">
                             <p class="text-white font-bold text-[40px] countup">100+</p>
                         </div>
                         <p class="text-center text-white font-semibold">Empresas han confiado en el talento formado en
@@ -77,7 +77,7 @@
                     </div>
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
-                            <img src="/src/assets/img/icons/indicators/graduados.svg" alt="" class="size-10">
+                            <img src="/img/icons/indicators/graduados.svg" alt="" class="size-10">
                             <p class="text-white font-bold text-[40px] countup">80%</p>
                         </div>
                         <p class="text-center text-white font-semibold">De los Campers se especializa en las tecnologías
@@ -85,7 +85,7 @@
                     </div>
                     <div class="flex flex-col w-[258px]">
                         <div class="flex items-center justify-center gap-x-2">
-                            <img src="/src/assets/img/icons/indicators/contratadosMeses.svg" alt="" class="size-10">
+                            <img src="/img/icons/indicators/contratadosMeses.svg" alt="" class="size-10">
                             <p class="text-white font-bold text-[40px] countup">90%</p>
                         </div>
                         <p class="text-center text-white font-semibold">De los Campers son contratados en los primeros 3
@@ -97,7 +97,7 @@
                 comienza con el mejor talento. Únete a la red de empleadores que confían en el futuro tech.</p>
             <button class="btn-primary max-w-[297px] mx-auto h-14 px-6 flex items-center gap-x-2">
                 Emplea nuestros Campers
-                <img src="/src/assets/img/icons/arm.svg" alt="">
+                <img src="/img/icons/arm.svg" alt="">
             </button>
         </div>
         <!-- habilidades -->
@@ -118,23 +118,23 @@
                 </div>
             </div>
             <div v-if="tabHabilidadesTecnicas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
-                <img src="/src/assets/img/group1.png" alt="">
-                <img src="/src/assets/img/group2.png" alt="">
-                <img src="/src/assets/img/group3.png" alt="">
+                <img src="/img/group1.png" alt="">
+                <img src="/img/group2.png" alt="">
+                <img src="/img/group3.png" alt="">
             </div>
             <div v-if="tabHerramientas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
-                <img src="/src/assets/img/herramientas1.png" alt="" class="mx-auto">
-                <img src="/src/assets/img/herramientas2.png" alt="" class="mx-auto">
+                <img src="/img/herramientas1.png" alt="" class="mx-auto">
+                <img src="/img/herramientas2.png" alt="" class="mx-auto">
             </div>
             <div v-if="tabHabilidadesBlandas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
-                <img src="/src/assets/img/habilidadesBlandas1.png" alt="" class="mx-auto">
-                <img src="/src/assets/img/habilidadesBlandas2.png" alt="" class="mx-auto">
-                <img src="/src/assets/img/habilidadesBlandas3.png" alt="" class="mx-auto">
+                <img src="/img/habilidadesBlandas1.png" alt="" class="mx-auto">
+                <img src="/img/habilidadesBlandas2.png" alt="" class="mx-auto">
+                <img src="/img/habilidadesBlandas3.png" alt="" class="mx-auto">
             </div>
         </div>
         <!-- building future -->
-        <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
-        <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
+        <img src="/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
+        <img src="/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
     </section>
 </template>
 

@@ -60,8 +60,8 @@
             </div>
         </div>
         <!-- building future -->
-        <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
-        <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
+        <img src="/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
+        <img src="/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
     </section>
 </template>
 

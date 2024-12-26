@@ -5,12 +5,12 @@
             <p class="text-white font-semibold text-center text-lg">Estamos aquí para ayudarte a encontrar el talento perfecto para construir el futuro. Escríbenos y da el primer paso hacia un equipo imparable.</p>
             <button class="btn-primary max-w-[190px] h-14 px-6 flex items-center gap-x-2 z-30 mx-auto font-semibold">
                 Contactanos
-                <img src="/src/assets/img/icons/happyFace.svg" alt="">
+                <img src="/img/icons/happyFace.svg" alt="">
             </button>
         </div>
         <!-- building future -->
-        <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
-        <img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
+        <img src="/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
+        <img src="/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
     </section>
 </template>
 
