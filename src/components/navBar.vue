@@ -9,7 +9,7 @@
             <div class="hidden md:flex space-x-6">
                 <a href="/emplea" class="text-white hover:text-gray-200">Emplea</a>
                 <a href="/patrocina" class="text-white hover:text-gray-200">Patrocina</a>
-                <a href="#" class="text-white hover:text-gray-200">Se un Camper</a>
+                <a href="/joinUs" class="text-white hover:text-gray-200">Se un Camper</a>
                 <a href="#" class="text-white hover:text-gray-200">Nosotros</a>
                 <a href="#" class="text-white hover:text-gray-200">Comunidad</a>
             </div>
@@ -27,7 +27,7 @@
             <div class="space-y-4 px-4 py-2">
                 <a href="/emplea" class="block text-white hover:text-gray-200">Emplea</a>
                 <a href="/patrocina" class="block text-white hover:text-gray-200">Patrocina</a>
-                <a href="#" class="block text-white hover:text-gray-200">Se un Camper</a>
+                <a href="/joinUs" class="block text-white hover:text-gray-200">Se un Camper</a>
                 <a href="#" class="block text-white hover:text-gray-200">Nosotros</a>
                 <a href="#" class="block text-white hover:text-gray-200">Comunidad</a>
             </div>
