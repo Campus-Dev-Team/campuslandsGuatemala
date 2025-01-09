@@ -104,10 +104,12 @@ const currentPath = Astro.url.pathname;
 			<div class="max-w-[691px] vstext mx-auto my-auto flex flex-col gap-y-8 py-20 px-6">
 				<p class="gradient-text text-lg md:text-[28px] mb-1 font-bold text-center">El futuro de la tecnología te está esperando. ¿Listo para dar el siguiente paso?</p>
 				<p class="text-white font-semibold text-center text-sm md:text-lg">Estamos aquí para ayudarte a encontrar el talento perfecto para construir el futuro. Escríbenos y da el primer paso hacia un equipo imparable.</p>
-				<button class="btn-primary h-14 px-6 justify-center w-full md:w-fit flex items-center gap-x-2 z-30 mx-auto font-semibold">
-					Contactanos
-					<Image src={iconHappy} alt="Happy" class="hidden md:block" />
-				</button>
+				<a href="https://camper.campuslands.com/login" target="_blank" class="flex justify-center items-center gap-x-2 z-30">
+					<button class="btn-primary h-14 px-6 justify-center w-full md:w-fit flex items-center gap-x-2 z-30 mx-auto font-semibold">
+						Contactanos
+						<Image src={iconHappy} alt="Happy" class="hidden md:block" />
+					</button>
+				</a>
 			</div>
 			<div class="flex flex-col gap-y-4 px-14 pb-4">
 				<div class="flex items-center border-b border-[transparent] md:border-white flex-col md:flex-row">

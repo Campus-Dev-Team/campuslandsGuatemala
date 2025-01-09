@@ -2,116 +2,62 @@
 import LayoutNavbar from "../layouts/LayoutNavbar.astro";
 import "~/styles/index.css";
 
-import { Image } from 'astro:assets';
-import myImage from '~/assets/img/campers/campers-home-final.png';
-import joinOurComunity from '~/assets/img/card.png';
-
 import Intro from "../components/home/intro.astro";
 import Testimonials from "../components/home/testimonials.astro";
 import AlliedCompanies from "../components/alliedCompanies.astro";
 import BuildingFuture from "../components/buildingFuture.astro";
+import PotentialDevelopment from "../components/potentialDevelopment.astro";
+import VisitUs from "../components/visitUs.astro";
+import Faq from "../components/home/faq.astro";
 ---
 <LayoutNavbar title="Campuslands">
 	<Intro />
-	<!-- bg-gradient-to-r from-[#2F10A2] from-5% via-[#130640] via-28% to-[#260D84] to-62% -->
 	<div class="">
 		<AlliedCompanies />
 		<BuildingFuture />
 		<Testimonials id="testimonials-section" />
-		<div class="indicators max-w-[934px] mx-auto mt-40 mb-20 !hidden">
-			<div class="flex flex-col gap-y-8 text-center mb-16">
-				<p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto"> Construyendo el futuro del talento tech en Colombia</p>
-			</div>
-			<div class="flex max-w-[555px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10">
-				<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white" :class="`${tabHabilidadesTecnicas ? 'bg-primary_action' : ''}`" @click="activeTab('tabHabilidadesTecnicas')">
-					Habilidades técnicas
-				</div>
-				<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white" :class="`${tabHerramientas ? 'bg-primary_action' : ''}`" @click="activeTab('tabHerramientas')">
-					Herramientas
-				</div>
-				<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white" :class="`${tabHabilidadesBlandas ? 'bg-primary_action' : ''}`" @click="activeTab('tabHabilidadesBlandas')">
-					Habilidades blandas
-				</div>
-			</div>
-			<div v-if="tabHabilidadesTecnicas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
-				<img src="/src/assets/img/group1.png" alt="">
-				<img src="/src/assets/img/group2.png" alt="">
-				<img src="/src/assets/img/group3.png" alt="">
-			</div>
-			<div v-if="tabHerramientas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
-				<img src="/src/assets/img/herramientas1.png" alt="" class="mx-auto">
-				<img src="/src/assets/img/herramientas2.png" alt="" class="mx-auto">
-			</div>
-			<div v-if="tabHabilidadesBlandas" class="flex flex-wrap gap-y-4 justify-between max-w-[590px] mx-auto">
-				<img src="/src/assets/img/habilidadesBlandas1.png" alt="" class="mx-auto">
-				<img src="/src/assets/img/habilidadesBlandas2.png" alt="" class="mx-auto">
-				<img src="/src/assets/img/habilidadesBlandas3.png" alt="" class="mx-auto">
-			</div>
+		<PotentialDevelopment />
+		<div class="w-full max-w-7xl mx-auto py-10 lg:my-20 lg:py-10 px-4">
+			<img src="/src/assets/img/card.png" alt="" class="w-full hidden lg:block">
+			<img src="/src/assets/img/cardMobile.png" alt="" class="w-full lg:hidden">
 		</div>
-		<div class="max-w-[1130px] mx-auto">
-			<img src="/src/assets/img/card.png" alt="">
-		</div>
+		<VisitUs />
+		<Faq />
 	</div>
 </LayoutNavbar>
 
 <style>
-	main {
-		margin: auto;
-		padding: 1rem;
-		width: 800px;
-		max-width: calc(100% - 2rem);
-		color: white;
-		font-size: 20px;
-		line-height: 1.6;
-	}
-	.astro-a {
-		position: absolute;
-		top: -32px;
-		left: 50%;
-		transform: translatex(-50%);
-		width: 220px;
-		height: auto;
-		z-index: -1;
-	}
-	h1 {
-		font-size: 4rem;
-		font-weight: 700;
-		line-height: 1;
-		text-align: center;
-		margin-bottom: 1em;
-	}
-	.text-gradient {
-		background-image: var(--accent-gradient);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-size: 400%;
-		background-position: 0%;
-	}
-	.instructions {
-		margin-bottom: 2rem;
-		border: 1px solid rgba(var(--accent-light), 25%);
-		background: linear-gradient(
-			rgba(var(--accent-dark), 66%),
-			rgba(var(--accent-dark), 33%)
-		);
-		padding: 1.5rem;
-		border-radius: 8px;
-	}
-	.instructions code {
-		font-size: 0.8em;
-		font-weight: bold;
-		background: rgba(var(--accent-light), 12%);
-		color: rgb(var(--accent-light));
-		border-radius: 4px;
-		padding: 0.3em 0.4em;
-	}
-	.instructions strong {
-		color: rgb(var(--accent-light));
-	}
-	.link-card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-		gap: 2rem;
-		padding: 0;
-	}
+main {
+	margin: auto;
+	padding: 1rem;
+	width: 800px;
+	max-width: calc(100% - 2rem);
+	color: white;
+	font-size: 20px;
+	line-height: 1.6;
+}
+.astro-a {
+	position: absolute;
+	top: -32px;
+	left: 50%;
+	transform: translatex(-50%);
+	width: 220px;
+	height: auto;
+	z-index: -1;
+}
+h1 {
+	font-size: 4rem;
+	font-weight: 700;
+	line-height: 1;
+	text-align: center;
+	margin-bottom: 1em;
+}
+.text-gradient {
+	background-image: var(--accent-gradient);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-size: 400%;
+	background-position: 0%;
+}
+
 </style>

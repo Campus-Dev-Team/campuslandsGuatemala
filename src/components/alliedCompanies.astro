@@ -7,59 +7,65 @@ import companyAmarisConsulting from '~/assets/img/companies/AmarisConsulting.svg
 import companyGalapagoAgroConsultores from '~/assets/img/companies/GalapagoAgroConsultores.svg';
 import companyApplus from '~/assets/img/companies/Applus.svg';
 import companyGrafosoft from '~/assets/img/companies/Grafosoft.svg';
+
+import carrusel1 from '~/assets/img/companies/carrusel1.png';
+import carrusel2 from '~/assets/img/companies/carrusel2.png';
+import carrusel3 from '~/assets/img/companies/carrusel3.png';
+import carrusel4 from '~/assets/img/companies/carrusel4.png';
 const companies = [
     {
         id: 1,
-        img: companySolvo,
+        img: carrusel1,
         alt: 'Solvo - Bringing you a world of talent',
     },
     {
         id: 2,
-        img: companyQNT,
+        img: carrusel2,
         alt: 'QNT - Creemos, ayudamos e impulsamos sueños',
     },
     {
         id: 3,
-        img: companyPensemos,
+        img: carrusel3,
         alt: 'Pensemos - Logo',
     },
     {
         id: 4,
-        img: companyAmarisConsulting,
+        img: carrusel4,
         alt: 'Amaris Consulting - Logo',
     },
-    {
-        id: 5,
-        img: companyGalapagoAgroConsultores,
-        alt: 'GalapagoAgroConsultores - Logo',
-    },
-    {
-        id: 6,
-        img: companyApplus,
-        alt: 'Applus - Logo',
-    },
-    {
-        id: 7,
-        img: companyGrafosoft,
-        alt: 'Grafosoft - Logo',
-    },
-    {
-        id: 7,
-        img: companyGrafosoft,
-        alt: 'Grafosoft - Logo',
-    },
+    // {
+    //     id: 5,
+    //     img: companyGalapagoAgroConsultores,
+    //     alt: 'GalapagoAgroConsultores - Logo',
+    // },
+    // {
+    //     id: 6,
+    //     img: companyApplus,
+    //     alt: 'Applus - Logo',
+    // },
+    // {
+    //     id: 7,
+    //     img: companyGrafosoft,
+    //     alt: 'Grafosoft - Logo',
+    // },
+    // {
+    //     id: 7,
+    //     img: companyGrafosoft,
+    //     alt: 'Grafosoft - Logo',
+    // },
 ]
 ---
 
-<section class="allied-companies overflow-hidden py-10 relative max-w-7xl mx-auto">
+<section class="allied-companies overflow-hidden py-10 relative max-w-7xl mx-auto px-6">
 	<p class="text-2xl text-center mb-10 px-4 lg:px-0 text-white font-bold">Empresas que cuentan con nuestro talento</p>
 	<div class="infinite-slider-container overflow-hidden">
-		<div class="flex flex-wraps gap-6 mx-auto max-w-[1150px] justify-center lg:justify-normal">
+		<div class="flex flex-wraps gap-6 mx-auto max-w-[1150psx] justify-center lg:justify-normal">
 			{companies.map((company, index) => (
-				<div class="slider">
+				<div class="slider w-full">
 					<Image
 						src={company.img}
 						alt="Unete a nuestra comunidad"
+                        class="w-full min-h-[60px]"
 					/>
 				</div>
 			))}

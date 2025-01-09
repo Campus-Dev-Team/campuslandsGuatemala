@@ -1,93 +1,13 @@
 ---
-import { Image } from 'astro:assets';
-import SliderTestimonials from '../sliderTestimonials.astro';
+import SliderTestimonials from './sliderTestimonials.astro';
 ---
 
-<section class="testimonials overflow-hidden py-10 relative ">
+<section class="testimonials overflow-hidden pt-20 pb-32 relative ">
+    <div class="text-center mb-10 flex flex-col gap-y-8">
+        <p class="gradient-text f-32 font-bold max-w-[476px] mx-auto">Conectamos Talento con Grandes Oportunidades</p>
+        <p class="text-lg text-white text-center font-semibold max-w-[485px] mx-auto">Las empresas más destacadas han apostado por el talento de Campuslands para construir el futuro.</p>
+    </div>
 	<SliderTestimonials />
-	
 	<img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
 	<img src="/src/assets/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
 </section>
-
-<!-- <script>
-import { onMounted, ref } from "vue"
-
-const currentIndex = ref(0)
-
-const tabHabilidadesTecnicas = ref(true)
-const tabHerramientas = ref(false)
-const tabHabilidadesBlandas = ref(false)
-
-const campers = ref([
-    { image: '/src/assets/img/campers/camper1.png', alt: 'Image 1', caption: 'First Image' },
-    { image: '/src/assets/img/campers/camper2.png', alt: 'Image 1', caption: 'First Image' },
-    { image: '/src/assets/img/campers/camper3.png', alt: 'Image 2', caption: 'Second Image' },
-    { image: '/src/assets/img/campers/camper4.png', alt: 'Image 2', caption: 'Second Image' },
-    { image: '/src/assets/img/campers/camper5.png', alt: 'Image 3', caption: 'Third Image' },
-    { image: '/src/assets/img/campers/camper6.png', alt: 'Image 3', caption: 'Third Image' },
-    { image: '/src/assets/img/campers/camper7.png', alt: 'Image 3', caption: 'Third Image' },
-    { image: '/src/assets/img/campers/camper8.png', alt: 'Image 3', caption: 'Third Image' },
-])
-
-// onMounted(() => {
-//     setInterval(nextSlide(), 3000);
-// })
-
-function nextSlide(params) {
-    currentIndex.value = (currentIndex.value + 1) % campers.value.length;
-}
-function name(params) {
-    currentIndex.value = (currentIndex.value - 1 + campers.value.length) % campers.value.length;
-}
-
-function activeTab(tab) {
-    if (tab == 'tabHabilidadesTecnicas') {
-        tabHabilidadesTecnicas.value = true
-        tabHerramientas.value = false
-        tabHabilidadesBlandas.value = false
-    } else if (tab == 'tabHerramientas') {
-        tabHabilidadesTecnicas.value = false
-        tabHerramientas.value = true
-        tabHabilidadesBlandas.value = false
-    } else if (tab == 'tabHabilidadesBlandas') {
-        tabHabilidadesTecnicas.value = false
-        tabHerramientas.value = false
-        tabHabilidadesBlandas.value = true
-    }
-}
-
-
-
-
-</script> -->
-
-<style scoped>
-
-.countup {
-    font-size: 40px;
-    font-weight: bold;
-    color: white;
-    display: inline-block;
-    position: relative;
-    animation: count 10s forwards;
-    /* 2s animation duration */
-}
-
-@keyframes count {
-    0% {
-        content: "0";
-        /* Initial state */
-    }
-
-    50% {
-        content: "50";
-        /* Halfway state */
-    }
-
-    100% {
-        content: "100";
-        /* Final state */
-    }
-}
-</style>
