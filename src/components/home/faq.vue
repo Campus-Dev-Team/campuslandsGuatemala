@@ -1,7 +1,38 @@
----
-const tab = 1;
+<template>
+	<div class="indicators max-w-[934px] mx-auto my-20 px-4">
+		<div class="flex flex-col gap-y-8 text-center mb-16">
+		</div>
+		<p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto text-center mb-16 pb-1"> Preguntas frecuentes</p>
+		<div class="flex max-w-[305px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10">
+			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white" :class="`${active === 'tabCampers' ? 'bg-primary_action' : ''}`" @click="activeTab('tabCampers')">
+				Campers
+			</div>
+			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white" :class="`${active === 'tabSponsors' ? 'bg-primary_action' : ''}`" @click="activeTab('tabSponsors')">
+				Patrocinadores
+			</div>
+		</div>
+		<div class="flex flex-wrap gap-y-4 lg:gap-y-3 mb-16">
+			<div v-for="(faq, index) in questionsAndAnswers" :key="index" class="w-full md:w-1/2 md:max-w-[480px] px-4 lg:p-4 h-fit">
+				<details>
+					<summary class="flex justify-between text-lg font-extrabold">
+						{{faq.title}}
+						<img src="/img/icons/IconPlus.svg" alt="" class="size-5 cursor-pointer">
+					</summary>
+					<p class="text-base font-normal mt-4 lg:mt-8">{{ faq.description }}</p>
+				</details>
+			</div>
+		</div>
+	</div>
+</template>
 
-const tabFaqCampers = [
+<script setup>
+import { onBeforeMount, ref } from 'vue';
+
+const active = ref('tabCampers')
+
+const questionsAndAnswers = ref([])
+
+const tabFaqCampersData = ref([
 	{
 		id: 1,
 		title: '¿Qué es Campuslands y cómo funciona?',
@@ -102,39 +133,68 @@ const tabFaqCampers = [
 		title: '¿Qué tipo de trabajos puedo obtener al graduarme de Campuslands?',
 		description: 'Al finalizar el programa, estarás capacitado para roles como desarrollador de software, analista de datos, soporte técnico y otros puestos demandados en tecnología. Campuslands te abre las puertas a empleos que no solo ofrecen buenas remuneraciones, sino también oportunidades de crecimiento y desarrollo en un sector en constante expansión.'
 	}
-]
----
+])
 
-<div class="indicators max-w-[934px] mx-auto my-20 px-4">
-	<div class="flex flex-col gap-y-8 text-center mb-16">
-		<p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto"> Preguntas fecuentes</p>
-	</div>
-	<div class="flex max-w-[305px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10">
-		<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white bg-primary_action">
-			Campers
-		</div>
-		<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white">
-			Patrocinadores
-		</div>
-	</div>
-	<div class="flex flex-wrap gap-y-4 lg:gap-y-3 mb-16">
-		{tabFaqCampers.map((faq, index) => (
-			<div class="w-full md:w-1/2 md:max-w-[480px] px-4 lg:p-4 h-fit">
-				<details>
-					<summary class="flex justify-between text-lg font-extrabold">
-						{faq.title}
-						<img src="/img/icons/IconPlus.svg" alt="" class="size-5 cursor-pointer">
-					</summary>
-					<p class="text-base font-normal mt-4 lg:mt-8">{ faq.description }</p>
-				</details>
-			</div>
-		))}
-	</div>
-</div>
+const tabFaqSponsersData = ref([
+	{
+		id: 1,
+		title: "¿Qué significa ser patrocinador de Campuslands?",
+		description: "Ser patrocinador de Campuslands significa apoyar el sueño de un joven con talento pero con recursos limitados. Tu aporte económico permite que estos jóvenes accedan a un entrenamiento especializado en desarrollo de software, inglés y habilidades socioemocionales. Este apoyo no solo transforma la vida del joven, sino que también impacta positivamente a su familia, su entorno y la industria tecnológica en general."
+	},
+	{
+		id: 2,
+		title: "¿Cómo funciona el modelo de patrocinio en Campuslands?",
+		description: "El modelo de patrocinio permite a personas o empresas financiar la formación de jóvenes durante su proceso de entrenamiento en Campuslands. Los patrocinadores realizan una contribución económica que cubre los costos de formación, mientras Campuslands se encarga de entrenar y acompañar al joven en habilidades técnicas, humanas y de idioma. Al final, el objetivo es que el joven consiga un empleo de calidad en la industria tecnológica."
+	},
+	{
+		id: 3,
+		title: "¿A quiénes se patrocina en Campuslands?",
+		description: "Se patrocina a jóvenes de estratos 1, 2 y 3 con un gran potencial, pero con recursos económicos limitados. Son personas con deseos de superación, pasión por la tecnología y compromiso con su aprendizaje. El patrocinio permite que estos jóvenes tengan acceso a una educación de calidad y oportunidades de empleo en la industria tecnológica."
+	},
+	{
+		id: 4,
+		title: "¿Cuál es el costo de patrocinar a un estudiante?",
+		description: "El costo puede variar dependiendo de la duración y el alcance del entrenamiento. Sin embargo, Campuslands se encarga de optimizar cada recurso para garantizar la mejor educación posible. Si estás interesado en patrocinar, puedes solicitar información específica para conocer el costo exacto y el plan de pago más adecuado para ti."
+	},
+	{
+		id: 5,
+		title: "¿Cuánto tiempo dura el patrocinio?",
+		description: "El patrocinio tiene una duración aproximada de 10 a 14 meses. Los primeros 10 meses se dedican al entrenamiento intensivo, donde los jóvenes aprenden desarrollo de software, inglés y habilidades socioemocionales. Luego, pueden pasar a la etapa de 'horas de vuelo', donde aplican sus conocimientos en proyectos reales, haciendo que su perfil sea mucho más competitivo para el mercado laboral."
+	},
+	{
+		id: 6,
+		title: "¿Cómo se mide el impacto de mi patrocinio?",
+		description: "Campuslands mide el impacto a través de indicadores de progreso y empleabilidad. Como patrocinador, recibirás actualizaciones sobre el avance del joven, sus logros y, en muchos casos, el resultado final: su inserción laboral en una empresa tecnológica. De esta forma, podrás ver de forma tangible cómo tu apoyo transforma vidas."
+	},
+	{
+		id: 7,
+		title: "¿Cómo puedo hacer seguimiento al estudiante que estoy patrocinando?",
+		description: "Campuslands se encarga de mantener una comunicación abierta y transparente. A través de informes periódicos, podrás conocer el progreso del estudiante, sus logros y el impacto que estás generando. Además, en algunos casos, se pueden organizar encuentros o eventos donde los patrocinadores pueden conocer a los jóvenes que están apoyando."
+	},
+	{
+		id: 8,
+		title: "¿Puedo patrocinar a más de un estudiante al mismo tiempo?",
+		description: "¡Por supuesto! Puedes patrocinar a tantos estudiantes como desees. Muchas empresas e individuos ven esto como una forma de crear un impacto aún mayor. Cada estudiante representa una oportunidad de transformar una vida, y con cada patrocinio adicional, la posibilidad de cambiar realidades se multiplica."
+	},
+	{
+		id: 9,
+		title: "¿Cuáles son los requisitos para ser patrocinador?",
+		description: "No existen requisitos estrictos. Solo se necesita la disposición para apoyar la educación de jóvenes y el compromiso de realizar las contribuciones económicas acordadas. Tanto personas naturales como empresas pueden ser patrocinadores."
+	}
+])
 
-<style>
-summary::marker {
-	content: '';
-	display: inline-block;
+onBeforeMount(() => {
+	questionsAndAnswers.value = tabFaqCampersData.value
+})
+
+function activeTab(tab) {
+	active.value = tab
+	questionsAndAnswers.value = tab === 'tabCampers'
+	? questionsAndAnswers.value = tabFaqCampersData.value
+	: questionsAndAnswers.value = tabFaqSponsersData.value
 }
+</script>
+
+<style lang="scss" scoped>
+
 </style>
