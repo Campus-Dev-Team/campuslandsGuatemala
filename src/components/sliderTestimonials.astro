@@ -25,20 +25,62 @@ document.getElementById("prevSlide").addEventListener("click", prevSlide);
 document.getElementById("nextSlide").addEventListener("click", nextSlide);
 
 document.addEventListener('DOMContentLoaded', () => {
-	setInterval(nextSlide, 8000);
+	setInterval(nextSlide, 12000);
 });
 </script>
-<div class="slider">
+<div class="slider max-w-[910px] mx-auto">
 	<div class="slider-container" id="slider-container">
-		<div class="slide"><img src="/img/campers/camper1.png" class="w-[340px]" width="340" alt="Slide 1" /></div>
-		<div class="slide"><img src="/img/campers/camper2.png" class="w-[340px]" width="340" alt="Slide 2" /></div>
-		<div class="slide"><img src="/img/campers/camper3.png" class="w-[340px]" width="340" alt="Slide 3" /></div>
-		<div class="slide"><img src="/img/campers/camper4.png" class="w-[340px]" width="340" alt="Slide 4" /></div>
-		<div class="slide"><img src="/img/campers/camper5.png" class="w-[340px]" width="340" alt="Slide 5" /></div>
-		<div class="slide"><img src="/img/campers/camper6.png" class="w-[340px]" width="340" alt="Slide 6" /></div>
+		<div class="slide flex gap-x-32">
+			<img src="/img/campers/camper1.png" class="w-[275px]" width="340" alt="Slide 1" />
+			<div class="flex flex-col relative">
+				<img src="/src/assets/img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
+				<p class="gradient-text text-4xl mb-4">Yuli Stefany Sánchez</p>
+				<p class="text-white max-w-[445px] mb-2">Para mí, Campuslands representa un desafío personal y académico, lleno de oportunidades para crecer trabajando duro y con determinación. He aprendido mucho en programación y en el manejo de mis emociones, lo cual me ha hecho avanzar considerablemente.</p>
+				<p class="text-white max-w-[445px]">Mi formación en artes me ha permitido estimular mi creatividad y expresión corporal, habilidades que complementan mi desarrollo en programación.</p>
+			</div>
+		</div>
+		<div class="slide flex gap-x-32">
+			<img src="/img/campers/camper2.png" class="w-[275px]" width="340" alt="Slide 2" />
+			<div class="flex flex-col relative">
+				<img src="/src/assets/img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
+				<p class="gradient-text text-4xl mb-4">Yuli Stefany Sánchez</p>
+				<p class="text-white max-w-[445px]">"Campuslands no solo me enseñó a programar, me preparó para enfrentar retos reales en la industria tech. Hoy trabajo en una empresa que siempre soñé, gracias a las habilidades que adquirí aquí."</p>
+			</div>
+		</div>
+		<div class="slide flex gap-x-32">
+			<img src="/img/campers/camper3.png" class="w-[275px]" width="340" alt="Slide 3" />
+			<div class="flex flex-col relative">
+				<img src="/src/assets/img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
+				<p class="gradient-text text-4xl mb-4">Yuli Stefany Sánchez</p>
+				<p class="text-white max-w-[445px]">"Campuslands no solo me enseñó a programar, me preparó para enfrentar retos reales en la industria tech. Hoy trabajo en una empresa que siempre soñé, gracias a las habilidades que adquirí aquí."</p>
+			</div>
+		</div>
+		<div class="slide flex gap-x-32">
+			<img src="/img/campers/camper4.png" class="w-[275px]" width="340" alt="Slide 4" />
+			<div class="flex flex-col relative">
+				<img src="/src/assets/img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
+				<p class="gradient-text text-4xl mb-4">Yuli Stefany Sánchez</p>
+				<p class="text-white max-w-[445px]">"Campuslands no solo me enseñó a programar, me preparó para enfrentar retos reales en la industria tech. Hoy trabajo en una empresa que siempre soñé, gracias a las habilidades que adquirí aquí."</p>
+			</div>
+		</div>
+		<div class="slide flex gap-x-32">
+			<img src="/img/campers/camper5.png" class="w-[275px]" width="340" alt="Slide 5" />
+			<div class="flex flex-col relative">
+				<img src="/src/assets/img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
+				<p class="gradient-text text-4xl mb-4">Yuli Stefany Sánchez</p>
+				<p class="text-white max-w-[445px]">"Campuslands no solo me enseñó a programar, me preparó para enfrentar retos reales en la industria tech. Hoy trabajo en una empresa que siempre soñé, gracias a las habilidades que adquirí aquí."</p>
+			</div>
+		</div>
+		<div class="slide flex gap-x-32">
+			<img src="/img/campers/camper6.png" class="w-[275px]" width="275" alt="Slide 6" />
+			<div class="flex flex-col relative">
+				<img src="/src/assets/img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
+				<p class="gradient-text text-4xl mb-4">Yuli Stefany Sánchez</p>
+				<p class="text-white max-w-[445px]">"Campuslands no solo me enseñó a programar, me preparó para enfrentar retos reales en la industria tech. Hoy trabajo en una empresa que siempre soñé, gracias a las habilidades que adquirí aquí."</p>
+			</div>
+		</div>
 	</div>
-
-	<div class="controls">
+	<div class="controls max-w-[70px] absolute right-[15px] bottom-0 gap-x-3 z-30">
 		<div id="prevSlide" class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#02D9A4]">
 			<img src="/img/icons/arrow-left.svg" alt="" width="14">
 		</div>
@@ -47,8 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		</div>
 	</div>
 </div>
-
-
 <style>
 .slider {
 	width: 80%;
@@ -66,12 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 .controls {
-	position: absolute;
-	top: 50%;
-	width: 100%;
 	display: flex;
 	justify-content: space-between;
-	transform: translateY(-50%);
 }
 .control-btn {
 	background-color: rgba(0, 0, 0, 0.5);
@@ -81,4 +117,4 @@ document.addEventListener('DOMContentLoaded', () => {
 	cursor: pointer;
 	padding: 0.5rem 1rem;
 }
-  </style>
+</style>

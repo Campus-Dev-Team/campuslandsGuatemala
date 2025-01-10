@@ -34,3 +34,11 @@
 .btn-outline {
   @apply rounded-full border text-primary border-primary;
 }
+
+.f-32{ font-size: 32px; }
+.f-40{ font-size: 40px; }
+
+@media (min-width: 1024px) {
+	.f-32{ font-size: 32px; }
+	.f-40{ font-size: 40px; }
+}

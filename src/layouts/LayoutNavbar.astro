@@ -62,11 +62,11 @@ const currentPath = Astro.url.pathname;
 					</a>
 				</div>
 				<div class="content-redirects items-center hidden md:flex h-full">
-					<a href="/emplea" aria-label="Impulsa a tu equipo" class={ currentPath.includes('/emplea') ? 'active' : 'text-white hover:text-gray-200'}>Emplea</a>
-					<a href="/patrocina" aria-label="Patrocina nuestros Campers" class={ currentPath.includes('/patrocina') ? 'active' : 'text-white hover:text-gray-200'}>Patrocina</a>
-					<!-- <a href="#" class={ currentPath.includes('#') ? 'active' : '' }>Se un Camper</a> -->
-					<a href="/nosotros" class={ currentPath.includes('/nosotros') ? 'active' : 'text-white hover:text-gray-200' }>Nosotros</a>
-					<!-- <a href="#" class={ currentPath.includes('#') ? 'active' : 'text-white hover:text-gray-200' }>Comunidad</a> -->
+					<a href="/emplea" aria-label="Impulsa a tu equipo" class={ currentPath === '/emplea' ? 'active' : 'text-white hover:text-gray-200'}>Emplea</a>
+					<a href="/patrocina" aria-label="Patrocina nuestros Campers" class={ currentPath === '/patrocina' ? 'active' : 'text-white hover:text-gray-200'}>Patrocina</a>
+					<a href="/joinUs" class={ currentPath === '/joinUs' ? 'active' : '' }>Se un Camper</a>
+					<a href="/nosotros" class={ currentPath === '/nosotros' ? 'active' : 'text-white hover:text-gray-200' }>Nosotros</a>
+					<a href="#" class={ currentPath === '#' ? 'active' : 'text-white hover:text-gray-200' }>Comunidad</a>
 				</div>
 				<div class="md:hidden flex items-center">
 					<button
@@ -93,7 +93,7 @@ const currentPath = Astro.url.pathname;
 				<div class="space-y-4 px-4 py-2">
 					<a href="/emplea" class="text-white hover:text-gray-200">Emplea</a>
 					<a href="/patrocina" class="text-white hover:text-gray-200">Patrocina</a>
-					<!-- <a href="#" class="text-white hover:text-gray-200">Se un Camper</a> -->
+					<a href="/joinUs" class="text-white hover:text-gray-200">Se un Camper</a>
 					<a href="/nosotros" class="text-white hover:text-gray-200">Nosotros</a>
 					<!-- <a href="#" class="text-white hover:text-gray-200">Comunidad</a> -->
 				</div>
@@ -104,10 +104,12 @@ const currentPath = Astro.url.pathname;
 			<div class="max-w-[691px] vstext mx-auto my-auto flex flex-col gap-y-8 py-20 px-6">
 				<p class="gradient-text text-lg md:text-[28px] mb-1 font-bold text-center">El futuro de la tecnología te está esperando. ¿Listo para dar el siguiente paso?</p>
 				<p class="text-white font-semibold text-center text-sm md:text-lg">Estamos aquí para ayudarte a encontrar el talento perfecto para construir el futuro. Escríbenos y da el primer paso hacia un equipo imparable.</p>
-				<button class="btn-primary h-14 px-6 justify-center w-full md:w-fit flex items-center gap-x-2 z-30 mx-auto font-semibold">
-					Contactanos
-					<Image src={iconHappy} alt="Happy" class="hidden md:block" />
-				</button>
+				<a href="https://camper.campuslands.com/login" target="_blank" class="flex justify-center items-center gap-x-2 z-30">
+					<button class="btn-primary h-14 px-6 justify-center w-full md:w-fit flex items-center gap-x-2 z-30 mx-auto font-semibold">
+						Contactanos
+						<Image src={iconHappy} alt="Happy" class="hidden md:block" />
+					</button>
+				</a>
 			</div>
 			<div class="flex flex-col gap-y-4 px-14 pb-4">
 				<div class="flex items-center border-b border-[transparent] md:border-white flex-col md:flex-row">
@@ -124,7 +126,7 @@ const currentPath = Astro.url.pathname;
 					<div class="flex ms-auto flex-col w-full gap-6 md:w-fit md:flex-row md:gap-0 items-center space-x-6">
 						<a href="/emplea" aria-label="Impulsa a tu equipo" class="text-white hover:text-gray-200 !m-0 px-4">Emplea</a>
 						<a href="/patrocina" aria-label="Patrocina nuestros Campers" class="text-white hover:text-gray-200 !m-0 px-4">Patrocina</a>
-						<a href="#" class="text-white hover:text-gray-200 !m-0 px-4">Se un Camper</a>
+						<a href="/joinUs" class="text-white hover:text-gray-200 !m-0 px-4">Se un Camper</a>
 						<a href="/nosotros" class="text-white hover:text-gray-200 !m-0 px-4">Nosotros</a>
 						<a href="#" class="text-white hover:text-gray-200 !m-0 px-4">Comunidad</a>
 					</div>
