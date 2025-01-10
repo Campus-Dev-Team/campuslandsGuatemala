@@ -1,15 +1,17 @@
 <template>
-    <section class="location overflow-hidden py-20 relative bg-gradient-to-r from-[#00001A] from-0% via-[#000066] via-26% to-[#000080] to-75%">
-        <!-- como emplear -->
+	<!-- bg-gradient-to-r from-[#00001A] from-0% via-[#000066] via-26% to-[#000080] to-75% -->
+    <section class="location overflow-hidden py-20 relative">
         <div class="flex max-w-[1130px] mx-auto gap-x-20">
             <div class="max-w-[550px] my-auto flex flex-col gap-y-8">
                 <p class="gradient-text text-4xl mb-1 font-bold">Visita nuestras instalaciones, vive la experiencia Campuslands</p>
                 <p class="text-white font-semibold">Visítanos en nuestras sedes y descubre cómo Campuslands está transformando el talento tech. Agenda una cita y descubre cómo puedes ser parte de esta revolución, ya sea como estudiante, empleador o patrocinador.</p>
                 <div class="flex gap-x-6">
-                    <button class="btn-primary max-w-[216px] h-14 px-6 font-semibold flex items-center gap-x-2">
-                        Agenda tu visita
-                        <img src="/src/assets/img/icons/agenda.svg" alt="">
-                    </button>
+					<a href="/agendar" target="_blank" class="w-full lg:w-fit">
+						<button class="btn-primary max-w-[216px] h-14 px-6 font-semibold flex items-center gap-x-2">
+							Agenda tu visita
+							<img src="/src/assets/img/icons/agenda.svg" alt="">
+						</button>
+					</a>
                     <button class="btn-outline  max-w-[252px] h-14 px-6 font-semibold flex items-center gap-x-2">
                         <p class="text-primary">Chatea con nosotros</p>
                         <img src="/src/assets/img/icons/whatsapp.svg" alt="">
@@ -41,7 +43,7 @@
 import { ref, onMounted } from 'vue';
 
 onMounted(() => {
-    setInterval(switchDiv, 6000);
+    setInterval(switchDiv, 4000);
 })
 
 const currentDiv = ref(1);
