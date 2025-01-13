@@ -62,6 +62,7 @@ const currentPath = Astro.url.pathname;
 					</a>
 				</div>
 				<div class="content-redirects items-center hidden md:flex h-full">
+					<a href="/" aria-label="Home" class={ currentPath === '/' ? 'active' : 'text-white hover:text-gray-200'}>Home</a>
 					<a href="/emplea" aria-label="Impulsa a tu equipo" class={ currentPath === '/emplea' ? 'active' : 'text-white hover:text-gray-200'}>Emplea</a>
 					<a href="/patrocina" aria-label="Patrocina nuestros Campers" class={ currentPath === '/patrocina' ? 'active' : 'text-white hover:text-gray-200'}>Patrocina</a>
 					<a href="/joinUs" class={ currentPath === '/joinUs' ? 'active' : '' }>Se un Camper</a>
@@ -124,6 +125,7 @@ const currentPath = Astro.url.pathname;
 						</a>
 					</div>
 					<div class="flex ms-auto flex-col w-full gap-6 md:w-fit md:flex-row md:gap-0 items-center space-x-6">
+						<a href="/" aria-label="Home" class="text-white hover:text-gray-200 !m-0 px-4">Home</a>
 						<a href="/emplea" aria-label="Impulsa a tu equipo" class="text-white hover:text-gray-200 !m-0 px-4">Emplea</a>
 						<a href="/patrocina" aria-label="Patrocina nuestros Campers" class="text-white hover:text-gray-200 !m-0 px-4">Patrocina</a>
 						<a href="/joinUs" class="text-white hover:text-gray-200 !m-0 px-4">Se un Camper</a>
@@ -132,7 +134,7 @@ const currentPath = Astro.url.pathname;
 					</div>
 				</div>
 				<div class="flex items-center flex-col-reverse md:flex-row">
-					<p class="text-sm text-white text-center md:text-start md:me-auto">© Campus 2024. Todos los derechos reservados</p>
+					<p class="text-sm text-white text-center md:text-start md:me-auto">© Campus 2025. Todos los derechos reservados</p>
 					<div class="block w-full h-[1px] bg-white my-4 md:hidden" />
 					<div class="flex items-center w-full md:w-fit justify-between md:gap-x-10">
 						<Image src={facebook} alt='Logo facebook' />
