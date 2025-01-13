@@ -1,0 +1,80 @@
+---
+
+
+---
+<script>
+let currentIndex = 0;
+const totalSlides = 1;
+const sliderContainer = document.getElementById('slider-container');
+
+function showSlide(index=0) {
+	sliderContainer.style.transform = `translateX(calc(-${index} * 100%))`;
+}
+
+function nextSlide() {
+	currentIndex = (currentIndex + 1) % totalSlides;
+	showSlide(currentIndex);
+}
+
+function prevSlide() {
+	currentIndex = ((currentIndex - 1)+ totalSlides) % totalSlides;
+	showSlide(currentIndex);
+}
+
+document.getElementById("prevSlide").addEventListener("click", prevSlide);
+document.getElementById("nextSlide").addEventListener("click", nextSlide);
+
+document.addEventListener('DOMContentLoaded', () => {
+	setInterval(nextSlide, 12000);
+});
+</script>
+<div class="slider max-w-[910px] mx-auto">
+	<div class="slider-container" id="slider-container">
+		<div class="slide flex flex-wrap lg:flex-nowrap  lg:gap-x-32">
+			<img src="/img/campers/camperHome.png" class="w-[275px] mx-auto" width="275" alt="Slide 1" />
+			<div class="flex flex-col relative text-center lg:text-start w-full">
+				<img src="/src/assets/img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
+				<p class="text-4xl mb-4">Cristian Vélez</p>
+				<p class="text-white max-w-[445px] text-center lg:text-start lg:!me-auto mb-2">Director MANTIS APP</p>
+				<p class="text-white max-w-[445px] text-center lg:text-start lg:!me-auto">Colaborar con un Camper fue una decisión clave para el crecimiento de nuestra empresa. Su preparación, junto con su disposición para aprender, adaptarse y contribuir de manera significativa, marcaron una gran diferencia en nuestro equipo. Estamos ansiosos de seguir contratando talento de alto calibre confiados plenamente en Campusland.</p>
+			</div>
+		</div>
+	</div>
+	<!-- <div class="controls max-w-[70px] absolute right-[15px] bottom-0 gap-x-3 z-30">
+		<div id="prevSlide" class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#02D9A4]">
+			<img src="/img/icons/arrow-left.svg" alt="" width="14">
+		</div>
+		<div id="nextSlide" class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#02D9A4]">
+			<img src="/img/icons/arrow-right.svg" alt="" width="14">
+		</div>
+	</div> -->
+</div>
+<style>
+.slider {
+	width: 80%;
+	overflow: hidden;
+	position: relative;
+	margin: auto;
+}
+.slider-container {
+	display: flex;
+	transition: transform 0.5s ease-in-out;
+	width: calc(100% * {totalSlides});
+}
+.slide {
+	min-width: 100%;
+}
+
+.controls {
+	display: flex;
+	justify-content: space-between;
+}
+.control-btn {
+	background-color: rgba(0, 0, 0, 0.5);
+	border: none;
+	color: white;
+	font-size: 2rem;
+	cursor: pointer;
+	padding: 0.5rem 1rem;
+}
+</style>
