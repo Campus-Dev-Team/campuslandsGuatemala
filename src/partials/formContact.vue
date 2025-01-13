@@ -15,6 +15,8 @@
 						<input :value="model.name" class="w-full" placeholder="¿Cómo te llamas?" />
 						<p class="font-semibold mt-5 pb-1">Correo electrónico</p>
 						<input :value="model.email" class="w-full" placeholder="Correo de contacto" />
+						<p class="font-semibold mt-5 pb-1">Contacto telefónico</p>
+						<input :value="model.email" class="w-full" placeholder="Número de teléfono" />
 						<button class="flex items-center justify-center w-full primary mt-5 mb-2 gap-x-4 h-14">Contactar <img src="/img/icons/arrow-right.svg" alt="" class="hidden lg:block size-5"></button>
 						<p class="text-white text-center text-[10px]">*Al solicitar tu visita, aceptas el tratamiento de tus datos personales</p>
 					</div>
