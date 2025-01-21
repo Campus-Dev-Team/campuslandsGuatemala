@@ -2,8 +2,8 @@
     <section class="location overflow-hidden py-20 relative">
         <div class="flex max-w-[1130px] mx-auto gap-x-20">
             <div class="max-w-[550px] my-auto flex flex-col gap-y-8">
-                <p class="gradient-text text-4xl mb-1 font-bold">Visita nuestras instalaciones, vive la experiencia Campuslands</p>
-                <p class="text-white font-semibold">Visítanos en nuestras sedes y descubre cómo Campuslands está transformando el talento tech. Agenda una cita y descubre cómo puedes ser parte de esta revolución, ya sea como estudiante, empleador o patrocinador.</p>
+                <p class="gradient-text text-4xl mb-1 font-bold">Conviértete en el puente hacia el futuro de un joven desarrollador</p>
+                <p class="text-white font-normal">En Campuslands, nos enorgullece transformar el talento emergente en protagonistas del mundo TI. Estos son los pasos para emplear a un joven desarrollador con nosotros:</p>
                 <div class="flex gap-x-6">
 					<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
 						<button class="btn-primary max-w-[216px] h-14 px-6 font-semibold flex items-center gap-x-2">
@@ -24,13 +24,14 @@
                     v-for="(step, index) in steps"
                     :key="index"
                     v-show="currentDiv === index + 1"
-                    class="transition-opacity p-6 flex-col gap-4 rounded-[40px] w-[395px] h-[265px] duration-4000 ease-in-out opacity-100 absolute inset-0 flex text-white"
+                    class="transition-opacity p-6 flex-col gap-4 rounded-[40px] w-[435px] h-fit duration-4000 ease-in-out opacity-100 absolute inset-0 flex text-white"
                     style="background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 55.8%, rgba(153, 153, 153, 0.08) 111.74%);"
                 >
                     <p class="text-[40px]">0{{ index + 1 }}</p>
                     <div class="flex flex-col gap-2">
                         <p class="text-2xl font-bold">{{ step.title }}</p>
                         <p class="text-base mt-2">{{ step.description }}</p>
+                        <p v-if="step.subdescription" class="text-base mt-2">{{ step.subdescription }}</p>
                     </div>
                 </div>
             </div>
@@ -51,33 +52,30 @@ const currentDiv = ref(1);
 const steps = ref([
     {
         id: 1,
-        title: 'Contáctanos',
-        description: 'Inicia el proceso comunicándote con nuestro equipo para conocer más sobre nuestros egresados y las oportunidades que podemos ofrecerte.',
+        title: 'Descubre el talento que se adapta a tus necesidades',
+        description: 'Revisa perfiles de candidatos preseleccionados con habilidades técnicas, dominio del inglés y experiencia práctica. Accede a perfiles seleccionados según las necesidades específicas de tu proyecto.',
     },
     {
         id: 2,
-        title: 'Define el Perfil',
-        description: 'Comparte con nosotros las necesidades específicas de tu empresa y el tipo de talento que estás buscando.',
+        title: 'Entrevista y prueba sus habilidades',
+        description: 'Realizamos evaluaciones técnicas y entrevistas para verificar las habilidades de los candidatos, asegurando su alineación con tus necesidades. Además, te brindamos informes con retroalimentación sobre sus competencias y áreas de mejora.',
     },
     {
         id: 3,
-        title: 'Acceso a Perfiles',
-        description: 'Te proporcionaremos acceso a una selección de perfiles cuidadosamente preseleccionados, ajustados a los requisitos de tu empresa',
+        title: 'Flexibilidad en la vinculación',
+        description: 'Gestión administrativa (opcional): Nos encargamos de la contratación y administración para que te enfoques en los resultados.',
+        subdescription: 'Vinculación directa: Puedes contratar directamente al desarrollador, y nosotros facilitamos todo el proceso como puente de apoyo.',
     },
     {
         id: 4,
-        title: 'Entrevista a los Candidatos',
-        description: 'Coordina las entrevistas con los candidatos más prometedores para evaluar sus habilidades técnicas y socioemocionales.',
+        title: 'Seguimiento constante del talento',
+        description: 'Monitoreo post-incorporación: Evaluamos el desempeño del desarrollador periódicamente para asegurar que tus objetivos se cumplan.',
+        subdescription: 'Formación continua: El talento sigue mejorando sus habilidades técnicas con certificaciones durante su etapa productiva.',
     },
     {
         id: 5,
-        title: 'Contratación',
-        description: 'Elige al mejor talento y procede con la contratación para integrarlo a tu equipo.',
-    },
-    {
-        id: 6,
-        title: 'Soporte Post-Contratación',
-        description: 'Nuestro equipo estará disponible para cualquier asistencia o seguimiento necesario durante el proceso de incorporación del nuevo empleado.',
+        title: 'Garantía de éxito',
+        description: 'Ofrecemos reposición gratuita con nuevas opciones de candidatos si el seleccionado no cumple tus expectativas. Además, nuestros desarrolladores destacan por su innovación y capacidad de adaptarse a la cultura de tu empresa.',
     },
 ])
 

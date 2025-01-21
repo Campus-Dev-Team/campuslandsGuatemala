@@ -16,37 +16,33 @@ import { Image } from 'astro:assets';
 
 ---
 
-<section class="flex justify-center items-center gap-16 min-h-[740px] mx-4">
-	<div class="flex flex-col w-[432px] gap-y-3">
-		<p class="gradient-text font-extrabold !leading-[1.6] text-4xl text-center md:text-[40px] md:text-start"> Comprometidos con el futuro de nuestros jóvenes talentos </p>
-		<p class="text-white text-sm text-center md:text-base md:text-start">Somos un equipo comprometido con la capacitación de jóvenes talentos y la conexión de sus habilidades con oportunidades en la industria tecnológica.</p>
+<section class="flex justify-center items-center gap-16 lg:min-h-[740px] mx-4">
+	<div class="flex flex-col flex-grow-1 w-[560px] gap-y-3">
+		<p class="gradient-text font-bold leading-9 lg:!leading-[60px] text-2xl text-center md:text-[40px] md:text-start"> Juntos, transformamos el futuro de la tecnología en Colombia y América Latina </p>
+		<p class="text-base font-medium text-center md:text-start text-white">Somos un equipo dedicado a transformar jóvenes talentos en profesionales listos para revolucionar la industria tecnológica.</p> 
+		<a href="/contactanos" target="_blank" class="flex  lg:hidden justify-center items-center gap-x-2 z-30 my-10">
+			<button class="btn-primary w-full max-w-[328px] lg:me-auto f-600 h-12 lg:h-14 px-6 flex justify-center items-center gap-x-2 z-30">
+				Emplea nuestros Campers
+				<img src="/img/icons/arm.svg" alt="cara feliz" class="">
+			</button>
+		</a>
 		<div class="flex-col items-center flex min-[1200px]:hidden gap-y-6">
-			<Image src={Students} alt="estudiantes" class="w-[312px] h-[276px]" />
-			<AHref client:load isRef="#students-two">
-				<Image src={circleArrowDown} alt="icon arrow" class="icon-circle-arrow w-[32px] h-[40px]" />
-			</AHref>
-		</div>
-		<p class="text-white text-sm text-center md:text-start mt-6">Compañías que confían en nuestro talento</p>
-		<div class="flex flex-wrap justify-between rounded-2xl w-[336px] shadow-[0_0_32px_0_#00000066] backdrop-blur-[200px] bg-gradient-to-b from-[#FFFFFF1F] to-[#8484841F] mx-auto md:m-0 gap-y-3 p-6">
-			<Image src={Solvo} alt="Empresa solve" class="h-7 w-[75px]" />
-			<Image src={QNT} alt="Empresa QNT" class="h-7 w-[76px]" />
-			<Image src={Pensemos} alt="Empresa Pensemos" class="h-7 w-[76px]" />
-			<Image src={GalapagoAgroConsultores} alt="Empresa Galapago" class="h-7 w-[90px]" />
-			<Image src={Applus} alt="Empresa Applus" class="h-7 w-[90px]" />
-			<Image src={Grafosoft} alt="Empresa Grafosoft" class="h-7 w-[90px]" />
+			<Image src={Students} alt="estudiantes" class="w-auto h-[276px]" />
 		</div>
 	</div>
-	<Image src={Students} alt="estudiantes" class="hidden min-[1200px]:block w-[614px] h-[514px]" />
+	<Image src={Students} alt="estudiantes" class="hidden min-[1200px]:block w-[430px] h-[435px]" />
 </section>
 <section id="students-two" class="flex justify-center items-center flex-col-reverse min-[1200px]:flex-row mt-8 gap-16 min-h-[352px]">
 	<Image src={StudentsTwo} alt="estudiantes" class="w-[328px] h-[236px] md:w-[488px] md:h-[352px]" />
 	<div class="flex flex-col gap-y-5 max-w-[328px] md:max-w-[471px]">
-		<p class="gradient-text font-extrabold !leading-[1.6] text-2xl mx-auto w-[328px] text-center md:text-[32px] md:w-full md:text-start"> Nuestra misión:
-			Transformar talento
+		<p class="gradient-text font-extrabold !leading-[1.6] text-2xl mx-auto w-[328px] text-center md:text-[32px] md:w-full md:text-start">
+			Democratizar el talento tech y transformar vidas
 		</p>
-		<p class="text-white text-sm text-center md:text-base md:text-start">Empoderar a jóvenes de diversos contextos mediante una educación tecnológica accesible, desarrollando sus habilidades en programación, inglés y competencias sociales para abrirles puertas a oportunidades laborales de alto impacto.</p>
+		<p class="text-center text-base md:text-start leading-6 text-white">
+			En Campuslands, formamos a la próxima generación de desarrolladores con una educación integral y humana. Impulsamos el crecimiento de jóvenes como agentes de cambio, listos para liderar la transformación tecnológica en empresas que buscan innovación, productividad y un impacto real en la economía global.
+		</p>
 		<div class="flex items-center justify-between flex-col md:flex-row gap-x-4">
-			<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank">
+			<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full">
 				<button class="btn-primary w-full mb-6 md:max-w-[216px] md:mb-0 h-14 px-6 flex items-center justify-center gap-x-2 z-30">
 					Agenda tu visita
 					<Image src={agenda} alt="agendar" class="hidden md:block">
@@ -64,9 +60,11 @@ import { Image } from 'astro:assets';
 <section class="flex justify-center items-center flex-col  min-[1200px]:flex-row mt-16 gap-16 min-h-[352px]">
 	<div class="flex flex-col gap-y-5 max-w-[328px] md:max-w-[471px]">
 		<p class="gradient-text font-extrabold !leading-[1.6] text-2xl mx-auto w-[328px] text-center md:text-[32px] md:w-full md:text-start">
-			La Visión que Nos Guía
+			Ser el mayor motor de talento tech en Colombia
 		</p>
-		<p class="text-white text-sm text-center md:text-base md:text-start">Crear una comunidad global de talentos digitales, donde jóvenes de todas partes accedan a las herramientas necesarias para un futuro próspero y significativo, contribuyendo a un nuevo estrato social digital.</p>
+		<p class="text-center text-base md:text-start leading-6 text-white">
+			Convertirnos en el referente en la formación de desarrolladores, creativos digitales y expertos en marketing, impulsando mentes brillantes en espacios de innovación y aprendizaje ágil. Nuestro objetivo: acelerar el crecimiento de empresas y transformar la economía con talento listo para liderar el futuro.
+		</p>
 		<div class="flex items-center justify-between flex-col md:flex-row gap-x-4">
 			<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank">
 				<button class="btn-primary w-full mb-6 md:max-w-[216px] md:mb-0 h-14 px-6 flex items-center justify-center gap-x-2 z-30">
