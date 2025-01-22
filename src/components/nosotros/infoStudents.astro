@@ -9,7 +9,7 @@ import Students from '~/assets/img/nosotros/students.png'
 import circleArrowDown from '~/assets/img/icons/circle-arrow-down.svg'
 import StudentsTwo from '~/assets/img/nosotros/students-two.png'
 import agenda from '~/assets/img/icons/agenda.svg'
-import whatsapp from '~/assets/img/icons/whatsapp.svg'
+import whatsapp from '~/assets/img/icons/whatsapp-green-dark.svg'
 import StudentsThree from '~/assets/img/nosotros/students-three.png'
 import AHref from './aHref.vue'
 import { Image } from 'astro:assets';
@@ -20,10 +20,10 @@ import { Image } from 'astro:assets';
 	<div class="flex flex-col flex-grow-1 w-[560px] gap-y-3">
 		<p class="gradient-text font-bold leading-9 lg:!leading-[60px] text-2xl text-center md:text-[40px] md:text-start"> Juntos, transformamos el futuro de la tecnología en Colombia y América Latina </p>
 		<p class="text-base font-medium text-center md:text-start text-white">Somos un equipo dedicado a transformar jóvenes talentos en profesionales listos para revolucionar la industria tecnológica.</p> 
-		<a href="/contactanos" target="_blank" class="flex  lg:hidden justify-center items-center gap-x-2 z-30 my-10">
+		<a href="/contactanos" target="_blank" class="flex  lg:hidden justify-center items-center gap-x-2 z-30 my-6">
 			<button class="btn-primary w-full max-w-[328px] lg:me-auto f-600 h-12 lg:h-14 px-6 flex justify-center items-center gap-x-2 z-30">
 				Emplea nuestros Campers
-				<img src="/img/icons/arm.svg" alt="cara feliz" class="">
+				<img src="/img/icons/arm.svg" alt="cara feliz" class="hidden md:block">
 			</button>
 		</a>
 		<div class="flex-col items-center flex min-[1200px]:hidden gap-y-6">
@@ -48,12 +48,6 @@ import { Image } from 'astro:assets';
 					<Image src={agenda} alt="agendar" class="hidden md:block">
 				</button>
 			</a>
-			<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank">
-				<button class="btn-outline !text-sm w-full md:max-w-[231px] h-14 px-6 flex items-center justify-center gap-x-2 z-30">
-					Chatea con nosotros
-					<Image src={whatsapp} alt="whatsapp" class="hidden md:block">
-				</button>
-			</a>
 		</div>
 	</div>
 </section>
@@ -65,20 +59,12 @@ import { Image } from 'astro:assets';
 		<p class="text-center text-base md:text-start leading-6 text-white">
 			Convertirnos en el referente en la formación de desarrolladores, creativos digitales y expertos en marketing, impulsando mentes brillantes en espacios de innovación y aprendizaje ágil. Nuestro objetivo: acelerar el crecimiento de empresas y transformar la economía con talento listo para liderar el futuro.
 		</p>
-		<div class="flex items-center justify-between flex-col md:flex-row gap-x-4">
-			<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank">
-				<button class="btn-primary w-full mb-6 md:max-w-[216px] md:mb-0 h-14 px-6 flex items-center justify-center gap-x-2 z-30">
-					Agenda tu visita
-					<Image src={agenda} alt="agendar" class="hidden md:block">
-				</button>
-			</a>
-			<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank">
-				<button class="btn-outline !text-sm w-full md:max-w-[231px] h-14 px-6 flex items-center justify-center gap-x-2 z-30">
-					Chatea con nosotros
-					<Image src={whatsapp} alt="whatsapp" class="hidden md:block">
-				</button>
-			</a>
-		</div>
+		<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank">
+			<button class="btn-primary !text-sm w-full md:max-w-[231px] h-14 px-6 flex items-center justify-center gap-x-2 z-30">
+				Chatea con nosotros
+				<Image src={whatsapp} alt="whatsapp" class="hidden md:block">
+			</button>
+		</a>
 	</div>
 	<Image src={StudentsThree} alt="estudiantes" class="w-[328px] h-[236px] md:w-[488px] md:h-[352px]" />
 </section>

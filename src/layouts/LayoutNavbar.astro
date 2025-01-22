@@ -12,12 +12,12 @@ import linkedin from '~/assets/img/icons/LinkedIn.svg'
 import youtube from '~/assets/img/icons/YouTube.svg'
 
 
-const { title } = Astro.props;
+const { title, classFooter } = Astro.props;
 const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" >
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,8 +104,8 @@ const currentPath = Astro.url.pathname;
 			</div>
 		</nav>
 		<slot />
-		<footer class="faq overflow-hidden relative bg-gradient-to-r from-[#00004F] from-5% via-[#000080] via-58% to-[#00001A] to-100%">
-			<div class="max-w-[691px] vstext mx-auto my-auto flex flex-col gap-y-8 py-20 px-6">
+		<footer class="faq overflow-hidden relative">
+			<div class={`max-w-[691px] vstext mx-auto my-auto flex flex-col gap-y-8 py-20 px-6 ${ classFooter }` }>
 				<p class="gradient-text text-lg md:text-[28px] mb-1 font-bold text-center">El futuro de la tecnología te está esperando. ¿Listo para dar el siguiente paso?</p>
 				<p class="text-white font-semibold text-center text-sm md:text-lg">Estamos aquí para ayudarte a encontrar el talento perfecto para construir el futuro. Escríbenos y da el primer paso hacia un equipo imparable.</p>
 				<a href="https://wa.me/+573160522555?text=Hola,+estoy+interesado+en+conocer+más+sobre+el+talento+de+Campuslands+para+contratar" target="_blank" class="flex justify-center items-center gap-x-2 z-30">
