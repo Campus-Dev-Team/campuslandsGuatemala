@@ -1,30 +1,30 @@
 <template>
     <section class="location overflow-hidden py-20 relative">
-        <div class="flex max-w-[1130px] mx-auto gap-x-20">
+        <div class="flex flex-col max-w-[1130px] lg:mx-auto gap-x-20 lg:flex-row mx-6">
             <div class="max-w-[550px] my-auto flex flex-col gap-y-8">
-                <p class="gradient-text text-4xl mb-1 font-bold">Conviértete en el puente hacia el futuro de un joven desarrollador</p>
-                <p class="text-white font-normal">En Campuslands, nos enorgullece transformar el talento emergente en protagonistas del mundo TI. Estos son los pasos para emplear a un joven desarrollador con nosotros:</p>
-                <div class="flex gap-x-6">
+                <p class="gradient-text text-4xl mb-1 font-bold text-center lg:text-left">Conviértete en el puente hacia el futuro de un joven desarrollador</p>
+                <p class="text-white font-normal text-center lg:text-left">En Campuslands, nos enorgullece transformar el talento emergente en protagonistas del mundo TI. Estos son los pasos para emplear a un joven desarrollador con nosotros:</p>
+                <div class="flex flex-col lg:flex-row gap-x-6">
 					<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
-						<button class="btn-primary max-w-[216px] h-14 px-6 font-semibold flex items-center gap-x-2">
+						<button class="btn-primary lg:max-w-[216px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2">
 							Agenda tu visita
 							<img src="/img/icons/agenda.svg" alt="">
 						</button>
 					</a>
                     <a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
-                        <button class="btn-outline  max-w-[252px] h-14 px-6 font-semibold flex items-center gap-x-2">
+                        <button class="btn-outline  lg:max-w-[252px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2 max-md:mt-3">
                             <p class="text-primary">Chatea con nosotros</p>
                             <img src="/img/icons/whatsapp.svg" alt="">
                         </button>
                     </a>
                 </div>
             </div>
-            <div class="relative">
+            <div class="relative h-[380px] max-md:mt-5">
                 <div
                     v-for="(step, index) in steps"
                     :key="index"
                     v-show="currentDiv === index + 1"
-                    class="transition-opacity p-6 flex-col gap-4 rounded-[40px] w-[435px] h-fit duration-4000 ease-in-out opacity-100 absolute inset-0 flex text-white"
+                    class="transition-opacity p-6 flex-col gap-4 rounded-[40px] w-[342px] lg:w-[435px] h-fit duration-4000 ease-in-out opacity-100 inset-0 flex text-white"
                     style="background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 55.8%, rgba(153, 153, 153, 0.08) 111.74%);"
                 >
                     <p class="text-[40px]">0{{ index + 1 }}</p>
