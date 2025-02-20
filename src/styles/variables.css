@@ -1,12 +1,12 @@
 :root {
-	--color-primary: #02D9A4;
-	--color-primary-action: #005C45;
+	--color-primary: #F4B422;
+	--color-primary-action: #be8602;
 	font-family: 'Poppins', sans-serif;
 	font-weight: 400;
 	line-height: 1.5;
 	color-scheme: light dark;
 	color: rgba(255, 255, 255, 0.87);
-	background: linear-gradient(3.14deg, #000065 -7.48%, #00001E 1.99%, #000066 30.56%, #000041 92.78%, #00001A 102.5%);
+	background: linear-gradient(3.14deg, rgb(64, 64, 64) -7.48%, #333333 1.99%, #262626 30.56%, #282828 92.78%, #282828 102.5%);
 	scroll-behavior: smooth;
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;

@@ -2,7 +2,7 @@
     <section class="faq overflow-hidden py-20 relative bg-gradient-to-r from-[#2F10A2] from-5% via-[#130640] via-28% to-[#260D84] to-62%">
         <div class="max-w-[550px] mx-auto my-auto flex flex-col gap-y-8">
             <p class="gradient-text text-4xl mb-1 font-bold text-center">Preguntas frecuentes</p>
-            <div class="flex max-w-[555px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-5">
+            <div class="flex max-w-[555px] gap-x-[10px] mx-auto border bg-[#F4B422] border-white rounded-full p-2 mb-5">
                 <div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white" :class="`${tabCampers ? 'bg-primary_action' : ''}`" @click="activeTab('tabCampers')">
                     Campers
                 </div>

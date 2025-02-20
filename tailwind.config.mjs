@@ -12,6 +12,9 @@ export default {
 				primary_action: "var(--color-primary-action)",
 				secondary: "var(--color-secondary)",
 			},
+			dropShadow: {
+				'custom': '4px 4px 10px rgba(0, 0, 0, 0.5)',
+			}
 		},
 	},
 	plugins: [],

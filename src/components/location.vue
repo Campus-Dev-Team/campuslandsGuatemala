@@ -11,7 +11,7 @@
                         <img src="/img/icons/agenda.svg" alt="">
                     </button>
                     <button class="btn-outline  max-w-[252px] h-14 px-6 font-semibold flex items-center gap-x-2">
-                        <p class="text-primary">Chatea con nosotros</p>
+                        <p class="text-[#F4B422]">Chatea con nosotros</p>
                         <img src="/img/icons/whatsapp.svg" alt="">
                     </button>
                 </div>
