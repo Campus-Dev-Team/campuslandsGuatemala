@@ -80,6 +80,33 @@ const companies = [
   animation: bannermove 20s linear infinite;
 }
 
+@media (max-width: 768px) {
+    .slider {
+        width: 550px; /* Fixed width for mobile */
+    }
+    
+    .slider img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        max-height: 80px;
+    }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .slider {
+        width: 700px; /* Slightly larger for tablets */
+    }
+    
+    .slider img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        max-height: 100px;
+    }
+}
+
 @keyframes bannermove {
 	0% {
 		transform: translateX(0);

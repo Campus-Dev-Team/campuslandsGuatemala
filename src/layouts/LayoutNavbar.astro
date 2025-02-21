@@ -71,7 +71,7 @@ const currentPath = Astro.url.pathname;
 	<body class="relative">
 		<div
 			id="go-up"
-			class="flex justify-center align-middle bg-primary rounded-full size-10 fixed right-10 bottom-[5%] cursor-pointer z-50"
+			class="flex justify-center items-center bg-primary rounded-full size-10 fixed right-10 bottom-[5%] cursor-pointer z-50"
 		>
 			<img src="/img/icons/arrow-up.svg" alt="" width="25" />
 		</div>
@@ -81,164 +81,95 @@ const currentPath = Astro.url.pathname;
 				src={logoCampus}
 				alt="logoCampus"
 				height="60"
-				class="max-h-[60px]"
+				class="max-h-[60px] h-10 md:h-[60px]"
 			/>
 			<div class="content-redirects items-center hidden md:flex h-full">
 				<a
 					href="/"
 					aria-label="Home"
-					class={currentPath === "/"
-						? "active"
-						: "text-white hover:text-gray-200"}>Inicio</a
+					class={currentPath === "/" ? "active" : "text-white hover:text-gray-200"}
 				>
+					Inicio
+				</a>
 				<a
 					href="/joinUs"
-					class={currentPath === "/joinUs" ? "active" : ""}
-					>Se un Camper</a
+					class={currentPath === "/joinUs" ? "active" : "text-white hover:text-gray-200"}
 				>
+					Se un Camper
+				</a>
 				<a
 					href="/emplea"
 					aria-label="Impulsa a tu equipo"
-					class={currentPath === "/emplea"
-						? "active"
-						: "text-white hover:text-gray-200"}>Emplea</a
+					class={currentPath === "/emplea" ? "active" : "text-white hover:text-gray-200"}
 				>
+					Emplea
+				</a>
 				<a
 					href="/patrocina"
 					aria-label="Patrocina nuestros Campers"
-					class={currentPath === "/patrocina"
-						? "active"
-						: "text-white hover:text-gray-200"}>Patrocina</a
+					class={currentPath === "/patrocina" ? "active" : "text-white hover:text-gray-200"}
 				>
+					Patrocina
+				</a>
 				<a
 					href="/nosotros"
-					class={currentPath === "/nosotros"
-						? "active"
-						: "text-white hover:text-gray-200"}>Nosotros</a
+					class={currentPath === "/nosotros" ? "active" : "text-white hover:text-gray-200"}
 				>
-				<!-- <a href="#" class={ currentPath === '#' ? 'active' : 'text-white hover:text-gray-200' }>Comunidad</a> -->
+					Nosotros
+				</a>
 			</div>
 			<div slot="menuMobile" class="md:hidden mt-5">
-				<div
-					class="flex flex-col items-center space-y-4 px-4 py-2 gap-y-3"
-				>
-					<a href="/" class="text-white hover:text-gray-200">Inicio</a
-					>
-					<a href="/joinUs" class="text-white hover:text-gray-200"
-						>Se un Camper</a
-					>
-					<a href="/emplea" class="text-white hover:text-gray-200"
-						>Emplea</a
-					>
-					<a href="/patrocina" class="text-white hover:text-gray-200"
-						>Patrocina</a
-					>
-					<a href="/nosotros" class="text-white hover:text-gray-200"
-						>Nosotros</a
-					>
+				<div class="flex flex-col items-center space-y-4 px-4 py-2 gap-y-3">
+					<a href="/" class="text-white hover:text-gray-200">Inicio</a>
+					<a href="/joinUs" class="text-white hover:text-gray-200">Se un Camper</a>
+					<a href="/emplea" class="text-white hover:text-gray-200">Emplea</a>
+					<a href="/patrocina" class="text-white hover:text-gray-200">Patrocina</a>
+					<a href="/nosotros" class="text-white hover:text-gray-200">Nosotros</a>
 				</div>
 			</div>
 		</MenuResponsive>
 		<slot />
 		<footer class="faq overflow-hidden relative">
-			<div
-				class={`max-w-[691px] vstext mx-auto my-auto flex flex-col gap-y-8 py-20 px-6 ${classFooter}`}
-			>
-				<p
-					class="gradient-text text-lg md:text-[28px] mb-1 font-bold text-center"
-				>
-					¿Preparado para la evolución que tu empresa necesita? Accede
-					al talento que impulsará tu crecimiento y marcará la
-					diferencia.
+			<div class={`max-w-[691px] vstext mx-auto my-auto flex flex-col gap-y-8 py-20 px-6 ${classFooter}`}>
+				<p class="gradient-text text-lg md:text-[28px] mb-1 font-bold text-center">
+					¿Preparado para la evolución que tu empresa necesita? Accede al talento que impulsará tu crecimiento y marcará la diferencia.
 				</p>
-				<p
-					class="text-white font-semibold text-center text-sm md:text-lg"
-				>
-					Estamos listos para ayudarte a formar un equipo que marque
-					la diferencia. Escríbenos y descubre cómo juntos podemos
-					crear el futuro. ¡Da el primer paso hacia un equipo
-					imparable!
+				<p class="text-white font-semibold text-center text-sm md:text-lg">
+					Estamos listos para ayudarte a formar un equipo que marque la diferencia. Escríbenos y descubre cómo juntos podemos crear el futuro. ¡Da el primer paso hacia un equipo imparable!
 				</p>
 				<a
 					href="https://wa.me/+573160522555?text=Hola,+estoy+interesado+en+conocer+más+sobre+el+talento+de+Campuslands+para+contratar"
 					target="_blank"
 					class="flex justify-center items-center gap-x-2 z-30"
 				>
-					<button
-						class="btn-primary h-14 px-6 justify-center w-full md:w-fit flex items-center gap-x-2 z-30 mx-auto font-semibold"
-					>
+					<button class="btn-primary h-14 px-6 justify-center w-full md:w-fit flex items-center gap-x-2 z-30 mx-auto font-semibold">
 						Contactanos
-						<Image
-							src={iconHappy}
-							alt="Happy"
-							class="hidden md:block"
-						/>
+						<Image src={iconHappy} alt="Happy" class="hidden md:block" />
 					</button>
 				</a>
 			</div>
 			<div class="flex flex-col gap-y-4 px-14 pb-4">
-				<div
-					class="flex items-center border-b border-[transparent] md:border-white flex-col md:flex-row"
-				>
+				<div class="flex items-center border-b border-[transparent] md:border-white flex-col md:flex-row">
 					<div class="text-white text-2xl font-bold mb-7 md:m-0">
 						<a href="/">
-							<Image
-								src={logoCampus}
-								alt=""
-								height="60"
-								class="max-h-[60px] pb-2"
-							/>
+							<Image src={logoCampus} alt="" height="60" class="max-h-[60px] pb-2" />
 						</a>
 					</div>
-					<div
-						class="flex ms-auto flex-col w-full gap-6 md:w-fit md:flex-row md:gap-0 items-center space-x-6"
-					>
-						<a
-							href="/"
-							aria-label="Home"
-							class="text-white hover:text-gray-200 !m-0 px-4"
-							>Home</a
-						>
-						<a
-							href="/emplea"
-							aria-label="Impulsa a tu equipo"
-							class="text-white hover:text-gray-200 !m-0 px-4"
-							>Emplea</a
-						>
-						<a
-							href="/patrocina"
-							aria-label="Patrocina nuestros Campers"
-							class="text-white hover:text-gray-200 !m-0 px-4"
-							>Patrocina</a
-						>
-						<a
-							href="/joinUs"
-							class="text-white hover:text-gray-200 !m-0 px-4"
-							>Se un Camper</a
-						>
-						<a
-							href="/nosotros"
-							class="text-white hover:text-gray-200 !m-0 px-4"
-							>Nosotros</a
-						>
-						<a
-							href="#"
-							class="text-white hover:text-gray-200 !m-0 px-4"
-							>Comunidad</a
-						>
+					<div class="flex ms-auto flex-col w-full gap-6 md:w-fit md:flex-row md:gap-0 items-center space-x-6">
+						<a href="/" aria-label="Home" class="text-white hover:text-gray-200 !m-0 px-4">Home</a>
+						<a href="/emplea" aria-label="Impulsa a tu equipo" class="text-white hover:text-gray-200 !m-0 px-4">Emplea</a>
+						<a href="/patrocina" aria-label="Patrocina nuestros Campers" class="text-white hover:text-gray-200 !m-0 px-4">Patrocina</a>
+						<a href="/joinUs" class="text-white hover:text-gray-200 !m-0 px-4">Se un Camper</a>
+						<a href="/nosotros" class="text-white hover:text-gray-200 !m-0 px-4">Nosotros</a>
+						<a href="#" class="text-white hover:text-gray-200 !m-0 px-4">Comunidad</a>
 					</div>
 				</div>
 				<div class="flex items-center flex-col-reverse md:flex-row">
-					<p
-						class="text-sm text-white text-center md:text-start md:me-auto"
-					>
+					<p class="text-sm text-white text-center md:text-start md:me-auto">
 						© Campus 2025. Todos los derechos reservados
 					</p>
-					<div class="block w-full h-[1px] bg-white my-4 md:hidden">
-					</div>
-					<div
-						class="flex items-center w-full md:w-fit justify-between md:gap-x-10"
-					>
+					<div class="block w-full h-[1px] bg-white my-4 md:hidden"></div>
+					<div class="flex items-center w-full md:w-fit justify-between md:gap-x-10">
 						<Image src={facebook} alt="Logo facebook" />
 						<Image src={instagram} alt="Logo instagram" />
 						<Image src={linkedin} alt="Logo linkedin" />
@@ -249,17 +180,18 @@ const currentPath = Astro.url.pathname;
 		</footer>
 	</body>
 </html>
+
 <script>
 	function goUp() {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	}
-
 	document.querySelector("#go-up").addEventListener("click", goUp);
 </script>
+
 <style is:global>
 	nav.navbar {
-		backdrop-filter: blur(10px); /* Efecto de vidrio */
-		-webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
 		.content-redirects {
 			a {
 				height: 100%;
@@ -279,27 +211,34 @@ const currentPath = Astro.url.pathname;
 		--accent: 136, 58, 234;
 		--accent-light: 224, 204, 250;
 		--accent-dark: 49, 10, 101;
-		--accent-gradient: linear-gradient(
-			45deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			white 60%
-		);
+		--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), rgb(var(--accent-light)) 30%, white 60%);
 	}
+
 	html {
 		font-family: "Poppins", sans-serif;
 		font-weight: 400;
 		background-color: red;
 	}
+
 	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
+		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+	}
+
+	/* Ajustes responsive para el Navbar */
+	@media (max-width: 768px) {
+		nav.navbar .content-redirects a {
+			padding: 0 10px;
+			font-size: 0.875rem;
+		}
+		/* Se ajusta la posición del botón de "go-up" en móviles */
+		#go-up {
+			right: 5%;
+			bottom: 5%;
+		}
+		/* Ajusta el padding y tamaño de fuente de los links en el menú móvil */
+		[slot="menuMobile"] a {
+			padding: 0.5rem 1rem;
+			font-size: 1rem;
+		}
 	}
 </style>

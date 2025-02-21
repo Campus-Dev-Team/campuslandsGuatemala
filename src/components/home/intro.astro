@@ -4,17 +4,17 @@ import myImage from '~/assets/img/campers/campers-home-final.png';
 ---
 
 <section 
-  class="home-section max-w-[90vw] ml-auto py-6 lg:py-20 relative h-fit md:h-[740px]" 
+  class="home-section ml-auto py-6 lg:py-20 relative h-fit md:h-[740px]" 
   style={`background-image: url(${myImage.src});`}
 >
   <!-- Sección de flecha de navegación -->
   <div class="scroll-arrow hidden items-center justify-center size-8 absolute left-[50%] -bottom-4 bg-white z-20 rounded-full bounce-top">
     <a href="#testimonials-section">
-      <img src="/img/icons/arrow-down.svg" alt="Flecha hacia abajo">
+      <img src="/img/icons/arrow-down.svg" alt="Flecha hacia abajo" />
     </a>
   </div>
 
-  <div class="flex flex-wrap justify-between h-full w-full px-10 md:px-50 lg:px-0 max-w-7xl relative">
+  <div class="flex flex-wrap justify-between h-full w-full px-10 md:px-50 lg:px-0 max-w-7xl relative z-10">
     <!-- Contenido principal de la izquierda -->
     <div class="my-auto w-full lg:w-5/12">
       <div class="flex flex-col gap-y-8 items-center lg:items-start relative">
@@ -24,78 +24,108 @@ import myImage from '~/assets/img/campers/campers-home-final.png';
         <p class="text-center lg:text-start text-sm lg:text-base leading-6 text-white">
           Campuslands forma jóvenes con habilidades únicas en desarrollo de software, preparándolos para el primer empleo de calidad en el sector tecnológico.
         </p>
-        <a href="https://wa.me/+573177709345?text=Hola,+estoy+interesado+en+obtener+informaci%C3%B3n+detallada+sobre+Campuslands" target="_blank" class="flex justify-center items-center gap-x-2 z-30">
+        <a
+          href="https://wa.me/+573177709345?text=Hola,+estoy+interesado+en+obtener+informaci%C3%B3n+detallada+sobre+Campuslands"
+          target="_blank"
+          class="flex justify-center items-center gap-x-2 z-30"
+        >
           <button class="btn-primary w-full sm:max-w-[188px] lg:me-auto f-600 h-12 lg:h-14 px-6 flex justify-center items-center gap-x-2 z-30">
             Contáctanos
-            <img src="/img/icons/happyFace.svg" alt="cara feliz" class="hidden lg:block">
+            <img src="/img/icons/happyFace.svg" alt="cara feliz" class="hidden lg:block" />
           </button>
         </a>
       </div>
     </div>
-
-    <!-- Imagen de derecha -->
-    <!-- <div class="my-auto">
-      <div class="hidden lg:block">
-        <Image
-          class="drop-shadow-custom p-6 rounded-lg"
-          src={myImage}
-          alt="Grupo de campers 1"
-          width={705}
-          widths={[100, 500, 1024]}
-          height={480}
-          loading="lazy"
-          sizes="(max-width: 635px) 100vw, 635px"
-        />
-      </div>
-      <div class="lg:hidden">
-        <Image
-          src={myImage}
-          alt="Grupo de campers 2"
-          width={300}
-          height={300}
-          loading="lazy"
-          sizes="(max-width: 300px) 100vw, 100px"
-        />
-      </div>
-    </div> -->
+    <!-- Imagen de derecha se maneja de forma condicional para desktop y mobile (comentada) -->
   </div>
 </section>
 
 <style scoped>
-.home-section {
-  background-position: 80% 0%;
-  background-repeat: no-repeat;
-  background-size: 75%;
-}
+  .home-section {
+    background-position: 80% 0%;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    position: relative;
+    margin: 0 1vw 0 8vw;
+  }
 
-.scroll-arrow {
-  -webkit-animation: heartbeat 4s ease-in-out infinite both;
-  animation: heartbeat 4s ease-in-out infinite both;
-}
+  .home-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    z-index: 1;
+    pointer-events: none;
+    display: none;
+  }
 
+  .scroll-arrow {
+    -webkit-animation: heartbeat 4s ease-in-out infinite both;
+    animation: heartbeat 4s ease-in-out infinite both;
+  }
 
-@-webkit-keyframes heartbeat {
-  from { transform: scale(1); -webkit-transform-origin: center; }
-  10% { transform: scale(.91); }
-  17% { transform: scale(.98); }
-  33% { transform: scale(.87); }
-  45% { transform: scale(1); }
-}
+  @-webkit-keyframes heartbeat {
+    from {
+      transform: scale(1);
+      -webkit-transform-origin: center;
+    }
+    10% {
+      transform: scale(0.91);
+    }
+    17% {
+      transform: scale(0.98);
+    }
+    33% {
+      transform: scale(0.87);
+    }
+    45% {
+      transform: scale(1);
+    }
+  }
 
-@keyframes heartbeat {
-  from { transform: scale(1); }
-  10% { transform: scale(.91); }
-  17% { transform: scale(.98); }
-  33% { transform: scale(.87); }
-  45% { transform: scale(1); }
-}
+  @keyframes heartbeat {
+    from {
+      transform: scale(1);
+    }
+    10% {
+      transform: scale(0.91);
+    }
+    17% {
+      transform: scale(0.98);
+    }
+    33% {
+      transform: scale(0.87);
+    }
+    45% {
+      transform: scale(1);
+    }
+  }
 
-/* ----------------------------------------------
- * Generated by Animista
- * Licensed under FreeBSD License.
- * See http://animista.net/license for more info.
- * w: http://animista.net, t: @cssanimista
- * ---------------------------------------------- */
+  /* Ajustes responsive para móviles */
+  @media (max-width: 1400px) {
+    .home-section {
+      background-position: center;
+      background-size: cover;
+      padding: 1.5rem;
+      height: 75vh;
+      margin: 0;
+      box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .home-section::before {
+      display: block;
+    }
 
+    .gradient-text {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+    
+    .btn-primary {
+      font-size: 0.875rem;
+    }
+  }
 </style>
-
