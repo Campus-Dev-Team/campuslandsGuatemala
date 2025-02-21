@@ -1,6 +1,9 @@
 :root {
 	--color-primary: #F4B422;
 	--color-primary-action: #be8602;
+	--Claro: #e2a727;
+	--Medio: #ca8f18;
+	--Oscuro: #faa30cda;
 	font-family: 'Poppins', sans-serif;
 	font-weight: 400;
 	line-height: 1.5;
