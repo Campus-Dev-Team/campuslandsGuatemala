@@ -1,48 +1,6 @@
-<template>
-    <section class="location overflow-hidden py-20 relative">
-        <div class="flex flex-col max-w-[1130px] lg:mx-auto gap-x-20 lg:flex-row mx-6">
-            <div class="max-w-[550px] my-auto flex flex-col gap-y-8">
-                <p class="gradient-text text-4xl mb-1 font-bold text-center lg:text-left">Conviértete en el puente hacia el futuro de un joven desarrollador</p>
-                <p class="text-white font-normal text-center lg:text-left">En Campuslands, nos enorgullece transformar el talento emergente en protagonistas del mundo TI. Estos son los pasos para emplear a un joven desarrollador con nosotros:</p>
-                <div class="flex flex-col lg:flex-row gap-x-6">
-					<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
-						<button class="btn-primary lg:max-w-[216px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2">
-							Agenda tu visita
-							<img src="/img/icons/agenda.svg" alt="">
-						</button>
-					</a>
-                    <a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
-                        <button class="btn-outline  lg:max-w-[252px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2 max-md:mt-3">
-                            <p class="text-primary">Chatea con nosotros</p>
-                            <img src="/img/icons/whatsapp.svg" alt="">
-                        </button>
-                    </a>
-                </div>
-            </div>
-            <div class="relative h-[380px] max-md:mt-5">
-                <div
-                    v-for="(step, index) in steps"
-                    :key="index"
-                    v-show="currentDiv === index + 1"
-                    class="transition-opacity p-6 flex-col gap-4 rounded-[40px] w-[342px] lg:w-[435px] h-fit duration-4000 ease-in-out opacity-100 inset-0 flex text-white"
-                    style="background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 55.8%, rgba(153, 153, 153, 0.08) 111.74%);"
-                >
-                    <p class="text-[40px]">0{{ index + 1 }}</p>
-                    <div class="flex flex-col gap-2">
-                        <p class="text-2xl font-bold">{{ step.title }}</p>
-                        <p class="text-base mt-2">{{ step.description }}</p>
-                        <p v-if="step.subdescription" class="text-base mt-2">{{ step.subdescription }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <img src="/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
-        <img src="/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
-    </section>
-</template>
-
 <script setup>
 import { ref, onMounted } from 'vue';
+import { Calendar, MessageCircle } from 'lucide-vue-next'; // Importa los iconos que necesitas
 
 onMounted(() => {
     setInterval(switchDiv, 4000);
@@ -80,9 +38,59 @@ const steps = ref([
 ])
 
 const switchDiv = () => {
-    currentDiv.value = (currentDiv.value % steps.value.length) + 1; // Cycle through divs
+    currentDiv.value = (currentDiv.value % steps.value.length) + 1;
 };
 </script>
+
+<template>
+    <section class="location overflow-hidden py-20 relative">
+        <div class="flex flex-col max-w-[1130px] lg:mx-auto gap-x-20 lg:flex-row mx-6">
+            <div class="max-w-[550px] my-auto flex flex-col gap-y-8">
+                <p class="gradient-text text-4xl mb-1 font-bold text-center lg:text-left">
+                    Conviértete en el puente hacia el futuro de un joven desarrollador
+                </p>
+                <p class="text-white font-normal text-center lg:text-left">
+                    En Campuslands, nos enorgullece transformar el talento emergente en protagonistas del mundo TI.
+                    Estos son los pasos para emplear a un joven desarrollador con nosotros:
+                </p>
+                <div class="flex flex-col lg:flex-row gap-x-6">
+                    <a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." 
+                       target="_blank" class="w-full lg:w-fit">
+                        <button class="btn-primary lg:max-w-[216px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2">
+                            Agenda tu visita
+                            <Calendar class="w-6 h-6 text-white" />
+                        </button>
+                    </a>
+                    <a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." 
+                       target="_blank" class="w-full lg:w-fit">
+                        <button class="btn-outline lg:max-w-[252px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2 max-md:mt-3">
+                            <p class="text-primary">Chatea con nosotros</p>
+                            <MessageCircle class="w-6 h-6 text-primary" />
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <div class="relative h-[380px] max-md:mt-5">
+                <div
+                    v-for="(step, index) in steps"
+                    :key="index"
+                    v-show="currentDiv === index + 1"
+                    class="transition-opacity p-6 flex-col gap-4 rounded-[40px] w-[342px] lg:w-[435px] h-fit duration-4000 ease-in-out opacity-100 inset-0 flex text-white"
+                    style="background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 55.8%, rgba(153, 153, 153, 0.08) 111.74%);"
+                >
+                    <p class="text-[40px]">0{{ index + 1 }}</p>
+                    <div class="flex flex-col gap-2">
+                        <p class="text-2xl font-bold">{{ step.title }}</p>
+                        <p class="text-base mt-2">{{ step.description }}</p>
+                        <p v-if="step.subdescription" class="text-base mt-2">{{ step.subdescription }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <img src="/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
+        <img src="/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
+    </section>
+</template>
 
 <style scoped>
 </style>
