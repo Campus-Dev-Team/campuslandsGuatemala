@@ -4,7 +4,7 @@
 			<section class="flex flex-col mx-8 lg:mx-32 pt-4 h-full gap-y-8">
 				<img src="/logoCampus.svg" alt="" class="object-cover w-[156px] h-[48px]">
 				<div class="flex items-center w-fit cursor-pointer gap-x-2">
-					<img src="/img/icons/arrow-left.svg" class="size-[25px] lg:size-[16px]" />
+					<img src="src/assets/img/icons/arrow-left.svg" class="size-[25px] lg:size-[16px]" />
 					<p class="font-semibold hidden lg:block text-sm">Regresar</p>
 				</div>
 				<div class="flex justify-center items-center h-full gap-x-[100px]">
@@ -17,7 +17,7 @@
 						<input :value="model.email" class="w-full" placeholder="Correo de contacto" />
 						<p class="font-semibold mt-4 pb-1">WhatsApp</p>
 						<input :value="model.wpp" class="w-full" placeholder="Tu número de WhatsApp" />
-						<button class="flex items-center justify-center w-full primary mt-5 mb-2 gap-x-4 h-14">Solicitar visita <img src="/img/icons/arrow-right.svg" alt="" class="size-5"> </button>
+						<button class="flex items-center justify-center w-full primary mt-5 mb-2 gap-x-4 h-14">Solicitar visita <img src="src/assets/img/icons/arrow-left.svg" alt="" class="size-5"> </button>
 						<p class="text-white text-center text-[10px]">*Al solicitar tu visita, aceptas el tratamiento de tus datos personales</p>
 					</div>
 					<camperPhotoFrame class="block max-[1200px]:hidden" />

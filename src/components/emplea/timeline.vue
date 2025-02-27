@@ -8,7 +8,7 @@
 					<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
 						<button class="btn-primary lg:max-w-[216px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2">
 							Agenda tu visita
-							<img src="/img/icons/agenda.svg" alt="">
+							<img src="src/assets/img/icons/agenda.svg" alt="">
 						</button>
 					</a>
                     <a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
