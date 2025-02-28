@@ -8,13 +8,13 @@
 					<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
 						<button class="btn-primary lg:max-w-[216px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2">
 							Agenda tu visita
-							<img src="/img/icons/agenda.svg" alt="">
+							<img src="src/assets/img/icons/agenda.svg" alt="">
 						</button>
 					</a>
                     <a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
                         <button class="btn-outline  lg:max-w-[252px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2 max-md:mt-3">
                             <p class="text-primary">Chatea con nosotros</p>
-                            <img src="/img/icons/whatsapp.svg" alt="">
+                            <img src="src/assets/img/icons/heart.svg" alt="">
                         </button>
                     </a>
                 </div>
@@ -36,8 +36,8 @@
                 </div>
             </div>
         </div>
-        <img src="/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
-        <img src="/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
+        <img src="src/assets/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
+        <img src="src/assets/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
     </section>
 </template>
 
