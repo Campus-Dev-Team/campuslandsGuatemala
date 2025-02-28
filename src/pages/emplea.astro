@@ -5,30 +5,20 @@ import Talent from "../components/emplea/talent.astro";
 import Timeline from "../components/emplea/timeline.vue";
 import AlliedCompanies from "../components/alliedCompanies.astro";
 import ConnectingTalent from "../components/emplea/connectingTalent.astro";
-import { Image } from 'astro:assets';
-import iconHappy from '~/assets/img/icons/happyFace.svg'
+import ContactButton from "~/components/common/ContactButton.astro";
 import "~/styles/index.css";
+
+const contactNumber = "+573177709345";
 ---
 <LayoutNavbar title="Campuslands - Emplea">
 	<Intro />
 	<Talent />
-	<Timeline client:load />
+	<Timeline client:load>
+		<ContactButton tipo="agendar" whatsApp={contactNumber} iconName="agenda.svg"/>
+		<ContactButton tipo="chatear" whatsApp={contactNumber} iconName="heart.svg" isOutline/>
+	</Timeline>
 	<AlliedCompanies />
 	<ConnectingTalent />
-	<div class="flex justify-center items-center px-4 lg:px-0">
-		<img src="src/assets/img/emplea/campers mundo.png" alt="">
-	</div>
-	<div class="max-w-[691px] vstext mx-auto my-auto flex flex-col gap-y-8 py-20 px-6">
-		<p class="gradient-text text-lg md:text-[28px] mb-1 font-bold text-center leading-10">¿Preparado para la evolución que tu empresa necesita? Accede al talento que impulsará tu crecimiento y marcará la diferencia.</p>
-		<p class="text-white font-semibold text-center text-sm md:text-lg leading-7">¿Preparado para la evolución que tu empresa necesita? Accede al talento que impulsará tu crecimiento y marcará la diferencia.</p>
-		<a href="https://wa.me/+573177709345?text=Hola,+estoy+interesado+en+obtener+informaci%C3%B3n+detallada+sobre+Campuslands" target="_blank" class="flex justify-center items-center gap-x-2 z-30">
-			<button class="btn-primary h-14 px-6 justify-center w-full md:w-fit flex items-center gap-x-2 z-30 mx-auto font-semibold">
-				Contactanos
-				<Image src={iconHappy} alt="Happy" class="hidden md:block" />
-			</button>
-		</a>
-	</div>
-
 </LayoutNavbar>
 
 <style>

@@ -2,9 +2,8 @@
 import { Image } from 'astro:assets';
 import { AstroFont } from "astro-font";
 import MenuResponsive from "../components/navbar/menuResponsive.vue";
+import ContactButton from '~/components/common/ContactButton.astro';
 
-import NavBar from '~/components/navBar.vue';
-import iconHappy from '~/assets/img/icons/happyFace.svg'
 import logoCampus from '~/assets/img/logos/logoCampus_v2.svg'
 import facebook from '~/assets/img/icons/Facebook.svg'
 import instagram from '~/assets/img/icons/Instagram.svg'
@@ -92,12 +91,7 @@ const currentPath = Astro.url.pathname;
 				<p class="gradient-text text-lg md:text-[28px] mb-1 font-bold text-center">¿Preparado para la evolución que tu empresa necesita? Accede al talento que impulsará tu crecimiento y marcará la diferencia.</p>
 				<p class="text-white font-semibold text-center text-sm md:text-lg">Estamos listos para ayudarte a formar un equipo que marque la diferencia. Escríbenos y descubre cómo juntos podemos crear el futuro.
 					¡Da el primer paso hacia un equipo imparable!</p>
-				<a href="https://wa.me/+573160522555?text=Hola,+estoy+interesado+en+conocer+más+sobre+el+talento+de+Campuslands+para+contratar" target="_blank" class="flex justify-center items-center gap-x-2 z-30">
-					<button class="btn-primary h-14 px-6 justify-center w-full md:w-fit flex items-center gap-x-2 z-30 mx-auto font-semibold">
-						Contactanos
-						<Image src={iconHappy} alt="Happy" class="hidden md:block" />
-					</button>
-				</a>
+				<ContactButton tipo="contaco" whatsApp='+573160522555' iconName='happyFace.svg' StylesAnchor='self-center' />
 			</div>
 			<div class="flex flex-col gap-y-4 px-14 pb-4">
 				<div class="flex items-center border-b border-[transparent] md:border-white flex-col md:flex-row">

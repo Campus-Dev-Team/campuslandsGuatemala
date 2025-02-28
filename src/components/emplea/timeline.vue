@@ -5,18 +5,7 @@
                 <p class="gradient-text text-4xl mb-1 font-bold text-center lg:text-left">Conviértete en el puente hacia el futuro de un joven desarrollador</p>
                 <p class="text-white font-normal text-center lg:text-left">En Campuslands, nos enorgullece transformar el talento emergente en protagonistas del mundo TI. Estos son los pasos para emplear a un joven desarrollador con nosotros:</p>
                 <div class="flex flex-col lg:flex-row gap-x-6">
-					<a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
-						<button class="btn-primary lg:max-w-[216px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2">
-							Agenda tu visita
-							<img src="src/assets/img/icons/agenda.svg" alt="">
-						</button>
-					</a>
-                    <a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank" class="w-full lg:w-fit">
-                        <button class="btn-outline  lg:max-w-[252px] max-md:w-full h-14 px-6 font-semibold flex items-center justify-center gap-x-2 max-md:mt-3">
-                            <p class="text-primary">Chatea con nosotros</p>
-                            <img src="src/assets/img/icons/heart.svg" alt="">
-                        </button>
-                    </a>
+                    <slot></slot>
                 </div>
             </div>
             <div class="relative h-[380px] max-md:mt-5">

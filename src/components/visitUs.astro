@@ -1,4 +1,7 @@
 ---
+import ContactButton from "./common/ContactButton.astro"
+
+const contactNumber = "+573177709345";
 ---
 <section class="max-w-7xl mx-auto from-8% relative py-6 lg:py-20 h-fit overflow-hidden px-4 lg:px-0">
     <div class="flex flex-wrap w-full lg:max-w-[1130px] mx-auto gap-x-20">
@@ -9,18 +12,8 @@
             <p class="gradient-text text-xl text-center lg:text-start lg:text-4xl font-bold mt-5">Visita nuestras instalaciones, vive la experiencia Campuslands</p>
             <p class="text-white font-semibold">Visítanos en nuestras sedes y descubre cómo Campuslands está transformando el talento tech. Agenda una cita y descubre cómo puedes ser parte de esta revolución, ya sea como estudiante, empleador o patrocinador.</p>
             <div class="flex flex-wrap md:flex-nowrap gap-6">
-                <a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank">
-					<button class="btn-primary w-full md:max-w-[216px] h-14 px-6 font-semibold flex items-center justify-center gap-x-2">
-						Agenda tu visita
-						<img src="src/assets/img/icons/agenda.svg" alt="">
-					</button>
-				</a>
-                <a href="https://wa.me/+573177709345?text=Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands." target="_blank">
-                    <button class="btn-outline  w-full md:max-w-[300px] h-14 px-6 font-semibold flex items-center justify-center gap-x-2">
-                        <p class="text-primary">Chatea con nosotros</p>
-                        <img src="src/assets/img/icons/whatsapp.svg" alt="">
-                    </button>
-                </a>
+                <ContactButton tipo="agendar" whatsApp={contactNumber} iconName="agenda.svg" StylesButton="md:max-w-[216px]"/>
+                <ContactButton tipo="chatear" whatsApp={contactNumber} iconName="whatsapp.svg" isOutline StylesButton="md:max-w-[300px]"/>
             </div>
         </div>
     </div>

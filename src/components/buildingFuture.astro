@@ -1,4 +1,7 @@
 ---
+import ContactButton from "./common/ContactButton.astro"
+
+const ContactNumber = "+573160522555";
 ---
 <div id="numbers" class="indicators max-w-[934px] mx-auto my-10 px-10 lg:px-0">
 	<div class="flex flex-col gap-y-8 text-center mb-16">
@@ -59,18 +62,8 @@
 		El éxito de tu empresa comienza con el mejor talento. Únete a la red de empleadores que confían en el futuro tech.
 	</p>
 	<div class="flex flex-wrap justify-center gap-10">
-		<a href="https://wa.me/+573160522555?text=Hola,+estoy+buscando+desarrolladores,+¿cómo+puedo+acceder+al+talento+de+Campuslands?" target="_blank">
-			<button class="btn-outline max-w-[320px] h-14 px-6 flex items-center gap-x-2">
-				Patrocina nuestros campers
-				<img src="src/assets/img/icons/heart.svg" alt="">
-			</button>
-		</a>
-		<a href="https://wa.me/+573160522555?text=Buen+día,+quisiera+obtener+información+sobre+cómo+emplear+talento+de+Campuslands" target="_blank">
-			<button class="btn-primary max-w-[320px] h-14 px-6 flex items-center gap-x-2">
-				Emplea nuestros Campers
-				<img src="src/assets/img/icons/arm.svg" alt="">
-			</button>
-		</a>
+		<ContactButton tipo="patrocinio" whatsApp={ContactNumber} iconName="medal.svg" isOutline StylesButton="max-w-[320px]"/>
+		<ContactButton tipo="emplear" whatsApp={ContactNumber} iconName="arm.svg" StylesButton="max-w-[320px]"/>
 	</div>
 </div>
 
