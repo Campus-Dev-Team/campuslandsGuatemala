@@ -1,6 +1,6 @@
 <template>
-	<nav class="navbar bg-transparent sticky top-0 z-[35] p-4">
-		<div class="max-w-7xl mx-auto flex justify-between items-center h-16">
+	<nav class="navbar glass sticky top-0 z-[35]">
+		<div class="mx-auto flex justify-around items-center ">
 			<div class="text-white text-2xl font-bold">
 				<a href="/">
 					<slot name="logo" />

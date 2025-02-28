@@ -1,0 +1,46 @@
+---
+import ContactButton from "../common/ContactButton.astro"
+
+interface Step {
+  title: string;
+  description: string;
+  subdescription?: string;
+}
+
+const steps: Step[] = [
+  { title: "Inscríbete", description: "Completa el formulario y da el primer paso hacie el futuro." },
+  { title: "Paso 2", description: "Descripción del paso 2" }
+];
+
+const currentDiv = 1; // Aquí podrías gestionar el estado con JavaScript si es dinámico
+---
+<section class="principal max-w-7xl mx-auto from-8% relative py-6 lg:py-20  h-fit lg:h-[740px]">
+    <div class="relative mx-auto flex flex-wrap justify-betweem h-fit w-full px-10 md:px-50 lg:px-0 max-w-7xl">
+		<div class="flex my-auto w-full lg:w-4/12 mx-auto">
+			<div class="items-center justify-center">
+				<div class="flex w-full md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex-col gap-y-8">
+					<p class="gradient-text text-center lg:text-start f-40 leading-8 lg:leading-[60px] f-700"> Sigue estos simples pasos y conviértete en un Camper</p>
+					<p class="text-center lg:text-start text-sm lg:text-base leading-6 text-white"> Hemos simplificado el proceso para que puedas inscribirte, presentarte y unirte a Campuslands de manera rápida y sencilla. ¡Empieza hoy mismo! </p>
+                    <ContactButton tipo="insripcion" whatsApp='+50240579715'  iconName='share.svg' />
+				</div>
+			</div>
+            <div class="relative h-[380px] max-md:mt-5">
+                {steps.map((step, index) => (
+                    index + 1 === currentDiv && (
+                      <div
+                        class="transition-opacity p-6 flex-col gap-4 rounded-[40px] w-[342px] lg:w-[435px] h-fit duration-[4000ms] ease-in-out opacity-100 inset-0 flex text-white"
+                        style="background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 55.8%, rgba(153, 153, 153, 0.08) 111.74%);"
+                      >
+                        <p class="text-[40px]">0{index + 1}</p>
+                        <div class="flex flex-col gap-2">
+                          <p class="text-2xl font-bold">{step.title}</p>
+                          <p class="text-base mt-2">{step.description}</p>
+                          {step.subdescription && <p class="text-base mt-2">{step.subdescription}</p>}
+                        </div>
+                      </div>
+                    )
+                  ))}
+            </div>
+		</div>
+    </div>
+</section>
