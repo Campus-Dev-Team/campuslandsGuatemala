@@ -8,7 +8,10 @@
                     <slot></slot>
                 </div>
             </div>
-            <div class="relative h-[380px] max-md:mt-5">
+            <div class="place-items-center self-center lg:h-[700px]">
+                <img src="src/assets/img/emplea/student.png" alt="" class="max-h-[450px] lg:h-full lg:max-h-max scale-x-[-1]">
+            </div>
+            <!-- <div class="relative h-[380px] max-md:mt-5">
                 <div
                     v-for="(step, index) in steps"
                     :key="index"
@@ -23,7 +26,7 @@
                         <p v-if="step.subdescription" class="text-base mt-2">{{ step.subdescription }}</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <img src="src/assets/img/texxture.svg" alt="" class="w-1/2 absolute top-[290px] -right-[340px]">
         <img src="src/assets/img/texxture.svg" alt="" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]">
