@@ -16,7 +16,6 @@ const isMenuVisible = ref(false);
 
 // Función para alternar el estado del menú
 function toggleMobileMenu() {
-	console.log("MENU DATA DATA", )
 //   isMenuVisible.value = !isMenuVisible.value;
 }
 
@@ -61,15 +60,15 @@ const currentPath = Astro.url.pathname;
 			]}
 		/>
 	</head>
-	<body class="relative">
+	<body class="relative overflow-x-hidden">
 		<div id="go-up" class="flex justify-center align-middle bg-primary rounded-full size-10 fixed right-10 bottom-[5%] cursor-pointer z-50">
 			<img src="/src/assets/img/icons/arrow-up.svg" alt="" width="25">
 		</div>
 		<MenuResponsive client:load>
-			<Image slot="logo" src={logoCampus} alt="logoCampus" height="60" class="max-h-[60px]" />
-			<div class="content-redirects items-center hidden md:flex h-full">
+			<Image slot="logo" src={logoCampus} alt="logoCampus" class="w-[14rem]" />
+			<div class=" content-redirects items-center hidden md:flex h-full">
 				<a href="/" aria-label="Home" class={ currentPath === '/' ? 'active' : 'text-white hover:text-gray-200'}>Inicio</a>
-				<a href="/joinUs" class={ currentPath === '/joinUs' ? 'active' : '' }>Se un Camper</a>
+				<a href="/joinUs" class={ currentPath === '/joinUs' ? 'active' : '' }>Sé un Camper</a>
 				<a href="/emplea" aria-label="Impulsa a tu equipo" class={ currentPath === '/emplea' ? 'active' : 'text-white hover:text-gray-200'}>Emplea</a>
 				<a href="/patrocina" aria-label="Patrocina nuestros Campers" class={ currentPath === '/patrocina' ? 'active' : 'text-white hover:text-gray-200'}>Patrocina</a>
 				<a href="/nosotros" class={ currentPath === '/nosotros' ? 'active' : 'text-white hover:text-gray-200' }>Nosotros</a>
@@ -142,22 +141,25 @@ document.querySelector("#go-up").addEventListener("click", goUp);
 		animation-range: 0 200px;
 		.content-redirects{
 			a {
+				line-height: 3;
 				height: 100%;
 				display: flex;
 				align-items: center;
-				padding: 0 17px;
+				padding: 1.2rem 2rem 0 2rem;
 				font-weight: 600;
 			}
 			a.active {
 				color: #02D9A4;
-				border-bottom: 1px solid #02D9A4;
+				border-bottom: 3px solid #02D9A4;
 			}
 		}
 	}
 
-	@keyframes bgHeader {
-		from { background: #000066; }
-		to { background: #000066; }
+	.glass {
+		background: rgba(255, 255, 255, 0);
+		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(14px);
+		-webkit-backdrop-filter: blur(14px);
 	}
 
 	:root {
