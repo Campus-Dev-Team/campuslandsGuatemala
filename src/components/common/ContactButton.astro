@@ -2,7 +2,7 @@
 
 interface Props {
     whatsApp: string;
-    tipo: "contaco" | "patrocinio" | "emplear" | "agendar" | "insripcion" | "chatear";
+    tipo: "contacto" | "patrocinio" | "emplear" | "agendar" | "insripcion" | "chatear";
     iconName?: string;
     alt?:string;
     isOutline?: boolean;
@@ -13,7 +13,7 @@ interface Props {
 const {whatsApp,tipo,iconName,alt,isOutline, StylesAnchor, StylesButton} = Astro.props;
 
 const presets = {
-    "contaco" : ["Contactanos", "Hola%2C+estoy+interesado+en+obtener+información+detallada+sobre+Campuslands."],
+    "contacto" : ["Contactanos", "Hola%2C+estoy+interesado+en+obtener+información+detallada+sobre+Campuslands."],
     "chatear" : ["Chatea Con Nosotros", "Hola%2C+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands."],
     "patrocinio" : ["Patrocina nuestros campers", "Hola%2C+estoy+buscando+desarrolladores%2C+¿cómo+puedo+acceder+al+talento+de+Campuslands."],
     "emplear" : ["Emplea nuestros Campers", "Buen+día,+quisiera+obtener+información+sobre+cómo+emplear+talento+de+Campuslands."],
