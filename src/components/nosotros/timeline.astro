@@ -1,0 +1,134 @@
+---
+import { Image } from "astro:assets";
+import timelineData from "./timelineData";
+import ArrowRight from "~/assets/img/icons/arrow-green-right.svg";
+import ArrowLeft from "~/assets/img/icons/arrow-green-left.svg";
+---
+
+<section
+  class="flex flex-col items-center mx-auto gap-6 md:w-[762px] mt-24 mb-16"
+>
+  <p
+    class="gradient-text text-lg md:text-[32px] mx-auto text-center font-semibold md:font-bold md:px-14"
+  >
+    Creciendo juntos: La fundación de Campuslands y su impacto
+  </p>
+  <p
+    class="font-semibold text-white !leading-[1.6] md:font-semibold text-base md:text-lg mx-auto text-center px-4"
+  >
+    Campuslands nació para conectar el talento joven con el mundo laboral,
+    transformando la educación en tecnología desde el primer día.
+  </p>
+</section>
+<section class="flex flex-col gap-y-4 w-[328px] lg:w-[762px] mx-auto mt-24">
+  <div class="flex items-center justify-center relative flex-col lg:flex-row">
+    <button
+      class="prev-timeline items-center justify-center btn-primary shrink-0 rounded-full me-auto size-8 z-[3] hidden lg:flex select-none"
+    >
+      <Image src={ArrowLeft} alt="agendar" class="min-w-5 !size-5 shrink-0" draggable="false"/>
+    </button>
+    <div
+      class="content-date flex flex-col justify-center relative gap-6 shadow-[0_0_16px_0_#00006666] bg-gradient-to-l from-[#FFFFFF1F] to-[#8484841F] rounded-[40px] px-6 min-h-[170px] max-w-[328px] lg:max-w-[482px] z-[2] py-4"
+    >
+      <p
+        id="timeline-title"
+        class="gradient-text text-lg lg:text-2xl text-center font-bold"
+      >
+      </p>
+      <p
+        id="timeline-desc"
+        class="text-[14px] lg:text-sm text-white text-center"
+      >
+      </p>
+      <div
+        class="flex items-center justify-center rounded-full backdrop-blur-[54px] absolute shadow-[0_0_16px_0_#00006666] drop-shadow-[0_0_21px_0_#00006666] left-[40%] top-[-65px] lg:top-[-90px] min-w-[70px] h-[70px] lg:min-w-[96px] lg:h-[96px] bg-gradient-to-r from-[#FFFFFF1F] to-[#8484841F] z-[2]"
+      >
+        <p
+          id="timeline-year"
+          class="text-white font-bold text-base lg:text-2xl"
+        >
+        </p>
+      </div>
+    </div>
+    <button
+      class="next-timeline items-center justify-center btn-primary shrink-0 rounded-full ms-auto size-8 z-[3] hidden lg:flex select-none"
+    >
+      <Image src={ArrowRight} alt="agendar" class="min-w-5 !size-5 shrink-0" draggable="false"/>
+    </button>
+    <div class="flex lg:hidden items-center justify-center gap-x-6">
+      <button
+        class="prev-timeline flex items-center justify-center btn-primary shrink-0 rounded-full size-6 max-w-6 z-[3] !px-0 select-none"
+      >
+        <Image src={ArrowLeft} alt="agendar" class="min-w-4 !size-4 shrink-0" draggable="false"/>
+      </button>
+      <button
+        class="next-timeline flex items-center justify-center btn-primary shrink-0 rounded-full size-6 max-w-6 z-[3] !px-0 select-none"
+      >
+        <Image
+          src={ArrowRight}
+          alt="agendar"
+          class="min-w-4 !size-4 shrink-0"
+          draggable="false"
+        />
+      </button>
+    </div>
+  </div>
+</section>
+<script define:vars={{ timelineData }}>
+  const timelineTitle = document.getElementById("timeline-title");
+  const timelineDesc = document.getElementById("timeline-desc");
+  const timelineYear = document.getElementById("timeline-year");
+
+  let index = 0;
+
+  const updateTimeline = () => {
+    timelineTitle.textContent = timelineData[index].title;
+    timelineDesc.textContent = timelineData[index].description;
+    timelineYear.textContent = timelineData[index].year;
+  };
+
+  updateTimeline();
+
+  const nextTimeline = () => {
+    index = index === timelineData.length - 1 ? 0 : index + 1;
+    updateTimeline();
+  };
+
+  const prevTimeline = () => {
+    index = index === 0 ? timelineData.length - 1 : index - 1;
+    updateTimeline();
+  };
+
+  document.querySelectorAll(".prev-timeline").forEach((el) => {
+    el.addEventListener("click", prevTimeline);
+  });
+
+  document.querySelectorAll(".next-timeline").forEach((el) => {
+    el.addEventListener("click", nextTimeline);
+  });
+</script>
+
+<style>
+  @media screen and (min-width: 1024px) {
+    .content-date::before {
+      content: "";
+      position: absolute;
+      top: 49%;
+      left: -26%;
+      width: 26%;
+      height: 4px;
+      /* background-color: linear-gradient(90deg, #61B9FF 0%, #02D9A4 100%) !important; */
+      background: linear-gradient(90deg, #61b9ff 0%, #02d9a4 100%);
+    }
+    .content-date::after {
+      content: "";
+      position: absolute;
+      top: 49%;
+      right: -26%;
+      width: 26%;
+      height: 4px;
+      /* background-color: linear-gradient(90deg, #61B9FF 0%, #02D9A4 100%) !important; */
+      background: linear-gradient(90deg, #61b9ff 0%, #02d9a4 100%);
+    }
+  }
+</style>
