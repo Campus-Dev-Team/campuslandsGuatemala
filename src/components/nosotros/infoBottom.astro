@@ -1,95 +1,63 @@
 ---
-import { Image } from 'astro:assets';
-import CardWords from "./cardWords.vue"
-import Cohete from '~/assets/img/icons/indicators/cohete.svg'
-import TrabajoEquipo from '~/assets/img/icons/indicators/trabajo-equipo.svg'
-import Medalla from '~/assets/img/icons/indicators/medalla.svg'
-import Flexibilidad from '~/assets/img/icons/indicators/flexibilidad.svg'
-import Transparencia from '~/assets/img/icons/indicators/transparencia.svg'
-import ArrowGreenRight from '~/assets/img/icons/arrow-green-right.svg'
-import ArrowLeft from '~/assets/img/icons/arrow-green-left.svg'
+import { Image } from "astro:assets";
+import CardWords from "./cardWords.vue";
+import Cohete from "~/assets/img/icons/indicators/cohete.svg";
+import TrabajoEquipo from "~/assets/img/icons/indicators/trabajo-equipo.svg";
+import Medalla from "~/assets/img/icons/indicators/medalla.svg";
+import Flexibilidad from "~/assets/img/icons/indicators/flexibilidad.svg";
+import Transparencia from "~/assets/img/icons/indicators/transparencia.svg";
 ---
 
-
 <section class="flex flex-col gap-6 my-8">
-	<div class="flex flex-col items-center mx-auto gap-6 mt-6 w-[328px] md:w-[691px]">
-		<p class="gradient-text font-extrabold text-2xl md:text-[32px] mx-auto text-center">¿Qué nos impulsa en Campuslands?</p>
-		<p class="font-semibold text-white !leading-[1.6] text-sm md:text-lg mx-auto text-center">Lo que nos mueve va más allá de las palabras; son nuestros valores los que definen nuestra cultura y nos llevan a crear un futuro audaz, inclusivo y transformador. Descubre los principios que nos guían y nos hacen diferentes</p>
-	</div>
-	<div class="flex xl:justify-center mx-auto overflow-auto hidden-scroll gap-x-6 p-4 w-full md:max-w-[1190px]">
-		<CardWords title="Innovación constante" description="Creemos que la única forma de avanzar es desafiando lo convencional y creando nuevas formas de pensar y hacer. ">
-			<Image src={Cohete} alt="cohete" />
-		</CardWords>
-		<CardWords title="Trabajo en equipo" description='Juntos somos más fuertes. El verdadero impacto se logra cuando unimos nuestras habilidades y talentos para construir algo más grande.es.' >
-			<Image src={TrabajoEquipo} alt="equipo" />
-		</CardWords>
-		<CardWords title="Responsabilidad con propósito" description='No solo nos comprometemos con lo que hacemos, sino con el cambio real que queremos generar, desde la formación hasta el impacto en la sociedad.' >
-			<Image src={Medalla} alt="medalla" />
-		</CardWords>
-		<CardWords title="Adaptabilidad" description='Vivimos en un mundo en constante evolución. En Campuslands, nos adaptamos, aprendemos y evolucionamos con agilidad para liderar el cambio.' >
-			<Image src={Flexibilidad} alt="flexibilidad" />
-		</CardWords>
-		<CardWords title="Transparencia" description='La honestidad es la base de todo lo que hacemos. Actuamos con total transparencia en nuestros procesos, decisiones y relaciones.' >
-			<Image src={Transparencia} alt="transparencia" />
-		</CardWords>
-	</div>
+  <div
+    class="flex flex-col items-center mx-auto gap-6 mt-6 w-[328px] md:w-[691px]"
+  >
+    <p
+      class="gradient-text font-extrabold text-2xl md:text-[32px] mx-auto text-center"
+    >
+      ¿Qué nos impulsa en Campuslands?
+    </p>
+    <p
+      class="font-semibold text-white !leading-[1.6] text-sm md:text-lg mx-auto text-center"
+    >
+      Lo que nos mueve va más allá de las palabras; son nuestros valores los que
+      definen nuestra cultura y nos llevan a crear un futuro audaz, inclusivo y
+      transformador. Descubre los principios que nos guían y nos hacen
+      diferentes
+    </p>
+  </div>
+  <div
+    class="flex xl:justify-center mx-auto overflow-auto hidden-scroll gap-x-6 p-4 w-full md:max-w-[1190px]"
+  >
+    <CardWords
+      title="Innovación constante"
+      description="Creemos que la única forma de avanzar es desafiando lo convencional y creando nuevas formas de pensar y hacer. "
+    >
+      <Image src={Cohete} alt="cohete" />
+    </CardWords>
+    <CardWords
+      title="Trabajo en equipo"
+      description="Juntos somos más fuertes. El verdadero impacto se logra cuando unimos nuestras habilidades y talentos para construir algo más grande.es."
+    >
+      <Image src={TrabajoEquipo} alt="equipo" />
+    </CardWords>
+    <CardWords
+      title="Responsabilidad con propósito"
+      description="No solo nos comprometemos con lo que hacemos, sino con el cambio real que queremos generar, desde la formación hasta el impacto en la sociedad."
+    >
+      <Image src={Medalla} alt="medalla" />
+    </CardWords>
+    <CardWords
+      title="Adaptabilidad"
+      description="Vivimos en un mundo en constante evolución. En Campuslands, nos adaptamos, aprendemos y evolucionamos con agilidad para liderar el cambio."
+    >
+      <Image src={Flexibilidad} alt="flexibilidad" />
+    </CardWords>
+    <CardWords
+      title="Transparencia"
+      description="La honestidad es la base de todo lo que hacemos. Actuamos con total transparencia en nuestros procesos, decisiones y relaciones."
+    >
+      <Image src={Transparencia} alt="transparencia" />
+    </CardWords>
+  </div>
 </section>
-<section class="flex flex-col items-center mx-auto gap-6 md:w-[762px] mt-24 mb-16">
-	<p class="gradient-text text-lg md:text-[32px] mx-auto text-center font-semibold md:font-bold md:px-14">Creciendo juntos: La fundación de Campuslands y su impacto</p>
-	<p class="font-semibold text-white !leading-[1.6] md:font-semibold text-base md:text-lg mx-auto text-center px-4">Campuslands nació para conectar el talento joven con el mundo laboral, transformando la educación en tecnología desde el primer día.</p>
-</section>
-<section class="flex flex-col gap-y-4 w-[328px] lg:w-[762px] mx-auto mt-24">
-	<div class="flex items-center justify-center relative flex-col lg:flex-row">
-		<button class="items-center justify-center btn-primary shrink-0 rounded-full me-auto size-8 z-[3] hidden lg:flex">
-			<Image src={ArrowGreenRight} alt="agendar" class="min-w-5 !size-5 shrink-0 rotate-180"></Image>
-		</button>
-		<!-- <div class="rounded-full min-w-[48px] h-[48px] lg:min-w-[72px] lg:h-[72px] backdrop-blur-2xl bg-gradient-to-b from-[#FFFFFF1F] to-[#8484841F] z-[2]" /> -->
-		<div class="content-date flex flex-col justify-center relative gap-6 shadow-[0_0_16px_0_#00006666] bg-gradient-to-l from-[#FFFFFF1F] to-[#8484841F] rounded-[40px] px-6 min-h-[170px] max-w-[328px] lg:max-w-[482px] z-[2] py-4">
-			<p class="gradient-text text-lg lg:text-2xl text-center font-bold">La chispa del cambio</p>
-			<p class="text-[14px] lg:text-sm text-white text-center">Dos emprendedores colombianos llegan a Bangalore, India,
-				y descubren cómo la formación tecnológica puede transformar vidas, sin saber que este viaje sería el comienzo de algo grande.</p>
-			<div class="flex items-center justify-center rounded-full backdrop-blur-[54px] absolute shadow-[0_0_16px_0_#00006666] drop-shadow-[0_0_21px_0_#00006666] left-[40%] top-[-65px] lg:top-[-90px] min-w-[70px] h-[70px] lg:min-w-[96px] lg:h-[96px] bg-gradient-to-r from-[#FFFFFF1F] to-[#8484841F] z-[2]">
-				<p class="text-white font-bold text-base lg:text-2xl">{ 2021 }</p>
-			</div>
-		</div>
-		<button class="items-center justify-center btn-primary shrink-0 rounded-full ms-auto size-8 z-[3] hidden lg:flex">
-			<Image src={ArrowGreenRight} alt="agendar" class="min-w-5 !size-5 shrink-0">
-		</button>
-	</div>
-	<div class="flex lg:hidden items-center justify-center gap-x-6">
-		<button class="flex items-center justify-center btn-primary shrink-0 rounded-full size-6 max-w-6 z-[3] !px-0">
-			<Image src={ArrowLeft} alt="agendar" class="min-w-4 !size-4 shrink-0"></Image>
-		</button>
-		<button class="flex items-center justify-center btn-primary shrink-0 rounded-full size-6 max-w-6 z-[3] !px-0">
-			<Image src={ArrowLeft} alt="agendar" class="min-w-4 !size-4 shrink-0 rotate-180"></Image>
-		</button>
-	</div>
-</div>
-
-<style>
-
-@media screen and (min-width: 1024px) {
-	.content-date::before {
-		content: "";
-		position: absolute;
-		top: 49%;
-		left: -26%;
-		width: 26%;
-		height: 4px;
-		/* background-color: linear-gradient(90deg, #61B9FF 0%, #02D9A4 100%) !important; */
-		background: linear-gradient(90deg, #61B9FF 0%, #02D9A4 100%);
-	}
-	.content-date::after {
-		content: "";
-		position: absolute;
-		top: 49%;
-		right: -26%;
-		width: 26%;
-		height: 4px;
-		/* background-color: linear-gradient(90deg, #61B9FF 0%, #02D9A4 100%) !important; */
-		background: linear-gradient(90deg, #61B9FF 0%, #02D9A4 100%);
-	}
-}
-
-
-</style>

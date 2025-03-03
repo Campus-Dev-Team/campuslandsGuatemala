@@ -2,21 +2,15 @@
 import LayoutNavbar from "../layouts/LayoutNavbar.astro";
 import Intro from "../components/emplea/intro.astro";
 import Talent from "../components/emplea/talent.astro";
-import Timeline from "../components/emplea/timeline.vue";
+import ChatWithUs from "~/components/emplea/chatWithUs.astro";
 import AlliedCompanies from "../components/alliedCompanies.astro";
 import ConnectingTalent from "../components/emplea/connectingTalent.astro";
-import ContactButton from "~/components/common/ContactButton.astro";
 import "~/styles/index.css";
-
-const contactNumber = "+50240579715";
 ---
 <LayoutNavbar title="Campuslands - Emplea">
 	<Intro />
 	<Talent />
-	<Timeline client:load>
-		<ContactButton tipo="agendar" whatsApp={contactNumber} iconName="agenda.svg"/>
-		<ContactButton tipo="chatear" whatsApp={contactNumber} iconName="heart.svg" isOutline/>
-	</Timeline>
+	<ChatWithUs />
 	<AlliedCompanies />
 	<ConnectingTalent />
 </LayoutNavbar>

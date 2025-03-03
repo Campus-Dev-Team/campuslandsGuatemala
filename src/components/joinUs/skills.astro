@@ -5,7 +5,7 @@ import tools from "./skillsArrays/tools";
 ---
 
 <section
-  class="principal max-w-7xl mx-auto from-8% relative py-6 lg:py-20 h-fit"
+  class="sections max-w-[1150px] self-center relative py-6 lg:py-20 h-fit"
 >
   <div
     class="relative mx-auto flex flex-col flex-wrap justify-center gap-8 h-fit w-full px-10 md:px-50 lg:px-0 max-w-7xl"
@@ -41,7 +41,7 @@ import tools from "./skillsArrays/tools";
           Herramientas
         </button>
         <button
-          class="tab-btn  flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-12 w-[196px] text-black"
+          class="tab-btn  flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-12 w-[196px] bg-primary_action text-white font-semibold"
           data-tab="softSkills"
         >
           Habilidades blandas
@@ -106,23 +106,23 @@ import tools from "./skillsArrays/tools";
 </section>
 
 <script>
-  // Client-side JavaScript
+  
   const tabButtons = document.querySelectorAll(".tab-btn");
   const skillContents = document.querySelectorAll(".skill-content");
 
   tabButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      // Remove active class from all buttons
+      
       tabButtons.forEach((btn) => {
       btn.classList.remove("bg-primary_action", "text-white", "font-semibold");
       btn.classList.add("text-black");
       });
-      // Add active class to clicked button
+      
       button.classList.remove("text-black");
       button.classList.add("bg-primary_action", "text-white", "font-semibold");
-      // Hide all content
+      
       skillContents.forEach((content) => content.classList.add("hidden"));
-      // Show selected content
+      
       const tabId = button.dataset.tab;
       document.getElementById(tabId).classList.remove("hidden");
     });

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { AstroFont } from "astro-font";
 import MenuResponsive from "../components/navbar/menuResponsive.vue";
 import ContactButton from '~/components/common/ContactButton.astro';
+import Circular from '~/assets/img/CircularPattern.svg'
 
 import logoCampus from '~/assets/img/logos/logoCampus_v2.svg'
 import facebook from '~/assets/img/icons/Facebook.svg'
@@ -11,10 +12,8 @@ import linkedin from '~/assets/img/icons/LinkedIn.svg'
 import youtube from '~/assets/img/icons/YouTube.svg'
 import { ref } from 'vue';
 
-// Estado reactivo para el menú
 const isMenuVisible = ref(false);
 
-// Función para alternar el estado del menú
 function toggleMobileMenu() {
 //   isMenuVisible.value = !isMenuVisible.value;
 }
@@ -60,7 +59,7 @@ const currentPath = Astro.url.pathname;
 			]}
 		/>
 	</head>
-	<body class="relative overflow-x-hidden">
+	<body class="relative flex flex-col overflow-x-hidden">
 		<div id="go-up" class="flex justify-center align-middle bg-primary rounded-full size-10 fixed right-10 bottom-[5%] cursor-pointer z-50">
 			<img src="/src/assets/img/icons/arrow-up.svg" alt="" width="25">
 		</div>
@@ -85,8 +84,8 @@ const currentPath = Astro.url.pathname;
 			</div>
 		</MenuResponsive>
 		<slot />
-		<footer class="faq overflow-hidden relative">
-			<div class={`max-w-[691px] vstext mx-auto my-auto flex flex-col gap-y-8 py-20 px-6 ${ classFooter }` }>
+		<footer class="faq flex flex-col overflow-hidden relative">
+			<div class={`max-w-[1150px] sections self-center vstext my-auto flex flex-col gap-y-8 py-20 ${ classFooter }` }>
 				<p class="gradient-text text-lg md:text-[28px] mb-1 font-bold text-center">¿Preparado para la evolución que tu empresa necesita? Accede al talento que impulsará tu crecimiento y marcará la diferencia.</p>
 				<p class="text-white font-semibold text-center text-sm md:text-lg">Estamos listos para ayudarte a formar un equipo que marque la diferencia. Escríbenos y descubre cómo juntos podemos crear el futuro.
 					¡Da el primer paso hacia un equipo imparable!</p>
@@ -124,6 +123,7 @@ const currentPath = Astro.url.pathname;
 					</div>
 				</div>
 			</div>
+			<Image class="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-0" src={Circular} alt="" />
 		</footer>
 	</body>
 </html>

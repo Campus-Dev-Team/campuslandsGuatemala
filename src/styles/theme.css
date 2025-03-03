@@ -22,6 +22,10 @@
   --color-border: theme("colors.gray.50" / 10%);
 }
 
+.sections {
+  @apply px-9
+}
+
 .gradient-text {
   @apply bg-clip-text text-transparent;
   @apply bg-gradient-to-br from-[#19F5BF] from-10% to-[#2CA2FF] to-100%;

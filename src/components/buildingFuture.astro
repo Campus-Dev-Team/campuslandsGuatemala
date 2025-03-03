@@ -3,7 +3,7 @@ import ContactButton from "./common/ContactButton.astro"
 
 const ContactNumber = "+50240579715";
 ---
-<div id="numbers" class="indicators max-w-[934px] mx-auto my-10 px-10 lg:px-0">
+<section id="numbers" class="indicators sections max-w-[1150px] self-center my-10">
 	<div class="flex flex-col gap-y-8 text-center mb-16">
 		<p class="gradient-text text-xl text-center lg:text-3xl font-bold max-w-[472px] mx-auto">
 			Construyendo el futuro del talento tech en Colombia
@@ -65,7 +65,7 @@ const ContactNumber = "+50240579715";
 		<ContactButton tipo="patrocinio" whatsApp={ContactNumber} iconName="medal.svg" isOutline StylesButton="max-w-[320px]"/>
 		<ContactButton tipo="emplear" whatsApp={ContactNumber} iconName="arm.svg" StylesButton="max-w-[320px]"/>
 	</div>
-</div>
+</section>
 
 <script>
 const target = document.getElementById('numbers');
