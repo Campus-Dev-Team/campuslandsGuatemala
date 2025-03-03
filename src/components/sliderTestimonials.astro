@@ -21,8 +21,8 @@ function prevSlide() {
 	showSlide(currentIndex);
 }
 
-document.getElementById("prevSlide").addEventListener("click", prevSlide);
-document.getElementById("nextSlide").addEventListener("click", nextSlide);
+document.getElementById("prev-testimonials").addEventListener("click", prevSlide);
+document.getElementById("next-testimonials").addEventListener("click", nextSlide);
 
 document.addEventListener('DOMContentLoaded', () => {
 	setInterval(nextSlide, 12000);
@@ -81,11 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		</div>
 	</div>
 	<div class="controls max-w-[70px] absolute right-[15px] bottom-0 gap-x-3 z-30">
-		<div id="prevSlide" class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#02D9A4]">
-			<img src="src/assets/img/icons/arrow-left.svg" alt="" width="14">
+		<div id="prev-testimonials" class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#02D9A4]">
+			<img src="src/assets/img/icons/arrow-left.svg" alt="" width="14" draggable="false">
 		</div>
-		<div id="nextSlide" class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#02D9A4]">
-			<img src="src/assets/img/icons/arrow-right.svg" alt="" width="14">
+		<div id="next-testimonials" class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#02D9A4]">
+			<img src="src/assets/img/icons/arrow-right.svg" alt="" width="14" draggable="false">
 		</div>
 	</div>
 </div>

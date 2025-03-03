@@ -1,0 +1,130 @@
+---
+import softSkills from "./skillsArrays/softSkills";
+import hardSkills from "./skillsArrays/hardSkills";
+import tools from "./skillsArrays/tools";
+---
+
+<section
+  class="principal max-w-7xl mx-auto from-8% relative py-6 lg:py-20 h-fit"
+>
+  <div
+    class="relative mx-auto flex flex-col flex-wrap justify-center gap-8 h-fit w-full px-10 md:px-50 lg:px-0 max-w-7xl"
+  >
+    <div
+      class="self-center flex w-full md:max-w-[350px] lg:max-w-[800px] flex-col gap-y-8"
+    >
+      <p
+        class="gradient-text text-center f-40 leading-8 lg:leading-[60px] f-700"
+      >
+        Habilidades que aprenden nuestros Campers
+      </p>
+      <p class="text-center text-sm lg:text-base leading-6 text-white">
+        En Campuslands, nuestros estudiantes adquieren el equilibrio perfecto
+        entre conocimiento técnico y humano para afrontar los retos de la
+        industria tech.
+      </p>
+    </div>
+    <div class="indicators mx-auto my-20 px-4 max-w-[980px]">
+      <div
+        class="flex items-center gap-x-[10px] mx-auto max-w-fit border bg-primary border-white rounded-full p-2 mb-10"
+      >
+        <button
+          class="tab-btn flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-12 w-[196px] text-black"
+          data-tab="hardSkills"
+        >
+          Habilidades técnicas
+        </button>
+        <button
+          class="tab-btn flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-black"
+          data-tab="tools"
+        >
+          Herramientas
+        </button>
+        <button
+          class="tab-btn  flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-12 w-[196px] text-black"
+          data-tab="softSkills"
+        >
+          Habilidades blandas
+        </button>
+      </div>
+
+      <div
+        id="hardSkills"
+        class="skill-content hidden flex flex-wrap justify-center gap-2 lg:gap-5 mb-16"
+      >
+        {
+            hardSkills.map((skill) => (
+            <img
+              src={skill.asset}
+              alt={skill.name}
+              class="max-h-[60px] min-w-[205px]"
+              draggable="false"
+              title={skill.name}
+            />
+            ))
+        }
+      </div>
+
+      <div
+        id="tools"
+        class="skill-content hidden flex flex-wrap justify-center gap-2 lg:gap-4 mb-16"
+      >
+        {
+          tools.map((skill) => (
+            <img
+              src={skill.asset}
+              alt={skill.name}
+              title={skill.name}
+              class="max-h-[95px] min-w-[170px]"
+              draggable="false"
+            />
+          ))
+        }
+      </div>
+
+      <div
+        id="softSkills"
+        class="skill-content flex flex-wrap justify-center gap-2 lg:gap-4 mb-16"
+      >
+        {
+          softSkills.map((skill) => (
+            <div class="flex rounded-[15px]  bg-gradient-to-b from-[#FFFFFF10] to-[#FFFFFF20] items-center gap-2 px-4 py-2">
+              <img
+                src={skill.asset}
+                alt={skill.name}
+                title={skill.name}
+                class="size-7"
+                draggable="false"
+              />
+              <p>{skill.name}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Client-side JavaScript
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const skillContents = document.querySelectorAll(".skill-content");
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      // Remove active class from all buttons
+      tabButtons.forEach((btn) => {
+      btn.classList.remove("bg-primary_action", "text-white", "font-semibold");
+      btn.classList.add("text-black");
+      });
+      // Add active class to clicked button
+      button.classList.remove("text-black");
+      button.classList.add("bg-primary_action", "text-white", "font-semibold");
+      // Hide all content
+      skillContents.forEach((content) => content.classList.add("hidden"));
+      // Show selected content
+      const tabId = button.dataset.tab;
+      document.getElementById(tabId).classList.remove("hidden");
+    });
+  });
+</script>
