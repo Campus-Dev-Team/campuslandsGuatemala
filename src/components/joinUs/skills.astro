@@ -8,10 +8,10 @@ import tools from "./skillsArrays/tools";
   class="sections max-w-[1150px] self-center relative py-6 lg:py-20 h-fit"
 >
   <div
-    class="relative mx-auto flex flex-col flex-wrap justify-center gap-8 h-fit w-full px-10 md:px-50 lg:px-0 max-w-7xl"
+    class="relative flex flex-col flex-wrap justify-center gap-8 h-fit w-full "
   >
     <div
-      class="self-center flex w-full md:max-w-[350px] lg:max-w-[800px] flex-col gap-y-8"
+      class="self-center flex w-full  flex-col gap-y-8"
     >
       <p
         class="gradient-text text-center f-40 leading-8 lg:leading-[60px] f-700"
@@ -24,24 +24,24 @@ import tools from "./skillsArrays/tools";
         industria tech.
       </p>
     </div>
-    <div class="indicators mx-auto my-20 px-4 max-w-[980px]">
+    <div class="indicators px-4 max-w-[980px]">
       <div
-        class="flex items-center gap-x-[10px] mx-auto max-w-fit border bg-primary border-white rounded-full p-2 mb-10"
+        class="flex flex-col md:flex-row items-center gap-2 mx-auto max-w-fit border bg-primary border-white rounded-[15px] p-2 mb-10"
       >
         <button
-          class="tab-btn flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-12 w-[196px] text-black"
+          class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-12 w-[196px] text-black"
           data-tab="hardSkills"
         >
           Habilidades técnicas
         </button>
         <button
-          class="tab-btn flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-black"
+          class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-9 w-[196px] text-black"
           data-tab="tools"
         >
           Herramientas
         </button>
         <button
-          class="tab-btn  flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-12 w-[196px] bg-primary_action text-white font-semibold"
+          class="tab-btn  flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-12 w-[196px] bg-primary_action text-white font-semibold"
           data-tab="softSkills"
         >
           Habilidades blandas
@@ -50,7 +50,7 @@ import tools from "./skillsArrays/tools";
 
       <div
         id="hardSkills"
-        class="skill-content hidden flex flex-wrap justify-center gap-2 lg:gap-5 mb-16"
+        class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-5 mb-16"
       >
         {
             hardSkills.map((skill) => (
@@ -67,7 +67,7 @@ import tools from "./skillsArrays/tools";
 
       <div
         id="tools"
-        class="skill-content hidden flex flex-wrap justify-center gap-2 lg:gap-4 mb-16"
+        class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-4 mb-16"
       >
         {
           tools.map((skill) => (
@@ -84,7 +84,7 @@ import tools from "./skillsArrays/tools";
 
       <div
         id="softSkills"
-        class="skill-content flex flex-wrap justify-center gap-2 lg:gap-4 mb-16"
+        class="skill-content flex flex-wrap justify-center gap-5 lg:gap-4 mb-16"
       >
         {
           softSkills.map((skill) => (

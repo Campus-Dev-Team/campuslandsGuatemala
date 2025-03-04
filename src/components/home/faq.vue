@@ -11,7 +11,7 @@
 				Patrocinadores
 			</div>
 		</div>
-		<div class="flex flex-wrap gap-y-4 lg:gap-y-3 mb-16">
+		<div class="items-center justify-center flex flex-wrap gap-y-4 lg:gap-y-3 mb-16">
 			<div v-for="(faq, index) in questionsAndAnswers" :key="index" class="w-full md:w-1/2 md:max-w-[480px] px-4 lg:p-4 h-fit">
 				<details>
 					<summary class="flex justify-between text-lg cursor-pointer font-semibold">

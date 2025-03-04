@@ -1,59 +1,74 @@
 ---
-import { Image } from 'astro:assets';
-import ContactButton from '../common/ContactButton.astro';
-import myImage from '~/assets/img/emplea/emplea-home.png';
+import { Image } from "astro:assets";
+import ContactButton from "../common/ContactButton.astro";
+import myImage from "~/assets/img/emplea/emplea-home.png";
 ---
-<section class="principal sections max-w-[1150px] self-center relative py-6 lg:py-20  h-fit md:h-[740px]">
-	<div class="relative mx-auto flex flex-wrap justify-between h-fit w-full px-10 md:px-50 lg:px-0 max-w-7xl">
-		<div class="my-auto w-full lg:w-5/12">
-			<div class="items-center justify-center">
-				<div class="flex w-full md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex-col gap-y-8 relative">
-					<p class="gradient-text text-center lg:text-start lg:text-[40px] text-[24px] leading-10 lg:leading-[60px] f-700"> Encuentra el talento tech competitivo que tu empresa necesita, sin complicaciones. </p>
-					<p class="text-center lg:text-start text-sm lg:text-base leading-6 text-white"> Identificamos jóvenes con potencial, los entrenamos en desarrollo de software, dominio del inglés y competencias socioemocionales, entregando candidatos ideales para tu equipo. </p>
-					<ContactButton tipo="emplear" whatsApp='+50240579715' iconName='arm.svg' StylesAnchor='place-items-center'/>
-				</div>
-			</div>
-		</div>
-		<div class="my-auto">
-			<div class="hidden lg:block">
-				<Image
-					src={myImage}
-					alt="Grupo de campers 1"
-					width={595}
-					widths={[100, 500, 1024]}
-					height={480}
-					loading='lazy'
-					sizes="(max-width: 595px) 100vw, 595px"
-				/>
-			</div>
-			<div class="lg:hidden mt-5">
-				<Image
-					src={myImage}
-					alt="Grupo de campers 2"
-					width={300}
-					height={300}
-					loading='lazy'
-					sizes="(max-width: 300px) 100vw, 100px"
-				/>
-			</div>
-		</div>
-	</div>
+
+<section
+  class="principal flex flex-col sections max-w-[1150px] self-center relative py-6 lg:py-20 h-fit items-center md:flex-row gap-8"
+>
+  <div
+    class="relative flex-wrap w-full md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex flex-col gap-8 items-center md:items-start"
+  >
+    <p
+      class="gradient-text text-center lg:text-start lg:text-[40px] text-[24px] leading-10 lg:leading-[60px] f-700"
+    >
+      Encuentra el talento tech competitivo que tu empresa necesita, sin
+      complicaciones.
+    </p>
+    <p
+      class="text-center lg:text-start text-sm lg:text-base leading-6 text-white"
+    >
+      Identificamos jóvenes con potencial, los entrenamos en desarrollo de
+      software, dominio del inglés y competencias socioemocionales, entregando
+      candidatos ideales para tu equipo.
+    </p>
+    <ContactButton
+      tipo="emplear"
+      whatsApp="+50240579715"
+      iconName="arm.svg"
+      StylesAnchor="place-items-center"
+    />
+  </div>
+  <div>
+    <div class="hidden lg:block">
+      <Image
+        src={myImage}
+        alt="Grupo de campers 1"
+        width={530}
+        widths={[100, 500, 1024]}
+        height={480}
+        loading="lazy"
+        sizes="(max-width: 530px) 100vw, 530px"
+      />
+    </div>
+    <div class="lg:hidden">
+      <Image
+        src={myImage}
+        alt="Grupo de campers 2"
+        width={300}
+        height={300}
+        loading="lazy"
+        sizes="(max-width: 300px) 100vw, 100px"
+      />
+    </div>
+  </div>
 </section>
 
 <style scoped>
-.bg-students {
+  .bg-students {
     position: absolute;
     bottom: 0px;
     right: 0px;
     width: 90%;
     max-width: 90%;
     max-height: 70%;
-}
+  }
 
-.principal {
+  .principal {
     /* background-image: url('src/assets/img/texxture.svg'); */
     background-position: 80% 0%;
     background-repeat: no-repeat;
     background-size: 75%;
-}
+  }
 </style>

@@ -32,13 +32,13 @@ const companies = [
 <section class="allied-companies self-center sections overflow-hidden py-10 relative">
 	<p class="text-2xl text-center mb-10 px-4 lg:px-0 text-white font-bold">Empresas que cuentan con nuestro talento</p>
 	<div class="infinite-slider-container overflow-hidden">
-		<div class="flex flex-wraps gap-6 mx-auto max-w-[1150psx] justify-center lg:justify-normal">
+		<div class="flex flex-wraps gap-6 mx-auto max-w-[1150psx] justify-center lg:justify-normal items-center">
 			{companies.map((company, index) => (
 				<div class="slider w-full">
 					<Image
 						src={company.img}
 						alt="Unete a nuestra comunidad"
-                        class="w-full min-h-[60px]"
+                        class="w-full"
 					/>
 				</div>
 			))}

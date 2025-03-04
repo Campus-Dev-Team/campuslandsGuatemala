@@ -12,7 +12,11 @@ export default {
 				primary_action: "var(--color-primary-action)",
 				secondary: "var(--color-secondary)",
 			},
+			screens: {
+			'semilg': '1180px'
+		}
 		},
+		
 	},
 	plugins: [],
 }

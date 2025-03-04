@@ -28,11 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	setInterval(nextSlide, 12000);
 });
 </script>
-<section class="slider max-w-[1150px] sections">
+<section class="w-[80%] relative overflow-hidden max-w-[1150px] sections justify-self-center">
 	<div class="slider-container" id="slider-container">
-		<div class="slide flex flex-wrap lg:flex-nowrap  lg:gap-x-32">
-			<img src="src/assets/img/campers/camperHome.png" class="" alt="Slide 1" />
-			<div class="flex flex-col relative text-center lg:text-start w-full">
+		<div class="slide flex justify-center flex-wrap lg:flex-nowrap lg:gap-x-32 items-center">
+			<img src="src/assets/img/campers/camperHome.png" class="h-fit" alt="Slide 1" />
+			<div class="flex flex-col relative text-center lg:text-start w-full items-center">
 				<img src="/src/assets/img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
 				<p class="text-4xl mb-4">Cristian Vélez</p>
 				<p class="text-white max-w-[445px] text-center lg:text-start lg:!me-auto mb-2">Director MANTIS APP</p>
@@ -42,12 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	</div>
 </section>
 <style>
-.slider {
-	width: 80%;
-	overflow: hidden;
-	position: relative;
-	margin: auto;
-}
 .slider-container {
 	display: flex;
 	transition: transform 0.5s ease-in-out;
