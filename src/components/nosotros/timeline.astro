@@ -6,26 +6,33 @@ import ArrowLeft from "~/assets/img/icons/arrow-green-left.svg";
 ---
 
 <section
-  class="flex flex-col sections max-w-[1150px] self-center gap-6 md:w-[762px]"
+  class="flex flex-col gap-y-4 w-[328px] max-w-[1150px] self-center lg:w-[762px]"
 >
-  <p
-    class="gradient-text text-lg md:text-[32px] mx-auto text-center font-semibold md:font-bold md:px-14"
+  <div
+    class="flex flex-col sections max-w-[1150px] self-center gap-6 md:w-[762px]"
   >
-    Creciendo juntos: La fundación de Campuslands y su impacto
-  </p>
-  <p
-    class="font-semibold text-white !leading-[1.6] md:font-semibold text-base md:text-lg mx-auto text-center px-4"
-  >
-    Campuslands nació para conectar el talento joven con el mundo laboral,
-    transformando la educación en tecnología desde el primer día.
-  </p>
-</section>
-<section class="flex flex-col gap-y-4 w-[328px]  max-w-[1150px] self-center lg:w-[762px] mt-24">
-  <div class="flex items-center justify-center relative flex-col lg:flex-row">
+    <p
+      class="gradient-text text-lg md:text-[32px] mx-auto text-center font-semibold md:font-bold md:px-14"
+    >
+      Creciendo juntos: La fundación de Campuslands y su impacto
+    </p>
+    <p
+      class="font-semibold text-white !leading-[1.6] md:font-semibold text-base md:text-lg mx-auto text-center px-4"
+    >
+      Campuslands nació para conectar el talento joven con el mundo laboral,
+      transformando la educación en tecnología desde el primer día.
+    </p>
+  </div>
+  <div class="flex items-center justify-center relative flex-col lg:flex-row mt-24">
     <button
       class="prev-timeline items-center justify-center btn-primary shrink-0 rounded-full me-auto size-8 z-[3] hidden lg:flex select-none"
     >
-      <Image src={ArrowLeft} alt="agendar" class="min-w-5 !size-5 shrink-0" draggable="false"/>
+      <Image
+        src={ArrowLeft}
+        alt="agendar"
+        class="min-w-5 !size-5 shrink-0"
+        draggable="false"
+      />
     </button>
     <div
       class="content-date flex flex-col justify-center relative gap-6 shadow-[0_0_16px_0_#00006666] bg-gradient-to-l from-[#FFFFFF1F] to-[#8484841F] rounded-[40px] px-6 min-h-[170px] max-w-[328px] lg:max-w-[482px] z-[2] py-4"
@@ -53,13 +60,23 @@ import ArrowLeft from "~/assets/img/icons/arrow-green-left.svg";
     <button
       class="next-timeline items-center justify-center btn-primary shrink-0 rounded-full ms-auto size-8 z-[3] hidden lg:flex select-none"
     >
-      <Image src={ArrowRight} alt="agendar" class="min-w-5 !size-5 shrink-0" draggable="false"/>
+      <Image
+        src={ArrowRight}
+        alt="agendar"
+        class="min-w-5 !size-5 shrink-0"
+        draggable="false"
+      />
     </button>
     <div class="flex lg:hidden items-center justify-center gap-x-6">
       <button
         class="prev-timeline flex items-center justify-center btn-primary shrink-0 rounded-full size-6 max-w-6 z-[3] !px-0 select-none"
       >
-        <Image src={ArrowLeft} alt="agendar" class="min-w-4 !size-4 shrink-0" draggable="false"/>
+        <Image
+          src={ArrowLeft}
+          alt="agendar"
+          class="min-w-4 !size-4 shrink-0"
+          draggable="false"
+        />
       </button>
       <button
         class="next-timeline flex items-center justify-center btn-primary shrink-0 rounded-full size-6 max-w-6 z-[3] !px-0 select-none"

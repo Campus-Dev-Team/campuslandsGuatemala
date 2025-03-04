@@ -8,7 +8,7 @@ import ContactButton from "../common/ContactButton.astro";
   class="principal flex flex-col sections max-w-[1150px] self-center relative h-fit items-center md:flex-row gap-8"
 >
   <div
-      class="relative flex-wrap justify-betweem h-fit w-full flex w-full md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex-col gap-8 items-center md:items-start"
+      class="relative flex-wrap justify-betweem h-fit w-full flex md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex-col gap-8 items-center md:items-start"
     >
       <p
         class="gradient-text text-center lg:text-start f-40 leading-8 lg:leading-[60px] f-700"
@@ -32,11 +32,10 @@ import ContactButton from "../common/ContactButton.astro";
       <Image
         src={Campers}
         alt="Grupo de campers 1"
-        width={530}
+        width={400}
         widths={[100, 500, 1024]}
-        height={480}
         loading="lazy"
-        sizes="(max-width: 530px) 100vw, 530px"
+        sizes="(max-width: 530px) 100vw, 400px"
       />
     </div>
     <div class="lg:hidden">

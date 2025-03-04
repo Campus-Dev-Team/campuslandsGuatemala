@@ -13,7 +13,7 @@ export default {
 				secondary: "var(--color-secondary)",
 			},
 			screens: {
-			'semilg': '1180px'
+			'semilg': '1200px'
 		}
 		},
 		
