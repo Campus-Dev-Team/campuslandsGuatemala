@@ -1,7 +1,5 @@
 <template>
-	<div class="indicators max-w-[1150px] sections self-center my-20">
-		<div class="flex flex-col gap-y-8 text-center mb-16">
-		</div>
+	<section class="indicators max-w-[1150px] sections self-center">
 		<p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto text-center mb-16 pb-1"> Preguntas frecuentes</p>
 		<div class="flex max-w-[305px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10">
 			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white" :class="`${active === 'tabCampers' ? 'bg-primary_action' : ''}`" @click="activeTab('tabCampers')">
@@ -23,7 +21,7 @@
 				<hr class="m-3 opacity-45">
 			</div>
 		</div>
-	</div>
+	</section>
 </template>
 
 <script setup>

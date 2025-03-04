@@ -7,8 +7,8 @@ import { Image } from 'astro:assets';
 
 ---
 
-<section class="flex sections max-w-[1150px] self-center gap-16 lg:min-h-[740px] ">
-	<div class="flex flex-col flex-grow-1 md:w-[560px] gap-y-3">
+<section class="flex sections max-w-[1150px] self-center gap-16">
+	<div class="flex flex-col flex-grow-1 md:w-[560px] gap-y-3 items-center md:items-start">
 		<p class="gradient-text font-bold leading-9 lg:!leading-[60px] text-2xl text-center md:text-[40px] md:text-start"> Juntos, transformamos el futuro de la tecnología en Colombia y América Latina </p>
 		<p class="text-base font-medium text-center md:text-start text-white">Somos un equipo dedicado a transformar jóvenes talentos en profesionales listos para revolucionar la industria tecnológica.</p>
 		<ContactButton tipo="emplear" whatsApp='+50240579715' iconName='arm.svg' StylesAnchor='place-items-center'/>
@@ -18,7 +18,7 @@ import { Image } from 'astro:assets';
 	</div>
 	<Image src={Students} alt="estudiantes" class="hidden min-[1200px]:block w-[430px] h-[435px]" />
 </section>
-<section id="students-two" class="flex sections max-w-[1150px] self-center flex-col-reverse min-[1200px]:flex-row mt-8 gap-16 min-h-[352px]">
+<section id="students-two" class="flex sections max-w-[1150px] self-center flex-col-reverse min-[1200px]:flex-row gap-16 ">
 	<Image src={StudentsTwo} alt="estudiantes" class="w-[328px] h-[236px] md:w-[488px] md:h-[352px]" />
 	<div class="flex flex-col gap-y-5 max-w-[328px] md:max-w-[471px]">
 		<p class="gradient-text font-extrabold !leading-[1.6] text-2xl mx-auto w-[328px] text-center md:text-[32px] md:w-full md:text-start">
@@ -32,7 +32,7 @@ import { Image } from 'astro:assets';
 		</div>
 	</div>
 </section>
-<section class="flex justify-center items-center flex-col  min-[1200px]:flex-row mt-16 gap-16 min-h-[352px]">
+<section class="flex justify-center items-center flex-col min-[1200px]:flex-row gap-16 ">
 	<div class="flex flex-col gap-y-5 max-w-[328px] md:max-w-[471px]">
 		<p class="gradient-text font-extrabold !leading-[1.6] text-2xl mx-auto w-[328px] text-center md:text-[32px] md:w-full md:text-start">
 			Ser el mayor motor de talento tech en Colombia

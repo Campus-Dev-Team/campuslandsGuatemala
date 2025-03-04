@@ -5,10 +5,10 @@ import tools from "./skillsArrays/tools";
 ---
 
 <section
-  class="sections max-w-[1150px] self-center relative py-6 lg:py-20 h-fit"
+  class="sections max-w-[1150px] self-center relative h-fit"
 >
   <div
-    class="relative flex flex-col flex-wrap justify-center gap-8 h-fit w-full "
+    class="relative flex flex-col flex-wrap justify-center gap-8 h-fit w-full items-center"
   >
     <div
       class="self-center flex w-full  flex-col gap-y-8"
@@ -50,14 +50,15 @@ import tools from "./skillsArrays/tools";
 
       <div
         id="hardSkills"
-        class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-5 mb-16"
+        class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-5"
       >
         {
             hardSkills.map((skill) => (
             <img
               src={skill.asset}
               alt={skill.name}
-              class="max-h-[60px] min-w-[205px]"
+              class="max-h-[55px]
+min-w-[130px] lg:max-h-[60px] lg:min-w-[205px]"
               draggable="false"
               title={skill.name}
             />
@@ -67,7 +68,7 @@ import tools from "./skillsArrays/tools";
 
       <div
         id="tools"
-        class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-4 mb-16"
+        class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-4"
       >
         {
           tools.map((skill) => (
@@ -75,7 +76,8 @@ import tools from "./skillsArrays/tools";
               src={skill.asset}
               alt={skill.name}
               title={skill.name}
-              class="max-h-[95px] min-w-[170px]"
+              class="max-h-[55px]
+min-w-[130px] lg:max-h-[95px] lg:min-w-[170px]"
               draggable="false"
             />
           ))
@@ -84,7 +86,7 @@ import tools from "./skillsArrays/tools";
 
       <div
         id="softSkills"
-        class="skill-content flex flex-wrap justify-center gap-5 lg:gap-4 mb-16"
+        class="skill-content flex flex-wrap justify-center gap-5 lg:gap-4"
       >
         {
           softSkills.map((skill) => (

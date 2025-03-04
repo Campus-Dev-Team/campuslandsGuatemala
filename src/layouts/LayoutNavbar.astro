@@ -12,7 +12,6 @@ import linkedin from "~/assets/img/icons/LinkedIn.svg";
 import youtube from "~/assets/img/icons/YouTube.svg";
 import { ref } from "vue";
 
-const isMenuVisible = ref(false);
 
 function toggleMobileMenu() {
   //   isMenuVisible.value = !isMenuVisible.value;
@@ -62,7 +61,7 @@ const currentPath = Astro.url.pathname;
       ]}
     />
   </head>
-  <body class="relative flex flex-col overflow-x-hidden">
+  <body class="relative flex flex-col overflow-x-hidden gap-[7.8rem]">
     <div
       id="go-up"
       class="flex justify-center align-middle bg-primary rounded-full size-10 fixed right-10 bottom-[5%] cursor-pointer z-50"
@@ -221,7 +220,7 @@ const currentPath = Astro.url.pathname;
         height: 100%;
         display: flex;
         align-items: center;
-        padding: 1.2rem .9rem 0 .9rem;
+        padding: 1.1rem .9rem 1.1rem .9rem;
         font-weight: 600;
       }
       a.active {
