@@ -10,15 +10,11 @@ import facebook from "~/assets/img/icons/Facebook.svg";
 import instagram from "~/assets/img/icons/Instagram.svg";
 import linkedin from "~/assets/img/icons/LinkedIn.svg";
 import youtube from "~/assets/img/icons/YouTube.svg";
-import { ref } from "vue";
 
-
-function toggleMobileMenu() {
-  //   isMenuVisible.value = !isMenuVisible.value;
-}
 
 const { title, classFooter } = Astro.props;
 const currentPath = Astro.url.pathname;
+const curryear = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -155,47 +151,44 @@ const currentPath = Astro.url.pathname;
           >
             <a
               href="/"
-              aria-label="Home"
-              class="text-white hover:text-gray-200 !m-0 px-4">Home</a
+              aria-label="Inicio"
+              class="text-white hover:text-gray-200 !mx-4">Inicio</a
             >
             <a
-              href="/emplea"
+              href="/joinUs"
               aria-label="Impulsa a tu equipo"
-              class="text-white hover:text-gray-200 !m-0 px-4">Emplea</a
+              class="text-white hover:text-gray-200 !mx-4">Sé un Camper</a
+            >
+            <a href="/emplea" class="text-white hover:text-gray-200 !mx-4"
+              >Emplea</a
             >
             <a
               href="/patrocina"
               aria-label="Patrocina nuestros Campers"
-              class="text-white hover:text-gray-200 !m-0 px-4">Patrocina</a
+              class="text-white hover:text-gray-200 !mx-4">Patrocina</a
             >
-            <a href="/joinUs" class="text-white hover:text-gray-200 !m-0 px-4"
-              >Se un Camper</a
-            >
-            <a href="/nosotros" class="text-white hover:text-gray-200 !m-0 px-4"
+            <a href="/nosotros" class="text-white hover:text-gray-200 !mx-4"
               >Nosotros</a
-            >
-            <a href="#" class="text-white hover:text-gray-200 !m-0 px-4"
-              >Comunidad</a
             >
           </div>
         </div>
         <div class="flex items-center flex-col-reverse md:flex-row">
           <p class="text-sm text-white text-center md:text-start md:me-auto">
-            © Campus 2025. Todos los derechos reservados
+            © Campuslands {curryear}. Todos los derechos reservados
           </p>
           <div class="block w-full h-[1px] bg-white my-4 md:hidden"></div>
           <div
             class="flex items-center w-full md:w-fit justify-between md:gap-x-10"
           >
-            <Image src={facebook} alt="Logo facebook" />
-            <Image src={instagram} alt="Logo instagram" />
-            <Image src={linkedin} alt="Logo linkedin" />
-            <Image src={youtube} alt="Logo youtube" />
+            <a href="https://www.facebook.com/Campuslands" target="_blank" class="w-7 h-7 content-center place-items-center"><Image src={facebook} alt="Logo facebook" /></a>
+            <a href="https://www.instagram.com/campuslands/?hl=es" target="_blank" class="w-7 h-7 content-center place-items-center"><Image src={instagram} alt="Logo instagram" /></a>
+            <a href="https://www.linkedin.com/company/campuslands/" target="_blank" class="w-7 h-7 content-center place-items-center"><Image src={linkedin} alt="Logo linkedin" /></a>
+            <a href="https://www.youtube.com/@campuslands" target="_blank" class="w-7 h-7 content-center place-items-center"><Image src={youtube} alt="Logo youtube" /></a>
           </div>
         </div>
       </div>
       <Image
-        class="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-0"
+        class="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] -z-50"
         src={Circular}
         alt=""
       />
@@ -220,7 +213,7 @@ const currentPath = Astro.url.pathname;
         height: 100%;
         display: flex;
         align-items: center;
-        padding: 1.1rem .9rem 1.1rem .9rem;
+        padding: 1.1rem 0.9rem 1.1rem 0.9rem;
         font-weight: 600;
       }
       a.active {
