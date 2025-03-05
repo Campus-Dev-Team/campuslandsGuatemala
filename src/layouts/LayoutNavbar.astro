@@ -18,7 +18,7 @@ const curryear = new Date().getFullYear();
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="es" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -196,6 +196,29 @@ const curryear = new Date().getFullYear();
   </body>
 </html>
 <script>
+  function updateActiveLinks() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.content-redirects a, .md\\:hidden a');
+    
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === currentPath) {
+        link.classList.add('active');
+        link.classList.remove('text-white', 'hover:text-gray-200');
+      } else {
+        link.classList.remove('active');
+        link.classList.add('text-white', 'hover:text-gray-200');
+      }
+    });
+  }
+
+  // Actualizar al cargar la página
+  document.addEventListener('DOMContentLoaded', updateActiveLinks);
+  
+  // Actualizar cuando cambie la URL (para navegación del lado del cliente)
+  document.addEventListener('astro:page-load', updateActiveLinks);
+
+  // Mantener la función goUp existente
   function goUp() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
