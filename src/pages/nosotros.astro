@@ -2,17 +2,15 @@
 import LayoutNavbar from "../layouts/LayoutNavbar.astro";
 import InfoStudents from "~/components/nosotros/infoStudents.astro";
 import InfoBottom from "~/components/nosotros/infoBottom.astro";
+import Timeline from "~/components/nosotros/timeline.astro";
 import Coworking from "~/components/nosotros/coWorking.astro";
-import JoinUs from "~/components/joinRevolution.astro";
 import "~/styles/index.css";
 
 ---
 
-<LayoutNavbar title="Campuslands" classFooter="flex lg:hidden">
-	<article class="from-8% relative py-5">
-		<InfoStudents />
-		<InfoBottom />
-		<Coworking />
-		<JoinUs />
-	</article>
+<LayoutNavbar title="Campuslands" >
+	<InfoStudents />
+	<InfoBottom />
+	<Timeline />
+	<Coworking />
 </LayoutNavbar>

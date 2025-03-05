@@ -1,68 +1,96 @@
 ---
-import { Image } from 'astro:assets';
-import myImage from '~/assets/img/patrocina/patrocina-home.png';
+import { Image } from "astro:assets";
+import myImage from "~/assets/img/patrocina/patrocina-home.png";
 ---
-<!-- <section class="principal max-w-7xl mx-auto from-8% relative py-6 lg:py-20 lg:my-10 h-fit"> -->
-<section class="principal max-w-7xl mx-auto from-8% relative py-6 lg:py-20 lg:my-10 h-fit">
-	<div class="relative mx-auto flex flex-wrap justify-between h-fit w-full px-10 md:px-50 lg:px-8 max-w-7xl">
-		<div class="my-auto w-full lg:w-5/12">
-			<div class="items-center justify-center">
-				<div class="flex w-full md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex-col gap-y-8 relative">
-					<p class="gradient-text text-center lg:text-start text-2xl lg:text-[40px] leading-8 lg:leading-[60px] f-700"> Transforma vidas, transforma futuro</p>
-					<p class="text-center lg:text-start text-sm lg:text-base leading-6 text-white"> En Campuslands, nos dedicamos a transformar vidas a través de la educación tecnológica, creando un nuevo estrato social digital. </p>
-					<a href="/contactanos" target="_blank" class="flex justify-center items-center gap-x-2 z-30">
-						<button class="btn-primary w-full sm:max-w-[316px] lg:me-auto f-600 h-12 lg:h-14 px-6 flex justify-center items-center gap-x-2 z-30">
-							Patrocina nuestros Campers
-							<img src="src/assets/img/icons/heart.svg" alt="cara feliz" class="hidden lg:block">
-						</button>
-					</a>
-				</div>
-			</div>
-		</div>
-		<div class="my-auto flex-grow lg:flex-1 text-center d-middle-center">
-			<div class="hidden lg:block">
-				<Image
-					src={myImage}
-					alt="Grupo de campers 1"
-					width={750}
-					widths={[100, 500, 1024]}
-					height={480}
-					loading='lazy'
-					sizes="(max-width: 750px) 100vw, 750px"
-					class='mx-auto'
-				/>
-			</div>
-			<div class="lg:hidden mt-5">
-				<Image
-					src={myImage}
-					alt="Grupo de campers 2"
-					width={300}
-					height={300}
-					loading='lazy'
-					sizes="(max-width: 300px) 100vw, 100px"
-					class="mx-auto"
-				/>
-			</div>
-		</div>
-	</div>
-	<img src="src/assets/img/textura-lateral-derecha.svg" alt="" class="absolute top-0 right-0">
-	<img src="src/assets/img/textura-lateral-izquierda.svg" alt="" class="absolute top-0 left-0">
+
+<section
+  class="principal flex flex-col sections max-w-[1150px] self-center relative h-fit items-center md:flex-row gap-8 z-20"
+>
+  <div
+    class="relative flex-wrap w-full md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex flex-col gap-8 items-center md:items-start"
+  >
+    <p
+      class="gradient-text text-center lg:text-start text-2xl lg:text-[40px] leading-8 lg:leading-[60px] f-700"
+    >
+      Transforma vidas, transforma futuro
+    </p>
+    <p
+      class="text-center lg:text-start text-sm lg:text-base leading-6 text-white"
+    >
+      En Campuslands, nos dedicamos a transformar vidas a través de la educación
+      tecnológica, creando un nuevo estrato social digital.
+    </p>
+    <a
+      href="https://mail.google.com/mail/?view=cm&fs=1&to=jorge@quantic.la&su=Donación" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="flex justify-center items-center w-full sm:max-w-[316px] lg:me-auto"
+    >
+      <button
+        class="btn-primary w-full h-12 lg:h-14 px-6 flex justify-center items-center gap-x-2 f-600"
+      >
+        Patrocina nuestros Campers
+        <img
+          src="src/assets/img/icons/heartdark.svg"
+          alt="cara feliz"
+          class="hidden lg:block"
+        />
+      </button>
+    </a>
+  </div>
+
+  <div class="relative flex-grow lg:flex-1 text-center z-20">
+    <div class="hidden lg:block">
+      <Image
+        src={myImage}
+        alt="Grupo de campers 1"
+        width={530}
+        widths={[100, 500, 1024]}
+        height={480}
+        loading="lazy"
+        sizes="(max-width: 750px) 100vw, 550px"
+        class="mx-auto"
+      />
+    </div>
+    <div class="lg:hidden mt-5">
+      <Image
+        src={myImage}
+        alt="Grupo de campers 2"
+        width={300}
+        height={300}
+        loading="lazy"
+        sizes="(max-width: 300px) 100vw, 100px"
+        class="mx-auto"
+      />
+    </div>
+  </div>
+
+  <img
+    src="src/assets/img/textura-lateral-derecha.svg"
+    alt=""
+    class="absolute top-0 right-0 z-[-1]"
+  />
+  <img
+    src="src/assets/img/textura-lateral-izquierda.svg"
+    alt=""
+    class="absolute top-0 left-0 z-[-1]"
+  />
 </section>
 
 <style scoped>
-.bg-students {
+  .bg-students {
     position: absolute;
     bottom: 0px;
     right: 0px;
     width: 90%;
     max-width: 90%;
     max-height: 70%;
-}
+  }
 
-.principal {
+  .principal {
     /* background-image: url('src/assets/img/texxture.svg'); */
     background-position: 80% 0%;
     background-repeat: no-repeat;
     background-size: 75%;
-}
+  }
 </style>

@@ -1,5 +1,6 @@
 ---
-import FormSponsor from "~/partials/formSponsor.vue";
+import FormSponsor from "~/partials/formSponsor.astro";
+import FormSponsor2 from "~/partials/formSponsor.vue";
 import "~/styles/index.css";
 
 ---
@@ -9,10 +10,12 @@ import "~/styles/index.css";
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 	<title>Patrocina</title>
 </head>
 <body>
-	<FormSponsor client:load />
+	<!-- <FormSponsor client:load /> -->
+	<FormSponsor2 client:load />
 </body>
 </html>
 

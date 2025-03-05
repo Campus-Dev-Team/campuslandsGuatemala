@@ -2,18 +2,18 @@
 import LayoutNavbar from "../layouts/LayoutNavbar.astro";
 import Intro from "../components/joinUs/intro.astro";
 import AlliedCompanies from "../components/alliedCompanies.astro";
-import SliderTestimonials from "../components/sliderTestimonials.astro";
+import SliderTestimonials from "../components/joinUs/sliderTestimonials.astro";
+import StepByStep from "~/components/joinUs/stepByStep.astro";
+import Skills from "~/components/joinUs/skills.astro"
 
 import "~/styles/index.css";
 ---
 <LayoutNavbar title="Campuslands - Se un Camper">
 	<Intro />
 	<AlliedCompanies />
-	<div class="my-20 py-20">
-		<SliderTestimonials />
-	</div>
-
-
+	<SliderTestimonials />
+	<Skills/>
+	<StepByStep>
 </LayoutNavbar>
 
 <style>

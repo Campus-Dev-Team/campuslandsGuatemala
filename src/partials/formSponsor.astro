@@ -1,0 +1,244 @@
+---
+
+---
+
+<main class="overflow-auto h-full w-full bg-texture" id="sponsorForm">
+  <article class="w-full h-full">
+    <section class="flex flex-col mx-8 md:mx-32 h-full gap-y-8 pt-4">
+      <img
+        src="src/assets/img/logos/logoCampus_v1.svg"
+        alt="Logo Campus"
+        class="object-cover w-[156px] h-[48px]"
+      />
+
+      <div class="flex items-center justify-center lg:hidden gap-x-6 mb-2">
+        <div
+          id="donateBtn"
+          class="flex items-center rounded-full transition-all duration-75 ease-linear w-fit font-semibold px-6 h-10 cursor-pointer text-[#DFFBF4] hover:bg-[#B0F7E6] hover:text-[#004232]"
+        >
+          <p>Hacer donación</p>
+        </div>
+        <div
+          id="subscribeBtn"
+          class="flex items-center rounded-full transition-all duration-75 ease-linear w-fit font-semibold px-6 h-10 cursor-pointer text-[#DFFBF4] hover:bg-[#B0F7E6] hover:text-[#004232]"
+        >
+          <p>Suscribirme</p>
+        </div>
+      </div>
+
+      <div
+        class="flex justify-center items-start md:items-center h-full gap-x-16"
+      >
+        <!-- Donate Form -->
+        <div
+          id="donateForm"
+          class="border-4 border-[#2CA2FF] bg-gradient-to-bl from-[#FFFFFF1F] to-[#8484841F] backdrop-blur-2xl rounded-[40px] w-full px-10 py-8 min-w-[328px] lg:max-w-[456px] lg:hover:scale-110 transition-all duration-75 ease-linear"
+        >
+          <div class="donate-initial">
+            <p class="gradient-text font-bold text-2xl">Haz una donación</p>
+            <p class="text-sm font-normal text-white my-2">
+              Cada aporte cuenta. Haz una donación puntual y contribuye al
+              futuro de nuestros campers con un impacto inmediato.
+            </p>
+            <button
+              class="flex items-center justify-center w-full primary mt-5 mb-2 gap-x-4 h-14"
+              id="">Donar a Campuslands</button
+            >
+            <p class="text-white text-center text-[10px]">
+              *Al donar, aceptas el tratamiento de tus datos personales
+            </p>
+          </div>
+
+          <div class="donate-form hidden">
+            <p class="gradient-text font-bold text-2xl">
+              ¡Gracias por contribuir!
+            </p>
+            <p class="text-sm font-normal text-white my-2">
+              Tu donación hace una gran diferencia en la vida de nuestros
+              campers.
+            </p>
+            <form id="donateFormFields">
+              <p class="font-semibold mt-4 pb-1">Tu nombre</p>
+              <input
+                name="name"
+                class="w-full"
+                placeholder="¿Cómo te llamas?"
+              />
+              <p class="font-semibold mt-4 pb-1">Correo electrónico</p>
+              <input
+                name="email"
+                class="w-full"
+                placeholder="Correo electrónico de contacto"
+              />
+              <p class="font-semibold mt-4 pb-1">Monto de la donación</p>
+              <input
+                name="amount"
+                class="w-full"
+                placeholder="Ingresa el monto de tu donación"
+              />
+              <button
+                type="submit"
+                class="flex items-center justify-center w-full primary mt-5 mb-2 gap-x-4 h-14"
+                >Donar ahora</button
+              >
+            </form>
+          </div>
+        </div>
+
+        <!-- Subscribe Form -->
+        <div
+          id="subscribeForm"
+          class="border-4 border-[#2CA2FF] bg-gradient-to-bl from-[#FFFFFF1F] to-[#8484841F] backdrop-blur-2xl rounded-[40px] w-full px-10 py-8 min-w-[328px] lg:max-w-[456px] lg:hover:scale-110 transition-all duration-75 ease-linear hidden lg:block"
+        >
+          <div class="subscribe-initial">
+            <p class="gradient-text font-bold text-2xl">
+              Suscríbete y cambia vidas
+            </p>
+            <p class="text-sm font-normal text-white my-2">
+              Al unirte como suscriptor, aseguras apoyo constante a nuestros
+              campers y te destacas en nuestros eventos y plataformas.
+            </p>
+            <button
+              class="flex items-center justify-center w-full primary mt-5 mb-2 gap-x-4 h-14"
+              id="subscribeCampusBtn">Suscribirte a Campuslands</button
+            >
+            <p class="text-white text-center text-[10px]">
+              *Al suscribirte, aceptas el tratamiento de tus datos personales
+            </p>
+          </div>
+
+          <div class="subscribe-form hidden">
+            <p class="gradient-text font-bold text-2xl">
+              ¡Gracias por suscribirte!
+            </p>
+            <p class="text-sm font-normal text-white my-2">
+              Tu donación hace una gran diferencia en la vida de nuestros
+              campers.
+            </p>
+            <form id="subscribeFormFields">
+              <p class="font-semibold mt-4 pb-1">Tu nombre</p>
+              <input
+                name="name"
+                class="w-full"
+                placeholder="¿Cómo te llamas?"
+              />
+              <p class="font-semibold mt-4 pb-1">Correo electrónico</p>
+              <input
+                name="email"
+                class="w-full"
+                placeholder="Correo electrónico de contacto"
+              />
+              <p class="font-semibold mt-4 pb-1">Monto de la donación</p>
+              <input
+                name="amount"
+                class="w-full"
+                placeholder="Ingresa el monto de tu donación"
+              />
+              <button
+                type="submit"
+                class="flex items-center justify-center w-full primary mt-5 mb-2 gap-x-4 h-14"
+                >Suscribirme ahora</button
+              >
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </article>
+</main>
+
+<style>
+  .bg-texture {
+    background-image: url("/src/assets/img/texxture.svg");
+    background-position: 100% 100%;
+    background-repeat: no-repeat;
+    background-size: 75%;
+  }
+
+  /* Add any additional styles here */
+</style>
+
+<script>
+  // Client-side JavaScript
+  document.addEventListener("astro:page-load", () => {
+    const state = {
+      isDonate: false,
+      isSubscribe: false,
+      viewDonate: true,
+    };
+
+    const elements = {
+      donateBtn: document.getElementById("donateBtn"),
+      subscribeBtn: document.getElementById("subscribeBtn"),
+      donateForm: document.getElementById("donateForm"),
+      subscribeForm: document.getElementById("subscribeForm"),
+      donateCampusBtn: document.getElementById("donateCampusBtn"),
+      subscribeCampusBtn: document.getElementById("subscribeCampusBtn"),
+      donateInitial: document.querySelector(".donate-initial"),
+      donateFormFields: document.querySelector(".donate-form"),
+      subscribeInitial: document.querySelector(".subscribe-initial"),
+      subscribeFormFields: document.querySelector(".subscribe-form"),
+    };
+
+    function updateUI() {
+      // Update button states
+      elements.donateBtn.classList.toggle("bg-[#02D9A4]", state.viewDonate);
+      elements.donateBtn.classList.toggle("text-[#004232]", state.viewDonate);
+      elements.subscribeBtn.classList.toggle("bg-[#02D9A4]", !state.viewDonate);
+      elements.subscribeBtn.classList.toggle(
+        "text-[#004232]",
+        !state.viewDonate
+      );
+
+      // Update form visibility
+      elements.donateForm.classList.toggle("hidden", !state.viewDonate);
+      elements.subscribeForm.classList.toggle("hidden", state.viewDonate);
+
+      // Update form states
+      elements.donateInitial.classList.toggle("hidden", state.isDonate);
+      elements.donateFormFields.classList.toggle("hidden", !state.isDonate);
+      elements.subscribeInitial.classList.toggle("hidden", state.isSubscribe);
+      elements.subscribeFormFields.classList.toggle(
+        "hidden",
+        !state.isSubscribe
+      );
+    }
+
+    // Event Handlers
+    elements.donateBtn.addEventListener("click", () => {
+      state.viewDonate = true;
+      updateUI();
+    });
+
+    elements.subscribeBtn.addEventListener("click", () => {
+      state.viewDonate = false;
+      updateUI();
+    });
+
+    elements.donateCampusBtn.addEventListener("click", () => {
+      state.isDonate = true;
+      updateUI();
+    });
+
+    elements.subscribeCampusBtn.addEventListener("click", () => {
+      state.isSubscribe = true;
+      updateUI();
+    });
+
+    // Form submissions
+    elements.donateFormFields.addEventListener("submit", (e) => {
+      e.preventDefault();
+      state.isDonate = false;
+      updateUI();
+    });
+
+    elements.subscribeFormFields.addEventListener("submit", (e) => {
+      e.preventDefault();
+      state.isSubscribe = false;
+      updateUI();
+    });
+
+    // Initial UI setup
+    updateUI();
+  });
+</script>
