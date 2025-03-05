@@ -7,8 +7,8 @@ import { Image } from 'astro:assets';
 
 ---
 
-<section class="flex sections max-w-[1150px] self-center gap-16">
-	<div class="flex flex-col flex-grow-1 md:w-[560px] gap-y-3 items-center semilg:items-start">
+<section class="principal flex sections max-w-[1150px] self-center gap-16">
+	<div class="flex flex-col flex-grow-1 md:w-[560px] gap-y-3 self-center items-center semilg:items-start">
 		<p class="gradient-text font-bold leading-9 lg:!leading-[60px] text-2xl text-center md:text-[40px] md:text-start"> Juntos, transformamos el futuro de la tecnología en Latinoamerica</p>
 		<p class="text-base font-medium text-center md:text-start text-white">Somos un equipo dedicado a transformar jóvenes talentos en profesionales listos para revolucionar la industria tecnológica.</p>
 		<ContactButton tipo="emplear" whatsApp='+50240579715' iconName='arm.svg' StylesAnchor='place-items-center'/>
@@ -46,6 +46,11 @@ import { Image } from 'astro:assets';
 </section>
 
 <style>
+
+	.principal {
+		margin-bottom: 10rem;
+
+	}
 .icon-circle-arrow {
 	animation: move-circle 2s infinite;
 }
