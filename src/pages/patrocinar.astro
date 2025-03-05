@@ -1,5 +1,6 @@
 ---
-import FormSponsor from "~/partials/formSponsor.vue";
+import FormSponsor from "~/partials/formSponsor.astro";
+import FormSponsor2 from "~/partials/formSponsor.vue";
 import "~/styles/index.css";
 
 ---
@@ -13,7 +14,8 @@ import "~/styles/index.css";
 	<title>Patrocina</title>
 </head>
 <body>
-	<FormSponsor client:load />
+	<!-- <FormSponsor client:load /> -->
+	<FormSponsor2 client:load />
 </body>
 </html>
 
