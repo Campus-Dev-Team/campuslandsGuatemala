@@ -2,7 +2,7 @@
 	<main class="overflow-auto h-full w-full">
 		<article class="w-full h-full">
 			<section class="flex flex-col mx-8 md:mx-32 h-full gap-y-8 pt-4">
-				<img src="src/assets/img/logos/logoCampus_v1.svg" alt="" class="object-cover w-[156px] h-[48px]">
+				<img src="/img/logos/logoCampus_v1.svg" alt="" class="object-cover w-[156px] h-[48px]">
 				<div class="flex items-center justify-center lg:hidden gap-x-6 mb-2">
 					<div :class="['flex items-center rounded-full transition-all duration-75 ease-linear w-fit font-semibold px-6 h-10', viewDonate ? 'text-[#004232] bg-[#02D9A4]': 'cursor-pointer text-[#DFFBF4] hover:bg-[#B0F7E6] hover:text-[#004232]']" @click="showViewDonate">
 						<p>Hacer donación</p>
@@ -102,7 +102,7 @@ function subscribeNow(){
 
 <style scoped>
 main {
-	background-image: url('/src/assets/img/texxture.svg');
+	background-image: url('/img/texxture.svg');
 	background-position: 100% 100%;
 	background-repeat: no-repeat;
 	background-size: 75%;

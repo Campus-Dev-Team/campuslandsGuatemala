@@ -1,4 +1,4 @@
-const path = "src/assets/img/campers/softSkills/"
+const path = "img/campers/softSkills/"
 
 const softSkills = [
     {name: "Empatía", asset: path + `heartbeat.svg`},

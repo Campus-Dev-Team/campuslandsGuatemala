@@ -14,7 +14,7 @@
 				<details>
 					<summary class="flex justify-between text-lg cursor-pointer font-semibold">
 						{{faq.title}}
-						<img src="src/assets/img/icons/heart.svg" alt="" class="size-5 cursor-pointer">
+						<img src="/img/icons/heart.svg" alt="" class="size-5 cursor-pointer">
 					</summary>
 					<p class="text-base font-normal mt-4 lg:mt-8">{{ faq.description }}</p>
 				</details>
