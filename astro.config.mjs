@@ -11,8 +11,5 @@ export default defineConfig({
 		vue(),
 		sitemap(),
 		icon()
-	],
-	experimental: {
-		viewTransitions: true
-	  }
+	]
 });

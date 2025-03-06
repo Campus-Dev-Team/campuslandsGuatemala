@@ -6,28 +6,36 @@ import Donate from "../components/patrocinar/donate.astro";
 import Subscribe from "../components/patrocinar/subscribe.astro";
 import AlliedCompanies from "../components/patrocinar/alliedCompanies.astro";
 import "~/styles/index.css";
+
+const dataFooter = {
+  title: "¿Listo para transformar vidas a través de la tecnología?",
+  content:
+    "Sé parte del cambio que impulsa el talento tech en Latinoamérica. Tu apoyo abre las puertas a jóvenes con potencial para desarrollarse en la industria tecnológica. ¡Únete como patrocinador y construye un futuro más inclusivo!",
+  buttonType: "patrocinio",
+  buttonIcon: "heartdark.svg",
+};
 ---
 
-<LayoutNavbar title="Campuslands - Patrocina">
-	<Intro />
-	<div class="sections max-w-[1150px] self-center">
-		<img src="/img/patrocina/card.png" alt="" class="w-full hidden sm:block">
-		<img src="/img/patrocina/cardMobile.png" alt="" class="w-full sm:hidden">
-	</div>
-	<Items />
-	<Donate />
-	<Subscribe />
-	<AlliedCompanies />
+<LayoutNavbar title="Campuslands - Patrocina" dataFooter={dataFooter}>
+  <Intro />
+  <div class="sections max-w-[1150px] self-center">
+    <img src="/img/patrocina/card.png" alt="" class="w-full hidden sm:block" />
+    <img src="/img/patrocina/cardMobile.png" alt="" class="w-full sm:hidden" />
+  </div>
+  <Items />
+  <Donate />
+  <Subscribe />
+  <AlliedCompanies />
 </LayoutNavbar>
 
 <style>
-main {
-	margin: auto;
-	padding: 1rem;
-	width: 800px;
-	max-width: calc(100% - 2rem);
-	color: white;
-	font-size: 20px;
-	line-height: 1.6;
-}
+  main {
+    margin: auto;
+    padding: 1rem;
+    width: 800px;
+    max-width: calc(100% - 2rem);
+    color: white;
+    font-size: 20px;
+    line-height: 1.6;
+  }
 </style>

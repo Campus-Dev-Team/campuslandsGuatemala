@@ -1,21 +1,27 @@
 <template>
 	<section class="indicators max-w-[1150px] sections self-center">
-		<p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto text-center mb-16 pb-1"> Preguntas frecuentes</p>
+		<p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto text-center mb-16 pb-1"> Preguntas frecuentes
+		</p>
 		<div class="flex max-w-[305px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10">
-			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white" :class="`${active === 'tabCampers' ? 'bg-primary_action' : ''}`" @click="activeTab('tabCampers')">
+			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white"
+				:class="`${active === 'tabCampers' ? 'bg-primary_action' : ''}`" @click="activeTab('tabCampers')">
 				Campers
 			</div>
-			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white" :class="`${active === 'tabSponsors' ? 'bg-primary_action' : ''}`" @click="activeTab('tabSponsors')">
+			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white"
+				:class="`${active === 'tabSponsors' ? 'bg-primary_action' : ''}`" @click="activeTab('tabSponsors')">
 				Patrocinadores
 			</div>
 		</div>
 		<div class="items-center justify-center flex flex-wrap gap-y-4 lg:gap-y-3 mb-16">
-			<div v-for="(faq, index) in questionsAndAnswers" :key="index" class="w-full md:w-1/2 md:max-w-[480px] px-4 lg:p-4 h-fit">
-				<details>
+			<div v-for="(faq, index) in questionsAndAnswers" :key="index"
+				class="w-full md:w-1/2 md:max-w-[480px] px-4 lg:p-4 h-fit">
+				<details class="group">
 					<summary class="flex justify-between text-lg cursor-pointer font-semibold">
-						{{faq.title}}
-						<img src="/img/icons/heart.svg" alt="" class="size-5 cursor-pointer">
+						{{ faq.title }}
+						<img src="/img/icons/plus-svgrepo-com.svg" alt=""
+							class="size-5 cursor-pointer transition-transform duration-300 group-open:rotate-45">
 					</summary>
+					<hr class="m-3 opacity-45">
 					<p class="text-base font-normal mt-4 lg:mt-8">{{ faq.description }}</p>
 				</details>
 				<hr class="m-3 opacity-45">
@@ -189,11 +195,9 @@ onBeforeMount(() => {
 function activeTab(tab) {
 	active.value = tab
 	questionsAndAnswers.value = tab === 'tabCampers'
-	? questionsAndAnswers.value = tabFaqCampersData.value
-	: questionsAndAnswers.value = tabFaqSponsersData.value
+		? questionsAndAnswers.value = tabFaqCampersData.value
+		: questionsAndAnswers.value = tabFaqSponsersData.value
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

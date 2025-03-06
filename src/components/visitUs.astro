@@ -1,19 +1,44 @@
 ---
-import ContactButton from "./common/ContactButton.astro"
+import ContactButton from "./common/ContactButton.astro";
 
 const contactNumber = "+50240579715";
 ---
-<section class="flex flex-wrap w-full lg:max-w-[1130px] gap-x-20 max-w-[1150px] sections self-center justify-center relative h-fit overflow-hidden ">
-    <a href="https://maps.app.goo.gl/6eu8ECMuVEH4wKaA6" target="_blank">
-        <img src="/img/mapa.svg" alt="" class="w-4/6 lg:w-[420px] max-h-[420px] mx-auto">
-    </a>
-    <div class="max-w-[550px] my-auto flex flex-col gap-y-8">
-        <p class="gradient-text text-xl text-center lg:text-start lg:text-4xl font-bold mt-5">Visita nuestras instalaciones, vive la experiencia Campuslands</p>
-        <p class="text-white font-semibold">Visítanos en nuestras sedes y descubre cómo Campuslands está transformando el talento tech. Agenda una cita y descubre cómo puedes ser parte de esta revolución, ya sea como estudiante, empleador o patrocinador.</p>
-        <div class="flex flex-wrap justify-center md:flex-nowrap gap-6">
-            <ContactButton tipo="agendar" whatsApp={contactNumber} iconName="agenda.svg" StylesButton="md:max-w-[216px]"/>
-            <ContactButton tipo="chatear" whatsApp={contactNumber} iconName="whatsapp.svg" isOutline StylesButton="md:max-w-[300px]"/>
-        </div>
-    </div>
 
+<section
+  class="flex flex-wrap w-full lg:max-w-[1130px] gap-x-20 max-w-[1150px] sections self-center justify-center relative h-fit overflow-hidden"
+>
+  <a href="https://maps.app.goo.gl/dR88W3gd1vREJi87A" target="_blank">
+    <img
+      src="/img/mapa.svg"
+      alt=""
+      class="w-4/6 lg:w-[420px] max-h-[420px] mx-auto"
+    />
+  </a>
+  <div class="max-w-[550px] my-auto flex flex-col gap-y-8">
+    <p
+      class="gradient-text text-xl text-center lg:text-start lg:text-4xl font-bold mt-5"
+    >
+      Visita nuestras instalaciones, vive la experiencia Campuslands
+    </p>
+    <p class="text-white font-semibold">
+      Visítanos en nuestras sedes y descubre cómo Campuslands está transformando
+      el talento tech. Agenda una cita y descubre cómo puedes ser parte de esta
+      revolución, ya sea como estudiante, empleador o patrocinador.
+    </p>
+    <div class="flex flex-wrap justify-center md:flex-nowrap gap-6">
+      <ContactButton
+        tipo="agendar"
+        whatsApp={contactNumber}
+        iconName="agenda.svg"
+        StylesButton="md:max-w-[216px]"
+      />
+      <ContactButton
+        tipo="chatear"
+        whatsApp={contactNumber}
+        iconName="whatsapp.svg"
+        isOutline
+        StylesButton="md:max-w-[300px]"
+      />
+    </div>
+  </div>
 </section>

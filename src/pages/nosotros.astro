@@ -6,11 +6,19 @@ import Timeline from "~/components/nosotros/timeline.astro";
 import Coworking from "~/components/nosotros/coWorking.astro";
 import "~/styles/index.css";
 
+const dataFooter = {
+  title:
+    "¿Listo para ser parte de una comunidad que transforma el talento tech en Latinoamérica?",
+  content:
+    "Únete a Campuslands, donde formamos la próxima generación de desarrolladores con una visión integral y humana. Sea como estudiante, empresa o patrocinador, juntos podemos liderar la revolución tecnológica en la región. ¡Construyamos el futuro hoy!",
+  buttonType: "chatear",
+  buttonIcon: "whatsapp-green-dark.svg",
+};
 ---
 
-<LayoutNavbar title="Campuslands - Nosotros" >
-	<InfoStudents />
-	<InfoBottom />
-	<Timeline />
-	<Coworking />
+<LayoutNavbar title="Campuslands - Nosotros" dataFooter={dataFooter}>
+  <InfoStudents />
+  <InfoBottom />
+  <Timeline />
+  <Coworking />
 </LayoutNavbar>

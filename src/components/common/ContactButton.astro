@@ -13,12 +13,17 @@ interface Props {
 const {whatsApp,tipo,iconName,alt,isOutline, StylesAnchor, StylesButton} = Astro.props;
 
 const presets = {
-    "contacto" : ["Contactanos", "Hola%2C+estoy+interesado+en+obtener+información+detallada+sobre+Campuslands."],
-    "chatear" : ["Chatea Con Nosotros", "Hola%2C+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands."],
-    "patrocinio" : ["Patrocina nuestros campers", "Hola%2C+estoy+buscando+desarrolladores%2C+¿cómo+puedo+acceder+al+talento+de+Campuslands."],
-    "emplear" : ["Emplea nuestros Campers", "Buen+día,+quisiera+obtener+información+sobre+cómo+emplear+talento+de+Campuslands."],
-    "agendar" : ["Agenda tu visita","Hola,+me+gustaría+obtener+información+para+agendar+una+cita+y+conocer+Campuslands."],
-    "insripcion": ["Inscríbete ahora", "Hola,+estoy+interesado+en+aprender+programación.+¿Cómo+funciona+el+entrenamiento+en+Campuslands?"]
+    "contacto": ["Contactanos", "¡Hola!+Me+gustaría+conocer+más+sobre+Campuslands+y+sus+programas+de+formación.+¿Podrían+brindarme+información+detallada?"],
+    
+    "chatear": ["Chatea Con Nosotros", "¡Hola!+Me+interesa+ser+parte+de+Campuslands.+¿Podemos+programar+una+reunión+para+conocer+más+sobre+la+metodología?"],
+    
+    "patrocinio": ["Patrocina nuestros campers", "¡Saludos!+Represento+a+una+empresa+interesada+en+el+talento+de+Campuslands.+¿Podrían+informarme+sobre+el+programa+de+patrocinio+y+los+perfiles+disponibles?"],
+    
+    "emplear": ["Emplea nuestros Campers", "¡Hola!+Somos+una+empresa+en+búsqueda+de+talento+tech.+Nos+interesa+conocer+los+perfiles+de+sus+Campers+y+el+proceso+de+vinculación+laboral."],
+    
+    "agendar": ["Agenda tu visita", "¡Hola!+Me+gustaría+coordinar+una+visita+para+conocer+las+instalaciones+de+Campuslands+y+aprender+más+sobre+su+metodología+de+formación.+¿Qué+horarios+tienen+disponibles?"],
+    
+    "insripcion": ["Inscríbete ahora", "¡Hola!+Estoy+muy+interesado+en+formarme+como+desarrollador+en+Campuslands.+¿Podrían+informarme+sobre+el+proceso+de+inscripción,+requisitos+y+próximas+fechas+de+inicio?"]
 }
 
 const config = presets[tipo]

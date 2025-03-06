@@ -6,11 +6,20 @@ import ChatWithUs from "~/components/emplea/chatWithUs.astro";
 import AlliedCompanies from "../components/alliedCompanies.astro";
 import ConnectingTalent from "../components/emplea/connectingTalent.astro";
 import "~/styles/index.css";
+
+const dataFooter = {
+  title: "¿Listo para potenciar tu empresa con talento tech de alto nivel?",
+  content:
+    "Da el siguiente paso en la innovación de tu equipo. Descubre cómo nuestros Campers, formados en desarrollo, inglés y habilidades blandas, pueden impulsar el crecimiento de tu empresa. ¡Contrata talento preparado para los retos del futuro!",
+  buttonType: "emplear",
+  buttonIcon: "arm.svg",
+};
 ---
-<LayoutNavbar title="Campuslands - Emplea">
-	<Intro />
-	<Talent />
-	<ChatWithUs />
-	<AlliedCompanies />
-	<ConnectingTalent />
+
+<LayoutNavbar title="Campuslands - Emplea" dataFooter={dataFooter}>
+  <Intro />
+  <Talent />
+  <ChatWithUs />
+  <AlliedCompanies />
+  <ConnectingTalent />
 </LayoutNavbar>

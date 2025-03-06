@@ -1,64 +1,66 @@
 ---
-import { Image } from 'astro:assets';
+import { Image } from "astro:assets";
 
-import carrusel1 from '~/assets/img/companies/carrusel1.png';
-import carrusel2 from '~/assets/img/companies/carrusel2.png';
-import carrusel3 from '~/assets/img/companies/carrusel3.png';
-import carrusel4 from '~/assets/img/companies/carrusel4.png';
+import carrusel1 from "~/assets/img/companies/carrusel1.png";
+import carrusel2 from "~/assets/img/companies/carrusel2.png";
+import carrusel3 from "~/assets/img/companies/carrusel3.png";
+import carrusel4 from "~/assets/img/companies/carrusel4.png";
 const companies = [
-    {
-        id: 1,
-        img: carrusel1,
-        alt: 'Solvo - Bringing you a world of talent',
-    },
-    {
-        id: 2,
-        img: carrusel2,
-        alt: 'QNT - Creemos, ayudamos e impulsamos sueños',
-    },
-    {
-        id: 3,
-        img: carrusel3,
-        alt: 'Pensemos - Logo',
-    },
-    {
-        id: 4,
-        img: carrusel4,
-        alt: 'Amaris Consulting - Logo',
-    }
-]
+  {
+    id: 1,
+    img: carrusel1,
+    alt: "Solvo - Bringing you a world of talent",
+  },
+  {
+    id: 2,
+    img: carrusel2,
+    alt: "QNT - Creemos, ayudamos e impulsamos sueños",
+  },
+  {
+    id: 3,
+    img: carrusel3,
+    alt: "Pensemos - Logo",
+  },
+  {
+    id: 4,
+    img: carrusel4,
+    alt: "Amaris Consulting - Logo",
+  },
+];
 ---
 
 <section class="allied-companies self-center sections overflow-hidden relative">
-	<p class="text-2xl text-center mb-10 px-4 lg:px-0 text-white font-bold">Empresas que cuentan con nuestro talento</p>
-	<div class="infinite-slider-container overflow-hidden">
-		<div class="flex flex-wraps gap-6 mx-auto max-w-[1150psx] justify-center lg:justify-normal items-center">
-			{companies.map((company, index) => (
-				<div class="slider w-full">
-					<Image
-						src={company.img}
-						alt="Unete a nuestra comunidad"
-                        class="w-full"
-					/>
-				</div>
-			))}
-		</div>
-	</div>
+  <p class="text-2xl text-center mb-10 px-4 lg:px-0 text-white font-bold">
+    Empresas que cuentan con nuestro talento
+  </p>
+  <div
+    class="infinite-slider-container w-[500%] md:w-[200%] overflow-hidden flex flex-wraps gap-6 mx-auto justify-center lg:justify-normal items-center"
+  >
+    {
+      companies.map((company, index) => (
+        <div class="slider w-full">
+          <Image
+            src={company.img}
+            alt="Unete a nuestra comunidad"
+            class="w-full"
+          />
+        </div>
+      ))
+    }
+  </div>
 </section>
 <style>
+  .infinite-slider-container {
+    display: flex;
+    animation: bannermove 20s linear infinite;
+  }
 
-.infinite-slider-container {
-  display: flex;
-  width: 200%;
-  animation: bannermove 20s linear infinite;
-}
-
-@keyframes bannermove {
-	0% {
-		transform: translateX(0);
-	}
-	100% {
-		transform: translateX(-50%);
-	}
-}
+  @keyframes bannermove {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
 </style>

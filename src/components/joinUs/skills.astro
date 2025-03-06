@@ -4,15 +4,11 @@ import hardSkills from "./skillsArrays/hardSkills";
 import tools from "./skillsArrays/tools";
 ---
 
-<section
-  class="sections max-w-[1150px] self-center relative h-fit"
->
+<section class="sections max-w-[1150px] self-center relative h-fit">
   <div
     class="relative flex flex-col flex-wrap justify-center gap-8 h-fit w-full items-center"
   >
-    <div
-      class="self-center flex w-full  flex-col gap-y-8"
-    >
+    <div class="self-center flex w-full flex-col gap-y-8">
       <p
         class="gradient-text text-center f-40 leading-8 lg:leading-[60px] f-700"
       >
@@ -29,7 +25,7 @@ import tools from "./skillsArrays/tools";
         class="flex flex-col md:flex-row items-center gap-2 mx-auto max-w-fit border bg-primary border-white rounded-[15px] p-2 mb-10"
       >
         <button
-          class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-12 w-[196px] text-black"
+          class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-12 w-[196px] bg-primary_action text-white font-semibold"
           data-tab="hardSkills"
         >
           Habilidades técnicas
@@ -41,7 +37,7 @@ import tools from "./skillsArrays/tools";
           Herramientas
         </button>
         <button
-          class="tab-btn  flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-12 w-[196px] bg-primary_action text-white font-semibold"
+          class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-12 w-[196px] text-black"
           data-tab="softSkills"
         >
           Habilidades blandas
@@ -50,10 +46,10 @@ import tools from "./skillsArrays/tools";
 
       <div
         id="hardSkills"
-        class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-5"
+        class="skill-content flex flex-wrap justify-center gap-5 lg:gap-5"
       >
         {
-            hardSkills.map((skill) => (
+          hardSkills.map((skill) => (
             <img
               src={skill.asset}
               alt={skill.name}
@@ -62,7 +58,7 @@ min-w-[130px] lg:max-h-[60px] lg:min-w-[205px]"
               draggable="false"
               title={skill.name}
             />
-            ))
+          ))
         }
       </div>
 
@@ -86,7 +82,7 @@ min-w-[130px] lg:max-h-[95px] lg:min-w-[170px]"
 
       <div
         id="softSkills"
-        class="skill-content flex flex-wrap justify-center gap-5 lg:gap-4"
+        class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-4"
       >
         {
           softSkills.map((skill) => (
@@ -108,23 +104,25 @@ min-w-[130px] lg:max-h-[95px] lg:min-w-[170px]"
 </section>
 
 <script>
-  
   const tabButtons = document.querySelectorAll(".tab-btn");
   const skillContents = document.querySelectorAll(".skill-content");
 
   tabButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      
       tabButtons.forEach((btn) => {
-      btn.classList.remove("bg-primary_action", "text-white", "font-semibold");
-      btn.classList.add("text-black");
+        btn.classList.remove(
+          "bg-primary_action",
+          "text-white",
+          "font-semibold"
+        );
+        btn.classList.add("text-black");
       });
-      
+
       button.classList.remove("text-black");
       button.classList.add("bg-primary_action", "text-white", "font-semibold");
-      
+
       skillContents.forEach((content) => content.classList.add("hidden"));
-      
+
       const tabId = button.dataset.tab;
       document.getElementById(tabId).classList.remove("hidden");
     });
