@@ -3,12 +3,13 @@ import { Image } from 'astro:assets';
 import myImage from '~/assets/img/campers/campers-home-border-girl.png';
 import ContactButton from '../common/ContactButton.astro';
 ---
-<section class="principal self-auto sections relative h-fit">
+<section class="principal self-auto sections relative h-fit w-full px-4 lg:px-0">
     <div class="relative flex flex-col lg:flex-row flex-wrap place-content-evenly h-fit w-full items-center gap-4 lg:gap-10 m-0 p-0">
+        <!-- Contenedor de texto y botón -->
         <div class="relative flex flex-col w-full md:max-w-[550px] lg:max-w-[425px] gap-y-4 lg:gap-y-8 items-center lg:items-start px-4 lg:px-0">
             <img src="/img/cohete1.png" alt="rocket" width="122" height="122" class="absolute -right-28 hidden lg:block">
 
-            <p class="gradient-text text-xl text-center lg:text-3xl font-bold max-w-[472px] mx-auto">
+            <p class="gradient-text text-xl lg:text-3xl font-bold text-center lg:text-start">
                 Revolucionamos el talento tecnológico
             </p>
 
@@ -19,8 +20,9 @@ import ContactButton from '../common/ContactButton.astro';
             <ContactButton whatsApp='+50240579715' tipo="contacto" iconName='happyFace.svg' alt='cara feliz'/>
         </div>
 
-        <div class="w-full lg:w-auto">
-            <div class="hidden semilg:block w-full">
+        <!-- Contenedor de las imágenes -->
+        <div class="w-full lg:w-auto flex justify-center">
+            <div class="hidden semilg:block w-full max-w-[635px]">
                 <Image
                     src={myImage}
                     alt="Grupo de campers 1"
@@ -29,18 +31,18 @@ import ContactButton from '../common/ContactButton.astro';
                     height={480}
                     loading='lazy'
                     sizes="(max-width: 635px) 100vw, 635px"
-                    class="w-full"
+                    class="w-full h-auto"
                 />
             </div>
 
-            <div class="semilg:hidden w-full">
+            <div class="semilg:hidden w-full max-w-[300px]">
                 <Image
                     src={myImage}
                     alt="Grupo de campers 2"
                     width={300}
                     loading='lazy'
                     sizes="(max-width: 300px) 100vw, 100px"
-                    class="w-full"
+                    class="w-full h-auto"
                 />
             </div>
         </div>
