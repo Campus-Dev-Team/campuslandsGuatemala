@@ -4,36 +4,47 @@ import myImage from '~/assets/img/campers/campers-home-border-girl.png';
 import ContactButton from '../common/ContactButton.astro';
 ---
 <section class="principal self-auto sections relative h-fit">
-	<div class="relative flex flex-col lg:flex-row flex-wrap place-content-evenly h-fit w-full items-center gap-10">
-		<div class="relative flex flex-col w-full md:max-w-[550px] lg:max-w-[425px] gap-y-8 items-center lg:items-start">
-			<img src="/img/cohete1.png" alt="rocket" width="122" height="122" class="absolute -right-28 hidden lg:block">
-			<p class="gradient-text text-center lg:text-start f-40 leading-8 lg:leading-[60px] f-700"> Revolucionamos el talento tecnológico </p>
-			<p class="text-center lg:text-start text-sm lg:text-base leading-6 text-white"> Campuslands forma a jóvenes con competencias únicas para su primer empleo de calidad en desarrollo de software. </p>
-			<ContactButton whatsApp='+50240579715' tipo="contacto" iconName='happyFace.svg' alt='cara feliz'/>
-		</div>
-		<div>
-			<div class="hidden semilg:block">
-				<Image
-					src={myImage}
-					alt="Grupo de campers 1"
-					width={635}
-					widths={[100, 500, 1024]}
-					height={480}
-					loading='lazy'
-					sizes="(max-width: 635px) 100vw, 635px"
-				/>
-			</div>
-			<div class="semilg:hidden">
-				<Image
-					src={myImage}
-					alt="Grupo de campers 2"
-					width={300}
-					loading='lazy'
-					sizes="(max-width: 300px) 100vw, 100px"
-				/>
-			</div>
-		</div>
-	</div>
+    <div class="relative flex flex-col lg:flex-row flex-wrap place-content-evenly h-fit w-full items-center gap-4 lg:gap-10 m-0 p-0">
+        <div class="relative flex flex-col w-full md:max-w-[550px] lg:max-w-[425px] gap-y-4 lg:gap-y-8 items-center lg:items-start px-4 lg:px-0">
+            <img src="/img/cohete1.png" alt="rocket" width="122" height="122" class="absolute -right-28 hidden lg:block">
+
+            <p class="gradient-text text-xl text-center lg:text-3xl font-bold max-w-[472px] mx-auto">
+                Revolucionamos el talento tecnológico
+            </p>
+
+            <p class="text-center lg:text-start text-sm lg:text-base leading-5 lg:leading-6 text-white">
+                Campuslands forma a jóvenes con competencias únicas para su primer empleo de calidad en desarrollo de software.
+            </p>
+
+            <ContactButton whatsApp='+50240579715' tipo="contacto" iconName='happyFace.svg' alt='cara feliz'/>
+        </div>
+
+        <div class="w-full lg:w-auto">
+            <div class="hidden semilg:block w-full">
+                <Image
+                    src={myImage}
+                    alt="Grupo de campers 1"
+                    width={635}
+                    widths={[100, 500, 1024]}
+                    height={480}
+                    loading='lazy'
+                    sizes="(max-width: 635px) 100vw, 635px"
+                    class="w-full"
+                />
+            </div>
+
+            <div class="semilg:hidden w-full">
+                <Image
+                    src={myImage}
+                    alt="Grupo de campers 2"
+                    width={300}
+                    loading='lazy'
+                    sizes="(max-width: 300px) 100vw, 100px"
+                    class="w-full"
+                />
+            </div>
+        </div>
+    </div>
 </section>
 
 <style scoped>

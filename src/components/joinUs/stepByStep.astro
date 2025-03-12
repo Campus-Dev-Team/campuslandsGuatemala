@@ -33,52 +33,44 @@ const steps: Step[] = [
 ];
 ---
 
-<section
-  class="sections max-w-[1150px] self-center relative h-fit"
->
-  <div
-    class="relative mx-auto flex flex-wrap justify-center gap-8 h-fit w-full px-10 md:px-50 lg:px-0 max-w-7xl"
-  >
-    <div
-        class="flex w-full md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex-col gap-y-8 items-center lg:items-start"
-      >
-        <p
-          class="gradient-text text-center lg:text-start f-40 leading-8 lg:leading-[60px] f-700"
-        >
-          Sigue estos simples pasos y conviértete en un Camper
-        </p>
-        <p
-          class="text-center lg:text-start text-sm lg:text-base leading-6 text-white"
-        >
-          Hemos simplificado el proceso para que puedas inscribirte, presentarte
-          y unirte a Campuslands de manera rápida y sencilla. ¡Empieza hoy
-          mismo!
-        </p>
-        <ContactButton
-          tipo="insripcion"
-          whatsApp="+50240579715"
-          iconName="share.svg"
-        />
-      </div>
-    <div class="flex gap-3">
-      <div
-        class="relative flex items-center content-center h-[380px] max-md:mt-5"
-      >
+<section class="sections max-w-[1150px] w-full mx-auto px-4 md:px-10 lg:px-0 relative h-fit">
+  <div class="relative mx-auto flex flex-col lg:flex-row justify-center gap-8 h-fit w-full max-w-7xl">
+    <!-- Contenedor de texto y botón -->
+    <div class="flex w-full md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex-col gap-y-4 lg:gap-y-8 items-center lg:items-start">
+      <p class="gradient-text text-center lg:text-start text-2xl lg:text-4xl leading-7 lg:leading-[60px] font-bold">
+        Sigue estos simples pasos y conviértete en un Camper
+      </p>
+      <p class="text-center lg:text-start text-sm lg:text-base leading-5 lg:leading-6 text-white">
+        Hemos simplificado el proceso para que puedas inscribirte, presentarte
+        y unirte a Campuslands de manera rápida y sencilla. ¡Empieza hoy
+        mismo!
+      </p>
+      <ContactButton
+        tipo="insripcion"
+        whatsApp="+50240579715"
+        iconName="share.svg"
+      />
+    </div>
+
+    <!-- Contenedor de los pasos y botones de navegación -->
+    <div class="flex flex-col lg:flex-row gap-3 w-full lg:w-auto">
+      <!-- Contenedor del paso -->
+      <div class="relative flex items-center justify-center w-full lg:w-[342px] xl:w-[435px] h-[300px] lg:h-[380px] max-md:mt-5">
         <div
-          class="transition-opacity p-6 flex-col gap-4 rounded-[40px] w-[342px] lg:w-[435px] h-fit duration-[4000ms] ease-in-out opacity-100 inset-0 flex text-white"
+          class="transition-opacity p-6 flex-col gap-4 rounded-[40px] w-full lg:w-[342px] xl:w-[435px] h-fit duration-[4000ms] ease-in-out opacity-100 inset-0 flex text-white"
           style="background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 55.8%, rgba(153, 153, 153, 0.08) 111.74%);"
           data-step-index="0"
         >
-          <p class="text-[40px]" id="step-number">01</p>
+          <p class="text-3xl lg:text-[40px]" id="step-number">01</p>
           <div class="flex flex-col gap-2">
-            <p id="step-title" class="text-2xl font-bold"></p>
-            <p id="step-description" class="text-base mt-2"></p>
+            <p id="step-title" class="text-xl lg:text-2xl font-bold"></p>
+            <p id="step-description" class="text-sm lg:text-base mt-2"></p>
           </div>
         </div>
       </div>
-      <div
-        class="flex flex-col gap-3 justify-center max-w-[70px] relative gap-x-3 z-30"
-      >
+
+      <!-- Botones de navegación -->
+      <div class="flex lg:flex-col gap-3 justify-center max-w-[70px] relative z-30 mx-auto lg:mx-0">
         <div
           id="prev-step"
           class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#02D9A4] select-none"

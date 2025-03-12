@@ -1,5 +1,5 @@
 <template>
-	<section class="indicators max-w-[1150px] sections self-center">
+	<section class="indicators max-w-[1150px] self-center">
 		<p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto text-center mb-16 pb-1"> Preguntas frecuentes
 		</p>
 		<div class="flex max-w-[305px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10">

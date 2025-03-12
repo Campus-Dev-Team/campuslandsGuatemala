@@ -18,31 +18,41 @@ import { Image } from 'astro:assets';
 	</div>
 	<Image src={Students} alt="estudiantes" class="hidden min-[1200px]:block w-[430px] h-[435px]" />
 </section>
-<section id="students-two" class="flex sections max-w-[1150px] self-center flex-col-reverse min-[1200px]:flex-row gap-16 ">
-	<Image src={StudentsTwo} alt="estudiantes" class="w-[328px] h-[236px] md:w-[488px] md:h-[352px]" />
-	<div class="flex flex-col gap-y-5 max-w-[328px] md:max-w-[471px] items-center lg:items-start">
-		<p class="gradient-text font-extrabold !leading-[1.6] text-2xl mx-auto w-[328px] text-center md:text-[32px] md:w-full md:text-start">
-			Democratizar el talento tech y transformar vidas
-		</p>
-		<p class="text-center text-base md:text-start leading-6 text-white">
-			En Campuslands, formamos a la próxima generación de desarrolladores con una educación integral y humana. Impulsamos el crecimiento de jóvenes como agentes de cambio, listos para liderar la transformación tecnológica en empresas que buscan innovación, productividad y un impacto real en la economía global.
-		</p>
-		<div class="flex items-center justify-between flex-col md:flex-row gap-x-4">
-			<ContactButton tipo="agendar" whatsApp='+50240579715' iconName='agenda.svg' StylesAnchor='place-items-center'/>
-		</div>
-	</div>
+<section id="students-two" class="flex sections max-w-[1150px] w-full mx-auto px-4 lg:px-0 flex-col-reverse min-[1200px]:flex-row gap-8 lg:gap-16">
+    <!-- Contenedor de la imagen -->
+    <div class="flex justify-center w-full min-[1200px]:w-auto">
+        <Image src={StudentsTwo} alt="estudiantes" class="w-full max-w-[328px] md:max-w-[488px] h-auto" />
+    </div>
+
+    <!-- Contenedor de texto y botón -->
+    <div class="flex flex-col gap-y-4 lg:gap-y-5 w-full min-[1200px]:max-w-[471px] items-center lg:items-start">
+        <p class="gradient-text font-extrabold leading-7 lg:!leading-[1.6] text-xl md:text-2xl lg:text-[32px] text-center lg:text-start">
+            Democratizar el talento tech y transformar vidas
+        </p>
+        <p class="text-center lg:text-start text-sm md:text-base leading-5 lg:leading-6 text-white">
+            En Campuslands, formamos a la próxima generación de desarrolladores con una educación integral y humana. Impulsamos el crecimiento de jóvenes como agentes de cambio, listos para liderar la transformación tecnológica en empresas que buscan innovación, productividad y un impacto real en la economía global.
+        </p>
+        <div class="flex items-center justify-center lg:justify-start w-full gap-4">
+            <ContactButton tipo="agendar" whatsApp='+50240579715' iconName='agenda.svg' StylesAnchor='place-items-center'/>
+        </div>
+    </div>
 </section>
-<section class="flex justify-center items-center flex-col min-[1200px]:flex-row gap-16 ">
-	<div class="flex flex-col gap-y-5 max-w-[328px] md:max-w-[471px]">
-		<p class="gradient-text font-extrabold !leading-[1.6] text-2xl mx-auto w-[328px] text-center md:text-[32px] md:w-full md:text-start">
-			Ser el mayor motor de talento tech en Latinoamerica
-		</p>
-		<p class="text-center text-base md:text-start leading-6 text-white">
-			Convertirnos en el referente en la formación de desarrolladores, creativos digitales y expertos en marketing, impulsando mentes brillantes en espacios de innovación y aprendizaje ágil. Nuestro objetivo: acelerar el crecimiento de empresas y transformar la economía con talento listo para liderar el futuro.
-		</p>
-		<ContactButton tipo="chatear" whatsApp='+50240579715' iconName='whatsapp-green-dark.svg' StylesAnchor='place-items-center'/>
-	</div>
-	<Image src={StudentsThree} alt="estudiantes" class="w-[328px] h-[236px] md:w-[488px] md:h-[352px]" />
+<section class="flex justify-center items-center flex-col min-[1200px]:flex-row gap-8 lg:gap-16 w-full px-4 py-8">
+    <div class="flex flex-col gap-y-4 lg:gap-y-5 w-full max-w-[328px] md:max-w-[471px]">
+        <p class="gradient-text font-extrabold leading-7 lg:!leading-[1.6] text-xl md:text-2xl lg:text-[32px] text-center md:text-start">
+            Ser el mayor motor de talento tech en Latinoamerica
+        </p>
+        <p class="text-center md:text-start text-sm md:text-base leading-5 lg:leading-6 text-white">
+            Convertirnos en el referente en la formación de desarrolladores, creativos digitales y expertos en marketing, impulsando mentes brillantes en espacios de innovación y aprendizaje ágil. Nuestro objetivo: acelerar el crecimiento de empresas y transformar la economía con talento listo para liderar el futuro.
+        </p>
+        <div class="flex justify-center md:justify-start">
+            <ContactButton tipo="chatear" whatsApp='+50240579715' iconName='whatsapp-green-dark.svg' StylesAnchor='place-items-center'/>
+        </div>
+    </div>
+
+    <div class="flex justify-center w-full min-[1200px]:w-auto">
+        <Image src={StudentsThree} alt="estudiantes" class="w-full max-w-[328px] md:max-w-[488px] h-auto" />
+    </div>
 </section>
 
 <style>
