@@ -8,28 +8,37 @@ import Coworking4 from '~/assets/img/nosotros/coworking_site4.png'
 ---
 
 
-<section class="flex flex-col items-center sections max-w-[1150px] self-center gap-6">
-	<div class="w-[410px] md:w-[691px] flex flex-col gap-y-8 px-6 lg:px-0">
-		<p class="gradient-text text-[18px] md:text-[32px] mx-auto text-center font-semibold md:font-bold md:px-14">¡Impulsa tus ideas en el <br /> corazón del talento digital!</p>
-		<p class="font-semibold text-white !leading-[1.6] md:font-semibold text-sm md:text-lg mx-auto text-center">Descubre nuestro espacio en Campuslands Guatemala: Un lugar diseñado para conectar, innovar y crear sin límites.</p>
-	</div>
-	<div class="flex flex-wrap justify-center mb-10">
-		<Image src={CoworkingLogo} alt="campuslands-coworking" />
-	</div>
-	<div class="flex flex-wrap justify-center gap-4">
-		<div class="w-full lg:w-2/12 flex items-center justify-center">
-			<Image src={Coworking1} alt="Coworking 1" />
-		</div>
-		<div class="w-full lg:w-2/12 flex items-center justify-center">
-			<Image src={Coworking2} alt="Coworking 2" />
-		</div>
-		<div class="w-full lg:w-2/12 flex items-center justify-center">
-			<Image src={Coworking3} alt="Coworking 3" />
-		</div>
-		<div class="w-full lg:w-2/12 flex items-center justify-center">
-			<Image src={Coworking4} alt="Coworking 4" />
-		</div>
-	</div>
+<section class="flex flex-col items-center sections max-w-[1150px] w-full mx-auto px-4 lg:px-0 gap-6">
+    <!-- Contenedor de texto -->
+    <div class="w-full md:w-[691px] flex flex-col gap-y-4 lg:gap-y-8 px-4 lg:px-0">
+        <p class="bg-gradient-to-r from-[#02D9A4] to-[#2CA2FF] bg-clip-text text-transparent text-[18px] md:text-4xl lg:text-4xl mx-auto text-center font-bold">
+            ¡Impulsa tus ideas en el <br /> corazón del talento digital!
+        </p>
+        <p class="font-semibold text-white leading-5 md:leading-6 text-sm md:text-lg mx-auto text-center">
+            Descubre nuestro espacio en Campuslands Guatemala: Un lugar diseñado para conectar, innovar y crear sin límites.
+        </p>
+    </div>
+
+    <!-- Contenedor del logo -->
+    <div class="flex flex-wrap justify-center mb-6 lg:mb-10 w-full">
+        <Image src={CoworkingLogo} alt="campuslands-coworking" class="w-full max-w-[300px] md:max-w-[400px] lg:max-w-[500px]" />
+    </div>
+
+    <!-- Contenedor de las imágenes -->
+    <div class="flex flex-col md:flex-row flex-wrap justify-center gap-4 w-full">
+        <div class="w-full md:w-1/2 lg:w-2/12 flex items-center justify-center">
+            <Image src={Coworking1} alt="Coworking 1" class="w-full max-w-[200px] md:max-w-[250px] lg:max-w-[300px]" />
+        </div>
+        <div class="w-full md:w-1/2 lg:w-2/12 flex items-center justify-center">
+            <Image src={Coworking2} alt="Coworking 2" class="w-full max-w-[200px] md:max-w-[250px] lg:max-w-[300px]" />
+        </div>
+        <div class="w-full md:w-1/2 lg:w-2/12 flex items-center justify-center">
+            <Image src={Coworking3} alt="Coworking 3" class="w-full max-w-[200px] md:max-w-[250px] lg:max-w-[300px]" />
+        </div>
+        <div class="w-full md:w-1/2 lg:w-2/12 flex items-center justify-center">
+            <Image src={Coworking4} alt="Coworking 4" class="w-full max-w-[200px] md:max-w-[250px] lg:max-w-[300px]" />
+        </div>
+    </div>
 </section>
 <style>
 
