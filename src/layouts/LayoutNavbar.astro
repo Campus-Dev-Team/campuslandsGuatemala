@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import { AstroFont } from "astro-font";
+import { ViewTransitions } from 'astro:transitions';
 import MenuResponsive from "../components/navbar/menuResponsive.vue";
 import ContactButton from "~/components/common/ContactButton.astro";
 import Circular from "~/assets/img/CircularPattern.svg";
@@ -33,6 +34,7 @@ const curryear = new Date().getFullYear();
       rel="stylesheet"
     />
     <title>{title}</title>
+    <ViewTransitions />
     <AstroFont
       config={[
         {
