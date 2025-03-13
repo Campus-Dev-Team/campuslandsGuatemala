@@ -1,4 +1,4 @@
-const path = "img/campers/tools/";
+const path = "/img/campers/tools/";
 
 const tools = [
     {name: "github", asset: path + `github.svg`},

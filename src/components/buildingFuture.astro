@@ -68,38 +68,47 @@ const ContactNumber = "+50240579715";
 </section>
 
 <script>
-const target = document.getElementById('numbers');
-const observer = new IntersectionObserver((entries, observer) => {
-	entries.forEach(entry => {
-		if (entry.isIntersecting) {
-			setTimeout(() => {
-				incrementNumbers()
-				observer.unobserve(entry.target);
-			}, 200);
-		}
-	});
-}, {
-	threshold: 0.5
-});
-
-observer.observe(target);
-
-function incrementNumbers() {
-	const counters = document.querySelectorAll('.countup');
-	counters.forEach((counter,index) => {
-		let initial_count = 0;
-		let final_count =  Number(counter.dataset.count);
-
-		const updateCounting = () => {
-			initial_count += 5;
-			counter.innerText = initial_count;
-			([counters.length -1,counters.length - 2].includes(index)) ? counter.innerText = final_count +'%' : counter.innerText = initial_count + '+';
-			if (initial_count >= final_count) {
-				clearInterval(counting);
+	const target = document.getElementById('numbers');
+	const observer = new IntersectionObserver((entries, observer) => {
+		entries.forEach(entry => {
+			if (entry.isIntersecting) {
+				setTimeout(() => {
+					incrementNumbers();
+					observer.unobserve(entry.target);
+				}, 200);
 			}
-		};
-
-		const counting = setInterval(updateCounting, 10);
+		});
+	}, {
+		threshold: 0.1,
+		rootMargin: '50px'
 	});
-}
-</script>
+	
+	function incrementNumbers() {
+		const counters = document.querySelectorAll('.countup');
+		counters.forEach((counter, index) => {
+			let initial_count = 0;
+			const final_count = Number(counter.dataset.count);
+			const increment = Math.ceil(final_count / 40); 
+	
+			const updateCounting = () => {
+				initial_count += increment;
+				if (initial_count >= final_count) {
+					initial_count = final_count;
+					clearInterval(counting);
+				}
+	
+				counter.innerText = ([counters.length - 1, counters.length - 2].includes(index)) 
+					? initial_count + '%' 
+					: initial_count + '+';
+			};
+	
+			const counting = setInterval(updateCounting, 25);
+		});
+	}
+	
+	if (target) {
+		observer.observe(target);
+	} else {
+		console.error('Target element not found');
+	}
+	</script>
