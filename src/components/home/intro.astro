@@ -3,15 +3,37 @@ import { Image } from 'astro:assets';
 import myImage from '~/assets/img/campers/campers-home-border-girl.png';
 import ContactButton from '../common/ContactButton.astro';
 ---
-<section class="principal self-auto sections relative h-fit w-full px-4 lg:px-0">
-    <div class="relative flex flex-col lg:flex-row flex-wrap place-content-evenly h-fit w-full items-center gap-4 lg:gap-10 m-0 p-0">
-        <!-- Contenedor de texto y botón -->
-        <div class="relative flex flex-col w-full md:max-w-[550px] lg:max-w-[425px] gap-y-4 lg:gap-y-8 items-center lg:items-start px-4 lg:px-0">
-            <img src="/img/cohete1.png" alt="rocket" width="122" height="122" class="absolute -right-28 hidden lg:block">
+<section class="principal self-auto sections relative h-fit w-full px-4 lg:px-0" aria-label="Sección de introducción sobre Campuslands">
+	<script type="application/ld+json">
+		{ 
+			"@context": "https://schema.org", 
+			"@type": "EducationalOrganization",
+			"name": "Campuslands",
+			"description": "Formación de jóvenes en desarrollo de software con empleabilidad asegurada.",
+			"url": "https://campuslands.com", 
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Carrera 4 # 24-80",
+				"addressLocality": "Bucaramanga",
+				"addressRegion": "Santander",
+				"addressCountry": "CO"
+			},
+			"telephone": "+57 40579715",
+			"sameAs": [
+				"https://www.facebook.com/campuslands/",
+				"https://www.instagram.com/campuslands/"
+			]
+		}
+	</script>
 
-            <p class="gradient-text text-xl lg:text-3xl font-bold text-center lg:text-start">
+	<div class="relative flex flex-col lg:flex-row flex-wrap place-content-evenly h-fit w-full items-center gap-4 lg:gap-10 m-0 p-0">
+		<!-- Contenedor de texto y botón -->
+		<div class="relative flex flex-col w-full md:max-w-[550px] lg:max-w-[425px] gap-y-4 lg:gap-y-8 items-center lg:items-start px-4 lg:px-0" title="Información sobre Campuslands">
+			<img src="/img/cohete1.png" alt="Cohete ilustrativo despegando" width="122" height="122" class="absolute -right-28 hidden lg:block" loading="lazy">
+
+            <h1 class="gradient-text text-xl lg:text-3xl font-bold text-center lg:text-start">
                 Revolucionamos el talento tecnológico
-            </p>
+			</h1>
 
             <p class="text-center lg:text-start text-sm lg:text-base leading-5 lg:leading-6 text-white">
                 Campuslands forma a jóvenes con competencias únicas para su primer empleo de calidad en desarrollo de software.
@@ -20,33 +42,33 @@ import ContactButton from '../common/ContactButton.astro';
             <ContactButton whatsApp='+50240579715' tipo="contacto" iconName='happyFace.svg' alt='cara feliz'/>
         </div>
 
-        <!-- Contenedor de las imágenes -->
-        <div class="w-full lg:w-auto flex justify-center">
-            <div class="hidden semilg:block w-full max-w-[635px]">
-                <Image
-                    src={myImage}
-                    alt="Grupo de campers 1"
-                    width={635}
-                    widths={[100, 500, 1024]}
-                    height={480}
-                    loading='lazy'
-                    sizes="(max-width: 635px) 100vw, 635px"
-                    class="w-full h-auto"
-                />
-            </div>
+		<!-- Contenedor de las imágenes -->
+		<div class="w-full lg:w-auto flex justify-center" aria-label="Imagen representativa de estudiantes">
+			<div class="hidden semilg:block w-full max-w-[635px]">
+				<Image
+					src={myImage}
+					alt="Grupo de campers estudiando en Campuslands"
+					width={635}
+					widths={[100, 500, 1024]}
+					height={480}
+					loading='lazy'
+					sizes="(max-width: 635px) 100vw, 635px"
+					class="w-full h-auto"
+				/>
+			</div>
 
-            <div class="semilg:hidden w-full max-w-[300px]">
-                <Image
-                    src={myImage}
-                    alt="Grupo de campers 2"
-                    width={300}
-                    loading='lazy'
-                    sizes="(max-width: 300px) 100vw, 100px"
-                    class="w-full h-auto"
-                />
-            </div>
-        </div>
-    </div>
+			<div class="semilg:hidden w-full max-w-[300px]">
+				<Image
+					src={myImage}
+					alt="Grupo de campers sonriendo en Campuslands"
+					width={300}
+					loading='lazy'
+					sizes="(max-width: 300px) 100vw, 100px"
+					class="w-full h-auto"
+				/>
+			</div>
+		</div>
+	</div>
 </section>
 
 <style scoped>
@@ -61,7 +83,6 @@ import ContactButton from '../common/ContactButton.astro';
 
 .principal {
 	margin-bottom: 10rem;
-    /* background-image: url('img/texxture.svg'); */
     background-position: 80% 0%;
     background-repeat: no-repeat;
     background-size: 75%;
