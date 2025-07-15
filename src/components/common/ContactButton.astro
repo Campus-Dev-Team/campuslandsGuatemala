@@ -1,16 +1,17 @@
 ---
 
 interface Props {
-    whatsApp: string;
     tipo: "contacto" | "patrocinio" | "emplear" | "agendar" | "insripcion" | "chatear";
+    whatsApp?: string;
     iconName?: string;
     alt?:string;
     isOutline?: boolean;
     StylesAnchor?: string;
     StylesButton?: string;
+    linkPage?: string;
 }
 
-const {whatsApp,tipo,iconName,alt,isOutline, StylesAnchor, StylesButton} = Astro.props;
+const {tipo,whatsApp,iconName,alt,isOutline, StylesAnchor, StylesButton, linkPage} = Astro.props;
 
 const presets = {
     "contacto": ["Contactanos", "¡Hola!+Me+gustaría+conocer+más+sobre+Campuslands+y+sus+programas+de+formación.+¿Podrían+brindarme+información+detallada?"],
@@ -29,11 +30,13 @@ const presets = {
 const config = presets[tipo]
 
 const presetStyle = isOutline ? "btn-outline" : "btn-primary";
+
+const linkText = linkPage !== undefined ? linkPage : `https://wa.me/${whatsApp}?text=${config[1]}`;
 ---
 
-<a href=`https://wa.me/${whatsApp}?text=${config[1]}` target="_blank" class={StylesAnchor}>
+<a href=`${linkText}` target="_blank" class={StylesAnchor}>
     <button class=`${presetStyle} p-7 lg:p-7 flex justify-center items-center gap-x-2 z-30 ${StylesButton}`>
         {config[0]}
-        {iconName && <img src={`img/icons/${iconName}`} alt={alt} class="hidden lg:block"/>}
+        {iconName && <img src={`/img/icons/${iconName}`} alt={alt} class="hidden lg:block"/>}
     </button>
 </a>
