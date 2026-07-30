@@ -1,4 +1,8 @@
-<nav class="navbar glass sticky top-0 z-[35]" aria-label="Navegación principal">
+<nav
+  class="navbar glass sticky top-0 z-[35]"
+  aria-label="Navegación principal"
+  transition:persist="site-navigation"
+>
   <div class="mx-auto flex justify-around items-center">
     <div class="text-white text-2xl font-bold">
       <a href="/" aria-label="Inicio de Campuslands Guatemala">
@@ -53,6 +57,12 @@
 
   menuButton?.addEventListener("click", () => {
     setMenu(menuButton.getAttribute("aria-expanded") !== "true");
+  });
+
+  mobileMenu?.addEventListener("click", (event) => {
+    if (event.target instanceof Element && event.target.closest("a")) {
+      setMenu(false);
+    }
   });
 
   document.addEventListener("keydown", (event) => {

@@ -4,6 +4,7 @@ import MenuResponsive from "../components/navbar/menuResponsive.astro";
 import ContactButton from "~/components/common/ContactButton.astro";
 import SeoHead from "~/components/SeoHead.astro";
 import Circular from "~/assets/img/CircularPattern.svg";
+import { fade, ViewTransitions } from "astro:transitions";
 
 import logoCampus from "~/assets/img/logos/logoCampus_v2.svg";
 import facebook from "~/assets/img/icons/Facebook.svg";
@@ -41,6 +42,7 @@ const curryear = new Date().getFullYear();
     <meta name="geo.region" content="GT-GUA" />
     <meta name="geo.placename" content="Ciudad de Guatemala, Guatemala" />
     <meta name="google-site-verification" content="VjWljaxyJbf68bXWX6Wna-Zcj84e_y8UWPRUKivFHKw" />
+    <ViewTransitions fallback="animate" />
     <!-- Medición diferida para no bloquear el contenido principal -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
@@ -60,6 +62,14 @@ const curryear = new Date().getFullYear();
         window.addEventListener(eventName, loadAnalytics, { once: true, passive: true });
       });
       window.setTimeout(loadAnalytics, 12000);
+      document.addEventListener('astro:page-load', () => {
+        if (!analyticsLoaded) return;
+        gtag('event', 'page_view', {
+          page_location: window.location.href,
+          page_path: window.location.pathname,
+          page_title: document.title
+        });
+      });
     </script>
   </head>
   <body class="relative flex flex-col overflow-x-hidden">
@@ -68,6 +78,7 @@ const curryear = new Date().getFullYear();
       id="go-up"
       type="button"
       aria-label="Volver al inicio de la página"
+      transition:persist="go-up-control"
       class="flex justify-center align-middle bg-primary rounded-full size-10 fixed right-10 bottom-[5%] cursor-pointer z-50"
     >
       <span aria-hidden="true" class="text-white text-xl leading-none">↑</span>
@@ -135,10 +146,15 @@ const curryear = new Date().getFullYear();
         </div>
       </div>
     </MenuResponsive>
-    <main id="contenido-principal" class="flex flex-col gap-[5.5rem]">
-      <slot />
-    </main>
-    <footer class="faq flex flex-col relative">
+    <div
+      class="flex flex-col"
+      transition:name="page-content"
+      transition:animate={fade({ duration: 180 })}
+    >
+      <main id="contenido-principal" class="flex flex-col gap-[5.5rem]">
+        <slot />
+      </main>
+      <footer class="faq flex flex-col relative">
       <div
         class={`max-w-[1150px] relative sections self-center vstext my-auto flex flex-col gap-y-8 py-20`}
       >
@@ -255,7 +271,8 @@ const curryear = new Date().getFullYear();
           </div>
         </div>
       </div>
-    </footer>
+      </footer>
+    </div>
   </body>
 </html>
 <script>
