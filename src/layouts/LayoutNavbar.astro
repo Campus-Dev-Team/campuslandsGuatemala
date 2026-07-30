@@ -4,7 +4,7 @@ import MenuResponsive from "../components/navbar/menuResponsive.astro";
 import ContactButton from "~/components/common/ContactButton.astro";
 import SeoHead from "~/components/SeoHead.astro";
 import Circular from "~/assets/img/CircularPattern.svg";
-import { fade, ViewTransitions } from "astro:transitions";
+import { slide, ViewTransitions } from "astro:transitions";
 
 import logoCampus from "~/assets/img/logos/logoCampus_v2.svg";
 import facebook from "~/assets/img/icons/Facebook.svg";
@@ -149,7 +149,7 @@ const curryear = new Date().getFullYear();
     <div
       class="flex flex-col"
       transition:name="page-content"
-      transition:animate={fade({ duration: 180 })}
+      transition:animate={slide({ duration: 360 })}
     >
       <main id="contenido-principal" class="flex flex-col gap-[5.5rem]">
         <slot />
