@@ -18,7 +18,7 @@ const dataFooter = {
 };
 ---
 
-<LayoutNavbar title="Campuslands" description="Impulsamos el talento con tecnología" dataFooter={dataFooter}>
+<LayoutNavbar dataFooter={dataFooter}>
   <Intro />
   <AlliedCompanies />
   <BuildingFuture />
@@ -28,13 +28,14 @@ const dataFooter = {
     <a
       href="https://wa.me/+50232705200?text=Hola,+estoy+interesado+en+unirme+a+la+comunidad+de+Campuslands.+¿Cómo+puedo+hacerlo?"
       target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Conversar por WhatsApp con Campuslands Guatemala"
     >
-      <img src="/img/card.png" alt="" class="w-full hidden lg:block" />
-      <img src="/img/card.png" alt="" class="w-full lg:hidden" />
+      <img src="/img/card.png" alt="Únete a la comunidad de Campuslands Guatemala" class="w-full" width="1136" height="285" loading="lazy" decoding="async" />
     </a>
   </div>
   <VisitUs />
-  <Faq client:load />
+  <Faq client:visible />
 </LayoutNavbar>
 
 <style>

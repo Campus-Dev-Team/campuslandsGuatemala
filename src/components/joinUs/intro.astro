@@ -27,27 +27,18 @@ import ContactButton from "../common/ContactButton.astro";
         iconName="happyFace.svg"
       />
     </div>
-  <div>
-    <div class="hidden lg:block">
-      <Image
-        src={Campers}
-        alt="Grupo de campers 1"
-        width={400}
-        widths={[100, 500, 1024]}
-        loading="lazy"
-        sizes="(max-width: 530px) 100vw, 400px"
-      />
-    </div>
-    <div class="lg:hidden">
-      <Image
-        src={Campers}
-        alt="Grupo de campers 2"
-        width={300}
-        height={300}
-        loading="lazy"
-        sizes="(max-width: 300px) 100vw, 100px"
-      />
-    </div>
+  <div class="w-full max-w-[530px]">
+    <Image
+      src={Campers}
+      alt="Campers en formación tecnológica en Campuslands Guatemala"
+      width={530}
+      widths={[320, 480, 530, 800, 1060]}
+      format="avif"
+      loading="eager"
+      fetchpriority="high"
+      sizes="(max-width: 767px) min(90vw, 530px), 530px"
+      class="w-full h-auto"
+    />
   </div>
 </section>
 

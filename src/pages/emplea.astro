@@ -16,7 +16,20 @@ const dataFooter = {
 };
 ---
 
-<LayoutNavbar title="Campuslands - Emplea" description="Conecta con profesionales formados" dataFooter={dataFooter}>
+<LayoutNavbar
+  dataFooter={dataFooter}
+  structuredData={{
+    "@type": "Service",
+    "@id": "https://www.campuslands.pro/emplea/#servicio",
+    name: "Conexión con talento tecnológico en Guatemala",
+    description:
+      "Conectamos empresas con jóvenes formados en desarrollo de software, inglés y habilidades profesionales.",
+    url: "https://www.campuslands.pro/emplea/",
+    provider: { "@id": "https://www.campuslands.pro/#organization" },
+    areaServed: { "@type": "Country", name: "Guatemala" },
+    serviceType: "Conexión de empresas con talento tecnológico",
+  }}
+>
   <Intro />
   <Talent />
   <ChatWithUs />

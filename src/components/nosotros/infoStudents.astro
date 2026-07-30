@@ -9,18 +9,18 @@ import { Image } from 'astro:assets';
 
 <section class="principal flex sections max-w-[1150px] self-center gap-16">
     <div class="flex flex-col flex-grow-1 md:w-[560px] gap-y-3 self-center items-center min-[1200px]:items-start">
-      <p class="gradient-text font-bold leading-9 lg:!leading-[60px] text-2xl text-center min-[1200px]:text-start md:text-[40px]">
-        Juntos, transformamos el futuro de la tecnología en Latinoamérica
-      </p>
+      <h1 class="gradient-text font-bold leading-9 lg:!leading-[60px] text-2xl text-center min-[1200px]:text-start md:text-[40px]">
+        Campuslands Guatemala: formación tecnológica que transforma vidas
+      </h1>
       <p class="text-base font-medium text-center min-[1200px]:text-start text-white">
         Somos un equipo dedicado a transformar jóvenes talentos en profesionales listos para revolucionar la industria tecnológica.
       </p>
       <ContactButton tipo="emplear" whatsApp='+50232705200' iconName='arm.svg' StylesAnchor='place-items-center'/>
       <div class="flex-col items-center flex max-[1199px]:flex hidden min-[1200px]:hidden gap-y-6">
-        <Image src={Students} alt="estudiantes" class="w-auto h-[276px]" />
+        <Image src={Students} alt="Estudiantes de Campuslands Guatemala" width={280} widths={[280, 420, 517]} format="avif" sizes="280px" loading="eager" fetchpriority="high" class="w-auto h-[276px]" />
       </div>
     </div>
-    <Image src={Students} alt="estudiantes" class="hidden min-[1200px]:block w-[430px] h-[435px]" />
+    <Image src={Students} alt="Estudiantes de Campuslands Guatemala" width={430} widths={[430, 517, 860]} format="avif" sizes="430px" loading="eager" fetchpriority="high" class="hidden min-[1200px]:block w-[430px] h-auto" />
   </section>
 <section id="students-two" class="flex sections max-w-[1150px] w-full mx-auto px-4 lg:px-0 flex-col-reverse min-[1200px]:flex-row gap-8 lg:gap-16">
     <!-- Contenedor de la imagen -->
@@ -30,9 +30,9 @@ import { Image } from 'astro:assets';
 
     <!-- Contenedor de texto y botón -->
     <div class="flex flex-col gap-y-4 lg:gap-y-5 w-full min-[1200px]:max-w-[471px] items-center lg:items-start px-4">
-        <p class="gradient-text font-extrabold leading-7 lg:!leading-[1.6] text-xl md:text-2xl lg:text-[32px] text-center lg:text-start">
+        <h2 class="gradient-text font-extrabold leading-7 lg:!leading-[1.6] text-xl md:text-2xl lg:text-[32px] text-center lg:text-start">
             Democratizar el talento tech y transformar vidas
-        </p>
+        </h2>
         <p class="text-center lg:text-start text-sm md:text-base leading-5 lg:leading-6 text-white">
             En Campuslands, formamos a la próxima generación de desarrolladores con una educación integral y humana. Impulsamos el crecimiento de jóvenes como agentes de cambio, listos para liderar la transformación tecnológica en empresas que buscan innovación, productividad y un impacto real en la economía global.
         </p>
@@ -43,9 +43,9 @@ import { Image } from 'astro:assets';
 </section>
 <section class="flex justify-center items-center flex-col min-[1200px]:flex-row gap-8 lg:gap-16 w-full px-6 py-10">
     <div class="flex flex-col gap-y-4 lg:gap-y-5 w-full min-[1200px]:max-w-[471px] items-center min-[1200px]:items-start px-4 md:px-6">
-        <p class="gradient-text font-extrabold leading-7 lg:!leading-[1.6] text-xl md:text-2xl lg:text-[32px] text-center min-[1200px]:text-start">
+        <h2 class="gradient-text font-extrabold leading-7 lg:!leading-[1.6] text-xl md:text-2xl lg:text-[32px] text-center min-[1200px]:text-start">
             Ser el mayor motor de talento tech en Latinoamérica
-        </p>
+        </h2>
         <p class="text-center min-[1200px]:text-start text-sm md:text-base leading-5 lg:leading-6 text-white">
             Convertirnos en el referente en la formación de desarrolladores, creativos digitales y expertos en marketing, impulsando mentes brillantes en espacios de innovación y aprendizaje ágil. Nuestro objetivo: acelerar el crecimiento de empresas y transformar la economía con talento listo para liderar el futuro.
         </p>

@@ -24,57 +24,31 @@ import myImage from "~/assets/img/patrocina/patrocina-home.png";
       href="https://mail.google.com/mail/?view=cm&fs=1&to=jorge@quantic.la&su=Interés en Programa de Patrocinio - [Nombre Empresa]" 
       target="_blank" 
       rel="noopener noreferrer" 
-      class="flex justify-center items-center w-full sm:max-w-[316px] lg:me-auto"
+      class="btn-primary w-full sm:max-w-[316px] h-12 lg:h-14 px-6 flex justify-center items-center gap-x-2 f-600 lg:me-auto"
     >
-      <button
-        class="btn-primary w-full h-12 lg:h-14 px-6 flex justify-center items-center gap-x-2 f-600"
-      >
-        Patrocina nuestros Campers
-        <img
-          src="/img/icons/heartdark.svg"
-          alt="icono de corazón"
-          class="hidden lg:block"
-        />
-      </button>
+      Patrocina nuestros Campers
+      <img
+        src="/img/icons/heartdark.svg"
+        alt=""
+        class="hidden lg:block"
+      />
     </a>
   </div>
 
-  <div class="relative flex-grow lg:flex-1 text-center z-20">
-    <div class="hidden lg:block">
-      <Image
-        src={myImage}
-        alt="Grupo de campers de Campuslands que reciben formación tecnológica gracias al patrocinio"
-        width={530}
-        widths={[100, 500, 1024]}
-        height={480}
-        loading="lazy"
-        sizes="(max-width: 750px) 100vw, 550px"
-        class="mx-auto"
-      />
-    </div>
-    <div class="lg:hidden mt-5">
-      <Image
-        src={myImage}
-        alt="Grupo de campers de Campuslands que reciben formación tecnológica gracias al patrocinio"
-        width={300}
-        height={300}
-        loading="lazy"
-        sizes="(max-width: 300px) 100vw, 100px"
-        class="mx-auto"
-      />
-    </div>
+  <div class="relative flex-grow lg:flex-1 text-center z-20 w-full max-w-[530px]">
+    <Image
+      src={myImage}
+      alt="Campers que reciben formación tecnológica mediante patrocinio en Guatemala"
+      width={530}
+      widths={[320, 480, 530, 800, 1060]}
+      format="avif"
+      loading="eager"
+      fetchpriority="high"
+      sizes="(max-width: 767px) min(90vw, 530px), 530px"
+      class="mx-auto w-full h-auto"
+    />
   </div>
 
-  <img
-    src="/img/textura-lateral-derecha.svg"
-    alt=""
-    class="absolute top-0 right-0 z-[-1]"
-  />
-  <img
-    src="/img/textura-lateral-izquierda.svg"
-    alt=""
-    class="absolute top-0 left-0 z-[-1]"
-  />
 </section>
 
 <style scoped>

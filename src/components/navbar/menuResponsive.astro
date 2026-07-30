@@ -1,0 +1,61 @@
+<nav class="navbar glass sticky top-0 z-[35]" aria-label="Navegación principal">
+  <div class="mx-auto flex justify-around items-center">
+    <div class="text-white text-2xl font-bold">
+      <a href="/" aria-label="Inicio de Campuslands Guatemala">
+        <slot name="logo" />
+      </a>
+    </div>
+    <slot />
+    <div class="md:hidden flex items-center">
+      <button
+        id="menu-principal-boton"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu-principal-movil"
+        aria-label="Abrir menú principal"
+        class="text-white focus:outline-none"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div id="menu-principal-movil" class="hidden">
+    <slot name="menuMobile" />
+  </div>
+</nav>
+
+<script>
+  const menuButton = document.querySelector<HTMLButtonElement>("#menu-principal-boton");
+  const mobileMenu = document.querySelector<HTMLElement>("#menu-principal-movil");
+
+  function setMenu(open: boolean) {
+    if (!menuButton || !mobileMenu) return;
+    menuButton.setAttribute("aria-expanded", String(open));
+    menuButton.setAttribute(
+      "aria-label",
+      open ? "Cerrar menú principal" : "Abrir menú principal",
+    );
+    mobileMenu.classList.toggle("hidden", !open);
+  }
+
+  menuButton?.addEventListener("click", () => {
+    setMenu(menuButton.getAttribute("aria-expanded") !== "true");
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setMenu(false);
+  });
+</script>

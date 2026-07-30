@@ -17,7 +17,21 @@ const dataFooter = {
 };
 ---
 
-<LayoutNavbar title="Campuslands - Se un Camper" description="Vive la experiencia" dataFooter={dataFooter}>
+<LayoutNavbar
+  dataFooter={dataFooter}
+  structuredData={{
+    "@type": "EducationalOccupationalProgram",
+    "@id": "https://www.campuslands.pro/joinUs/#programa",
+    name: "Programa presencial de formación tecnológica Campuslands Guatemala",
+    description:
+      "Formación presencial en desarrollo de software, inglés y habilidades profesionales orientada al empleo tecnológico.",
+    url: "https://www.campuslands.pro/joinUs/",
+    provider: { "@id": "https://www.campuslands.pro/#organization" },
+    educationalProgramMode: "Presencial",
+    inLanguage: "es-GT",
+    occupationalCategory: "Desarrollo de software",
+  }}
+>
   <Intro />
   <AlliedCompanies />
   <SliderTestimonials />

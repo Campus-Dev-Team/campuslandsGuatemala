@@ -34,9 +34,12 @@ const presetStyle = isOutline ? "btn-outline" : "btn-primary";
 const linkText = linkPage !== undefined ? linkPage : `https://wa.me/${whatsApp}?text=${config[1]}`;
 ---
 
-<a href=`${linkText}` target="_blank" class={StylesAnchor}>
-    <button class=`${presetStyle} p-7 lg:p-7 flex justify-center items-center gap-x-2 z-30 ${StylesButton}`>
-        {config[0]}
-        {iconName && <img src={`/img/icons/${iconName}`} alt={alt} class="hidden lg:block"/>}
-    </button>
+<a
+    href={linkText}
+    target="_blank"
+    rel="noopener noreferrer"
+    class={`${presetStyle} p-7 lg:p-7 flex justify-center items-center gap-x-2 z-30 ${StylesAnchor ?? ""} ${StylesButton ?? ""}`}
+>
+    {config[0]}
+    {iconName && <img src={`/img/icons/${iconName}`} alt={alt ?? ""} class="hidden lg:block"/>}
 </a>

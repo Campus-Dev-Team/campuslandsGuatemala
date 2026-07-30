@@ -1,0 +1,19 @@
+{
+  "name": "Campuslands Guatemala",
+  "short_name": "Campuslands GT",
+  "description": "Formación tecnológica intensiva y presencial en Ciudad de Guatemala.",
+  "lang": "es-GT",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07102B",
+  "theme_color": "#07102B",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+# Campuslands Guatemala
+
+> Sitio oficial de Campuslands Guatemala, centro presencial de formación en desarrollo de software, inglés y habilidades profesionales en Ciudad de Guatemala.
+
+## Páginas principales
+
+- [Inicio](https://www.campuslands.pro/): presentación del modelo de formación, comunidad y sede.
+- [Sé un Camper](https://www.campuslands.pro/joinUs/): programa de formación y proceso para futuros estudiantes.
+- [Emplea](https://www.campuslands.pro/emplea/): conexión de empresas con talento tecnológico formado.
+- [Patrocina](https://www.campuslands.pro/patrocina/): opciones para impulsar la formación tecnológica de jóvenes.
+- [Nosotros](https://www.campuslands.pro/nosotros/): propósito, modelo y comunidad de Campuslands Guatemala.
+
+## Información oficial
+
+- Nombre: Campuslands Guatemala
+- Ubicación: Edificio Campus Tec, Vía 4 1-00, Zona 4, Torre 1, 7.º nivel, Ciudad de Guatemala 01004, Guatemala.
+- Teléfono y WhatsApp: +502 3270 5200
+- LinkedIn: https://www.linkedin.com/company/campuslands-guatemala/
+- Instagram: https://www.instagram.com/campuslands502/
+- Facebook: https://www.facebook.com/campuslandsgt/
+
+La versión de Guatemala usa el dominio campuslands.pro. La versión de Colombia usa campuslands.com.

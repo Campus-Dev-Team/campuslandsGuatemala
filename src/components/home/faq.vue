@@ -1,16 +1,15 @@
 <template>
 	<section class="indicators max-w-[1150px] self-center">
-		<p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto text-center mb-16 pb-1"> Preguntas frecuentes
-		</p>
-		<div class="flex max-w-[305px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10">
-			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white"
-				:class="`${active === 'tabCampers' ? 'bg-primary_action' : ''}`" @click="activeTab('tabCampers')">
+		<h2 class="gradient-text text-4xl font-bold max-w-[472px] mx-auto text-center mb-16 pb-1">Preguntas frecuentes</h2>
+		<div class="flex max-w-[305px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10" role="tablist" aria-label="Categorías de preguntas frecuentes">
+			<button type="button" role="tab" :aria-selected="active === 'tabCampers'" class="font-semibold flex items-center justify-center rounded-full cursor-pointer h-9 w-[196px]"
+				:class="active === 'tabCampers' ? 'bg-primary_action text-white' : 'bg-[#07102B] text-white hover:bg-[#B0F7E6] hover:text-[#07102B]'" @click="activeTab('tabCampers')">
 				Campers
-			</div>
-			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white"
-				:class="`${active === 'tabSponsors' ? 'bg-primary_action' : ''}`" @click="activeTab('tabSponsors')">
+			</button>
+			<button type="button" role="tab" :aria-selected="active === 'tabSponsors'" class="font-semibold flex items-center justify-center rounded-full cursor-pointer h-9 w-[196px]"
+				:class="active === 'tabSponsors' ? 'bg-primary_action text-white' : 'bg-[#07102B] text-white hover:bg-[#B0F7E6] hover:text-[#07102B]'" @click="activeTab('tabSponsors')">
 				Patrocinadores
-			</div>
+			</button>
 		</div>
 		<div class="items-center justify-center flex flex-wrap gap-y-4 lg:gap-y-3 mb-16">
 			<div v-for="(faq, index) in questionsAndAnswers" :key="index"
@@ -31,22 +30,20 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from 'vue';
+import { ref } from 'vue';
 
 const active = ref('tabCampers')
-
-const questionsAndAnswers = ref([])
 
 const tabFaqCampersData = ref([
 	{
 		id: 1,
 		title: '¿Qué es Campuslands y cómo funciona?',
-		description: 'Campuslands es una experiencia educativa intensiva que busca transformar vidas en solo un año, formando a jóvenes en habilidades de tecnología y competencias blandas para integrarse en el sector laboral del futuro. Nos especializamos en programación, inglés y desarrollo personal, todo en un ambiente presencial y 24/7. Aquí, nos enfocamos en brindar una experiencia completa que te prepara para obtener empleos bien remunerados en tecnología, acelerando tu camino hacia una carrera exitosa.'
+		description: 'Campuslands Guatemala es una experiencia educativa intensiva y presencial que forma a jóvenes en programación, inglés y habilidades profesionales para integrarse al sector tecnológico. El aprendizaje práctico, la disciplina y el acompañamiento de mentores son parte central del proceso.'
 	},
 	{
 		id: 2,
 		title: '¿Cuánto tiempo dura el programa de Campuslands?',
-		description: 'El programa tiene una duración de un año, con un enfoque intensivo de aprendizaje que maximiza tu formación en un tiempo reducido. Para ajustarnos a las necesidades de los estudiantes, Campuslands ofrece dos jornadas: una en horario matutino de 6:00 a.m. a 3:00 p.m. y otra en horario vespertino de 2:00 p.m. a 10:00 - 11:00 p.m., dependiendo de la disponibilidad. Con estas opciones, buscamos que puedas adaptarte al horario que mejor se acomode a tus necesidades sin comprometer la intensidad del programa.'
+		description: 'Es un programa intensivo y presencial. La duración, las jornadas disponibles y las fechas de cada convocatoria pueden cambiar; solicita la información vigente al equipo de admisiones de Campuslands Guatemala.'
 	},
 	{
 		id: 3,
@@ -56,7 +53,7 @@ const tabFaqCampersData = ref([
 	{
 		id: 4,
 		title: '¿Cuál es el costo del programa y existen facilidades de pago?',
-		description: 'El programa tiene una inversión de 20 millones de pesos, pero en Campuslands estamos comprometidos con hacer la educación accesible. Contamos con planes de becas que cubren entre el 50% y el 100% del costo, además de opciones de financiamiento para quienes califiquen. Te invitamos a agendar una cita en el campus para conocer más sobre las oportunidades de apoyo financiero y ver cómo Campuslands puede ser el primer paso hacia tu futuro en tecnología.'
+		description: 'La inversión y las alternativas de apoyo dependen de la convocatoria vigente en Guatemala. Te invitamos a agendar una cita en el campus para recibir información actualizada sobre costos, requisitos y opciones disponibles.'
 	},
 	{
 		id: 5,
@@ -71,22 +68,22 @@ const tabFaqCampersData = ref([
 	{
 		id: 7,
 		title: '¿Cómo me ayudará Campuslands a conseguir empleo después de graduarme?',
-		description: 'En Campuslands, nuestro modelo educativo se enfoca no solo en la formación académica, sino en la conexión directa con el mercado laboral. Gracias a nuestras alianzas con empresas y nuestra reputación en la industria, logramos que nuestros estudiantes consigan empleo de calidad en un tiempo récord, en promedio, en solo 90 días después de finalizar la formación. Nuestra metodología orientada a resultados es lo que nos diferencia de cualquier otro modelo educativo.'
+		description: 'Nuestro modelo combina formación técnica, inglés y habilidades profesionales con preparación para procesos de selección y conexión con empresas. El equipo acompaña a los Campers en el desarrollo de un perfil competitivo; los resultados laborales dependen del desempeño de cada persona y de las condiciones del mercado.'
 	},
 	{
 		id: 8,
 		title: '¿Cuál es el retorno de inversión del programa?',
-		description: 'Campuslands ofrece uno de los retornos de inversión más rápidos en el ámbito educativo. Gracias a las oportunidades de empleo bien remuneradas que obtienen nuestros egresados, podrás recuperar tu inversión en menos de un año. Con salarios que duplican el mínimo legal vigente, Campuslands asegura que tu esfuerzo y dedicación se vean reflejados en beneficios económicos concretos en el corto plazo.'
+		description: 'El retorno depende del desempeño del estudiante, las oportunidades disponibles y las condiciones del mercado laboral. Nuestro objetivo es fortalecer habilidades técnicas y profesionales que mejoren las posibilidades de acceder al sector tecnológico.'
 	},
 	{
 		id: 9,
 		title: '¿Cuánto ganan en promedio los graduados de Campuslands?',
-		description: 'Los graduados de Campuslands suelen obtener empleos con un salario inicial de al menos dos veces el salario mínimo vigente, y muchos logran incrementos en sus ingresos a medida que avanzan en sus carreras en tecnología. Esta es una inversión que se traduce en estabilidad y crecimiento profesional, permitiéndote mejorar tu calidad de vida y construir un futuro sólido.'
+		description: 'Los salarios varían según el rol, la empresa, la experiencia y las condiciones del mercado. Campuslands prepara perfiles para posiciones iniciales en tecnología, pero no promete una remuneración específica.'
 	},
 	{
 		id: 10,
 		title: '¿Cuántas horas al día tendré que estudiar?',
-		description: 'El programa es intensivo y requiere un compromiso de 11 horas diarias. Esta intensidad garantiza que puedas absorber todo el conocimiento necesario en un solo año, preparando tu perfil para el mercado laboral en tiempo récord. Este esfuerzo es la clave para lograr resultados impactantes y una transformación profesional completa.'
+		description: 'El programa exige dedicación constante y disponibilidad para una formación intensiva. Antes de inscribirte, confirma con admisiones la jornada y la carga horaria de la convocatoria vigente.'
 	},
 	{
 		id: 11,
@@ -96,12 +93,12 @@ const tabFaqCampersData = ref([
 	{
 		id: 12,
 		title: '¿Qué diferencia a Campuslands de una universidad o instituto tradicional?',
-		description: 'Campuslands es una alternativa disruptiva a la educación tradicional. Nuestro modelo intensivo y 100% presencial está orientado a maximizar el aprendizaje práctico, preparándote para el mercado laboral en solo un año. A diferencia de las universidades, aquí encontrarás un enfoque en habilidades prácticas y una conexión directa con oportunidades laborales, acelerando tu crecimiento profesional.'
+		description: 'Campuslands ofrece un modelo intensivo, presencial y práctico enfocado en programación, inglés y habilidades profesionales. No sustituye una carrera universitaria; es una ruta de formación distinta, orientada a desarrollar competencias para el sector tecnológico.'
 	},
 	{
 		id: 13,
 		title: '¿Puedo estudiar y trabajar al mismo tiempo mientras hago el programa?',
-		description: 'Aunque el programa de Campuslands es intensivo, algunos estudiantes han logrado combinar estudio y trabajo. Esto requiere una alta disciplina y esfuerzo, ya que la carga académica es demandante. Con determinación, es posible hacerlo, y tenemos ejemplos de jóvenes que lo han logrado con éxito, pero debes estar preparado para el compromiso y la dedicación que esto implica.'
+		description: 'Por la intensidad del programa, combinarlo con un trabajo puede ser difícil. Consulta la jornada vigente con admisiones y evalúa tu disponibilidad antes de iniciar el proceso.'
 	},
 	{
 		id: 14,
@@ -121,7 +118,7 @@ const tabFaqCampersData = ref([
 	{
 		id: 17,
 		title: '¿Campuslands ofrece becas o apoyos financieros?',
-		description: 'Campuslands está comprometido en crear oportunidades de educación accesible para jóvenes talentosos que desean un futuro mejor. Ofrecemos opciones de financiamiento y becas que cubren entre el 50% y el 100% del costo, dependiendo del desempeño y logros del estudiante. Creemos en el potencial de los jóvenes y en su capacidad de cambio, y por eso buscamos que puedan acceder a una educación de calidad sin limitaciones económicas.'
+		description: 'Las opciones de apoyo pueden variar entre convocatorias. Consulta directamente con admisiones para conocer los requisitos, la disponibilidad y las condiciones vigentes en Guatemala.'
 	},
 	{
 		id: 18,
@@ -154,7 +151,7 @@ const tabFaqSponsersData = ref([
 	{
 		id: 3,
 		title: "¿A quiénes se patrocina en Campuslands?",
-		description: "Se patrocina a jóvenes de estratos 1, 2 y 3 con un gran potencial, pero con recursos económicos limitados. Son personas con deseos de superación, pasión por la tecnología y compromiso con su aprendizaje. El patrocinio permite que estos jóvenes tengan acceso a una educación de calidad y oportunidades de empleo en la industria tecnológica."
+		description: "Se patrocina a jóvenes de niveles socioeconómicos C, C- y D con gran potencial y recursos económicos limitados. Son personas con deseos de superación, pasión por la tecnología y compromiso con su aprendizaje."
 	},
 	{
 		id: 4,
@@ -164,7 +161,7 @@ const tabFaqSponsersData = ref([
 	{
 		id: 5,
 		title: "¿Cuánto tiempo dura el patrocinio?",
-		description: "El patrocinio tiene una duración aproximada de 10 a 14 meses. Los primeros 10 meses se dedican al entrenamiento intensivo, donde los jóvenes aprenden desarrollo de software, inglés y habilidades socioemocionales. Luego, pueden pasar a la etapa de 'horas de vuelo', donde aplican sus conocimientos en proyectos reales, haciendo que su perfil sea mucho más competitivo para el mercado laboral."
+		description: "La duración y el alcance del patrocinio dependen del plan acordado y de la convocatoria vigente. El equipo de Campuslands Guatemala puede compartir el cronograma y las condiciones aplicables antes de formalizar el apoyo."
 	},
 	{
 		id: 6,
@@ -188,15 +185,13 @@ const tabFaqSponsersData = ref([
 	}
 ])
 
-onBeforeMount(() => {
-	questionsAndAnswers.value = tabFaqCampersData.value
-})
+const questionsAndAnswers = ref(tabFaqCampersData.value)
 
 function activeTab(tab) {
 	active.value = tab
 	questionsAndAnswers.value = tab === 'tabCampers'
-		? questionsAndAnswers.value = tabFaqCampersData.value
-		: questionsAndAnswers.value = tabFaqSponsersData.value
+		? tabFaqCampersData.value
+		: tabFaqSponsersData.value
 }
 </script>
 

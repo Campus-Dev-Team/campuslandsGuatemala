@@ -1,118 +1,119 @@
 ---
 import { Image } from "astro:assets";
-import { AstroFont } from "astro-font";
-// import { ViewTransitions } from 'astro:transitions';
-import MenuResponsive from "../components/navbar/menuResponsive.vue";
+import MenuResponsive from "../components/navbar/menuResponsive.astro";
 import ContactButton from "~/components/common/ContactButton.astro";
+import SeoHead from "~/components/SeoHead.astro";
 import Circular from "~/assets/img/CircularPattern.svg";
 
 import logoCampus from "~/assets/img/logos/logoCampus_v2.svg";
 import logoCampus502 from "~/assets/img/nosotros/campus502.svg";
 import facebook from "~/assets/img/icons/Facebook.svg";
 import instagram from "~/assets/img/icons/Instagram.svg";
-import linkedin from "~/assets/img/icons/LinkedIn.svg";
-import youtube from "~/assets/img/icons/YouTube.svg";
 
-const { dataFooter, title = "Campuslands", description = "Campuslands, donde la tecnología transforma el talento"} = Astro.props;
-const currentPath = Astro.url.pathname;
+const {
+  dataFooter,
+  title,
+  description,
+  image,
+  noindex = false,
+  pageType,
+  structuredData,
+} = Astro.props;
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 const curryear = new Date().getFullYear();
 ---
 
 <!doctype html>
-<html lang="es" data-theme="dark">
+<html lang="es-GT" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
+    <SeoHead
+      title={title}
+      description={description}
+      image={image}
+      noindex={noindex}
+      pageType={pageType}
+      structuredData={structuredData}
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta name="geo.region" content="GT-GUA" />
     <meta name="geo.placename" content="Ciudad de Guatemala, Guatemala" />
-    <meta name="geo.position" content="14.6349;-90.5069" />
-    <meta name="ICBM" content="14.6349, -90.5069" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
-    <title>{title}</title>
-    <!-- <ViewTransitions /> -->
-    <AstroFont
-      config={[
-        {
-          name: "Poppins",
-          src: [
-            {
-              style: "normal",
-              weight: "400",
-              path: "/public/fonts/Poppins-Regular.ttf",
-            },
-            {
-              style: "medium",
-              weight: "500",
-              path: "./public/fonts/Afacad-Medium.woff2",
-            },
-          ],
-          preload: false,
-          display: "swap",
-          selector: "body",
-          fallback: "sans-serif",
-        },
-      ]}
-    />
     <meta name="google-site-verification" content="VjWljaxyJbf68bXWX6Wna-Zcj84e_y8UWPRUKivFHKw" />
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XTZ0LV0CT"></script>
+    <!-- Medición diferida para no bloquear el contenido principal -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){ dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-3XTZ0LV0CT');
+      let analyticsLoaded = false;
+      function loadAnalytics() {
+        if (analyticsLoaded) return;
+        analyticsLoaded = true;
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-3XTZ0LV0CT';
+        document.head.appendChild(script);
+        gtag('js', new Date());
+        gtag('config', 'G-3XTZ0LV0CT');
+      }
+      ['pointerdown', 'keydown', 'touchstart'].forEach((eventName) => {
+        window.addEventListener(eventName, loadAnalytics, { once: true, passive: true });
+      });
+      window.setTimeout(loadAnalytics, 12000);
     </script>
-  </script>
   </head>
-  <body class="relative flex flex-col overflow-x-hidden gap-[5.5rem]">
-    <div
+  <body class="relative flex flex-col overflow-x-hidden">
+    <a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
+    <button
       id="go-up"
+      type="button"
+      aria-label="Volver al inicio de la página"
       class="flex justify-center align-middle bg-primary rounded-full size-10 fixed right-10 bottom-[5%] cursor-pointer z-50"
     >
-      <img src="/img/icons/arrow-up.svg" alt="icono-flecha" width="25" />
-    </div>
-    <MenuResponsive client:load>
+      <span aria-hidden="true" class="text-white text-xl leading-none">↑</span>
+    </button>
+    <MenuResponsive>
       <Image
         slot="logo"
         src={logoCampus}
         alt="logoCampus"
         class="py-6 w-[13rem] lg:p-0 lg:w-[15rem]"
+        loading="eager"
       />
       <div class="content-redirects items-center hidden md:flex h-full">
         <a
           href="/"
-          aria-label="Home"
+          aria-label="Inicio"
+          aria-current={currentPath === "/" ? "page" : undefined}
           class={currentPath === "/"
             ? "active"
             : "text-white hover:text-gray-200"}>Inicio</a
         >
-        <a href="/joinUs" class={currentPath === "/joinUs" ? "active" : ""}
+        <a
+          href="/joinUs/"
+          aria-current={currentPath === "/joinUs" ? "page" : undefined}
+          class={currentPath === "/joinUs" ? "active" : ""}
           >Sé un Camper</a
         >
         <a
-          href="/emplea"
+          href="/emplea/"
           aria-label="Impulsa a tu equipo"
+          aria-current={currentPath === "/emplea" ? "page" : undefined}
           class={currentPath === "/emplea"
             ? "active"
             : "text-white hover:text-gray-200"}>Emplea</a
         >
         <a
-          href="/patrocina"
+          href="/patrocina/"
           aria-label="Patrocina nuestros Campers"
+          aria-current={currentPath === "/patrocina" ? "page" : undefined}
           class={currentPath === "/patrocina"
             ? "active"
             : "text-white hover:text-gray-200"}>Patrocina</a
         >
         <a
-          href="/nosotros"
+          href="/nosotros/"
+          aria-current={currentPath === "/nosotros" ? "page" : undefined}
           class={currentPath === "/nosotros"
             ? "active"
             : "text-white hover:text-gray-200"}>Nosotros</a
@@ -122,19 +123,21 @@ const curryear = new Date().getFullYear();
       <div slot="menuMobile" class="md:hidden mt-5">
         <div class="flex flex-col items-center space-y-4 px-4 py-2 gap-y-3">
           <a href="/" class="text-white hover:text-gray-200">Inicio</a>
-          <a href="/joinUs" class="text-white hover:text-gray-200"
-            >Se un Camper</a
+          <a href="/joinUs/" class="text-white hover:text-gray-200"
+            >Sé un Camper</a
           >
-          <a href="/emplea" class="text-white hover:text-gray-200">Emplea</a>
-          <a href="/patrocina" class="text-white hover:text-gray-200"
+          <a href="/emplea/" class="text-white hover:text-gray-200">Emplea</a>
+          <a href="/patrocina/" class="text-white hover:text-gray-200"
             >Patrocina</a
           >
-          <a href="/nosotros" class="text-white hover:text-gray-200">Nosotros</a
+          <a href="/nosotros/" class="text-white hover:text-gray-200">Nosotros</a
           >
         </div>
       </div>
     </MenuResponsive>
-    <slot />
+    <main id="contenido-principal" class="flex flex-col gap-[5.5rem]">
+      <slot />
+    </main>
     <footer class="faq flex flex-col relative">
       <div
         class={`max-w-[1150px] relative sections self-center vstext my-auto flex flex-col gap-y-8 py-20`}
@@ -189,20 +192,20 @@ const curryear = new Date().getFullYear();
               class="text-white hover:text-gray-200 !mx-4">Inicio</a
             >
             <a
-              href="/joinUs"
-              aria-label="Impulsa a tu equipo"
+              href="/joinUs/"
+              aria-label="Sé un Camper"
               class="text-white hover:text-gray-200 !mx-4 break-keep"
               >Sé un Camper</a
             >
-            <a href="/emplea" class="text-white hover:text-gray-200 !mx-4"
+            <a href="/emplea/" class="text-white hover:text-gray-200 !mx-4"
               >Emplea</a
             >
             <a
-              href="/patrocina"
+              href="/patrocina/"
               aria-label="Patrocina nuestros Campers"
               class="text-white hover:text-gray-200 !mx-4">Patrocina</a
             >
-            <a href="/nosotros" class="text-white hover:text-gray-200 !mx-4"
+            <a href="/nosotros/" class="text-white hover:text-gray-200 !mx-4"
               >Nosotros</a
             >
           </div>
@@ -220,29 +223,21 @@ const curryear = new Date().getFullYear();
             class="flex items-center w-full md:w-fit justify-evenly md:gap-x-10"
           >
             <a
-              href="https://www.facebook.com/share/1A7C6VczMB/"
+              href="https://www.facebook.com/campuslandsgt/"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook de Campuslands Guatemala"
               class="w-7 h-7 content-center place-items-center"
               ><Image src={facebook} alt="Logo facebook" /></a
             >
             <a
               href="https://www.instagram.com/campuslands502/"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram de Campuslands Guatemala"
               class="w-7 h-7 content-center place-items-center"
               ><Image src={instagram} alt="Logo instagram" /></a
             >
-            <!-- <a
-              href=""
-              target="_blank"
-              class="w-7 h-7 content-center place-items-center"
-              ><Image src={linkedin} alt="Logo linkedin" /></a
-            >
-            <a
-              href=""
-              target="_blank"
-              class="w-7 h-7 content-center place-items-center"
-              ><Image src={youtube} alt="Logo youtube" /></a
-            > -->
           </div>
         </div>
       </div>
@@ -323,7 +318,37 @@ const curryear = new Date().getFullYear();
   html {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
-    background-color: red;
+    background-color: #07102b;
+    scroll-behavior: smooth;
+  }
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    transform: translateY(-150%);
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #07102b;
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+  :focus-visible {
+    outline: 3px solid #57bbff;
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
   code {
     font-family:

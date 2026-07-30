@@ -16,11 +16,34 @@ const dataFooter = {
 };
 ---
 
-<LayoutNavbar title="Campuslands - Patrocina" description="Invierte en el futuro" dataFooter={dataFooter}>
+<LayoutNavbar
+  dataFooter={dataFooter}
+  structuredData={{
+    "@type": "Service",
+    "@id": "https://www.campuslands.pro/patrocina/#servicio",
+    name: "Patrocinio de formación tecnológica para jóvenes en Guatemala",
+    description:
+      "Programa de patrocinio para impulsar la formación tecnológica y profesional de jóvenes guatemaltecos.",
+    url: "https://www.campuslands.pro/patrocina/",
+    provider: { "@id": "https://www.campuslands.pro/#organization" },
+    areaServed: { "@type": "Country", name: "Guatemala" },
+    serviceType: "Patrocinio educativo",
+  }}
+>
   <Intro />
   <div class="sections max-w-[1150px] self-center">
-    <img src="/img/patrocina/card.png" alt="Campers de Campuslands con mensaje de transformación social a través de la tecnología" class="w-full hidden sm:block" />
-    <img src="/img/patrocina/cardMobile.png" alt="Imagen promocional de patrocinio a la educación tecnológica en Campuslands" class="w-full sm:hidden" />
+    <picture>
+      <source media="(max-width: 639px)" srcset="/img/patrocina/cardMobile.png" />
+      <img
+        src="/img/patrocina/card.png"
+        alt="Campers de Campuslands Guatemala con un mensaje sobre patrocinio de talento joven"
+        class="w-full"
+        width="1135"
+        height="285"
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
   </div>
   <Items />
   <Donate />
