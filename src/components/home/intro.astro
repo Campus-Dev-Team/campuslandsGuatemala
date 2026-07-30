@@ -3,8 +3,8 @@ import { Image } from 'astro:assets';
 import myImage from '~/assets/img/campers/campers-home-border-girl.png';
 import ContactButton from '../common/ContactButton.astro';
 ---
-<section class="principal self-auto sections relative h-fit w-full px-4 lg:px-0" aria-label="Sección de introducción sobre Campuslands">
-	<div class="relative flex flex-col lg:flex-row flex-wrap place-content-evenly h-fit w-full items-center gap-4 lg:gap-10 m-0 p-0">
+<section class="page-hero principal self-center sections relative w-full px-4 lg:px-9" aria-label="Sección de introducción sobre Campuslands">
+	<div class="relative flex flex-col lg:flex-row flex-wrap justify-center lg:justify-between h-fit w-full max-w-[1600px] items-center gap-8 lg:gap-10 m-0 p-0">
 		<!-- Contenedor de texto y botón -->
 		<div class="relative flex flex-col w-full md:max-w-[550px] lg:max-w-[425px] gap-y-4 lg:gap-y-8 items-center lg:items-start px-4 lg:px-0" title="Información sobre Campuslands">
 			<img src="/img/cohete1.png" alt="Cohete ilustrativo despegando" width="122" height="122" class="absolute -right-28 hidden lg:block" loading="lazy">
@@ -48,7 +48,6 @@ import ContactButton from '../common/ContactButton.astro';
 }
 
 .principal {
-	margin-bottom: 10rem;
     background-position: 80% 0%;
     background-repeat: no-repeat;
     background-size: 75%;
