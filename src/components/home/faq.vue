@@ -58,7 +58,7 @@ const tabFaqCampersData = ref([
 	{
 		id: 5,
 		title: '¿Qué materias o habilidades voy a aprender en Campuslands?',
-		description: 'En Campuslands, aprenderás programación avanzada, inglés y habilidades blandas esenciales para el mundo laboral. El plan de estudios está diseñado para proporcionarte competencias técnicas en desarrollo de software y habilidades de comunicación en inglés que te abrirán puertas en el mercado global. Además, cultivamos habilidades interpersonales como trabajo en equipo, adaptabilidad y liderazgo, asegurándonos de que seas un profesional completo y preparado para enfrentar los desafíos del mercado.'
+		description: 'En Campuslands, aprenderás programación avanzada, inglés y habilidades adaptativas esenciales para el mundo laboral. El plan de estudios está diseñado para proporcionarte competencias técnicas en desarrollo de software y habilidades de comunicación en inglés que te abrirán puertas en el mercado global. Además, cultivamos habilidades interpersonales como trabajo en equipo, adaptabilidad y liderazgo, asegurándonos de que seas un profesional completo y preparado para enfrentar los desafíos del mercado.'
 	},
 	{
 		id: 6,
