@@ -42,6 +42,13 @@
   @apply bg-gradient-to-br from-brand-sky from-10% to-brand-aqua to-100%;
 }
 
+.page-title {
+  font-size: clamp(1.75rem, 7vw, 2.125rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
 .btn-primary {
   @apply rounded-full bg-primary text-brand-petroleum hover:bg-brand-cyan transition-all duration-300;
 }
@@ -54,6 +61,10 @@
 .f-40{ font-size: 40px; }
 
 @media (min-width: 1024px) {
+	.page-title {
+		font-size: clamp(2.75rem, 3.4vw, 3rem);
+	}
+
 	.f-32{ font-size: 32px; }
 	.f-40{ font-size: 40px; }
 }
