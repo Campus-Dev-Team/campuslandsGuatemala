@@ -20,23 +20,42 @@ import tools from "./skillsArrays/tools";
         industria tech. 
       </p>
     </div>
-    <div class="indicators px-4 max-w-[980px]">
+    <div class="indicators px-4 max-w-[980px]" data-skills-tabs>
       <div
         class="flex flex-col md:flex-row items-center gap-2 mx-auto max-w-fit border bg-primary border-white rounded-[15px] p-2 mb-10"
+        role="tablist"
+        aria-label="Tipos de habilidades"
       >
         <button
+          type="button"
+          role="tab"
+          id="hardSkills-tab"
+          aria-controls="hardSkills"
+          aria-selected="true"
           class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-12 w-[196px] bg-primary_action text-white font-semibold"
           data-tab="hardSkills"
         >
           Habilidades técnicas
         </button>
         <button
+          type="button"
+          role="tab"
+          id="tools-tab"
+          aria-controls="tools"
+          aria-selected="false"
+          tabindex="-1"
           class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-9 w-[196px] text-black"
           data-tab="tools"
         >
           Herramientas
         </button>
         <button
+          type="button"
+          role="tab"
+          id="softSkills-tab"
+          aria-controls="softSkills"
+          aria-selected="false"
+          tabindex="-1"
           class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-12 w-[196px] text-black"
           data-tab="softSkills"
         >
@@ -46,6 +65,8 @@ import tools from "./skillsArrays/tools";
 
       <div
         id="hardSkills"
+        role="tabpanel"
+        aria-labelledby="hardSkills-tab"
         class="skill-content flex flex-wrap justify-center gap-5 lg:gap-5"
       >
         {
@@ -64,6 +85,8 @@ min-w-[130px] lg:max-h-[60px] lg:min-w-[205px]"
 
       <div
         id="tools"
+        role="tabpanel"
+        aria-labelledby="tools-tab"
         class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-4"
       >
         {
@@ -82,6 +105,8 @@ min-w-[130px] lg:max-h-[95px] lg:min-w-[170px]"
 
       <div
         id="softSkills"
+        role="tabpanel"
+        aria-labelledby="softSkills-tab"
         class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-4"
       >
         {
@@ -104,27 +129,85 @@ min-w-[130px] lg:max-h-[95px] lg:min-w-[170px]"
 </section>
 
 <script>
-  const tabButtons = document.querySelectorAll(".tab-btn");
-  const skillContents = document.querySelectorAll(".skill-content");
+  const initializedSkillTabs = new WeakSet<Element>();
 
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      tabButtons.forEach((btn) => {
-        btn.classList.remove(
-          "bg-primary_action",
-          "text-white",
-          "font-semibold"
-        );
-        btn.classList.add("text-black");
+  function setupSkillTabs() {
+    const tabs = document.querySelector<HTMLElement>("[data-skills-tabs]");
+
+    if (!tabs || initializedSkillTabs.has(tabs)) return;
+
+    const tabButtons = Array.from(
+      tabs.querySelectorAll<HTMLButtonElement>(".tab-btn")
+    );
+    const skillContents = Array.from(
+      tabs.querySelectorAll<HTMLElement>(".skill-content")
+    );
+
+    if (!tabButtons.length || !skillContents.length) return;
+
+    initializedSkillTabs.add(tabs);
+
+    const activateTab = (button: HTMLButtonElement) => {
+      tabButtons.forEach((tabButton) => {
+        const isActive = tabButton === button;
+
+        tabButton.classList.toggle("bg-primary_action", isActive);
+        tabButton.classList.toggle("text-white", isActive);
+        tabButton.classList.toggle("font-semibold", isActive);
+        tabButton.classList.toggle("text-black", !isActive);
+        tabButton.setAttribute("aria-selected", String(isActive));
+        tabButton.tabIndex = isActive ? 0 : -1;
       });
 
-      button.classList.remove("text-black");
-      button.classList.add("bg-primary_action", "text-white", "font-semibold");
-
-      skillContents.forEach((content) => content.classList.add("hidden"));
-
       const tabId = button.dataset.tab;
-      document.getElementById(tabId).classList.remove("hidden");
+
+      skillContents.forEach((content) => {
+        const isActive = content.id === tabId;
+
+        content.classList.toggle("hidden", !isActive);
+        content.hidden = !isActive;
+      });
+    };
+
+    tabButtons.forEach((button, index) => {
+      button.addEventListener("click", () => activateTab(button));
+      button.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+          return;
+        }
+
+        event.preventDefault();
+
+        let nextIndex = index;
+
+        if (event.key === "ArrowLeft") {
+          nextIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+        } else if (event.key === "ArrowRight") {
+          nextIndex = (index + 1) % tabButtons.length;
+        } else if (event.key === "Home") {
+          nextIndex = 0;
+        } else if (event.key === "End") {
+          nextIndex = tabButtons.length - 1;
+        }
+
+        const nextButton = tabButtons[nextIndex];
+        activateTab(nextButton);
+        nextButton.focus();
+      });
     });
-  });
+
+    const initialTab =
+      tabButtons.find((button) => button.getAttribute("aria-selected") === "true") ??
+      tabButtons[0];
+
+    activateTab(initialTab);
+  }
+
+  document.addEventListener("astro:page-load", setupSkillTabs);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupSkillTabs, { once: true });
+  } else {
+    setupSkillTabs();
+  }
 </script>
