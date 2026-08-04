@@ -171,6 +171,7 @@ Astro está configurado para utilizar una barra final en las rutas.
 | `/emplea/` | Contratación de talento tecnológico. |
 | `/patrocina/` | Programa de patrocinio. |
 | `/nosotros/` | Información institucional. |
+| `/terminos-condiciones/` | Términos y condiciones de participación. |
 | `/politica-de-privacidad/` | Política de privacidad y seguridad de datos. |
 | `/patrocinar/` | Formulario de patrocinio. |
 | `/contactanos/` | Ruta de contacto reservada. |
@@ -201,7 +202,7 @@ campuslandsGuatemala/
 - El dominio canónico y los metadatos SEO se definen en `src/config/seo.mjs`.
 - El sitemap se genera automáticamente durante `npm run build`.
 - La configuración exige rutas con barra final, por ejemplo
-  `/politica-de-privacidad/`.
+  `/terminos-condiciones/` o `/politica-de-privacidad/`.
 - Los enlaces externos a WhatsApp, redes sociales, correo y portales conservan
   su navegación normal.
 
@@ -235,7 +236,7 @@ npm run dev -- --port 4322
 Comprueba que la URL termine con `/`. Por ejemplo:
 
 ```text
-http://localhost:4321/politica-de-privacidad/
+http://localhost:4321/terminos-condiciones/
 ```
 
 ### Las dependencias no coinciden

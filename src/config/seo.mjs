@@ -42,6 +42,11 @@ export const PAGE_SEO = {
     description:
       "Conoce el modelo, la comunidad y el propósito de Campuslands Guatemala: formar talento joven para la industria tecnológica.",
   },
+  "/terminos-condiciones/": {
+    title: "Términos y Condiciones | Campuslands Guatemala",
+    description:
+      "Consulta las condiciones de inscripción, participación y uso de los recursos formativos de Campuslands Guatemala.",
+  },
 };
 
 export const INDEXABLE_PATHS = Object.keys(PAGE_SEO);

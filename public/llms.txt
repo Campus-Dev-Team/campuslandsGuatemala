@@ -10,6 +10,11 @@
 - [Patrocina](https://www.campuslands.pro/patrocina/): opciones para impulsar la formación tecnológica de jóvenes.
 - [Nosotros](https://www.campuslands.pro/nosotros/): propósito, modelo y comunidad de Campuslands Guatemala.
 
+## Información legal
+
+- [Términos y condiciones](https://www.campuslands.pro/terminos-condiciones/): condiciones de inscripción, participación, uso de recursos, certificación y conducta en los programas formativos.
+- [Política de privacidad](https://www.campuslands.pro/politica-de-privacidad/): tratamiento, protección y administración de datos personales.
+
 ## Información oficial
 
 - Nombre: Campuslands Guatemala
