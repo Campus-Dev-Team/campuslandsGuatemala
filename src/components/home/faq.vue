@@ -43,7 +43,7 @@ const tabFaqCampersData = ref([
 	{
 		id: 2,
 		title: '¿Cuánto tiempo dura el programa de Campuslands?',
-		description: 'Es un programa intensivo y presencial. La duración, las jornadas disponibles y las fechas de cada convocatoria pueden cambiar; solicita la información vigente al equipo de admisiones de Campuslands Guatemala.'
+		description: 'El programa tiene una duración de 10 meses, con un enfoque intensivo de aprendizaje que maximiza tu formación en un tiempo reducido. Para ajustarnos a las necesidades de los estudiantes, Campuslands ofrece dos jornadas: una en horario matutino de 6:00 a.m. a 2:00 p.m. y otra en horario vespertino de 2:00 p.m. a 10:00 p.m., dependiendo de la disponibilidad. Con estas opciones, buscamos que puedas adaptarte al horario que mejor se acomode a tus necesidades sin comprometer la intensidad del programa. Por favor solicita la información vigente al equipo de admisiones de Campuslands Guatemala.'
 	},
 	{
 		id: 3,
