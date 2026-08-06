@@ -17,29 +17,215 @@
         aria-expanded="false"
         aria-controls="menu-principal-movil"
         aria-label="Abrir menú principal"
-        class="text-white focus:outline-none"
+        class="menu-toggle text-white"
       >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"
-          ></path>
-        </svg>
+        <span class="menu-icon" aria-hidden="true">
+          <span class="menu-icon-line"></span>
+          <span class="menu-icon-line"></span>
+          <span class="menu-icon-line"></span>
+        </span>
       </button>
     </div>
   </div>
-  <div id="menu-principal-movil" class="hidden">
-    <slot name="menuMobile" />
+  <div
+    id="menu-principal-movil"
+    class="mobile-menu-shell md:hidden"
+    data-open="false"
+    aria-hidden="true"
+    inert
+  >
+    <div class="mobile-menu-panel">
+      <slot name="menuMobile" />
+    </div>
   </div>
 </nav>
+
+<style>
+  .menu-toggle {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    transition:
+      color 220ms ease,
+      background-color 220ms ease,
+      border-color 220ms ease,
+      box-shadow 220ms ease;
+  }
+
+  .menu-toggle:hover,
+  .menu-toggle[aria-expanded="true"] {
+    color: #57bbff;
+    border-color: rgb(87 187 255 / 35%);
+    background: rgb(87 187 255 / 10%);
+    box-shadow: 0 0 0 4px rgb(87 187 255 / 6%);
+  }
+
+  .menu-toggle:focus-visible {
+    outline: 2px solid #57bbff;
+    outline-offset: 3px;
+  }
+
+  .menu-icon {
+    position: relative;
+    display: block;
+    width: 1.5rem;
+    height: 1.125rem;
+  }
+
+  .menu-icon-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transform-origin: center;
+    transition:
+      top 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 180ms ease;
+  }
+
+  .menu-icon-line:nth-child(1) {
+    top: 0;
+  }
+
+  .menu-icon-line:nth-child(2) {
+    top: 0.5rem;
+  }
+
+  .menu-icon-line:nth-child(3) {
+    top: 1rem;
+  }
+
+  .menu-toggle[aria-expanded="true"] .menu-icon-line:nth-child(1) {
+    top: 0.5rem;
+    transform: rotate(45deg);
+  }
+
+  .menu-toggle[aria-expanded="true"] .menu-icon-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0.35);
+  }
+
+  .menu-toggle[aria-expanded="true"] .menu-icon-line:nth-child(3) {
+    top: 0.5rem;
+    transform: rotate(-45deg);
+  }
+
+  .mobile-menu-shell {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, -0.875rem, 0) scale(0.985);
+    transform-origin: top center;
+    transition:
+      grid-template-rows 440ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 220ms ease,
+      transform 440ms cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s linear 440ms;
+  }
+
+  .mobile-menu-shell[data-open="true"] {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) scale(1);
+    transition-delay: 0s;
+  }
+
+  .mobile-menu-panel {
+    min-height: 0;
+    overflow: hidden;
+    border-bottom: 1px solid rgb(87 187 255 / 28%);
+    background:
+      radial-gradient(circle at 50% -35%, rgb(87 187 255 / 20%), transparent 58%),
+      linear-gradient(180deg, rgb(7 16 43 / 97%), rgb(0 0 81 / 96%));
+    box-shadow: 0 1.75rem 4rem rgb(0 0 51 / 42%);
+    backdrop-filter: blur(18px);
+  }
+
+  :global(.mobile-menu-links > a) {
+    display: block;
+    width: 100%;
+    max-width: 24rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: 1rem;
+    color: white;
+    background: rgb(255 255 255 / 3.5%);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-0.75rem);
+    transition:
+      color 220ms ease,
+      border-color 220ms ease,
+      background-color 220ms ease;
+  }
+
+  :global(.mobile-menu-links > a:hover) {
+    color: #57bbff;
+    border-color: rgb(87 187 255 / 40%);
+    background: rgb(87 187 255 / 10%);
+  }
+
+  :global(.mobile-menu-links > a:focus-visible) {
+    outline: 2px solid #57bbff;
+    outline-offset: 2px;
+  }
+
+  :global(.mobile-menu-shell[data-open="true"] .mobile-menu-links > a) {
+    animation: menu-link-reveal 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  :global(.mobile-menu-shell[data-open="true"] .mobile-menu-links > a:nth-child(2)) {
+    animation-delay: 45ms;
+  }
+
+  :global(.mobile-menu-shell[data-open="true"] .mobile-menu-links > a:nth-child(3)) {
+    animation-delay: 90ms;
+  }
+
+  :global(.mobile-menu-shell[data-open="true"] .mobile-menu-links > a:nth-child(4)) {
+    animation-delay: 135ms;
+  }
+
+  :global(.mobile-menu-shell[data-open="true"] .mobile-menu-links > a:nth-child(5)) {
+    animation-delay: 180ms;
+  }
+
+  @keyframes menu-link-reveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu-toggle,
+    .menu-icon-line,
+    .mobile-menu-shell,
+    :global(.mobile-menu-shell[data-open="true"] .mobile-menu-links > a) {
+      animation: none;
+      transition-duration: 0.01ms;
+    }
+
+    :global(.mobile-menu-shell[data-open="true"] .mobile-menu-links > a) {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
 
 <script>
   const menuButton = document.querySelector<HTMLButtonElement>("#menu-principal-boton");
@@ -52,7 +238,9 @@
       "aria-label",
       open ? "Cerrar menú principal" : "Abrir menú principal",
     );
-    mobileMenu.classList.toggle("hidden", !open);
+    mobileMenu.dataset.open = String(open);
+    mobileMenu.setAttribute("aria-hidden", String(!open));
+    mobileMenu.toggleAttribute("inert", !open);
   }
 
   menuButton?.addEventListener("click", () => {
@@ -68,4 +256,6 @@
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") setMenu(false);
   });
+
+  document.addEventListener("astro:before-swap", () => setMenu(false));
 </script>
