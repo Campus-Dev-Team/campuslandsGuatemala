@@ -30,7 +30,8 @@ import ContactButton from '../common/ContactButton.astro';
 				format="avif"
 				loading="eager"
 				fetchpriority="high"
-				sizes="(max-width: 1023px) min(90vw, 635px), 635px"
+				decoding="sync"
+				sizes="(max-width: 480px) calc(100vw - 50px), 635px"
 				class="w-full h-auto"
 			/>
 		</div>
