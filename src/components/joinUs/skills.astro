@@ -95,8 +95,10 @@ min-w-[130px] lg:max-h-[60px] lg:min-w-[205px]"
               src={skill.asset}
               alt={skill.name}
               title={skill.name}
-              class="max-h-[55px]
-min-w-[130px] lg:max-h-[95px] lg:min-w-[170px]"
+              class:list={[
+                "max-h-[55px] min-w-[130px] lg:max-h-[95px] lg:min-w-[170px]",
+                { "rounded-[10px] bg-white px-3 py-2": skill.name === "Docker" },
+              ]}
               draggable="false"
             />
           ))
