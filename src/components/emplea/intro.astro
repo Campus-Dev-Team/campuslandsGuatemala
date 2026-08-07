@@ -1,24 +1,21 @@
 ---
 import { Image } from "astro:assets";
 import ContactButton from "../common/ContactButton.astro";
-import myImage from "~/assets/img/emplea/emplea-home.png";
+import myImage from "~/assets/img/emplea/talento-empresa-guatemala.webp";
 ---
 
 <section
-  class="page-hero principal flex flex-col sections max-w-[1150px] self-center relative items-center justify-center md:flex-row md:justify-between gap-8"
+  class="page-hero flex flex-col sections max-w-[1150px] self-center relative items-center justify-center md:flex-row md:justify-between gap-8 lg:gap-12"
+  aria-label="Presentación del talento tecnológico para empresas"
 >
   <div
     class="relative flex-wrap w-full md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex flex-col gap-8 items-center md:items-start"
   >
-    <h1
-      class="page-title gradient-text text-center lg:text-start"
-    >
+    <h1 class="page-title gradient-text text-center lg:text-start">
       Encuentra el talento tech competitivo que tu empresa necesita, sin
       complicaciones.
     </h1>
-    <p
-      class="text-center lg:text-start text-sm lg:text-base leading-6 text-white"
-    >
+    <p class="text-center lg:text-start text-sm lg:text-base leading-6 text-white">
       Identificamos jóvenes con potencial, los entrenamos en desarrollo de
       software, dominio del inglés y competencias socioemocionales, entregando
       candidatos ideales para tu equipo.
@@ -30,35 +27,104 @@ import myImage from "~/assets/img/emplea/emplea-home.png";
       StylesAnchor="place-items-center"
     />
   </div>
-  <div class="w-full max-w-[530px]">
-    <Image
-      src={myImage}
-      alt="Campers de Campuslands Guatemala preparados para integrarse a empresas"
-      width={530}
-      widths={[320, 480, 530, 800, 1060]}
-      format="avif"
-      loading="eager"
-      fetchpriority="high"
-      sizes="(max-width: 767px) min(90vw, 530px), 530px"
-      class="w-full h-auto"
-    />
-  </div>
+
+  <figure class="emplea-hero-media w-full max-w-[560px]" aria-label="Talento profesional para empresas">
+    <div class="emplea-hero-media__surface">
+      <Image
+        src={myImage}
+        alt="Profesional tecnológico preparado para integrarse a una empresa en Guatemala"
+        width={1536}
+        widths={[320, 480, 560, 768, 1024, 1536]}
+        format="avif"
+        quality={80}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        sizes="(max-width: 767px) calc(100vw - 32px), 560px"
+        class="emplea-hero-media__photo"
+      />
+      <span class="emplea-hero-media__code" aria-hidden="true">talento.tech//gt</span>
+      <img
+        src="/img/frames/emplea-hero-frame.svg"
+        alt=""
+        aria-hidden="true"
+        width="1536"
+        height="1024"
+        class="emplea-hero-media__frame"
+        decoding="async"
+      />
+    </div>
+  </figure>
 </section>
 
 <style scoped>
-  .bg-students {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 90%;
-    max-width: 90%;
-    max-height: 70%;
+  .emplea-hero-media {
+    margin: 0;
+    filter: drop-shadow(0 24px 46px rgb(0 0 81 / .38));
   }
 
-  .principal {
-    /* background-image: url('img/texxture.svg'); */
-    background-position: 80% 0%;
-    background-repeat: no-repeat;
-    background-size: 75%;
+  .emplea-hero-media__surface {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: clamp(16px, 2.4vw, 28px);
+    background: #07102b;
+    transform: translateZ(0);
+  }
+
+  .emplea-hero-media__surface::after {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    content: "";
+    pointer-events: none;
+    background:
+      linear-gradient(110deg, rgb(0 170 128 / .08), transparent 32%, rgb(44 170 255 / .05) 68%, transparent),
+      linear-gradient(to top, rgb(0 0 81 / .18), transparent 38%);
+  }
+
+  .emplea-hero-media__photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 700ms cubic-bezier(.2, .8, .2, 1), filter 700ms ease;
+  }
+
+  .emplea-hero-media__code {
+    position: absolute;
+    z-index: 2;
+    right: 5%;
+    bottom: 5.5%;
+    color: rgb(234 248 255 / .56);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.58rem, 1.2vw, .72rem);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-shadow: 0 0 12px rgb(44 170 255 / .65);
+  }
+
+  .emplea-hero-media__frame {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .emplea-hero-media__surface:hover .emplea-hero-media__photo {
+      filter: saturate(1.04) contrast(1.02);
+      transform: scale(1.012);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .emplea-hero-media__photo {
+      transition: none;
+    }
   }
 </style>
