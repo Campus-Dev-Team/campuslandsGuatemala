@@ -2,7 +2,7 @@
 import ContactButton from '../common/ContactButton.astro'
 import Students from '~/assets/img/nosotros/astronautas-campuslands-guatemala.webp'
 import StudentsTwo from '~/assets/img/nosotros/formacion-tecnologica-campuslands-guatemala.webp'
-import StudentsThree from '~/assets/img/nosotros/students-three.png'
+import StudentsThree from '~/assets/img/nosotros/motor-talento-tech-latinoamerica.webp'
 import { Image } from 'astro:assets';
 
 ---
@@ -115,7 +115,35 @@ import { Image } from 'astro:assets';
     </div>
 
     <div class="flex justify-center w-full min-[1200px]:w-auto">
-        <Image src={StudentsThree} alt="estudiantes" class="w-full max-w-[328px] md:max-w-[488px] h-auto" />
+        <figure class="talent-lab talent-lab--vision" aria-label="Talento tecnológico de Campuslands Guatemala">
+            <div class="talent-lab__surface">
+                <div class="talent-lab__viewport">
+                    <Image
+                        src={StudentsThree}
+                        alt="Estudiantes de Campuslands Guatemala colaborando durante su formación tecnológica en Campus Tec"
+                        width={960}
+                        widths={[328, 488, 640, 800, 960]}
+                        format="avif"
+                        quality={82}
+                        sizes="(max-width: 1199px) min(90vw, 488px), 488px"
+                        loading="lazy"
+                        decoding="async"
+                        class="talent-lab__photo"
+                    />
+                    <span class="talent-lab__grid" aria-hidden="true"></span>
+                    <span class="talent-lab__scan" aria-hidden="true"></span>
+                    <span class="talent-lab__corner talent-lab__corner--top" aria-hidden="true"></span>
+                    <span class="talent-lab__corner talent-lab__corner--bottom" aria-hidden="true"></span>
+                    <span class="talent-lab__status" aria-hidden="true">
+                        <i></i> red activa
+                    </span>
+                    <span class="talent-lab__caption" aria-hidden="true">
+                        <small>LATAM://TALENTO_03</small>
+                        <strong>Visión en movimiento</strong>
+                    </span>
+                </div>
+            </div>
+        </figure>
     </div>
 </section>
 
@@ -301,6 +329,33 @@ import { Image } from 'astro:assets';
     font-weight: 700;
 }
 
+.talent-lab--vision .talent-lab__surface {
+    background: linear-gradient(245deg, #00aaa0, #57bbff 38%, #2caaff 68%, #00aaa0);
+    background-size: 260% 260%;
+    animation-direction: reverse;
+}
+
+.talent-lab--vision .talent-lab__grid {
+    background-image:
+      linear-gradient(30deg, rgb(0 215 177 / .12) 1px, transparent 1px),
+      linear-gradient(120deg, rgb(87 187 255 / .12) 1px, transparent 1px);
+    background-size: 42px 42px;
+}
+
+.talent-lab--vision .talent-lab__caption {
+    right: auto;
+    left: 16px;
+    align-items: flex-start;
+    border-right: 0;
+    border-left: 2px solid #00aaa0;
+    background: linear-gradient(90deg, rgb(0 0 81 / .82), transparent);
+}
+
+.talent-lab--vision .talent-lab__status {
+    right: 16px;
+    left: auto;
+}
+
 @keyframes talent-border-flow {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -354,12 +409,22 @@ import { Image } from 'astro:assets';
         opacity: 1;
         transform: translateY(0);
     }
+
+    .talent-lab--vision .talent-lab__surface:hover {
+        transform: translateY(-7px) rotateX(1.2deg) rotateY(1.2deg);
+    }
+
+    .talent-lab--vision .talent-lab__surface:hover .talent-lab__photo {
+        transform: scale(1.045) translateX(-.7%);
+    }
 }
 
 @media (max-width: 420px) {
     .talent-lab__status { top: 10px; left: 10px; }
     .talent-lab__caption { right: 10px; bottom: 10px; }
     .talent-lab__corner { display: none; }
+    .talent-lab--vision .talent-lab__status { right: 10px; }
+    .talent-lab--vision .talent-lab__caption { left: 10px; }
 }
 
 .nosotros-hero-media {
