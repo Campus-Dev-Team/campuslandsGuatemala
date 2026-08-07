@@ -1,141 +1,175 @@
 ---
 import { Image } from "astro:assets";
-import Campers from "~/assets/img/joinUs/campersGroup.png";
+import Campers from "~/assets/img/joinUs/campers-guatemala-grupo.webp";
 import ContactButton from "../common/ContactButton.astro";
 ---
 
 <section
-  class="page-hero principal flex flex-col sections max-w-[1150px] self-center relative items-center justify-center md:flex-row md:justify-between gap-8"
+  class="page-hero flex flex-col sections max-w-[1150px] self-center relative items-center justify-center md:flex-row md:justify-between gap-8 lg:gap-12"
+  aria-label="Presentación del programa para campers"
 >
   <div
-      class="relative flex-wrap justify-betweem h-fit w-full flex md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex-col gap-8 items-center md:items-start"
-    >
-      <h1
-        class="page-title gradient-text text-center lg:text-start"
-      >
-        Transforma tu talento en éxito
-      </h1>
-      <p
-        class="text-center lg:text-start text-sm lg:text-base leading-6 text-white"
-      >
-        Campuslands forma a jóvenes con competencias únicas para su primer
-        empleo de calidad en desarrollo de software.
-      </p>
-      <ContactButton
-        tipo="insripcion"
-        linkPage="https://estudiante-guate.campuslands.com/login"
-        iconName="happyFace.svg"
-      />
-    </div>
-  <div class="w-full max-w-[530px]">
-    <Image
-      src={Campers}
-      alt="Campers en formación tecnológica en Campuslands Guatemala"
-      width={530}
-      widths={[320, 480, 530, 800, 1060]}
-      format="avif"
-      loading="eager"
-      fetchpriority="high"
-      sizes="(max-width: 767px) min(90vw, 530px), 530px"
-      class="w-full h-auto"
+    class="relative flex-wrap justify-betweem h-fit w-full flex md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex-col gap-8 items-center md:items-start"
+  >
+    <h1 class="page-title gradient-text text-center lg:text-start">
+      Transforma tu talento en éxito
+    </h1>
+    <p class="text-center lg:text-start text-sm lg:text-base leading-6 text-white">
+      Campuslands forma a jóvenes con competencias únicas para su primer
+      empleo de calidad en desarrollo de software.
+    </p>
+    <ContactButton
+      tipo="insripcion"
+      linkPage="https://estudiante-guate.campuslands.com/login"
+      iconName="happyFace.svg"
     />
   </div>
+
+  <figure class="joinus-hero-media w-full max-w-[550px]" aria-label="Grupo de campers de Campuslands Guatemala">
+    <div class="joinus-hero-media__surface">
+      <span class="joinus-hero-media__code" aria-hidden="true">&lt;talento_gt /&gt;</span>
+      <Image
+        src={Campers}
+        alt="Cuatro campers de Campuslands Guatemala preparados para iniciar su formación tecnológica"
+        width={963}
+        widths={[320, 480, 550, 720, 963]}
+        format="avif"
+        quality={80}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        sizes="(max-width: 767px) calc(100vw - 32px), 550px"
+        class="joinus-hero-media__photo"
+      />
+      <img
+        src="/img/frames/joinus-hero-frame-back.svg"
+        alt=""
+        aria-hidden="true"
+        width="1100"
+        height="1200"
+        class="joinus-hero-media__frame joinus-hero-media__frame--back"
+        decoding="async"
+      />
+      <img
+        src="/img/frames/joinus-hero-frame-front.svg"
+        alt=""
+        aria-hidden="true"
+        width="1100"
+        height="1200"
+        class="joinus-hero-media__frame joinus-hero-media__frame--front"
+        decoding="async"
+      />
+    </div>
+  </figure>
 </section>
 
 <style scoped>
-  .bg-students {
+  .joinus-hero-media {
+    margin: 0;
+    filter: drop-shadow(0 24px 46px rgb(0 0 81 / 0.38));
+  }
+
+  .joinus-hero-media__surface {
+    position: relative;
+    aspect-ratio: 11 / 12;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: clamp(18px, 2.5vw, 30px);
+    background:
+      radial-gradient(circle at 72% 18%, rgb(44 170 255 / 0.2), transparent 38%),
+      radial-gradient(circle at 18% 82%, rgb(0 170 128 / 0.16), transparent 34%),
+      linear-gradient(145deg, #000051 0%, #000087 58%, #07102b 100%);
+    transform: translateZ(0);
+  }
+
+  .joinus-hero-media__surface::before {
     position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 90%;
-    max-width: 90%;
-    max-height: 70%;
+    inset: 0;
+    z-index: 0;
+    content: "";
+    pointer-events: none;
+    opacity: .16;
+    background-image:
+      linear-gradient(rgb(87 187 255 / .2) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(87 187 255 / .2) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(to bottom, black, transparent 72%);
   }
 
-  .principal {
-    /* background-image: url('img/texxture.svg'); */
-    background-position: 80% 0%;
-    background-repeat: no-repeat;
-    background-size: 75%;
+  .joinus-hero-media__surface::after {
+    position: absolute;
+    z-index: 0;
+    top: 18%;
+    left: 13%;
+    width: 74%;
+    aspect-ratio: 1;
+    content: "";
+    pointer-events: none;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(44 170 255 / .18), rgb(0 170 128 / .06) 48%, transparent 70%);
+    filter: blur(10px);
+    animation: joinus-ambient-orbit 8s ease-in-out infinite alternate;
   }
 
-  .heartbeat {
-    -webkit-animation: heartbeat 4s ease-in-out infinite both;
-    animation: heartbeat 4s ease-in-out infinite both;
+  .joinus-hero-media__code {
+    position: absolute;
+    top: 7%;
+    left: 8%;
+    z-index: 1;
+    color: rgb(87 187 255 / .5);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.65rem, 1.4vw, .82rem);
+    font-weight: 700;
+    letter-spacing: .1em;
   }
-  /* ----------------------------------------------
- * Generated by Animista
- * Licensed under FreeBSD License.
- * See http://animista.net/license for more info.
- * w: http://animista.net, t: @cssanimista
- * ---------------------------------------------- */
 
-  @-webkit-keyframes heartbeat {
-    from {
-      -webkit-transform: scale(1);
-      transform: scale(1);
-      -webkit-transform-origin: center center;
-      transform-origin: center center;
-      -webkit-animation-timing-function: ease-out;
-      animation-timing-function: ease-out;
-    }
-    10% {
-      -webkit-transform: scale(0.91);
-      transform: scale(0.91);
-      -webkit-animation-timing-function: ease-in;
-      animation-timing-function: ease-in;
-    }
-    17% {
-      -webkit-transform: scale(0.98);
-      transform: scale(0.98);
-      -webkit-animation-timing-function: ease-out;
-      animation-timing-function: ease-out;
-    }
-    33% {
-      -webkit-transform: scale(0.87);
-      transform: scale(0.87);
-      -webkit-animation-timing-function: ease-in;
-      animation-timing-function: ease-in;
-    }
-    45% {
-      -webkit-transform: scale(1);
-      transform: scale(1);
-      -webkit-animation-timing-function: ease-out;
-      animation-timing-function: ease-out;
+  .joinus-hero-media__photo {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    bottom: 1%;
+    display: block;
+    width: auto;
+    max-width: 96%;
+    height: 98%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 18px 24px rgb(0 0 0 / .22));
+    transition: transform 700ms cubic-bezier(.2, .8, .2, 1), filter 700ms ease;
+  }
+
+  .joinus-hero-media__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .joinus-hero-media__frame--back {
+    z-index: 1;
+  }
+
+  .joinus-hero-media__frame--front {
+    z-index: 3;
+  }
+
+  @keyframes joinus-ambient-orbit {
+    from { transform: translate3d(-4%, -2%, 0) scale(.92); opacity: .55; }
+    to { transform: translate3d(5%, 4%, 0) scale(1.08); opacity: 1; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .joinus-hero-media__surface:hover .joinus-hero-media__photo {
+      filter: drop-shadow(0 22px 30px rgb(0 0 0 / .28)) saturate(1.04);
+      transform: translateX(-50%) scale(1.012);
     }
   }
-  @keyframes heartbeat {
-    from {
-      -webkit-transform: scale(1);
-      transform: scale(1);
-      -webkit-transform-origin: center center;
-      transform-origin: center center;
-      -webkit-animation-timing-function: ease-out;
-      animation-timing-function: ease-out;
-    }
-    10% {
-      -webkit-transform: scale(0.91);
-      transform: scale(0.91);
-      -webkit-animation-timing-function: ease-in;
-      animation-timing-function: ease-in;
-    }
-    17% {
-      -webkit-transform: scale(0.98);
-      transform: scale(0.98);
-      -webkit-animation-timing-function: ease-out;
-      animation-timing-function: ease-out;
-    }
-    33% {
-      -webkit-transform: scale(0.87);
-      transform: scale(0.87);
-      -webkit-animation-timing-function: ease-in;
-      animation-timing-function: ease-in;
-    }
-    45% {
-      -webkit-transform: scale(1);
-      transform: scale(1);
-      -webkit-animation-timing-function: ease-out;
-      animation-timing-function: ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    .joinus-hero-media__photo,
+    .joinus-hero-media__surface::after {
+      animation: none;
+      transition: none;
     }
   }
 </style>
