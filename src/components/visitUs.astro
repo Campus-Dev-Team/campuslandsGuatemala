@@ -4,24 +4,59 @@ import ContactButton from "./common/ContactButton.astro";
 const contactNumber = "+50232705200";
 ---
 
-<section
-  class="flex flex-wrap w-full lg:max-w-[1130px] gap-x-20 max-w-[1150px] sections self-center justify-center relative h-fit overflow-hidden"
->
+<section class="visit-section sections">
   <a
     href="https://www.google.com/maps/place/Campuslands+Guatemala/@14.6222245,-90.5168285,17z/data=!3m1!4b1!4m6!3m5!1s0x8589a3b61a018d91:0x3b8f5bb6cc476d2b!8m2!3d14.6222193!4d-90.5142536!16s%2Fg%2F11ys3sw_hd?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D"
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Ver Campuslands Guatemala en Google Maps"
+    class="map-experience"
   >
-    <img
-      src="/img/mapa.webp"
-      alt="Mapa de la ubicación de Campuslands Guatemala en Campus Tec, zona 4"
-      class="w-4/6 lg:w-[420px] max-h-[420px] mx-auto"
-      width="840"
-      height="842"
-      loading="lazy"
-      decoding="async"
-    />
+    <span class="map-orbit map-orbit--outer" aria-hidden="true"></span>
+    <span class="map-orbit map-orbit--inner" aria-hidden="true"></span>
+
+    <span class="map-frame">
+      <img
+        src="/img/mapa.webp"
+        alt="Mapa de la ubicación de Campuslands Guatemala en Campus Tec, zona 4"
+        class="map-image"
+        width="840"
+        height="842"
+        loading="lazy"
+        decoding="async"
+      />
+      <span class="map-grid" aria-hidden="true"></span>
+      <span class="map-scan" aria-hidden="true"></span>
+
+      <span class="location-marker" aria-hidden="true">
+        <span class="location-marker__pulse"></span>
+        <span class="location-marker__pin">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 21s6-5.3 6-12a6 6 0 1 0-12 0c0 6.7 6 12 6 12Z" stroke="currentColor" stroke-width="1.8" />
+            <circle cx="12" cy="9" r="2.2" stroke="currentColor" stroke-width="1.8" />
+          </svg>
+        </span>
+      </span>
+
+      <span class="map-status" aria-hidden="true">
+        <span class="map-status__dot"></span>
+        Campus activo
+      </span>
+
+      <span class="map-card">
+        <span class="map-card__eyebrow">GT://UBICACIÓN_01</span>
+        <strong>Campuslands Guatemala</strong>
+        <span>Campus Tec · Zona 4</span>
+        <span class="map-card__route">
+          Abrir ruta
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m8 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </span>
+    </span>
+
+    <span class="map-coordinates" aria-hidden="true">14.6222° N / 90.5143° W</span>
   </a>
   <div class="max-w-[550px] my-auto flex flex-col gap-y-8">
     <h2
@@ -51,3 +86,401 @@ const contactNumber = "+50232705200";
     </div>
   </div>
 </section>
+
+<style>
+  .visit-section {
+    position: relative;
+    display: grid;
+    width: min(100%, 1130px);
+    align-self: center;
+    grid-template-columns: minmax(360px, 0.92fr) minmax(0, 1.08fr);
+    align-items: center;
+    gap: clamp(3rem, 7vw, 6rem);
+    overflow: visible;
+  }
+
+  .map-experience {
+    --map-cyan: #2caaff;
+    --map-green: #00d1a0;
+    position: relative;
+    display: block;
+    width: min(100%, 470px);
+    aspect-ratio: 1;
+    isolation: isolate;
+    border-radius: 2.2rem;
+    outline: none;
+  }
+
+  .map-frame {
+    position: absolute;
+    inset: 1rem;
+    display: block;
+    overflow: hidden;
+    border: 1px solid rgba(87, 187, 255, 0.55);
+    border-radius: 2rem;
+    background: #07102b;
+    box-shadow:
+      0 24px 80px rgba(0, 5, 81, 0.42),
+      0 0 0 0.45rem rgba(44, 170, 255, 0.06),
+      inset 0 0 42px rgba(7, 16, 43, 0.22);
+    transition:
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 400ms ease,
+      box-shadow 600ms ease;
+  }
+
+  .map-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    border: 2px solid transparent;
+    border-radius: inherit;
+    background: linear-gradient(120deg, var(--map-green), transparent 32%, transparent 68%, var(--map-cyan)) border-box;
+    mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .map-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.86) contrast(1.04) brightness(0.96);
+    transform: scale(1.015);
+    transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1), filter 600ms ease;
+  }
+
+  .map-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.15;
+    background-image:
+      linear-gradient(rgba(44, 170, 255, 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(44, 170, 255, 0.3) 1px, transparent 1px);
+    background-size: 2.5rem 2.5rem;
+    mask-image: linear-gradient(to bottom, #000, transparent 60%);
+    pointer-events: none;
+  }
+
+  .map-scan {
+    position: absolute;
+    inset: -40% 0 auto;
+    z-index: 2;
+    height: 30%;
+    opacity: 0;
+    background: linear-gradient(to bottom, transparent, rgba(44, 170, 255, 0.2), transparent);
+    pointer-events: none;
+  }
+
+  .location-marker {
+    position: absolute;
+    top: 28%;
+    left: 77%;
+    z-index: 5;
+    width: 5.25rem;
+    height: 5.25rem;
+    transform: translate(-50%, -50%);
+  }
+
+  .location-marker__pulse {
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(0, 170, 128, 0.8);
+    border-radius: 50%;
+    animation: map-pulse 2.6s ease-out infinite;
+  }
+
+  .location-marker__pin {
+    position: absolute;
+    inset: 0.6rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(176, 247, 230, 0.7);
+    border-radius: 1rem 1rem 1rem 0.3rem;
+    color: #07102b;
+    background: linear-gradient(135deg, var(--map-green), #57bbff);
+    box-shadow: 0 12px 28px rgba(0, 170, 128, 0.34);
+    transform: rotate(-45deg);
+    transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .location-marker__pin svg {
+    width: 1.65rem;
+    transform: rotate(45deg);
+  }
+
+  .map-status {
+    position: absolute;
+    top: 1.15rem;
+    left: 1.15rem;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    color: #fff;
+    background: rgba(7, 16, 43, 0.78);
+    backdrop-filter: blur(10px);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .map-status__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--map-green);
+    box-shadow: 0 0 0 0.25rem rgba(0, 209, 160, 0.13), 0 0 1rem var(--map-green);
+  }
+
+  .map-card {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.18rem 1rem;
+    align-items: center;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(87, 187, 255, 0.32);
+    border-radius: 1.15rem;
+    color: #fff;
+    background: linear-gradient(110deg, rgba(7, 16, 43, 0.94), rgba(0, 0, 81, 0.82));
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 38px rgba(0, 5, 81, 0.28);
+    transform: translateY(0.25rem);
+    transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1), border-color 400ms ease;
+  }
+
+  .map-card__eyebrow {
+    grid-column: 1 / -1;
+    color: #57bbff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+  }
+
+  .map-card strong {
+    font-size: 1rem;
+  }
+
+  .map-card > span:not(.map-card__eyebrow, .map-card__route) {
+    grid-column: 1;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.74);
+  }
+
+  .map-card__route {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #b0f7e6;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .map-card__route svg {
+    width: 1rem;
+    transition: transform 350ms ease;
+  }
+
+  .map-coordinates {
+    position: absolute;
+    right: 2rem;
+    bottom: -0.1rem;
+    z-index: 7;
+    padding-inline: 0.55rem;
+    color: rgba(87, 187, 255, 0.82);
+    background: #000087;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  .map-orbit {
+    position: absolute;
+    z-index: -1;
+    border: 1px solid rgba(44, 170, 255, 0.2);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .map-orbit::after {
+    content: '';
+    position: absolute;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: #57bbff;
+    box-shadow: 0 0 1.2rem #2caaff;
+  }
+
+  .map-orbit--outer {
+    inset: -0.5rem;
+    animation: map-orbit 14s linear infinite;
+  }
+
+  .map-orbit--outer::after {
+    top: 13%;
+    right: 12%;
+  }
+
+  .map-orbit--inner {
+    inset: 2.2rem;
+    border-style: dashed;
+    animation: map-orbit 10s linear infinite reverse;
+  }
+
+  .map-orbit--inner::after {
+    bottom: 5%;
+    left: 20%;
+    width: 0.38rem;
+    height: 0.38rem;
+    background: var(--map-green);
+  }
+
+  .map-experience:focus-visible .map-frame {
+    outline: 3px solid #57bbff;
+    outline-offset: 0.35rem;
+  }
+
+  @media (hover: hover) {
+    .map-experience:hover .map-frame {
+      border-color: rgba(176, 247, 230, 0.85);
+      box-shadow:
+        0 30px 95px rgba(0, 5, 81, 0.54),
+        0 0 0 0.55rem rgba(0, 209, 160, 0.08),
+        0 0 3rem rgba(44, 170, 255, 0.18);
+      transform: translateY(-0.45rem) rotate(-0.35deg);
+    }
+
+    .map-experience:hover .map-image {
+      filter: saturate(1.02) contrast(1.07) brightness(1.02);
+      transform: scale(1.065);
+    }
+
+    .map-experience:hover .map-scan {
+      opacity: 1;
+      animation: map-scan 1.8s ease-in-out infinite;
+    }
+
+    .map-experience:hover .location-marker__pin {
+      transform: rotate(-45deg) scale(1.12);
+    }
+
+    .map-experience:hover .map-card {
+      border-color: rgba(0, 209, 160, 0.52);
+      transform: translateY(-0.25rem);
+    }
+
+    .map-experience:hover .map-card__route svg {
+      transform: translateX(0.25rem);
+    }
+  }
+
+  @keyframes map-pulse {
+    0% { opacity: 0.8; transform: scale(0.55); }
+    75%, 100% { opacity: 0; transform: scale(1.35); }
+  }
+
+  @keyframes map-orbit {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes map-scan {
+    from { transform: translateY(0); }
+    to { transform: translateY(470%); }
+  }
+
+  @media (max-width: 900px) {
+    .visit-section {
+      grid-template-columns: 1fr;
+      gap: 2.75rem;
+    }
+
+    .map-experience {
+      width: min(90vw, 470px);
+      margin-inline: auto;
+    }
+
+    .visit-section > div {
+      width: min(100%, 580px);
+      margin-inline: auto;
+      padding-inline: 1rem;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .map-experience {
+      width: min(92vw, 410px);
+    }
+
+    .map-frame {
+      inset: 0.65rem;
+      border-radius: 1.55rem;
+    }
+
+    .location-marker {
+      width: 4.6rem;
+      height: 4.6rem;
+    }
+
+    .map-card {
+      right: 0.7rem;
+      bottom: 0.7rem;
+      left: 0.7rem;
+      padding: 0.82rem 0.9rem;
+    }
+
+    .map-card strong {
+      font-size: 0.88rem;
+    }
+
+    .map-card__route {
+      font-size: 0;
+    }
+
+    .map-card__route svg {
+      width: 1.3rem;
+    }
+
+    .map-status {
+      top: 0.85rem;
+      left: 0.85rem;
+      font-size: 0.6rem;
+    }
+
+    .map-coordinates {
+      right: 1.5rem;
+      font-size: 0.52rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .map-orbit,
+    .location-marker__pulse,
+    .map-scan {
+      animation: none !important;
+    }
+
+    .map-frame,
+    .map-image,
+    .location-marker__pin,
+    .map-card,
+    .map-card__route svg {
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
