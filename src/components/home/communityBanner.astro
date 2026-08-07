@@ -1,0 +1,414 @@
+---
+import { Image } from "astro:assets";
+import communityPhoto from "~/assets/img/home/comunidad-campuslands-guatemala.webp";
+
+const whatsappUrl = "https://wa.me/+50232705200?text=Hola,+estoy+interesado+en+unirme+a+la+comunidad+de+Campuslands.+¿Cómo+puedo+hacerlo?";
+---
+
+<section class="community-banner sections self-center" aria-labelledby="community-banner-title">
+  <div class="community-banner__copy">
+    <span class="community-banner__eyebrow" aria-hidden="true">
+      <span class="community-banner__status"></span>
+      community://connected
+    </span>
+
+    <h2 id="community-banner-title">
+      Campers, empresas y patrocinadores están transformando la industria tech con Campuslands
+    </h2>
+
+    <a
+      class="community-banner__cta"
+      href={whatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Unirse a la comunidad de Campuslands Guatemala por WhatsApp"
+    >
+      <span>Únete a nuestra comunidad</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3v18M3 12h18M7.5 7.5l9 9M16.5 7.5l-9 9"></path>
+      </svg>
+    </a>
+  </div>
+
+  <div class="community-banner__visual">
+    <Image
+      src={communityPhoto}
+      alt="Campers de Campuslands trabajando en desarrollo de software en un aula tecnológica"
+      class="community-banner__photo"
+      widths={[640, 960, 1280, 1800]}
+      sizes="(max-width: 767px) 100vw, 58vw"
+      format="avif"
+      quality={72}
+      loading="lazy"
+    />
+
+    <div class="community-banner__blend" aria-hidden="true"></div>
+    <div class="community-banner__grid" aria-hidden="true"></div>
+    <div class="community-banner__scan" aria-hidden="true"></div>
+    <span class="community-banner__corner community-banner__corner--top" aria-hidden="true"></span>
+    <span class="community-banner__corner community-banner__corner--bottom" aria-hidden="true"></span>
+
+    <div class="community-banner__telemetry community-banner__telemetry--one" aria-hidden="true">
+      <span>01</span> cohort.online
+    </div>
+    <div class="community-banner__telemetry community-banner__telemetry--two" aria-hidden="true">
+      &lt;learning_mode /&gt;
+    </div>
+    <div class="community-banner__telemetry community-banner__telemetry--three" aria-hidden="true">
+      progress <span>98%</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .community-banner {
+    --banner-deep: #000051;
+    --banner-blue: #2caaff;
+    --banner-aqua: #00aa80;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+    width: min(calc(100% - 2rem), 1150px);
+    min-height: 340px;
+    padding: 0;
+    overflow: hidden;
+    isolation: isolate;
+    border: 2px solid transparent;
+    border-radius: clamp(1.5rem, 3vw, 2.4rem);
+    background:
+      linear-gradient(105deg, #1c9fe5 0%, #0bb8c8 34%, #00aa80 50%, var(--banner-deep) 50.2%) padding-box,
+      linear-gradient(110deg, var(--banner-aqua), var(--banner-blue), #57bbff, var(--banner-aqua)) border-box;
+    background-size: auto, 240% 100%;
+    box-shadow: 0 1.8rem 4rem rgb(0 0 81 / .28), inset 0 0 0 1px rgb(255 255 255 / .08);
+    transition: transform 700ms cubic-bezier(.16, 1, .3, 1), box-shadow 700ms ease, background-position 900ms ease;
+  }
+
+  .community-banner::after {
+    content: "";
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(118deg, transparent 30%, rgb(255 255 255 / .18) 47%, transparent 62%);
+    opacity: 0;
+    transform: translateX(-65%);
+    transition: opacity 350ms ease, transform 1.1s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .community-banner__copy {
+    position: relative;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: clamp(.9rem, 1.6vw, 1.2rem);
+    padding: clamp(2rem, 3.6vw, 2.8rem);
+  }
+
+  .community-banner__copy::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: -55%;
+    right: -28%;
+    width: 72%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgb(255 255 255 / .18);
+    box-shadow: 0 0 0 2.25rem rgb(255 255 255 / .035), 0 0 0 4.5rem rgb(255 255 255 / .025);
+  }
+
+  .community-banner__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    color: rgb(0 0 81 / .7);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.66rem, 1vw, .76rem);
+    font-weight: 700;
+    letter-spacing: .075em;
+    text-transform: uppercase;
+  }
+
+  .community-banner__status {
+    width: .55rem;
+    height: .55rem;
+    border-radius: 50%;
+    background: var(--banner-deep);
+    box-shadow: 0 0 0 .25rem rgb(0 0 81 / .1), 0 0 1rem rgb(0 0 81 / .35);
+    animation: community-status 2.2s ease-in-out infinite;
+  }
+
+  .community-banner h2 {
+    max-width: 20ch;
+    margin: 0;
+    color: #000051;
+    font-size: clamp(1.55rem, 2.2vw, 2.1rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.025em;
+    text-wrap: balance;
+  }
+
+  .community-banner__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+    min-height: 3.2rem;
+    padding: .7rem 1rem .7rem 1.35rem;
+    color: #000051;
+    font-size: clamp(.9rem, 1.25vw, 1.02rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    border: 2px solid #000051;
+    border-radius: 999px;
+    background: rgb(255 255 255 / .08);
+    box-shadow: inset 0 0 0 0 #000051;
+    transition: color 350ms ease, box-shadow 450ms cubic-bezier(.16, 1, .3, 1), transform 350ms ease;
+  }
+
+  .community-banner__cta svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    padding: .35rem;
+    overflow: visible;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    fill: none;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    transition: transform 500ms cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .community-banner__cta:hover,
+  .community-banner__cta:focus-visible {
+    color: white;
+    box-shadow: inset 18rem 0 0 0 #000051;
+    transform: translateY(-2px);
+    outline: none;
+  }
+
+  .community-banner__cta:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 3px;
+  }
+
+  .community-banner__cta:hover svg,
+  .community-banner__cta:focus-visible svg {
+    transform: rotate(135deg);
+  }
+
+  .community-banner__visual {
+    position: relative;
+    z-index: 2;
+    min-width: 0;
+    min-height: 340px;
+    overflow: hidden;
+  }
+
+  .community-banner__photo {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 56% 50%;
+    filter: saturate(.92) contrast(1.04) brightness(.88);
+    transform: scale(1.01);
+    transition: transform 1s cubic-bezier(.16, 1, .3, 1), filter 900ms ease;
+  }
+
+  .community-banner__blend {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, #00aa80 0%, rgb(0 170 128 / .8) 4%, transparent 30%),
+      linear-gradient(180deg, rgb(0 0 81 / .08), rgb(0 0 81 / .42));
+    mix-blend-mode: normal;
+  }
+
+  .community-banner__grid {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgb(87 187 255 / .18) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(87 187 255 / .18) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(90deg, transparent 12%, black 70%);
+    opacity: .12;
+    transform: perspective(480px) rotateX(62deg) scale(1.35) translateY(32%);
+    transform-origin: bottom;
+    transition: opacity 500ms ease, background-position 1.2s ease;
+  }
+
+  .community-banner__scan {
+    position: absolute;
+    z-index: 3;
+    top: -8%;
+    left: 7%;
+    width: 90%;
+    height: 2px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, #57bbff, #00aa80, transparent);
+    box-shadow: 0 0 1rem #2caaff, 0 0 2.5rem rgb(0 170 128 / .55);
+    opacity: 0;
+  }
+
+  .community-banner__corner {
+    position: absolute;
+    z-index: 3;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-color: #57bbff;
+    opacity: .65;
+  }
+
+  .community-banner__corner--top {
+    top: 1.2rem;
+    right: 1.2rem;
+    border-top: 2px solid;
+    border-right: 2px solid;
+  }
+
+  .community-banner__corner--bottom {
+    right: 1.2rem;
+    bottom: 1.2rem;
+    border-right: 2px solid;
+    border-bottom: 2px solid;
+  }
+
+  .community-banner__telemetry {
+    position: absolute;
+    z-index: 4;
+    width: max-content;
+    max-width: calc(100% - 2rem);
+    padding: .42rem .65rem;
+    color: #eaf8ff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.58rem, .9vw, .72rem);
+    font-weight: 700;
+    letter-spacing: .045em;
+    white-space: nowrap;
+    border: 1px solid rgb(87 187 255 / .45);
+    border-radius: .35rem;
+    background: rgb(0 0 81 / .74);
+    box-shadow: 0 0 1.5rem rgb(44 170 255 / .24);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transform: translateY(.8rem) scale(.94);
+    transition: opacity 450ms ease, transform 650ms cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .community-banner__telemetry span { color: #57bbff; }
+  .community-banner__telemetry--one { top: 15%; left: 12%; }
+  .community-banner__telemetry--two { top: 43%; right: 5%; transition-delay: 80ms; }
+  .community-banner__telemetry--three { right: 15%; bottom: 10%; transition-delay: 160ms; }
+
+  .community-banner:hover,
+  .community-banner:focus-within {
+    background-position: 0 0, 100% 0;
+    box-shadow: 0 2.4rem 5rem rgb(0 0 81 / .38), 0 0 2.4rem rgb(44 170 255 / .16);
+    transform: translateY(-4px);
+  }
+
+  .community-banner:hover::after,
+  .community-banner:focus-within::after {
+    opacity: 1;
+    transform: translateX(65%);
+  }
+
+  .community-banner:hover .community-banner__photo,
+  .community-banner:focus-within .community-banner__photo {
+    filter: saturate(1.08) contrast(1.07) brightness(.96);
+    transform: scale(1.055);
+  }
+
+  .community-banner:hover .community-banner__grid,
+  .community-banner:focus-within .community-banner__grid {
+    opacity: .58;
+    background-position: 20px 20px;
+  }
+
+  .community-banner:hover .community-banner__scan,
+  .community-banner:focus-within .community-banner__scan {
+    animation: community-scan 1.65s cubic-bezier(.4, 0, .2, 1) both;
+  }
+
+  .community-banner:hover .community-banner__telemetry,
+  .community-banner:focus-within .community-banner__telemetry {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  @keyframes community-status {
+    0%, 100% { opacity: .55; transform: scale(.82); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes community-scan {
+    0% { top: -8%; opacity: 0; }
+    15% { opacity: .9; }
+    85% { opacity: .65; }
+    100% { top: 108%; opacity: 0; }
+  }
+
+  @media (max-width: 767px) {
+    .community-banner {
+      grid-template-columns: 1fr;
+      width: min(calc(100% - 1.5rem), 38rem);
+      min-height: 0;
+      background:
+        linear-gradient(145deg, #2caaff 0%, #09b7c4 55%, #00aa80 100%) padding-box,
+        linear-gradient(110deg, #00aa80, #2caaff, #57bbff, #00aa80) border-box;
+    }
+
+    .community-banner__copy {
+      min-height: 310px;
+      padding: 2rem 1.5rem;
+    }
+
+    .community-banner h2 { max-width: 18ch; }
+
+    .community-banner__visual {
+      min-height: clamp(270px, 76vw, 390px);
+    }
+
+    .community-banner__photo { object-position: 53% 50%; }
+
+    .community-banner__blend {
+      background:
+        linear-gradient(180deg, #00aa80 0%, transparent 21%),
+        linear-gradient(180deg, transparent 55%, rgb(0 0 81 / .35));
+    }
+
+    .community-banner__telemetry--one { top: 12%; left: 5%; }
+    .community-banner__telemetry--two { top: 48%; right: 4%; }
+    .community-banner__telemetry--three { right: auto; bottom: 7%; left: 8%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .community-banner,
+    .community-banner::after,
+    .community-banner__photo,
+    .community-banner__grid,
+    .community-banner__telemetry,
+    .community-banner__cta,
+    .community-banner__cta svg,
+    .community-banner__status {
+      animation: none !important;
+      transition-duration: .01ms !important;
+    }
+
+    .community-banner__scan { display: none; }
+  }
+</style>
