@@ -1,12 +1,18 @@
 export const SITE_URL = "https://www.campuslands.pro";
 export const COLOMBIA_URL = "https://campuslands.com";
 export const DEFAULT_IMAGE = `${SITE_URL}/img/og-campuslands-guatemala.jpg`;
+export const LAST_CONTENT_UPDATE = "2026-08-07";
 
 export const SITE = {
   name: "Campuslands Guatemala",
   locale: "es_GT",
   language: "es-GT",
   phone: "+50232705200",
+  email: "contacto@campuslands.com",
+  geo: {
+    latitude: 14.6222193,
+    longitude: -90.5142536,
+  },
   address: {
     streetAddress: "Edificio Campus Tec, Vía 4 1-00, Zona 4, Torre 1, 7mo nivel",
     addressLocality: "Ciudad de Guatemala",
@@ -43,9 +49,14 @@ export const PAGE_SEO = {
       "Conoce el modelo, la comunidad y el propósito de Campuslands Guatemala: formar talento joven para la industria tecnológica.",
   },
   "/terminos-condiciones/": {
-    title: "Términos y Condiciones | Campuslands Guatemala",
+    title: "Términos y condiciones | Campuslands Guatemala",
     description:
-      "Consulta las condiciones de inscripción, participación y uso de los recursos formativos de Campuslands Guatemala.",
+      "Consulta los términos y condiciones de participación en los programas formativos de Campuslands Guatemala.",
+  },
+  "/politica-de-privacidad/": {
+    title: "Política de privacidad y seguridad de datos | Campuslands Guatemala",
+    description:
+      "Política de tratamiento, privacidad y seguridad de datos personales de Campuslands Guatemala.",
   },
 };
 
@@ -76,15 +87,35 @@ export function organizationSchema() {
     description:
       "Centro de formación intensiva y presencial en desarrollo de software, inglés y habilidades profesionales en Guatemala.",
     telephone: SITE.phone,
+    email: SITE.email,
     address: {
       "@type": "PostalAddress",
       ...SITE.address,
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      ...SITE.geo,
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "admisiones y atención general",
+      telephone: SITE.phone,
+      email: SITE.email,
+      areaServed: "GT",
+      availableLanguage: ["es"],
     },
     foundingDate: "2025",
     areaServed: {
       "@type": "Country",
       name: "Guatemala",
     },
+    knowsAbout: [
+      "Desarrollo de software",
+      "Programación",
+      "Inglés",
+      "Habilidades adaptativas",
+      "Empleabilidad tecnológica",
+    ],
     sameAs: [
       "https://www.facebook.com/campuslandsgt/",
       "https://www.instagram.com/campuslands502/",

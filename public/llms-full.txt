@@ -1,0 +1,65 @@
+# Campuslands Guatemala — información ampliada
+
+Fuente oficial: https://www.campuslands.pro/
+Idioma principal: español de Guatemala (es-GT)
+Última actualización del contenido: 2026-08-07
+
+## Entidad
+
+Campuslands Guatemala es un centro presencial de formación tecnológica para jóvenes. Su programa integra desarrollo de software, inglés y habilidades adaptativas orientadas a la empleabilidad.
+
+- Nombre: Campuslands Guatemala
+- Razón indicada en el sitio: Campuslands Sociedad Anónima
+- Dirección: Edificio Campus Tec, Vía 4 1-00, Zona 4, Torre 1, 7.º nivel, Ciudad de Guatemala 01004, Guatemala
+- Teléfono y WhatsApp: +502 3270 5200
+- Correo: contacto@campuslands.com
+- LinkedIn: https://www.linkedin.com/company/campuslands-guatemala/
+- Instagram: https://www.instagram.com/campuslands502/
+- Facebook: https://www.facebook.com/campuslandsgt/
+
+## Programa formativo
+
+El programa tiene una duración de 10 meses y un enfoque intensivo. Las jornadas disponibles son matutina, de 6:00 a. m. a 2:00 p. m., y vespertina, de 2:00 p. m. a 10:00 p. m., sujetas a disponibilidad. Las personas interesadas deben solicitar la información vigente al equipo de admisiones.
+
+La formación contempla programación avanzada, desarrollo de software, comunicación en inglés, trabajo en equipo, adaptabilidad y liderazgo.
+
+## Directorio de páginas públicas
+
+- Inicio: https://www.campuslands.pro/
+  Presentación de Campuslands Guatemala, su propuesta de formación, comunidad y sede.
+- Sé un Camper: https://www.campuslands.pro/joinUs/
+  Programa, conocimientos, herramientas y proceso para futuros estudiantes.
+- Emplea: https://www.campuslands.pro/emplea/
+  Información para empresas interesadas en contratar talento tecnológico formado por Campuslands.
+- Patrocina: https://www.campuslands.pro/patrocina/
+  Información para organizaciones y personas que desean patrocinar la formación de jóvenes.
+- Nosotros: https://www.campuslands.pro/nosotros/
+  Propósito, modelo, comunidad e instalaciones de Campuslands Guatemala.
+- Términos y condiciones: https://www.campuslands.pro/terminos-condiciones/
+  Condiciones de inscripción, participación, recursos, certificación y conducta.
+- Política de privacidad: https://www.campuslands.pro/politica-de-privacidad/
+  Tratamiento, protección, consulta, actualización y rectificación de datos personales.
+
+## Servicios por audiencia
+
+### Futuros estudiantes
+
+Formación presencial e intensiva para desarrollar competencias técnicas, inglés y habilidades adaptativas. La disponibilidad de jornadas y convocatorias debe confirmarse con admisiones.
+
+### Empresas
+
+Conexión con talento junior preparado en desarrollo de software, inglés y competencias profesionales.
+
+### Patrocinadores
+
+Opciones para financiar formación tecnológica y ampliar las oportunidades educativas y laborales de jóvenes guatemaltecos de niveles socioeconómicos C, C- y D.
+
+## Alcance geográfico
+
+Este contenido corresponde a Campuslands Guatemala y al dominio campuslands.pro. La operación de Colombia utiliza el dominio https://campuslands.com/.
+
+## Recursos técnicos
+
+- Sitemap: https://www.campuslands.pro/sitemap-index.xml
+- Robots: https://www.campuslands.pro/robots.txt
+- Manifiesto web: https://www.campuslands.pro/site.webmanifest

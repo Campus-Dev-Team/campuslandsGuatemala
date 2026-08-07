@@ -23,6 +23,11 @@ const chapters = [
   { id: "derechos", label: "Derechos de los titulares", number: "06" },
   { id: "disposiciones", label: "Disposiciones finales", number: "07" },
 ];
+
+const policyHtml = politicaPrivacidadGuatemala.replace(
+  '<img src="https://khc-sistema-v2.s3.amazonaws.com/editor/17634840567001f4046bdba53f/attachment-1.png.png">',
+  '<img src="https://khc-sistema-v2.s3.amazonaws.com/editor/17634840567001f4046bdba53f/attachment-1.png.png" alt="Flujo de tratamiento y protección de datos personales de Campuslands Guatemala">',
+);
 ---
 
 <LayoutNavbar
@@ -30,7 +35,7 @@ const chapters = [
   description="Política de tratamiento, privacidad y seguridad de datos personales de Campuslands Guatemala."
   dataFooter={dataFooter}
 >
-  <main class="privacy-policy">
+  <div class="privacy-policy">
     <section class="policy-hero sections" aria-labelledby="policy-title">
       <div class="policy-orbit policy-orbit-one" aria-hidden="true"></div>
       <div class="policy-orbit policy-orbit-two" aria-hidden="true"></div>
@@ -118,10 +123,10 @@ const chapters = [
             </svg>
           </div>
         </div>
-        <div class="policy-content" set:html={politicaPrivacidadGuatemala} />
+        <div class="policy-content" set:html={policyHtml} />
       </article>
     </section>
-  </main>
+  </div>
 </LayoutNavbar>
 
 <script>
