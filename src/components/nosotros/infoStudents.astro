@@ -1,7 +1,7 @@
 ---
 import ContactButton from '../common/ContactButton.astro'
 import Students from '~/assets/img/nosotros/astronautas-campuslands-guatemala.webp'
-import StudentsTwo from '~/assets/img/nosotros/students-two.png'
+import StudentsTwo from '~/assets/img/nosotros/formacion-tecnologica-campuslands-guatemala.webp'
 import StudentsThree from '~/assets/img/nosotros/students-three.png'
 import { Image } from 'astro:assets';
 
@@ -54,10 +54,38 @@ import { Image } from 'astro:assets';
       </div>
     </figure>
   </section>
-<section id="students-two" class="flex sections max-w-[1150px] w-full mx-auto px-4 lg:px-0 flex-col-reverse min-[1200px]:flex-row gap-8 lg:gap-16">
+<section id="students-two" class="flex sections max-w-[1150px] w-full mx-auto px-4 lg:px-0 flex-col-reverse min-[1200px]:flex-row items-center gap-8 lg:gap-16">
     <!-- Contenedor de la imagen -->
     <div class="flex justify-center w-full min-[1200px]:w-auto">
-        <Image src={StudentsTwo} alt="estudiantes" class="w-full max-w-[328px] md:max-w-[488px] h-auto" />
+        <figure class="talent-lab" aria-label="Formación tecnológica en Campuslands Guatemala">
+            <div class="talent-lab__surface">
+                <div class="talent-lab__viewport">
+                    <Image
+                        src={StudentsTwo}
+                        alt="Estudiantes de Campuslands Guatemala durante una jornada de formación tecnológica en Campus Tec"
+                        width={960}
+                        widths={[328, 488, 640, 800, 960]}
+                        format="avif"
+                        quality={82}
+                        sizes="(max-width: 1199px) min(90vw, 488px), 488px"
+                        loading="lazy"
+                        decoding="async"
+                        class="talent-lab__photo"
+                    />
+                    <span class="talent-lab__grid" aria-hidden="true"></span>
+                    <span class="talent-lab__scan" aria-hidden="true"></span>
+                    <span class="talent-lab__corner talent-lab__corner--top" aria-hidden="true"></span>
+                    <span class="talent-lab__corner talent-lab__corner--bottom" aria-hidden="true"></span>
+                    <span class="talent-lab__status" aria-hidden="true">
+                        <i></i> laboratorio activo
+                    </span>
+                    <span class="talent-lab__caption" aria-hidden="true">
+                        <small>GT://FORMACIÓN_02</small>
+                        <strong>Talento en construcción</strong>
+                    </span>
+                </div>
+            </div>
+        </figure>
     </div>
 
     <!-- Contenedor de texto y botón -->
@@ -95,6 +123,244 @@ import { Image } from 'astro:assets';
 
 
 <style>
+
+.talent-lab {
+    width: min(100%, 31rem);
+    margin: 0;
+    padding: clamp(.5rem, 1.5vw, .85rem);
+    perspective: 1000px;
+}
+
+.talent-lab__surface {
+    position: relative;
+    isolation: isolate;
+    aspect-ratio: 4 / 3;
+    padding: 3px;
+    border-radius: clamp(20px, 3vw, 30px);
+    background: linear-gradient(115deg, #00aaa0, #2caaff 42%, #57bbff 67%, #00aaa0);
+    background-size: 260% 260%;
+    box-shadow:
+      0 22px 48px rgb(0 0 81 / .42),
+      0 0 0 1px rgb(87 187 255 / .12);
+    transform: translateZ(0);
+    animation: talent-border-flow 7s ease-in-out infinite;
+    transition:
+      transform 650ms cubic-bezier(.2, .8, .2, 1),
+      box-shadow 650ms ease;
+}
+
+.talent-lab__surface::before,
+.talent-lab__surface::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.talent-lab__surface::before {
+    inset: -10px;
+    border: 1px solid rgb(44 170 255 / .18);
+    opacity: .72;
+}
+
+.talent-lab__surface::after {
+    inset: 12% 8%;
+    background: linear-gradient(100deg, rgb(0 170 128 / .3), rgb(44 170 255 / .38));
+    filter: blur(32px);
+    opacity: .52;
+    transition: opacity 500ms ease, filter 500ms ease;
+}
+
+.talent-lab__viewport {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: calc(clamp(20px, 3vw, 30px) - 3px);
+    background: #07102b;
+}
+
+.talent-lab__photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
+    filter: saturate(.98) contrast(1.025);
+    transform: scale(1.005);
+    transition:
+      transform 850ms cubic-bezier(.16, 1, .3, 1),
+      filter 700ms ease;
+}
+
+.talent-lab__grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background-image:
+      linear-gradient(rgb(87 187 255 / .13) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(87 187 255 / .13) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mix-blend-mode: screen;
+    transition: opacity 500ms ease;
+}
+
+.talent-lab__scan {
+    position: absolute;
+    inset-inline: 0;
+    top: -20%;
+    height: 16%;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(to bottom, transparent, rgb(87 187 255 / .4), transparent);
+    filter: blur(2px);
+}
+
+.talent-lab__corner {
+    position: absolute;
+    z-index: 2;
+    width: 42px;
+    height: 42px;
+    pointer-events: none;
+    opacity: .8;
+    transition: width 500ms ease, height 500ms ease, opacity 500ms ease;
+}
+
+.talent-lab__corner--top {
+    top: 16px;
+    right: 16px;
+    border-top: 2px solid #57bbff;
+    border-right: 2px solid #57bbff;
+}
+
+.talent-lab__corner--bottom {
+    bottom: 16px;
+    left: 16px;
+    border-bottom: 2px solid #00aaa0;
+    border-left: 2px solid #00aaa0;
+}
+
+.talent-lab__status {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .45rem .65rem;
+    border: 1px solid rgb(87 187 255 / .38);
+    border-radius: 999px;
+    color: #e9fbff;
+    background: rgb(0 0 81 / .68);
+    backdrop-filter: blur(10px);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.56rem, 1.5vw, .7rem);
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+}
+
+.talent-lab__status i {
+    width: .48rem;
+    height: .48rem;
+    border-radius: 50%;
+    background: #00d7b1;
+    box-shadow: 0 0 0 0 rgb(0 215 177 / .6);
+    animation: talent-status-pulse 2.3s ease-out infinite;
+}
+
+.talent-lab__caption {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .12rem;
+    padding: .65rem .75rem;
+    border-right: 2px solid #2caaff;
+    color: white;
+    background: linear-gradient(90deg, transparent, rgb(0 0 81 / .82));
+    opacity: .88;
+    transform: translateY(4px);
+    transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.talent-lab__caption small {
+    color: #57bbff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.55rem, 1.5vw, .68rem);
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.talent-lab__caption strong {
+    font-size: clamp(.72rem, 2vw, .9rem);
+    font-weight: 700;
+}
+
+@keyframes talent-border-flow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes talent-status-pulse {
+    0% { box-shadow: 0 0 0 0 rgb(0 215 177 / .55); }
+    70%, 100% { box-shadow: 0 0 0 8px transparent; }
+}
+
+@keyframes talent-scan-pass {
+    0% { top: -20%; opacity: 0; }
+    12% { opacity: .85; }
+    88% { opacity: .7; }
+    100% { top: 110%; opacity: 0; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .talent-lab__surface:hover {
+        box-shadow:
+          0 30px 64px rgb(0 0 81 / .52),
+          0 0 36px rgb(44 170 255 / .18);
+        transform: translateY(-7px) rotateX(1.2deg) rotateY(-1.2deg);
+    }
+
+    .talent-lab__surface:hover::after {
+        filter: blur(38px);
+        opacity: .82;
+    }
+
+    .talent-lab__surface:hover .talent-lab__photo {
+        filter: saturate(1.08) contrast(1.045);
+        transform: scale(1.045);
+    }
+
+    .talent-lab__surface:hover .talent-lab__grid {
+        opacity: .5;
+    }
+
+    .talent-lab__surface:hover .talent-lab__scan {
+        animation: talent-scan-pass 1.7s cubic-bezier(.2, .7, .2, 1) infinite;
+    }
+
+    .talent-lab__surface:hover .talent-lab__corner {
+        width: 58px;
+        height: 58px;
+        opacity: 1;
+    }
+
+    .talent-lab__surface:hover .talent-lab__caption {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 420px) {
+    .talent-lab__status { top: 10px; left: 10px; }
+    .talent-lab__caption { right: 10px; bottom: 10px; }
+    .talent-lab__corner { display: none; }
+}
 
 .nosotros-hero-media {
     margin: 0;
@@ -196,6 +462,16 @@ import { Image } from 'astro:assets';
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .talent-lab__surface,
+    .talent-lab__status i,
+    .talent-lab__scan,
+    .talent-lab__photo,
+    .talent-lab__caption,
+    .talent-lab__corner {
+        animation: none;
+        transition: none;
+    }
+
     .nosotros-hero-media__photo,
     .nosotros-hero-media__surface::after {
         animation: none;
