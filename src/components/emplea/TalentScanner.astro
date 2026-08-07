@@ -1,0 +1,444 @@
+---
+import { Image } from "astro:assets";
+import camperPuente from "~/assets/img/emplea/camper-puente-empleo-guatemala.webp";
+---
+
+<figure
+    class="talent-scanner"
+    tabindex="0"
+    aria-label="Camper de Campuslands conectando talento con oportunidades laborales"
+>
+    <div class="talent-scanner__stage">
+                    <span class="talent-scanner__glow" aria-hidden="true"></span>
+                    <span class="talent-scanner__mesh" aria-hidden="true"></span>
+                    <span class="talent-scanner__radar" aria-hidden="true"></span>
+                    <span class="talent-scanner__beam" aria-hidden="true"></span>
+
+                    <div class="talent-scanner__frame" aria-hidden="true">
+                        <span class="talent-scanner__corner talent-scanner__corner--tl"></span>
+                        <span class="talent-scanner__corner talent-scanner__corner--tr"></span>
+                        <span class="talent-scanner__corner talent-scanner__corner--bl"></span>
+                        <span class="talent-scanner__corner talent-scanner__corner--br"></span>
+                    </div>
+
+                    <div class="talent-scanner__hud" aria-hidden="true">
+                        <span class="talent-scanner__tag">GT://TALENTO</span>
+                        <span class="talent-scanner__status"><i></i> MATCH_READY</span>
+                        <div class="talent-scanner__metrics">
+                            <span>TECH_SKILLS</span>
+                            <i style="--metric: 92%"></i>
+                            <span>ADAPTABILITY</span>
+                            <i style="--metric: 96%"></i>
+                            <strong>PERFIL CONECTADO</strong>
+                        </div>
+                    </div>
+
+                    <span class="talent-scanner__target" aria-hidden="true">
+                        <i></i>
+                    </span>
+
+                    <div class="talent-scanner__packets" aria-hidden="true">
+                        <span class="talent-packet talent-packet--one">01</span>
+                        <span class="talent-packet talent-packet--two">&lt;/&gt;</span>
+                        <span class="talent-packet talent-packet--three">{ }</span>
+                        <span class="talent-packet talent-packet--four">GT</span>
+                    </div>
+
+                    <Image
+                        src={camperPuente}
+                        alt="Camper de Campuslands Guatemala sentada y señalando una oportunidad"
+                        width={839}
+                        widths={[280, 360, 480, 600, 839]}
+                        format="avif"
+                        quality={80}
+                        loading="lazy"
+                        decoding="async"
+                        sizes="(max-width: 1023px) min(86vw, 440px), 500px"
+                        class="talent-scanner__photo"
+                    />
+    </div>
+</figure>
+
+<style scoped>
+    .talent-scanner {
+        --scanner-blue: #2caaff;
+        --scanner-cyan: #57bbff;
+        --scanner-green: #00aa80;
+        position: relative;
+        width: min(86vw, 500px);
+        outline: none;
+        perspective: 1100px;
+    }
+
+    .talent-scanner__stage {
+        position: relative;
+        isolation: isolate;
+        aspect-ratio: 839 / 1173;
+        transform-style: preserve-3d;
+    }
+
+    .talent-scanner__glow {
+        position: absolute;
+        z-index: 0;
+        inset: 13% 4% 7%;
+        border-radius: 46% 54% 44% 56% / 40% 48% 52% 60%;
+        background:
+            radial-gradient(circle at 68% 21%, rgb(87 187 255 / .72), transparent 25%),
+            radial-gradient(circle at 35% 63%, rgb(0 170 128 / .52), transparent 42%),
+            radial-gradient(circle at 55% 45%, rgb(44 170 255 / .42), transparent 58%);
+        filter: blur(clamp(22px, 4vw, 42px));
+        opacity: .72;
+        animation: talent-glow-breathe 5.2s cubic-bezier(.45, 0, .55, 1) infinite;
+        transition: opacity 600ms ease, filter 600ms ease;
+    }
+
+    .talent-scanner__mesh {
+        position: absolute;
+        z-index: 1;
+        inset: 15% 3% 8%;
+        opacity: .18;
+        pointer-events: none;
+        background-image:
+            linear-gradient(30deg, rgb(87 187 255 / .32) 1px, transparent 1px),
+            linear-gradient(150deg, rgb(0 170 128 / .24) 1px, transparent 1px);
+        background-size: 34px 58px;
+        mask-image: radial-gradient(ellipse at center, black 12%, transparent 73%);
+        animation: talent-mesh-drift 12s linear infinite;
+    }
+
+    .talent-scanner__radar {
+        position: absolute;
+        z-index: 1;
+        left: 51%;
+        top: 47%;
+        width: 76%;
+        aspect-ratio: 1;
+        border: 1px solid rgb(87 187 255 / .24);
+        border-radius: 50%;
+        background:
+            linear-gradient(90deg, transparent 49.7%, rgb(87 187 255 / .2) 50%, transparent 50.3%),
+            linear-gradient(transparent 49.7%, rgb(87 187 255 / .2) 50%, transparent 50.3%),
+            repeating-radial-gradient(circle, transparent 0 20%, rgb(0 170 128 / .16) 20.4% 20.8%);
+        transform: translate(-50%, -50%);
+        opacity: .48;
+        animation: talent-radar-turn 18s linear infinite;
+    }
+
+    .talent-scanner__beam {
+        position: absolute;
+        z-index: 4;
+        left: 8%;
+        top: 8%;
+        width: 84%;
+        height: 10%;
+        border-top: 1px solid rgb(87 187 255 / .88);
+        background: linear-gradient(to bottom, rgb(44 170 255 / .2), transparent);
+        filter: drop-shadow(0 0 8px rgb(44 170 255 / .7));
+        opacity: 0;
+        pointer-events: none;
+        animation: talent-scan-beam 6.4s ease-in-out infinite;
+    }
+
+    .talent-scanner__frame {
+        position: absolute;
+        z-index: 2;
+        inset: 8% 3% 6%;
+        pointer-events: none;
+    }
+
+    .talent-scanner__corner {
+        position: absolute;
+        width: 17%;
+        aspect-ratio: 1;
+        border-color: rgb(87 187 255 / .7);
+        transition: width 650ms cubic-bezier(.16, 1, .3, 1), filter 650ms ease;
+    }
+
+    .talent-scanner__corner--tl { top: 0; left: 0; border-top: 2px solid; border-left: 2px solid; }
+    .talent-scanner__corner--tr { top: 0; right: 0; border-top: 2px solid; border-right: 2px solid; }
+    .talent-scanner__corner--bl { bottom: 0; left: 0; border-bottom: 2px solid; border-left: 2px solid; }
+    .talent-scanner__corner--br { right: 0; bottom: 0; border-right: 2px solid; border-bottom: 2px solid; }
+
+    .talent-scanner__hud {
+        position: absolute;
+        inset: 0;
+        z-index: 6;
+        pointer-events: none;
+        color: #eaf8ff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: clamp(.5rem, 1vw, .66rem);
+        font-weight: 700;
+        letter-spacing: .08em;
+    }
+
+    .talent-scanner__tag,
+    .talent-scanner__status,
+    .talent-scanner__metrics {
+        position: absolute;
+        border: 1px solid rgb(87 187 255 / .34);
+        background: rgb(0 0 81 / .64);
+        box-shadow: 0 0 20px rgb(44 170 255 / .13), inset 0 0 14px rgb(0 170 128 / .08);
+        backdrop-filter: blur(8px);
+    }
+
+    .talent-scanner__tag {
+        top: 10%;
+        left: 5%;
+        padding: .42rem .58rem;
+        color: var(--scanner-cyan);
+    }
+
+    .talent-scanner__status {
+        top: 12%;
+        right: 3%;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .42rem .58rem;
+        opacity: .66;
+    }
+
+    .talent-scanner__status i {
+        width: .42rem;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--scanner-green);
+        box-shadow: 0 0 10px var(--scanner-green);
+        animation: talent-status-blink 1.8s ease-in-out infinite;
+    }
+
+    .talent-scanner__metrics {
+        left: 2%;
+        bottom: 8%;
+        display: grid;
+        width: 42%;
+        gap: .32rem;
+        padding: .62rem;
+        opacity: 0;
+        transform: translateX(-18px) rotateY(12deg);
+        transform-origin: left center;
+        transition: opacity 450ms ease, transform 700ms cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .talent-scanner__metrics i {
+        display: block;
+        width: 100%;
+        height: 2px;
+        overflow: hidden;
+        background: rgb(87 187 255 / .16);
+    }
+
+    .talent-scanner__metrics i::after {
+        content: "";
+        display: block;
+        width: var(--metric);
+        height: 100%;
+        background: linear-gradient(90deg, var(--scanner-green), var(--scanner-blue));
+        box-shadow: 0 0 8px var(--scanner-cyan);
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+
+    .talent-scanner__metrics strong {
+        margin-top: .2rem;
+        color: var(--scanner-green);
+        font-size: inherit;
+    }
+
+    .talent-scanner__target {
+        position: absolute;
+        z-index: 7;
+        top: 24%;
+        right: 1%;
+        width: 10%;
+        aspect-ratio: 1;
+        border: 1px solid rgb(87 187 255 / .46);
+        border-radius: 50%;
+        opacity: .58;
+        pointer-events: none;
+        animation: talent-target-idle 3s ease-in-out infinite;
+    }
+
+    .talent-scanner__target::before,
+    .talent-scanner__target::after {
+        content: "";
+        position: absolute;
+        inset: 50% auto auto 50%;
+        background: var(--scanner-cyan);
+        opacity: .58;
+        transform: translate(-50%, -50%);
+    }
+
+    .talent-scanner__target::before { width: 140%; height: 1px; }
+    .talent-scanner__target::after { width: 1px; height: 140%; }
+
+    .talent-scanner__target i {
+        position: absolute;
+        inset: 25%;
+        border-radius: 50%;
+        background: var(--scanner-green);
+        box-shadow: 0 0 16px var(--scanner-green);
+    }
+
+    .talent-scanner__packets {
+        position: absolute;
+        z-index: 8;
+        top: 25%;
+        right: 2%;
+        pointer-events: none;
+    }
+
+    .talent-packet {
+        position: absolute;
+        color: #eaf8ff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: clamp(.48rem, 1vw, .65rem);
+        font-weight: 800;
+        text-shadow: 0 0 10px var(--scanner-blue);
+        opacity: 0;
+    }
+
+    .talent-scanner__photo {
+        position: absolute;
+        z-index: 5;
+        left: 50%;
+        bottom: 0;
+        display: block;
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 26px 28px rgb(0 0 0 / .32));
+        transform: translateX(-50%) translateZ(28px);
+        transition: transform 850ms cubic-bezier(.16, 1, .3, 1), filter 700ms ease;
+    }
+
+    .talent-scanner:hover .talent-scanner__photo,
+    .talent-scanner:focus-visible .talent-scanner__photo {
+        filter: drop-shadow(0 34px 38px rgb(0 0 0 / .4)) saturate(1.05);
+        transform: translateX(-50%) translateZ(42px) rotateY(-1.2deg);
+    }
+
+    .talent-scanner:hover .talent-scanner__glow,
+    .talent-scanner:focus-visible .talent-scanner__glow {
+        opacity: 1;
+        filter: blur(clamp(26px, 4.6vw, 48px)) saturate(1.2);
+    }
+
+    .talent-scanner:hover .talent-scanner__corner,
+    .talent-scanner:focus-visible .talent-scanner__corner {
+        width: 25%;
+        filter: drop-shadow(0 0 7px var(--scanner-blue));
+    }
+
+    .talent-scanner:hover .talent-scanner__metrics,
+    .talent-scanner:focus-visible .talent-scanner__metrics {
+        opacity: 1;
+        transform: translateX(0) rotateY(0);
+    }
+
+    .talent-scanner:hover .talent-scanner__metrics i::after,
+    .talent-scanner:focus-visible .talent-scanner__metrics i::after {
+        animation: talent-metric-fill 900ms cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    .talent-scanner:hover .talent-scanner__target,
+    .talent-scanner:focus-visible .talent-scanner__target {
+        opacity: 1;
+        animation: talent-target-lock 900ms cubic-bezier(.16, 1, .3, 1) both;
+    }
+
+    .talent-scanner:hover .talent-packet,
+    .talent-scanner:focus-visible .talent-packet {
+        animation: talent-data-burst 1.7s cubic-bezier(.16, 1, .3, 1) infinite;
+    }
+
+    .talent-scanner:hover .talent-packet--two,
+    .talent-scanner:focus-visible .talent-packet--two { animation-delay: 180ms; --packet-x: 66px; --packet-y: -38px; }
+    .talent-scanner:hover .talent-packet--three,
+    .talent-scanner:focus-visible .talent-packet--three { animation-delay: 360ms; --packet-x: 78px; --packet-y: 12px; }
+    .talent-scanner:hover .talent-packet--four,
+    .talent-scanner:focus-visible .talent-packet--four { animation-delay: 540ms; --packet-x: 48px; --packet-y: 42px; }
+    .talent-packet--one { --packet-x: 72px; --packet-y: -12px; }
+
+    @keyframes talent-glow-breathe {
+        0%, 100% { transform: scale(.92) rotate(-2deg); opacity: .5; }
+        50% { transform: scale(1.06) rotate(2deg); opacity: .92; }
+    }
+
+    @keyframes talent-mesh-drift {
+        to { background-position: 68px 116px, -68px 116px; }
+    }
+
+    @keyframes talent-radar-turn {
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @keyframes talent-scan-beam {
+        0%, 12% { transform: translateY(0); opacity: 0; }
+        22% { opacity: .72; }
+        72% { opacity: .22; }
+        84%, 100% { transform: translateY(560%); opacity: 0; }
+    }
+
+    @keyframes talent-status-blink {
+        50% { opacity: .28; transform: scale(.72); }
+    }
+
+    @keyframes talent-target-idle {
+        0%, 100% { transform: scale(.82); box-shadow: 0 0 0 0 rgb(44 170 255 / .18); }
+        50% { transform: scale(1); box-shadow: 0 0 0 12px rgb(44 170 255 / 0); }
+    }
+
+    @keyframes talent-target-lock {
+        0% { transform: scale(1.6) rotate(-35deg); }
+        70% { transform: scale(.88) rotate(5deg); }
+        100% { transform: scale(1) rotate(0); box-shadow: 0 0 22px rgb(44 170 255 / .48); }
+    }
+
+    @keyframes talent-metric-fill {
+        to { transform: scaleX(1); }
+    }
+
+    @keyframes talent-data-burst {
+        0% { opacity: 0; transform: translate(0, 0) scale(.7); }
+        18% { opacity: 1; }
+        76% { opacity: .72; }
+        100% { opacity: 0; transform: translate(var(--packet-x), var(--packet-y)) scale(1.08); }
+    }
+
+    @media (hover: none) {
+        .talent-scanner__metrics {
+            opacity: .58;
+            transform: none;
+        }
+
+        .talent-scanner__metrics i::after { transform: scaleX(1); }
+    }
+
+    @media (max-width: 1023px) {
+        .talent-scanner { margin-top: 2rem; }
+        .talent-scanner__tag { left: 2%; }
+        .talent-scanner__status { right: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .talent-scanner__glow,
+        .talent-scanner__mesh,
+        .talent-scanner__radar,
+        .talent-scanner__beam,
+        .talent-scanner__status i,
+        .talent-scanner__target,
+        .talent-packet,
+        .talent-scanner__metrics i::after {
+            animation: none !important;
+        }
+
+        .talent-scanner__photo,
+        .talent-scanner__corner,
+        .talent-scanner__metrics {
+            transition: none;
+        }
+
+        .talent-scanner__beam,
+        .talent-scanner__packets { display: none; }
+    }
+</style>
