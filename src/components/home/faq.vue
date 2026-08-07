@@ -11,20 +11,24 @@
 				Patrocinadores
 			</button>
 		</div>
-		<div class="items-center justify-center flex flex-wrap gap-y-4 lg:gap-y-3 mb-16">
-			<div v-for="(faq, index) in questionsAndAnswers" :key="index"
-				class="w-full md:w-1/2 md:max-w-[480px] px-4 lg:p-4 h-fit">
-				<details class="group">
-					<summary class="flex justify-between text-lg cursor-pointer font-semibold">
-						{{ faq.title }}
-						<img src="/img/icons/plus-svgrepo-com.svg" alt=""
-							class="size-5 cursor-pointer transition-transform duration-300 group-open:rotate-45">
-					</summary>
-					<hr class="m-3 opacity-45">
-					<p class="text-base font-normal mt-4 lg:mt-8">{{ faq.description }}</p>
-				</details>
-				<hr class="m-3 opacity-45">
-			</div>
+		<div class="faq-grid mb-16">
+			<article v-for="faq in questionsAndAnswers" :key="`${active}-${faq.id}`" class="faq-card"
+				:class="{ 'is-open': isFaqOpen(faq.id) }">
+				<button type="button" class="faq-summary" :aria-expanded="isFaqOpen(faq.id)"
+					:aria-controls="`faq-answer-${active}-${faq.id}`" @click="toggleFaq(faq.id)">
+					<span class="faq-question">{{ faq.title }}</span>
+					<span class="faq-toggle" aria-hidden="true"></span>
+				</button>
+				<div :id="`faq-answer-${active}-${faq.id}`" class="faq-answer-shell"
+					:aria-hidden="!isFaqOpen(faq.id)">
+					<div class="faq-answer-overflow">
+						<div class="faq-answer">
+							<span class="faq-answer-label" aria-hidden="true">response.ok</span>
+							<p>{{ faq.description }}</p>
+						</div>
+					</div>
+				</div>
+			</article>
 		</div>
 	</section>
 </template>
@@ -33,6 +37,7 @@
 import { ref } from 'vue';
 
 const active = ref('tabCampers')
+const openFaqs = ref(new Set())
 
 const tabFaqCampersData = ref([
 	{
@@ -189,10 +194,248 @@ const questionsAndAnswers = ref(tabFaqCampersData.value)
 
 function activeTab(tab) {
 	active.value = tab
+	openFaqs.value = new Set()
 	questionsAndAnswers.value = tab === 'tabCampers'
 		? tabFaqCampersData.value
 		: tabFaqSponsersData.value
 }
+
+function isFaqOpen(id) {
+	return openFaqs.value.has(id)
+}
+
+function toggleFaq(id) {
+	const nextOpenFaqs = new Set(openFaqs.value)
+
+	if (nextOpenFaqs.has(id)) {
+		nextOpenFaqs.delete(id)
+	} else {
+		nextOpenFaqs.add(id)
+	}
+
+	openFaqs.value = nextOpenFaqs
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.faq-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem 1.5rem;
+}
+
+.faq-card {
+	position: relative;
+	align-self: start;
+	border: 1px solid transparent;
+	border-bottom-color: rgba(87, 187, 255, 0.3);
+	border-radius: 1.25rem;
+	background: rgba(7, 16, 43, 0);
+	overflow: hidden;
+	transition:
+		background 400ms ease,
+		border-color 400ms ease,
+		box-shadow 500ms ease,
+		transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-card::before {
+	content: '';
+	position: absolute;
+	inset: 0 auto auto 0;
+	width: 100%;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, #2caaff, #00aa80, transparent);
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-card.is-open {
+	border-color: rgba(87, 187, 255, 0.22);
+	background: linear-gradient(135deg, rgba(44, 170, 255, 0.1), rgba(0, 170, 128, 0.055));
+	box-shadow: 0 18px 55px rgba(0, 5, 81, 0.2), inset 0 1px rgba(255, 255, 255, 0.04);
+	transform: translateY(-2px);
+}
+
+.faq-card.is-open::before {
+	transform: scaleX(1);
+}
+
+.faq-summary {
+	position: relative;
+	display: flex;
+	width: 100%;
+	min-height: 5.25rem;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.25rem;
+	padding: 1.15rem 1.25rem;
+	text-align: left;
+	font-size: 1.125rem;
+	font-weight: 600;
+	line-height: 1.4;
+	cursor: pointer;
+}
+
+.faq-summary:focus-visible {
+	outline: 2px solid #57bbff;
+	outline-offset: -4px;
+	border-radius: 1rem;
+}
+
+.faq-question {
+	transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), color 300ms ease;
+}
+
+.is-open .faq-question {
+	color: #b0f7e6;
+	transform: translateX(0.3rem);
+}
+
+.faq-toggle {
+	position: relative;
+	display: grid;
+	width: 2.25rem;
+	height: 2.25rem;
+	flex: 0 0 2.25rem;
+	place-items: center;
+	border: 1px solid rgba(0, 209, 160, 0.38);
+	border-radius: 999px;
+	background: rgba(0, 170, 128, 0.08);
+	box-shadow: 0 0 0 0 rgba(0, 209, 160, 0);
+	transition:
+		transform 600ms cubic-bezier(0.16, 1, 0.3, 1),
+		background 300ms ease,
+		box-shadow 450ms ease;
+}
+
+.faq-toggle::before,
+.faq-toggle::after {
+	content: '';
+	position: absolute;
+	width: 0.95rem;
+	height: 2px;
+	border-radius: 999px;
+	background: #00d1a0;
+	transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background 300ms ease;
+}
+
+.faq-toggle::after {
+	transform: rotate(90deg);
+}
+
+.is-open .faq-toggle {
+	background: #00aa80;
+	box-shadow: 0 0 0 0.4rem rgba(0, 209, 160, 0.09), 0 0 1.6rem rgba(44, 170, 255, 0.22);
+	transform: rotate(180deg);
+}
+
+.is-open .faq-toggle::before,
+.is-open .faq-toggle::after {
+	background: #07102b;
+}
+
+.is-open .faq-toggle::after {
+	transform: rotate(90deg) scaleX(0);
+}
+
+.faq-answer-shell {
+	display: grid;
+	grid-template-rows: 0fr;
+	opacity: 0;
+	filter: blur(5px);
+	transform: translateY(-0.6rem);
+	transition:
+		grid-template-rows 600ms cubic-bezier(0.16, 1, 0.3, 1),
+		opacity 320ms ease,
+		filter 400ms ease,
+		transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.is-open .faq-answer-shell {
+	grid-template-rows: 1fr;
+	opacity: 1;
+	filter: blur(0);
+	transform: translateY(0);
+}
+
+.faq-answer-overflow {
+	min-height: 0;
+	overflow: hidden;
+}
+
+.faq-answer {
+	position: relative;
+	margin: 0 1.25rem;
+	padding: 1.15rem 0 1.4rem;
+	border-top: 1px solid rgba(87, 187, 255, 0.2);
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.7;
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.faq-answer-label {
+	display: block;
+	margin-bottom: 0.55rem;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: #57bbff;
+}
+
+@media (hover: hover) {
+	.faq-card:not(.is-open):hover {
+		border-color: rgba(87, 187, 255, 0.2);
+		background: rgba(44, 170, 255, 0.035);
+		transform: translateY(-2px);
+	}
+
+	.faq-card:not(.is-open):hover .faq-toggle {
+		box-shadow: 0 0 1.2rem rgba(0, 209, 160, 0.2);
+		transform: rotate(90deg);
+	}
+}
+
+@media (max-width: 767px) {
+	.faq-grid {
+		grid-template-columns: 1fr;
+		gap: 0.8rem;
+		padding-inline: 0.75rem;
+	}
+
+	.faq-summary {
+		min-height: 4.75rem;
+		padding: 1rem;
+		font-size: 1rem;
+	}
+
+	.faq-answer {
+		margin-inline: 1rem;
+		padding: 1rem 0 1.2rem;
+		font-size: 0.95rem;
+		line-height: 1.65;
+	}
+
+	.faq-toggle {
+		width: 2rem;
+		height: 2rem;
+		flex-basis: 2rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.faq-card,
+	.faq-card::before,
+	.faq-question,
+	.faq-toggle,
+	.faq-toggle::before,
+	.faq-toggle::after,
+	.faq-answer-shell {
+		transition-duration: 0.01ms !important;
+	}
+}
+</style>
