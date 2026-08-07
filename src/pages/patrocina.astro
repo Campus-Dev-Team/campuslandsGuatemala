@@ -5,6 +5,7 @@ import Items from "../components/patrocinar/items.astro";
 import Donate from "../components/patrocinar/donate.astro";
 import Subscribe from "../components/patrocinar/subscribe.astro";
 import AlliedCompanies from "../components/patrocinar/alliedCompanies.astro";
+import ImpactBanner from "../components/patrocinar/impactBanner.astro";
 import "~/styles/index.css";
 
 const dataFooter = {
@@ -31,20 +32,7 @@ const dataFooter = {
   }}
 >
   <Intro />
-  <div class="sections max-w-[1150px] self-center">
-    <picture>
-      <source media="(max-width: 639px)" srcset="/img/patrocina/cardMobile.png" />
-      <img
-        src="/img/patrocina/card.png"
-        alt="Campers de Campuslands Guatemala con un mensaje sobre patrocinio de talento joven"
-        class="w-full"
-        width="1135"
-        height="285"
-        loading="lazy"
-        decoding="async"
-      />
-    </picture>
-  </div>
+  <ImpactBanner />
   <Items />
   <Donate />
   <Subscribe />

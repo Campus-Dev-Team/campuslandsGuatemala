@@ -1,0 +1,462 @@
+---
+import { Image } from "astro:assets";
+import communityPhoto from "~/assets/img/patrocina/comunidad-patrocinio-guatemala.webp";
+---
+
+<section
+  class="impact-banner sections self-center"
+  aria-labelledby="impact-banner-title"
+  tabindex="0"
+>
+  <div class="impact-banner__visual">
+    <Image
+      src={communityPhoto}
+      alt="Comunidad de campers y equipo de Campuslands Guatemala reunida en sus instalaciones"
+      class="impact-banner__photo"
+      widths={[640, 960, 1280, 1800]}
+      sizes="(max-width: 767px) 100vw, 55vw"
+      format="avif"
+      quality={72}
+      loading="lazy"
+    />
+
+    <div class="impact-banner__shade" aria-hidden="true"></div>
+    <div class="impact-banner__scan" aria-hidden="true"></div>
+
+    <svg class="impact-banner__network" viewBox="0 0 720 390" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M84 92 L212 58 L322 142 L452 82 L624 116"></path>
+      <path d="M122 276 L244 216 L366 290 L500 208 L646 258"></path>
+      <path d="M212 58 L244 216 M322 142 L366 290 M452 82 L500 208"></path>
+      <circle cx="84" cy="92" r="5"></circle>
+      <circle cx="212" cy="58" r="5"></circle>
+      <circle cx="322" cy="142" r="5"></circle>
+      <circle cx="452" cy="82" r="5"></circle>
+      <circle cx="624" cy="116" r="5"></circle>
+      <circle cx="122" cy="276" r="5"></circle>
+      <circle cx="244" cy="216" r="5"></circle>
+      <circle cx="366" cy="290" r="5"></circle>
+      <circle cx="500" cy="208" r="5"></circle>
+      <circle cx="646" cy="258" r="5"></circle>
+    </svg>
+
+    <span class="impact-banner__metric impact-banner__metric--one" aria-hidden="true">
+      GT://talento_activo
+    </span>
+    <span class="impact-banner__metric impact-banner__metric--two" aria-hidden="true">
+      impacto <strong>80%</strong>
+    </span>
+    <span class="impact-banner__metric impact-banner__metric--three" aria-hidden="true">
+      futuro++
+    </span>
+  </div>
+
+  <div class="impact-banner__copy">
+    <span class="impact-banner__eyebrow" aria-hidden="true">
+      <span></span>
+      sponsorship.system
+    </span>
+
+    <h2 id="impact-banner-title">Sé parte del cambio: Patrocina el talento de Campuslands</h2>
+
+    <p>
+      Patrocinando nuestro talento joven ayudas a que las nuevas generaciones, especialmente el 80% de nuestros campers provenientes de los niveles socioeconómicos C, C- y D, vean un impacto positivo en sus vidas y en la economía de la región.
+    </p>
+
+    <div class="impact-banner__signal" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+      <small>impact.signal</small>
+    </div>
+  </div>
+</section>
+
+<style>
+  .impact-banner {
+    --impact-deep: #000051;
+    --impact-blue: #2caaff;
+    --impact-sky: #57bbff;
+    --impact-aqua: #00aa80;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+    width: min(calc(100% - 2rem), 1150px);
+    min-height: 365px;
+    padding: 0;
+    overflow: hidden;
+    isolation: isolate;
+    border: 2px solid transparent;
+    border-radius: clamp(1.5rem, 3vw, 2.5rem);
+    background:
+      linear-gradient(var(--impact-deep), var(--impact-deep)) padding-box,
+      linear-gradient(115deg, var(--impact-aqua), var(--impact-blue), var(--impact-sky), var(--impact-aqua)) border-box;
+    background-size: auto, 230% 100%;
+    box-shadow: 0 1.7rem 4rem rgb(0 0 81 / .32), inset 0 0 0 1px rgb(255 255 255 / .08);
+    outline: none;
+    transition: transform 700ms cubic-bezier(.16, 1, .3, 1), box-shadow 700ms ease, background-position 900ms ease;
+  }
+
+  .impact-banner::after {
+    content: "";
+    position: absolute;
+    z-index: 8;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 0 rgb(87 187 255 / .22);
+    transition: box-shadow 700ms ease;
+  }
+
+  .impact-banner:focus-visible {
+    outline: 3px solid var(--impact-sky);
+    outline-offset: 5px;
+  }
+
+  .impact-banner__visual {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    min-height: 365px;
+    overflow: hidden;
+    background: var(--impact-deep);
+  }
+
+  .impact-banner__photo {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 52%;
+    filter: saturate(.9) contrast(1.04) brightness(.9);
+    transform: scale(1.01);
+    transition: transform 1s cubic-bezier(.16, 1, .3, 1), filter 900ms ease;
+  }
+
+  .impact-banner__shade {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgb(0 0 81 / .12), transparent 58%, rgb(0 170 128 / .78)),
+      linear-gradient(180deg, rgb(0 0 81 / .12), rgb(0 0 81 / .42));
+    transition: opacity 700ms ease;
+  }
+
+  .impact-banner__scan {
+    position: absolute;
+    z-index: 5;
+    top: -8%;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--impact-sky), white, var(--impact-aqua), transparent);
+    box-shadow: 0 0 1rem var(--impact-blue), 0 0 2.5rem rgb(0 170 128 / .65);
+    opacity: 0;
+  }
+
+  .impact-banner__network {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    filter: drop-shadow(0 0 5px rgb(44 170 255 / .7));
+    transition: opacity 500ms ease;
+  }
+
+  .impact-banner__network path {
+    fill: none;
+    stroke: rgb(87 187 255 / .74);
+    stroke-width: 1.2;
+    stroke-dasharray: 18 12;
+    stroke-dashoffset: 90;
+  }
+
+  .impact-banner__network circle {
+    fill: var(--impact-aqua);
+    stroke: white;
+    stroke-width: 1.5;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .impact-banner__metric {
+    position: absolute;
+    z-index: 6;
+    display: block;
+    width: max-content;
+    max-width: calc(100% - 1.5rem);
+    padding: .42rem .62rem;
+    overflow: hidden;
+    color: #eaf8ff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.55rem, .9vw, .7rem);
+    font-weight: 700;
+    letter-spacing: .045em;
+    white-space: nowrap;
+    border: 1px solid rgb(87 187 255 / .48);
+    border-radius: .4rem;
+    background: rgb(0 0 81 / .76);
+    box-shadow: 0 0 1.4rem rgb(44 170 255 / .28);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    transform: translateY(.75rem);
+  }
+
+  .impact-banner__metric strong { color: var(--impact-sky); }
+  .impact-banner__metric--one { top: 10%; left: 5%; }
+  .impact-banner__metric--two { top: 45%; right: 5%; }
+  .impact-banner__metric--three { bottom: 8%; left: 7%; }
+
+  .impact-banner__copy {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: clamp(.9rem, 1.6vw, 1.15rem);
+    min-width: 0;
+    margin-left: clamp(-4.5rem, -5vw, -2.5rem);
+    padding: clamp(2rem, 3.8vw, 3rem) clamp(1.7rem, 4vw, 3.4rem) clamp(2rem, 3.8vw, 3rem) clamp(4.6rem, 6.2vw, 6rem);
+    color: #07102b;
+    border-radius: 48% 0 0 48% / 100% 0 0 100%;
+    background:
+      radial-gradient(circle at 18% 40%, rgb(255 255 255 / .18), transparent 32%),
+      linear-gradient(125deg, #00d7a6 0%, #0acfc1 52%, #2caaff 130%);
+    box-shadow: -1.5rem 0 3rem rgb(0 0 81 / .18);
+  }
+
+  .impact-banner__copy::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background-image:
+      linear-gradient(rgb(0 0 81 / .08) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(0 0 81 / .08) 1px, transparent 1px);
+    background-size: 34px 34px;
+    mask-image: linear-gradient(90deg, transparent, black 38%, black);
+    opacity: .18;
+    transition: opacity 600ms ease, background-position 1.1s ease;
+  }
+
+  .impact-banner__eyebrow,
+  .impact-banner h2,
+  .impact-banner p,
+  .impact-banner__signal {
+    position: relative;
+    z-index: 2;
+  }
+
+  .impact-banner__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    color: rgb(0 0 81 / .7);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.63rem, .9vw, .74rem);
+    font-weight: 700;
+    letter-spacing: .075em;
+    text-transform: uppercase;
+  }
+
+  .impact-banner__eyebrow span {
+    width: .55rem;
+    height: .55rem;
+    border-radius: 50%;
+    background: var(--impact-deep);
+    box-shadow: 0 0 0 .25rem rgb(0 0 81 / .1), 0 0 1rem rgb(0 0 81 / .35);
+    animation: impact-status 2.2s ease-in-out infinite;
+  }
+
+  .impact-banner h2 {
+    max-width: 20ch;
+    margin: 0;
+    color: var(--impact-deep);
+    font-size: clamp(1.55rem, 2.2vw, 2.1rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.025em;
+    text-wrap: balance;
+  }
+
+  .impact-banner p {
+    max-width: 48ch;
+    margin: 0;
+    color: rgb(7 16 43 / .9);
+    font-size: clamp(.88rem, 1.18vw, 1.02rem);
+    font-weight: 550;
+    line-height: 1.55;
+  }
+
+  .impact-banner__signal {
+    display: flex;
+    align-items: flex-end;
+    gap: .22rem;
+    height: 1.25rem;
+    color: rgb(0 0 81 / .66);
+  }
+
+  .impact-banner__signal span {
+    width: 3px;
+    height: 28%;
+    border-radius: 99px;
+    background: var(--impact-deep);
+    animation: impact-signal 1.1s ease-in-out infinite alternate;
+  }
+
+  .impact-banner__signal span:nth-child(2) { height: 52%; animation-delay: 100ms; }
+  .impact-banner__signal span:nth-child(3) { height: 100%; animation-delay: 200ms; }
+  .impact-banner__signal span:nth-child(4) { height: 68%; animation-delay: 300ms; }
+  .impact-banner__signal span:nth-child(5) { height: 38%; animation-delay: 400ms; }
+
+  .impact-banner__signal small {
+    margin-left: .4rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+  }
+
+  .impact-banner:hover,
+  .impact-banner:focus-visible {
+    background-position: 0 0, 100% 0;
+    box-shadow: 0 2.4rem 5rem rgb(0 0 81 / .4), 0 0 2.5rem rgb(44 170 255 / .18);
+    transform: translateY(-4px);
+  }
+
+  .impact-banner:hover::after,
+  .impact-banner:focus-visible::after {
+    box-shadow: inset 0 0 3rem rgb(87 187 255 / .22);
+  }
+
+  .impact-banner:hover .impact-banner__photo,
+  .impact-banner:focus-visible .impact-banner__photo {
+    filter: saturate(1.08) contrast(1.06) brightness(.97);
+    transform: scale(1.045);
+  }
+
+  .impact-banner:hover .impact-banner__shade,
+  .impact-banner:focus-visible .impact-banner__shade { opacity: .7; }
+
+  .impact-banner:hover .impact-banner__scan,
+  .impact-banner:focus-visible .impact-banner__scan {
+    animation: impact-scan 1.75s cubic-bezier(.4, 0, .2, 1) both;
+  }
+
+  .impact-banner:hover .impact-banner__network,
+  .impact-banner:focus-visible .impact-banner__network { opacity: 1; }
+
+  .impact-banner:hover .impact-banner__network path,
+  .impact-banner:focus-visible .impact-banner__network path {
+    animation: impact-network 2.7s linear infinite;
+  }
+
+  .impact-banner:hover .impact-banner__network circle,
+  .impact-banner:focus-visible .impact-banner__network circle {
+    animation: impact-node 1.35s ease-in-out infinite alternate;
+  }
+
+  .impact-banner:hover .impact-banner__metric,
+  .impact-banner:focus-visible .impact-banner__metric {
+    animation: impact-metric .72s steps(16, end) forwards;
+  }
+
+  .impact-banner:hover .impact-banner__metric--two,
+  .impact-banner:focus-visible .impact-banner__metric--two { animation-delay: 120ms; }
+  .impact-banner:hover .impact-banner__metric--three,
+  .impact-banner:focus-visible .impact-banner__metric--three { animation-delay: 240ms; }
+
+  .impact-banner:hover .impact-banner__copy::after,
+  .impact-banner:focus-visible .impact-banner__copy::after {
+    opacity: .5;
+    background-position: 17px 17px;
+  }
+
+  @keyframes impact-status {
+    0%, 100% { opacity: .55; transform: scale(.82); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes impact-signal {
+    to { transform: scaleY(.45); opacity: .55; }
+  }
+
+  @keyframes impact-scan {
+    0% { top: -8%; opacity: 0; }
+    14% { opacity: .95; }
+    86% { opacity: .65; }
+    100% { top: 108%; opacity: 0; }
+  }
+
+  @keyframes impact-network {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes impact-node {
+    to { transform: scale(1.65); fill: var(--impact-sky); }
+  }
+
+  @keyframes impact-metric {
+    from { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateY(.75rem); }
+    to { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
+  }
+
+  @media (max-width: 767px) {
+    .impact-banner {
+      grid-template-columns: 1fr;
+      width: min(calc(100% - 1.5rem), 38rem);
+      min-height: 0;
+    }
+
+    .impact-banner__visual {
+      min-height: clamp(270px, 76vw, 390px);
+    }
+
+    .impact-banner__photo { object-position: 50% 52%; }
+
+    .impact-banner__shade {
+      background:
+        linear-gradient(180deg, rgb(0 0 81 / .08), transparent 55%, rgb(0 170 128 / .75)),
+        linear-gradient(90deg, rgb(0 0 81 / .08), rgb(0 0 81 / .24));
+    }
+
+    .impact-banner__copy {
+      min-height: 340px;
+      margin: -2.25rem 0 0;
+      padding: 4rem 1.5rem 2rem;
+      border-radius: 48% 48% 0 0 / 15% 15% 0 0;
+    }
+
+    .impact-banner h2 { max-width: 19ch; }
+    .impact-banner p { max-width: 42ch; }
+
+    .impact-banner__metric--one { top: 8%; left: 4%; }
+    .impact-banner__metric--two { top: 45%; right: 4%; }
+    .impact-banner__metric--three { bottom: 12%; left: 6%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .impact-banner,
+    .impact-banner::after,
+    .impact-banner__photo,
+    .impact-banner__shade,
+    .impact-banner__network,
+    .impact-banner__metric,
+    .impact-banner__copy::after,
+    .impact-banner__eyebrow span,
+    .impact-banner__signal span {
+      animation: none !important;
+      transition-duration: .01ms !important;
+    }
+
+    .impact-banner__scan { display: none; }
+  }
+</style>
