@@ -3,10 +3,10 @@ import { Image } from 'astro:assets';
 import myImage from '~/assets/img/patrocina/camper-patrocinio-guatemala.webp';
 ---
 
-<section class="principal sections max-w-[1150px] self-center relative h-fit">
-	<div class="relative mx-auto flex flex-wrap justify-between h-fit w-full px-10 md:px-50 lg:px-0 max-w-7xl">
+<section class="sponsor-subscribe principal sections self-center relative h-fit">
+	<div class="sponsor-subscribe__layout">
 		<figure
-			class="sponsor-tech-visual my-auto flex-grow lg:flex-1 w-full max-w-[595px]"
+			class="sponsor-tech-visual"
 			aria-label="Camper desarrollando sus habilidades tecnológicas"
 			tabindex="0"
 		>
@@ -40,29 +40,49 @@ import myImage from '~/assets/img/patrocina/camper-patrocinio-guatemala.webp';
 			</div>
 		</figure>
 
-		<div class="my-auto w-full lg:w-6/12 place-items-center">
-			<div class="flex w-full md:max-w-[350px] lg:w-[455px] lg:max-w-[455px] flex-col gap-y-8 relative">
-				<p class="gradient-text text-center lg:text-start text-2xl lg:text-[32px] leading-[48px] lg:leading-[60px] f-700"> Suscríbete y construyamos un futuro inclusivo juntos </p>
-				<p class="text-center lg:text-start text-sm lg:text-base leading-6 text-white"> Tu apoyo permite abrir puertas hacia un futuro lleno de oportunidades, donde ellos pueden desarrollar su máximo potencial, aprender habilidades clave para el mundo laboral y convertirse en agentes de cambio en sus comunidades. </p>
+		<div class="sponsor-subscribe__copy">
+			<div class="sponsor-subscribe__copy-inner">
+				<h2 class="sponsor-subscribe__title gradient-text f-700">Suscríbete y construyamos un futuro inclusivo juntos</h2>
+				<p class="sponsor-subscribe__description text-white">Tu apoyo permite abrir puertas hacia un futuro lleno de oportunidades, donde ellos pueden desarrollar su máximo potencial, aprender habilidades clave para el mundo laboral y convertirse en agentes de cambio en sus comunidades.</p>
 				<a
 					href="https://mail.google.com/mail/?view=cm&fs=1&to=jorge@quantic.la&su=Interés en Programa de Patrocinio - [Nombre Empresa]"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="btn-primary w-full sm:max-w-[305px] lg:me-auto f-600 h-12 lg:h-14 px-6 flex justify-center items-center gap-x-2 z-30"
+					class="sponsor-subscribe__button btn-primary f-600 z-30"
 				>
-					Suscríbete a Campuslands
-					<img src="/img/icons/heartdark.svg" alt="" class="hidden lg:block">
+					<span>Suscríbete a Campuslands</span>
+					<img src="/img/icons/heartdark.svg" alt="" width="24" height="24">
 				</a>
 			</div>
 		</div>
 	</div>
-	<img src="/img/textura-lateral-derecha.svg" alt="" class="absolute top-0 right-0">
-	<img src="/img/textura-lateral-izquierda.svg" alt="" class="absolute top-0 left-0">
+	<img src="/img/textura-lateral-derecha.svg" alt="" class="sponsor-subscribe__texture sponsor-subscribe__texture--right">
+	<img src="/img/textura-lateral-izquierda.svg" alt="" class="sponsor-subscribe__texture sponsor-subscribe__texture--left">
 </section>
 
 <style scoped>
+.sponsor-subscribe {
+	width: 100%;
+	max-width: 1280px;
+	overflow: visible;
+}
+
+.sponsor-subscribe__layout {
+	position: relative;
+	z-index: 2;
+	display: grid;
+	grid-template-columns: minmax(0, 1.12fr) minmax(400px, .88fr);
+	align-items: center;
+	gap: clamp(2rem, 4vw, 5rem);
+	width: 100%;
+	margin-inline: auto;
+	padding-inline: clamp(.25rem, 1.4vw, 1.25rem);
+}
+
 .sponsor-tech-visual {
 	position: relative;
+	width: 100%;
+	max-width: 680px;
 	margin-inline: auto;
 	outline: none;
 }
@@ -148,7 +168,7 @@ import myImage from '~/assets/img/patrocina/camper-patrocinio-guatemala.webp';
 	left: 50%;
 	bottom: 1%;
 	display: block;
-	width: 96%;
+	width: 104%;
 	height: auto;
 	transform: translateX(-50%);
 	filter: drop-shadow(0 24px 32px rgb(0 0 0 / .3));
@@ -165,7 +185,8 @@ import myImage from '~/assets/img/patrocina/camper-patrocinio-guatemala.webp';
 .sponsor-code {
 	position: absolute;
 	display: block;
-	max-width: 48%;
+	width: max-content;
+	max-width: calc(100% - 1rem);
 	padding: .42rem .62rem;
 	overflow: hidden;
 	color: #EAF8FF;
@@ -192,11 +213,75 @@ import myImage from '~/assets/img/patrocina/camper-patrocinio-guatemala.webp';
 	animation: sponsor-cursor 1s steps(2, end) infinite;
 }
 
-.sponsor-code--one { top: 13%; left: 2%; }
-.sponsor-code--two { top: 29%; right: 0; }
-.sponsor-code--three { top: 52%; left: 0; }
-.sponsor-code--four { right: 2%; bottom: 22%; }
-.sponsor-code--five { left: 11%; bottom: 7%; }
+.sponsor-code--one { top: 12%; left: 1%; }
+.sponsor-code--two { top: 27%; right: 1%; }
+.sponsor-code--three { top: 52%; left: 1%; }
+.sponsor-code--four { right: 1%; bottom: 20%; }
+.sponsor-code--five { left: 8%; bottom: 5%; }
+
+.sponsor-subscribe__copy {
+	position: relative;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	min-width: 0;
+	width: 100%;
+}
+
+.sponsor-subscribe__copy-inner {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(1.35rem, 2.4vw, 2rem);
+	width: 100%;
+	max-width: 540px;
+	min-width: 0;
+}
+
+.sponsor-subscribe__title {
+	margin: 0;
+	font-size: clamp(2rem, 3.15vw, 3.25rem);
+	line-height: 1.16;
+	letter-spacing: -.025em;
+	overflow-wrap: anywhere;
+}
+
+.sponsor-subscribe__description {
+	margin: 0;
+	font-size: clamp(.95rem, 1.25vw, 1.125rem);
+	line-height: 1.65;
+	overflow-wrap: anywhere;
+}
+
+.sponsor-subscribe__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	align-self: flex-start;
+	gap: .65rem;
+	width: fit-content;
+	max-width: 100%;
+	min-height: 3.5rem;
+	padding: .85rem 1.55rem;
+	text-align: center;
+	line-height: 1.2;
+	white-space: normal;
+}
+
+.sponsor-subscribe__button img {
+	flex: 0 0 auto;
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.sponsor-subscribe__texture {
+	position: absolute;
+	z-index: 1;
+	pointer-events: none;
+	opacity: .72;
+}
+
+.sponsor-subscribe__texture--right { top: 0; right: 0; }
+.sponsor-subscribe__texture--left { top: 0; left: 0; }
 
 .sponsor-tech-visual:hover .sponsor-code,
 .sponsor-tech-visual:focus-visible .sponsor-code {
@@ -269,6 +354,58 @@ import myImage from '~/assets/img/patrocina/camper-patrocinio-guatemala.webp';
 @keyframes sponsor-touch-code {
 	0%, 100% { transform: translateY(0); opacity: .34; }
 	50% { transform: translateY(-6px); opacity: .68; }
+}
+
+@media (max-width: 1023px) {
+	.sponsor-subscribe__layout {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1.5rem;
+		padding-inline: 0;
+	}
+
+	.sponsor-tech-visual {
+		max-width: 640px;
+	}
+
+	.sponsor-subscribe__copy {
+		justify-content: center;
+	}
+
+	.sponsor-subscribe__copy-inner {
+		max-width: 640px;
+		align-items: center;
+		text-align: center;
+	}
+
+	.sponsor-subscribe__button {
+		align-self: center;
+	}
+}
+
+@media (max-width: 520px) {
+	.sponsor-subscribe__title {
+		font-size: clamp(1.8rem, 9vw, 2.35rem);
+	}
+
+	.sponsor-subscribe__description {
+		font-size: .95rem;
+		line-height: 1.6;
+	}
+
+	.sponsor-code {
+		max-width: calc(100% - .5rem);
+		padding: .35rem .48rem;
+		font-size: .5rem;
+	}
+
+	.sponsor-code--one { left: 0; }
+	.sponsor-code--two { right: 0; }
+	.sponsor-code--three { left: 0; }
+	.sponsor-code--four { right: 0; }
+
+	.sponsor-subscribe__button {
+		width: 100%;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
