@@ -43,12 +43,62 @@ const scenes = [
   role="group"
   aria-label="Experiencias de formación y comunidad en Campuslands Guatemala"
 >
-  <div class="circuit-frame" aria-hidden="true">
-    <span class="circuit-node circuit-node--one"></span>
-    <span class="circuit-node circuit-node--two"></span>
-    <span class="circuit-node circuit-node--three"></span>
-    <span class="circuit-scan"></span>
-  </div>
+  <svg
+    class="circuit-network"
+    viewBox="0 0 100 120"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient id="route-gradient" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#00aa80" />
+        <stop offset="0.48" stop-color="#2caaff" />
+        <stop offset="1" stop-color="#57bbff" />
+      </linearGradient>
+      <filter id="route-glow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="1.8" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+
+    <path
+      id="transformation-route"
+      class="route route--base"
+      pathLength="100"
+      d="M 67 6 H 88 Q 96 6 96 15 V 24 Q 96 33 87 33 H 18 Q 8 33 8 43 V 50 Q 8 60 18 60 H 82 Q 92 60 92 70 V 78 Q 92 88 82 88 H 22 Q 12 88 12 99 V 110 H 55"
+    />
+    <path
+      class="route route--energy"
+      pathLength="100"
+      d="M 67 6 H 88 Q 96 6 96 15 V 24 Q 96 33 87 33 H 18 Q 8 33 8 43 V 50 Q 8 60 18 60 H 82 Q 92 60 92 70 V 78 Q 92 88 82 88 H 22 Q 12 88 12 99 V 110 H 55"
+    />
+    <path
+      class="route route--beam"
+      pathLength="100"
+      d="M 67 6 H 88 Q 96 6 96 15 V 24 Q 96 33 87 33 H 18 Q 8 33 8 43 V 50 Q 8 60 18 60 H 82 Q 92 60 92 70 V 78 Q 92 88 82 88 H 22 Q 12 88 12 99 V 110 H 55"
+    />
+
+    <g class="route-nodes">
+      <circle cx="96" cy="24" r="1.25" />
+      <circle cx="8" cy="50" r="1.25" />
+      <circle cx="92" cy="78" r="1.25" />
+      <circle cx="12" cy="99" r="1.25" />
+    </g>
+
+    <circle class="energy-particle energy-particle--one" r="1.15">
+      <animateMotion dur="4.8s" repeatCount="indefinite">
+        <mpath href="#transformation-route" />
+      </animateMotion>
+    </circle>
+    <circle class="energy-particle energy-particle--two" r="0.75">
+      <animateMotion dur="4.8s" begin="-2.4s" repeatCount="indefinite">
+        <mpath href="#transformation-route" />
+      </animateMotion>
+    </circle>
+  </svg>
 
   {scenes.map((scene, index) => (
     <figure class={`gallery-scene ${scene.className}`}>
@@ -79,83 +129,70 @@ const scenes = [
 <style>
   .transformation-gallery {
     position: relative;
-    width: min(100%, 36rem);
-    aspect-ratio: 1 / 1.04;
+    width: min(100%, 34rem);
+    aspect-ratio: 0.84;
     isolation: isolate;
   }
 
-  .circuit-frame {
+  .circuit-network {
     position: absolute;
-    inset: 12% 11% 9% 14%;
+    inset: 2% 1% 1%;
     z-index: 0;
-    border: 0.25rem solid transparent;
-    border-radius: 4.5rem 1.75rem 4.5rem 1.75rem;
-    background:
-      linear-gradient(#000051, #000051) padding-box,
-      linear-gradient(125deg, #00aa80, #2caaff 48%, #57bbff 75%, #00aa80) border-box;
-    background-size: 100% 100%, 240% 240%;
-    box-shadow:
-      0 0 2.5rem rgb(44 170 255 / 15%),
-      inset 0 0 1.75rem rgb(0 170 128 / 8%);
-    animation: circuit-flow 6s ease-in-out infinite;
+    width: 98%;
+    height: 97%;
+    overflow: visible;
+    pointer-events: none;
   }
 
-  .circuit-frame::before,
-  .circuit-frame::after {
-    content: "";
-    position: absolute;
-    background: linear-gradient(90deg, transparent, #57bbff, #00aa80, transparent);
-    opacity: 0.72;
-    filter: drop-shadow(0 0 0.45rem rgb(87 187 255 / 75%));
+  .route {
+    fill: none;
+    vector-effect: non-scaling-stroke;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  .circuit-frame::before {
-    top: 28%;
-    left: -14%;
-    width: 35%;
-    height: 0.15rem;
+  .route--base {
+    stroke: rgb(87 187 255 / 24%);
+    stroke-width: 7;
+    filter: url("#route-glow");
   }
 
-  .circuit-frame::after {
-    right: -12%;
-    bottom: 24%;
-    width: 31%;
-    height: 0.15rem;
+  .route--energy {
+    stroke: url("#route-gradient");
+    stroke-width: 3;
+    stroke-dasharray: 3 7;
+    animation: route-flow 1.7s linear infinite;
   }
 
-  .circuit-node {
-    position: absolute;
-    width: 0.72rem;
-    aspect-ratio: 1;
-    border: 0.16rem solid #57bbff;
-    border-radius: 999px;
-    background: #000051;
-    box-shadow: 0 0 0 0 rgb(87 187 255 / 45%);
-    animation: node-pulse 2.4s ease-out infinite;
+  .route--beam {
+    stroke: #b7efff;
+    stroke-width: 4.5;
+    stroke-dasharray: 11 89;
+    filter: url("#route-glow");
+    animation: route-beam 5.2s cubic-bezier(0.45, 0, 0.2, 1) infinite;
   }
 
-  .circuit-node--one { top: 16%; left: -0.48rem; }
-  .circuit-node--two { top: 47%; right: -0.48rem; animation-delay: -0.8s; }
-  .circuit-node--three { bottom: 12%; left: -0.48rem; animation-delay: -1.6s; }
-
-  .circuit-scan {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    border-radius: inherit;
+  .route-nodes circle {
+    fill: #000051;
+    stroke: #57bbff;
+    stroke-width: 0.65;
+    vector-effect: non-scaling-stroke;
+    filter: url("#route-glow");
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: route-node-pulse 2.5s ease-in-out infinite;
   }
 
-  .circuit-scan::before {
-    content: "";
-    position: absolute;
-    top: -20%;
-    left: -45%;
-    width: 36%;
-    height: 140%;
-    transform: skewX(-14deg);
-    background: linear-gradient(90deg, transparent, rgb(87 187 255 / 13%), transparent);
-    animation: circuit-scan 5.5s ease-in-out infinite;
+  .route-nodes circle:nth-child(2) { animation-delay: -0.6s; }
+  .route-nodes circle:nth-child(3) { animation-delay: -1.2s; }
+  .route-nodes circle:nth-child(4) { animation-delay: -1.8s; }
+
+  .energy-particle {
+    fill: #d8f8ff;
+    filter: url("#route-glow");
   }
+
+  .energy-particle--two { fill: #00aa80; }
 
   .gallery-scene {
     --scene-radius: 1.75rem;
@@ -233,37 +270,37 @@ const scenes = [
   }
 
   .scene--one {
-    top: 1%;
-    right: 0;
-    width: 55%;
-    height: 34%;
+    top: 0;
+    right: 1%;
+    width: 49%;
+    height: 25%;
   }
 
   .scene--one img { object-position: 70% 48%; }
 
   .scene--two {
-    top: 34%;
-    left: 2%;
-    width: 48%;
-    height: 32%;
+    top: 27%;
+    left: 1%;
+    width: 44%;
+    height: 25%;
   }
 
   .scene--two img { object-position: 63% 52%; }
 
   .scene--three {
-    right: 5%;
-    bottom: 10%;
-    width: 48%;
-    height: 34%;
+    top: 52%;
+    right: 2%;
+    width: 45%;
+    height: 25%;
   }
 
   .scene--three img { object-position: 58% 50%; }
 
   .scene--four {
     left: 8%;
-    bottom: 0;
-    width: 42%;
-    height: 28%;
+    bottom: 0.5%;
+    width: 45%;
+    height: 24%;
   }
 
   .scene--four img { object-position: 40% 50%; }
@@ -313,26 +350,26 @@ const scenes = [
   }
 
   .gallery-code--left { top: 18%; left: 1%; transform: rotate(-90deg); }
-  .gallery-code--right { right: 0; bottom: 2%; }
+  .gallery-code--right { right: 1%; bottom: 1%; }
 
   @media (max-width: 767px) {
     .transformation-gallery {
-      width: min(100%, 28rem);
-      aspect-ratio: 0.96;
+      width: min(100%, 24rem);
+      aspect-ratio: 0.78;
       margin-inline: auto;
     }
 
-    .circuit-frame {
-      inset: 10% 8% 8% 8%;
-      border-width: 0.2rem;
-      border-radius: 3.25rem 1.35rem 3.25rem 1.35rem;
+    .circuit-network {
+      inset: 1%;
+      width: 98%;
+      height: 98%;
     }
 
     .gallery-scene { --scene-radius: 1.2rem; }
-    .scene--one { width: 57%; height: 34%; }
-    .scene--two { top: 32%; left: 0; width: 49%; height: 34%; }
-    .scene--three { right: 1%; bottom: 9%; width: 52%; height: 35%; }
-    .scene--four { left: 5%; width: 45%; height: 29%; }
+    .scene--one { top: 0; right: 0; width: 54%; height: 23%; }
+    .scene--two { top: 26%; left: 0; width: 47%; height: 23%; }
+    .scene--three { top: 52%; right: 0; width: 50%; height: 23%; }
+    .scene--four { left: 5%; bottom: 0; width: 48%; height: 23%; }
 
     .gallery-scene figcaption {
       right: 0.6rem;
@@ -351,11 +388,13 @@ const scenes = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .circuit-frame,
-    .circuit-scan::before,
-    .circuit-node {
+    .route--energy,
+    .route--beam,
+    .route-nodes circle {
       animation: none;
     }
+
+    .energy-particle { display: none; }
 
     .gallery-scene,
     .gallery-scene img,
@@ -366,19 +405,19 @@ const scenes = [
     }
   }
 
-  @keyframes circuit-flow {
-    0%, 100% { background-position: 0 0, 0% 50%; }
-    50% { background-position: 0 0, 100% 50%; }
+  @keyframes route-flow {
+    to { stroke-dashoffset: -10; }
   }
 
-  @keyframes circuit-scan {
-    0%, 18% { transform: translateX(0) skewX(-14deg); opacity: 0; }
-    32% { opacity: 1; }
-    70%, 100% { transform: translateX(410%) skewX(-14deg); opacity: 0; }
+  @keyframes route-beam {
+    0% { stroke-dashoffset: 12; opacity: 0; }
+    12% { opacity: 1; }
+    78% { opacity: 1; }
+    100% { stroke-dashoffset: -88; opacity: 0; }
   }
 
-  @keyframes node-pulse {
-    0% { box-shadow: 0 0 0 0 rgb(87 187 255 / 44%); }
-    70%, 100% { box-shadow: 0 0 0 0.7rem rgb(87 187 255 / 0%); }
+  @keyframes route-node-pulse {
+    0%, 100% { transform: scale(0.86); opacity: 0.72; }
+    50% { transform: scale(1.48); opacity: 1; }
   }
 </style>
