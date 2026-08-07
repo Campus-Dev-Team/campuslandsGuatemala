@@ -1,6 +1,5 @@
 ---
-import { Image } from "astro:assets";
-import myImage from "~/assets/img/patrocina/patrocina-home.png";
+import TransformationGallery from "./transformationGallery.astro";
 ---
 
 <section
@@ -35,34 +34,14 @@ import myImage from "~/assets/img/patrocina/patrocina-home.png";
     </a>
   </div>
 
-  <div class="relative flex-grow lg:flex-1 text-center z-20 w-full max-w-[530px]">
-    <Image
-      src={myImage}
-      alt="Campers que reciben formación tecnológica mediante patrocinio en Guatemala"
-      width={530}
-      widths={[320, 480, 530, 800, 1060]}
-      format="avif"
-      loading="eager"
-      fetchpriority="high"
-      sizes="(max-width: 767px) min(90vw, 530px), 530px"
-      class="mx-auto w-full h-auto"
-    />
+  <div class="relative flex-grow lg:flex-1 z-20 w-full max-w-[580px]">
+    <TransformationGallery />
   </div>
 
 </section>
 
 <style scoped>
-  .bg-students {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 90%;
-    max-width: 90%;
-    max-height: 70%;
-  }
-
   .principal {
-    /* background-image: url('img/texxture.svg'); */
     background-position: 80% 0%;
     background-repeat: no-repeat;
     background-size: 75%;

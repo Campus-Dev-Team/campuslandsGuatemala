@@ -1,0 +1,384 @@
+---
+import { Image } from "astro:assets";
+import formacionPresencial from "~/assets/img/patrocina/transformacion/formacion-presencial.webp";
+import comunidadAprendizaje from "~/assets/img/patrocina/transformacion/comunidad-aprendizaje.webp";
+import programacionCampus from "~/assets/img/patrocina/transformacion/programacion-en-campus.webp";
+import talentoTecnologico from "~/assets/img/patrocina/transformacion/talento-tecnologico.webp";
+
+const scenes = [
+  {
+    src: formacionPresencial,
+    alt: "Campers de Campuslands Guatemala durante una sesión de formación presencial",
+    label: "Formación",
+    className: "scene--one",
+    loading: "eager" as const,
+    fetchpriority: "high" as const,
+  },
+  {
+    src: comunidadAprendizaje,
+    alt: "Jóvenes de Campuslands Guatemala compartiendo una experiencia de aprendizaje",
+    label: "Comunidad",
+    className: "scene--two",
+    loading: "lazy" as const,
+  },
+  {
+    src: programacionCampus,
+    alt: "Campers desarrollando proyectos de programación en las instalaciones de Campuslands",
+    label: "Programación",
+    className: "scene--three",
+    loading: "lazy" as const,
+  },
+  {
+    src: talentoTecnologico,
+    alt: "Talento joven de Guatemala concentrado en su formación tecnológica",
+    label: "Talento tech",
+    className: "scene--four",
+    loading: "lazy" as const,
+  },
+];
+---
+
+<div
+  class="transformation-gallery"
+  role="group"
+  aria-label="Experiencias de formación y comunidad en Campuslands Guatemala"
+>
+  <div class="circuit-frame" aria-hidden="true">
+    <span class="circuit-node circuit-node--one"></span>
+    <span class="circuit-node circuit-node--two"></span>
+    <span class="circuit-node circuit-node--three"></span>
+    <span class="circuit-scan"></span>
+  </div>
+
+  {scenes.map((scene, index) => (
+    <figure class={`gallery-scene ${scene.className}`}>
+      <div class="scene-border" aria-hidden="true"></div>
+      <Image
+        src={scene.src}
+        alt={scene.alt}
+        widths={[320, 480, 720]}
+        width={720}
+        format="avif"
+        quality={70}
+        loading={scene.loading}
+        fetchpriority={scene.fetchpriority}
+        decoding="async"
+        sizes="(max-width: 767px) 48vw, (max-width: 1023px) 36vw, 300px"
+      />
+      <figcaption>
+        <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+        {scene.label}
+      </figcaption>
+    </figure>
+  ))}
+
+  <span class="gallery-code gallery-code--left" aria-hidden="true">&lt;impacto&gt;</span>
+  <span class="gallery-code gallery-code--right" aria-hidden="true">future.commit()</span>
+</div>
+
+<style>
+  .transformation-gallery {
+    position: relative;
+    width: min(100%, 36rem);
+    aspect-ratio: 1 / 1.04;
+    isolation: isolate;
+  }
+
+  .circuit-frame {
+    position: absolute;
+    inset: 12% 11% 9% 14%;
+    z-index: 0;
+    border: 0.25rem solid transparent;
+    border-radius: 4.5rem 1.75rem 4.5rem 1.75rem;
+    background:
+      linear-gradient(#000051, #000051) padding-box,
+      linear-gradient(125deg, #00aa80, #2caaff 48%, #57bbff 75%, #00aa80) border-box;
+    background-size: 100% 100%, 240% 240%;
+    box-shadow:
+      0 0 2.5rem rgb(44 170 255 / 15%),
+      inset 0 0 1.75rem rgb(0 170 128 / 8%);
+    animation: circuit-flow 6s ease-in-out infinite;
+  }
+
+  .circuit-frame::before,
+  .circuit-frame::after {
+    content: "";
+    position: absolute;
+    background: linear-gradient(90deg, transparent, #57bbff, #00aa80, transparent);
+    opacity: 0.72;
+    filter: drop-shadow(0 0 0.45rem rgb(87 187 255 / 75%));
+  }
+
+  .circuit-frame::before {
+    top: 28%;
+    left: -14%;
+    width: 35%;
+    height: 0.15rem;
+  }
+
+  .circuit-frame::after {
+    right: -12%;
+    bottom: 24%;
+    width: 31%;
+    height: 0.15rem;
+  }
+
+  .circuit-node {
+    position: absolute;
+    width: 0.72rem;
+    aspect-ratio: 1;
+    border: 0.16rem solid #57bbff;
+    border-radius: 999px;
+    background: #000051;
+    box-shadow: 0 0 0 0 rgb(87 187 255 / 45%);
+    animation: node-pulse 2.4s ease-out infinite;
+  }
+
+  .circuit-node--one { top: 16%; left: -0.48rem; }
+  .circuit-node--two { top: 47%; right: -0.48rem; animation-delay: -0.8s; }
+  .circuit-node--three { bottom: 12%; left: -0.48rem; animation-delay: -1.6s; }
+
+  .circuit-scan {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+
+  .circuit-scan::before {
+    content: "";
+    position: absolute;
+    top: -20%;
+    left: -45%;
+    width: 36%;
+    height: 140%;
+    transform: skewX(-14deg);
+    background: linear-gradient(90deg, transparent, rgb(87 187 255 / 13%), transparent);
+    animation: circuit-scan 5.5s ease-in-out infinite;
+  }
+
+  .gallery-scene {
+    --scene-radius: 1.75rem;
+    position: absolute;
+    z-index: 2;
+    overflow: hidden;
+    margin: 0;
+    border-radius: var(--scene-radius);
+    background: #07102b;
+    box-shadow:
+      0 1.5rem 3.2rem rgb(0 0 30 / 34%),
+      0 0 0 1px rgb(87 187 255 / 12%);
+    transform: translateZ(0);
+    transition:
+      transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 500ms ease;
+  }
+
+  .gallery-scene::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(120deg, transparent 24%, rgb(87 187 255 / 17%) 44%, transparent 61%),
+      linear-gradient(180deg, transparent 58%, rgb(0 0 30 / 72%) 100%);
+    background-position: 140% 0, 0 0;
+    background-size: 220% 100%, 100% 100%;
+    transition: background-position 650ms ease;
+  }
+
+  .gallery-scene img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.94) contrast(1.02);
+    transition:
+      transform 700ms cubic-bezier(0.18, 0.8, 0.2, 1),
+      filter 500ms ease;
+  }
+
+  .scene-border {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    border: 0.11rem solid rgb(87 187 255 / 40%);
+    border-radius: inherit;
+    box-shadow: inset 0 0 1.3rem rgb(44 170 255 / 8%);
+    transition: border-color 400ms ease, box-shadow 400ms ease;
+  }
+
+  .gallery-scene figcaption {
+    position: absolute;
+    right: 1rem;
+    bottom: 0.72rem;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: white;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(0.55rem);
+    transition: opacity 350ms ease, transform 350ms ease;
+  }
+
+  .gallery-scene figcaption span {
+    color: #57bbff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .scene--one {
+    top: 1%;
+    right: 0;
+    width: 55%;
+    height: 34%;
+  }
+
+  .scene--one img { object-position: 70% 48%; }
+
+  .scene--two {
+    top: 34%;
+    left: 2%;
+    width: 48%;
+    height: 32%;
+  }
+
+  .scene--two img { object-position: 63% 52%; }
+
+  .scene--three {
+    right: 5%;
+    bottom: 10%;
+    width: 48%;
+    height: 34%;
+  }
+
+  .scene--three img { object-position: 58% 50%; }
+
+  .scene--four {
+    left: 8%;
+    bottom: 0;
+    width: 42%;
+    height: 28%;
+  }
+
+  .scene--four img { object-position: 40% 50%; }
+
+  .gallery-scene:hover,
+  .gallery-scene:focus-within {
+    z-index: 6;
+    transform: translateY(-0.55rem) scale(1.035);
+    box-shadow:
+      0 1.8rem 4rem rgb(0 0 30 / 46%),
+      0 0 2rem rgb(44 170 255 / 22%);
+  }
+
+  .gallery-scene:hover img,
+  .gallery-scene:focus-within img {
+    transform: scale(1.055);
+    filter: saturate(1.08) contrast(1.06) brightness(1.025);
+  }
+
+  .gallery-scene:hover::after,
+  .gallery-scene:focus-within::after {
+    background-position: -80% 0, 0 0;
+  }
+
+  .gallery-scene:hover .scene-border,
+  .gallery-scene:focus-within .scene-border {
+    border-color: #57bbff;
+    box-shadow:
+      inset 0 0 1.5rem rgb(44 170 255 / 12%),
+      0 0 1.25rem rgb(87 187 255 / 36%);
+  }
+
+  .gallery-scene:hover figcaption,
+  .gallery-scene:focus-within figcaption {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .gallery-code {
+    position: absolute;
+    z-index: 1;
+    color: rgb(87 187 255 / 34%);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+  }
+
+  .gallery-code--left { top: 18%; left: 1%; transform: rotate(-90deg); }
+  .gallery-code--right { right: 0; bottom: 2%; }
+
+  @media (max-width: 767px) {
+    .transformation-gallery {
+      width: min(100%, 28rem);
+      aspect-ratio: 0.96;
+      margin-inline: auto;
+    }
+
+    .circuit-frame {
+      inset: 10% 8% 8% 8%;
+      border-width: 0.2rem;
+      border-radius: 3.25rem 1.35rem 3.25rem 1.35rem;
+    }
+
+    .gallery-scene { --scene-radius: 1.2rem; }
+    .scene--one { width: 57%; height: 34%; }
+    .scene--two { top: 32%; left: 0; width: 49%; height: 34%; }
+    .scene--three { right: 1%; bottom: 9%; width: 52%; height: 35%; }
+    .scene--four { left: 5%; width: 45%; height: 29%; }
+
+    .gallery-scene figcaption {
+      right: 0.6rem;
+      bottom: 0.5rem;
+      font-size: 0.56rem;
+    }
+
+    .gallery-code { display: none; }
+  }
+
+  @media (hover: none) {
+    .gallery-scene figcaption {
+      opacity: 0.9;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .circuit-frame,
+    .circuit-scan::before,
+    .circuit-node {
+      animation: none;
+    }
+
+    .gallery-scene,
+    .gallery-scene img,
+    .gallery-scene::after,
+    .scene-border,
+    .gallery-scene figcaption {
+      transition: none;
+    }
+  }
+
+  @keyframes circuit-flow {
+    0%, 100% { background-position: 0 0, 0% 50%; }
+    50% { background-position: 0 0, 100% 50%; }
+  }
+
+  @keyframes circuit-scan {
+    0%, 18% { transform: translateX(0) skewX(-14deg); opacity: 0; }
+    32% { opacity: 1; }
+    70%, 100% { transform: translateX(410%) skewX(-14deg); opacity: 0; }
+  }
+
+  @keyframes node-pulse {
+    0% { box-shadow: 0 0 0 0 rgb(87 187 255 / 44%); }
+    70%, 100% { box-shadow: 0 0 0 0.7rem rgb(87 187 255 / 0%); }
+  }
+</style>
