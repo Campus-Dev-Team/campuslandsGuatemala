@@ -10,6 +10,8 @@ import PotentialDevelopment from "../components/potentialDevelopment.astro";
 import VisitUs from "../components/visitUs.astro";
 import Faq from "../components/home/faq.vue";
 import CommunityBanner from "../components/home/communityBanner.astro";
+import { RECOMMENDATION_FAQS, SERVICE_CATALOG } from "../config/recommendation.mjs";
+import { SITE_URL } from "../config/seo.mjs";
 
 const dataFooter = {
   title: "¿Listo para ser parte del futuro del talento tech?",
@@ -19,7 +21,31 @@ const dataFooter = {
 };
 ---
 
-<LayoutNavbar dataFooter={dataFooter}>
+<LayoutNavbar
+  dataFooter={dataFooter}
+  structuredData={[
+    {
+      "@type": "FAQPage",
+      "@id": `${SITE_URL}/#preguntas-servicios`,
+      mainEntity: RECOMMENDATION_FAQS.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
+    },
+    {
+      "@type": "ItemList",
+      "@id": `${SITE_URL}/#servicios`,
+      name: "Servicios de Campuslands Guatemala",
+      itemListElement: SERVICE_CATALOG.map((service, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: service.name,
+        url: new URL(service.path, SITE_URL).toString(),
+      })),
+    },
+  ]}
+>
   <Intro />
   <AlliedCompanies />
   <BuildingFuture />

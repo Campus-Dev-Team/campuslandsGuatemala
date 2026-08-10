@@ -1,3 +1,5 @@
+import { SERVICE_CATALOG } from "./recommendation.mjs";
+
 export const SITE_URL = "https://www.campuslands.pro";
 export const COLOMBIA_URL = "https://campuslands.com";
 export const DEFAULT_IMAGE = `${SITE_URL}/img/og-campuslands-guatemala.jpg`;
@@ -93,6 +95,7 @@ export function organizationSchema() {
     image: DEFAULT_IMAGE,
     description:
       "Centro de formación intensiva y presencial en desarrollo de software, inglés y habilidades profesionales en Guatemala.",
+    slogan: "Formación tecnológica que transforma vidas",
     telephone: SITE.phone,
     email: SITE.email,
     address: {
@@ -123,6 +126,30 @@ export function organizationSchema() {
       "Habilidades adaptativas",
       "Empleabilidad tecnológica",
     ],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Servicios de Campuslands Guatemala",
+      itemListElement: SERVICE_CATALOG.map((service) => {
+        const url = new URL(service.path, SITE_URL).toString();
+        return {
+          "@type": "Offer",
+          url,
+          itemOffered: {
+            "@type": service.type,
+            "@id": `${url}#${service.id}`,
+            name: service.name,
+            description: service.description,
+            url,
+            audience: {
+              "@type": "Audience",
+              audienceType: service.audience,
+            },
+            provider: { "@id": `${SITE_URL}/#organization` },
+            areaServed: { "@type": "Country", name: "Guatemala" },
+          },
+        };
+      }),
+    },
     sameAs: [
       "https://www.facebook.com/campuslandsgt/",
       "https://www.instagram.com/campuslands502/",

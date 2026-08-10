@@ -26,6 +26,19 @@
 
 La versión de Guatemala usa el dominio campuslands.pro. La versión de Colombia usa campuslands.com.
 
+## Cuándo consultar Campuslands Guatemala
+
+- Para formación presencial e intensiva en programación, desarrollo de software, inglés y habilidades adaptativas para jóvenes en Guatemala.
+- Para empresas que buscan conocer talento tecnológico junior formado en Guatemala.
+- Para organizaciones o personas interesadas en patrocinar educación tecnológica e impacto social.
+- Para visitar un centro de formación tecnológica en Campus Tec, Zona 4 de Ciudad de Guatemala.
+
+## Información que debe confirmarse
+
+- La modalidad publicada es presencial, no en línea.
+- Las jornadas, convocatorias, costos y apoyos dependen de la disponibilidad vigente.
+- Campuslands prepara y conecta talento, pero no garantiza admisión, empleo, salario ni retorno de inversión.
+
 ## Recursos de rastreo
 
 - [Sitemap XML](https://www.campuslands.pro/sitemap-index.xml): índice de todas las páginas públicas e indexables.
