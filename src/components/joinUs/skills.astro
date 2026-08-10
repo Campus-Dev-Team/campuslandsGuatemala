@@ -74,8 +74,12 @@ import tools from "./skillsArrays/tools";
             <img
               src={skill.asset}
               alt={skill.name}
+              width="205"
+              height="60"
               class="max-h-[55px]
 min-w-[130px] lg:max-h-[60px] lg:min-w-[205px]"
+              loading="lazy"
+              decoding="async"
               draggable="false"
               title={skill.name}
             />
@@ -95,6 +99,8 @@ min-w-[130px] lg:max-h-[60px] lg:min-w-[205px]"
               src={skill.asset}
               alt={skill.name}
               title={skill.name}
+              width={skill.width}
+              height={skill.height}
               class:list={[
                 "max-h-[55px] min-w-[130px] object-contain lg:max-h-[95px] lg:min-w-[170px]",
                 {
@@ -127,7 +133,11 @@ min-w-[130px] lg:max-h-[60px] lg:min-w-[205px]"
                 src={skill.asset}
                 alt={skill.name}
                 title={skill.name}
+                width="28"
+                height="28"
                 class="size-7"
+                loading="lazy"
+                decoding="async"
                 draggable="false"
               />
               <p>{skill.name}</p>

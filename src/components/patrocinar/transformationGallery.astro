@@ -11,8 +11,7 @@ const scenes = [
     alt: "Campers de Campuslands Guatemala durante una sesión de formación presencial",
     label: "Formación",
     className: "scene--one",
-    loading: "eager" as const,
-    fetchpriority: "high" as const,
+    loading: "lazy" as const,
   },
   {
     src: comunidadAprendizaje,
@@ -109,9 +108,8 @@ const scenes = [
         widths={[320, 480, 720]}
         width={720}
         format="avif"
-        quality={70}
+        quality={64}
         loading={scene.loading}
-        fetchpriority={scene.fetchpriority}
         decoding="async"
         sizes="(max-width: 767px) 48vw, (max-width: 1023px) 36vw, 300px"
       />

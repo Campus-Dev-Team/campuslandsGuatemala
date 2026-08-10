@@ -19,7 +19,10 @@ const totalSlides = testimonials.length;
                 <img
                   src={image}
                   class="w-full max-w-[200px] md:max-w-[275px] h-auto object-cover rounded-lg"
+                  width="340"
+                  height="340"
                   loading="lazy"
+                  decoding="async"
                   alt={`Testimonio de ${name}`}
                 />
               </div>
@@ -28,7 +31,9 @@ const totalSlides = testimonials.length;
               <div class="w-full lg:w-2/3 flex flex-col relative text-center lg:text-left">
                 <img
                   src="/img/quote.svg"
-                  alt="comillas-icono"
+                  alt=""
+                  width="115"
+                  height="90"
                   class="hidden lg:block absolute top-[-31px] left-[-90px] w-[115px]"
                 />
                 <h3 class="gradient-text text-xl md:text-3xl lg:text-4xl mb-2 md:mb-4">
@@ -62,6 +67,7 @@ const totalSlides = testimonials.length;
           src="/img/icons/arrow-left.svg"
           alt=""
           width="14"
+          height="14"
           draggable="false"
         />
       </button>
@@ -76,6 +82,7 @@ const totalSlides = testimonials.length;
           src="/img/icons/arrow-right.svg"
           alt=""
           width="14"
+          height="14"
           draggable="false"
         />
       </button>
