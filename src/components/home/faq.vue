@@ -1,45 +1,58 @@
 <template>
 	<section class="indicators max-w-[1150px] self-center">
 		<h2 class="gradient-text text-4xl font-bold max-w-[472px] mx-auto text-center mb-16 pb-1">Preguntas frecuentes</h2>
-		<div class="flex max-w-[305px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10" role="tablist" aria-label="Categorías de preguntas frecuentes">
-			<button type="button" role="tab" :aria-selected="active === 'tabCampers'" class="font-semibold flex items-center justify-center rounded-full cursor-pointer h-9 w-[196px]"
-				:class="active === 'tabCampers' ? 'bg-primary_action text-white' : 'bg-[#07102B] text-white hover:bg-[#B0F7E6] hover:text-[#07102B]'" @click="activeTab('tabCampers')">
-				Campers
-			</button>
-			<button type="button" role="tab" :aria-selected="active === 'tabSponsors'" class="font-semibold flex items-center justify-center rounded-full cursor-pointer h-9 w-[196px]"
-				:class="active === 'tabSponsors' ? 'bg-primary_action text-white' : 'bg-[#07102B] text-white hover:bg-[#B0F7E6] hover:text-[#07102B]'" @click="activeTab('tabSponsors')">
-				Patrocinadores
-			</button>
-		</div>
-		<div class="faq-grid mb-16">
-			<article v-for="faq in questionsAndAnswers" :key="`${active}-${faq.id}`" class="faq-card"
-				:class="{ 'is-open': isFaqOpen(faq.id) }">
-				<button type="button" class="faq-summary" :aria-expanded="isFaqOpen(faq.id)"
-					:aria-controls="`faq-answer-${active}-${faq.id}`" @click="toggleFaq(faq.id)">
-					<span class="faq-question">{{ faq.title }}</span>
-					<span class="faq-toggle" aria-hidden="true"></span>
-				</button>
-				<div :id="`faq-answer-${active}-${faq.id}`" class="faq-answer-shell"
-					:aria-hidden="!isFaqOpen(faq.id)">
-					<div class="faq-answer-overflow">
-						<div class="faq-answer">
-							<span class="faq-answer-label" aria-hidden="true">response.ok</span>
-							<p>{{ faq.description }}</p>
+		<div class="faq-controller">
+			<input id="faq-tab-campers" class="faq-tab-input" type="radio" name="faq-category" checked>
+			<input id="faq-tab-sponsors" class="faq-tab-input" type="radio" name="faq-category">
+
+			<div class="faq-tablist" aria-label="Categorías de preguntas frecuentes">
+				<label for="faq-tab-campers" class="faq-tab">Campers</label>
+				<label for="faq-tab-sponsors" class="faq-tab">Patrocinadores</label>
+			</div>
+
+			<div class="faq-panel faq-panel-campers">
+				<div class="faq-grid mb-16">
+					<details v-for="faq in tabFaqCampersData" :key="`campers-${faq.id}`" class="faq-card">
+						<summary class="faq-summary">
+							<span class="faq-question">{{ faq.title }}</span>
+							<span class="faq-toggle" aria-hidden="true"></span>
+						</summary>
+						<div class="faq-answer-shell">
+							<div class="faq-answer-overflow">
+								<div class="faq-answer">
+									<span class="faq-answer-label" aria-hidden="true">response.ok</span>
+									<p>{{ faq.description }}</p>
+								</div>
+							</div>
 						</div>
-					</div>
+					</details>
 				</div>
-			</article>
+			</div>
+
+			<div class="faq-panel faq-panel-sponsors">
+				<div class="faq-grid mb-16">
+					<details v-for="faq in tabFaqSponsersData" :key="`sponsors-${faq.id}`" class="faq-card">
+						<summary class="faq-summary">
+							<span class="faq-question">{{ faq.title }}</span>
+							<span class="faq-toggle" aria-hidden="true"></span>
+						</summary>
+						<div class="faq-answer-shell">
+							<div class="faq-answer-overflow">
+								<div class="faq-answer">
+									<span class="faq-answer-label" aria-hidden="true">response.ok</span>
+									<p>{{ faq.description }}</p>
+								</div>
+							</div>
+						</div>
+					</details>
+				</div>
+			</div>
 		</div>
 	</section>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
-const active = ref('tabCampers')
-const openFaqs = ref(new Set())
-
-const tabFaqCampersData = ref([
+const tabFaqCampersData = [
 	{
 		id: 1,
 		title: '¿Qué es Campuslands y cómo funciona?',
@@ -140,9 +153,9 @@ const tabFaqCampersData = ref([
 		title: '¿Qué tipo de trabajos puedo obtener al graduarme de Campuslands?',
 		description: 'Al finalizar el programa, estarás capacitado para roles como desarrollador de software, analista de datos, soporte técnico y otros puestos demandados en tecnología. Campuslands te abre las puertas a empleos que no solo ofrecen buenas remuneraciones, sino también oportunidades de crecimiento y desarrollo en un sector en constante expansión.'
 	}
-])
+]
 
-const tabFaqSponsersData = ref([
+const tabFaqSponsersData = [
 	{
 		id: 1,
 		title: "¿Qué significa ser patrocinador de Campuslands?",
@@ -188,36 +201,73 @@ const tabFaqSponsersData = ref([
 		title: "¿Cuáles son los requisitos para ser patrocinador?",
 		description: "No existen requisitos estrictos. Solo se necesita la disposición para apoyar la educación de jóvenes y el compromiso de realizar las contribuciones económicas acordadas. Tanto personas naturales como empresas pueden ser patrocinadores."
 	}
-])
-
-const questionsAndAnswers = ref(tabFaqCampersData.value)
-
-function activeTab(tab) {
-	active.value = tab
-	openFaqs.value = new Set()
-	questionsAndAnswers.value = tab === 'tabCampers'
-		? tabFaqCampersData.value
-		: tabFaqSponsersData.value
-}
-
-function isFaqOpen(id) {
-	return openFaqs.value.has(id)
-}
-
-function toggleFaq(id) {
-	const nextOpenFaqs = new Set(openFaqs.value)
-
-	if (nextOpenFaqs.has(id)) {
-		nextOpenFaqs.delete(id)
-	} else {
-		nextOpenFaqs.add(id)
-	}
-
-	openFaqs.value = nextOpenFaqs
-}
+]
 </script>
 
 <style scoped>
+.faq-controller {
+	position: relative;
+}
+
+.faq-tab-input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.faq-tablist {
+	display: flex;
+	width: min(100%, 32rem);
+	gap: 0.625rem;
+	margin: 0 auto 2.5rem;
+	padding: 0.5rem;
+	border: 1px solid #fff;
+	border-radius: 999px;
+	background: #00aa80;
+}
+
+.faq-tab {
+	display: flex;
+	width: 50%;
+	min-height: 2.75rem;
+	align-items: center;
+	justify-content: center;
+	border-radius: 999px;
+	background: #07102b;
+	color: #fff;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 250ms ease, color 250ms ease, transform 250ms ease;
+}
+
+#faq-tab-campers:checked ~ .faq-tablist label[for="faq-tab-campers"],
+#faq-tab-sponsors:checked ~ .faq-tablist label[for="faq-tab-sponsors"] {
+	background: #0076b7;
+}
+
+.faq-tab-input:focus-visible ~ .faq-tablist {
+	outline: 2px solid #57bbff;
+	outline-offset: 4px;
+}
+
+.faq-panel-sponsors {
+	display: none;
+}
+
+#faq-tab-sponsors:checked ~ .faq-panel-campers {
+	display: none;
+}
+
+#faq-tab-sponsors:checked ~ .faq-panel-sponsors {
+	display: block;
+}
+
 .faq-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -239,6 +289,14 @@ function toggleFaq(id) {
 		transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.faq-card > summary {
+	list-style: none;
+}
+
+.faq-card > summary::-webkit-details-marker {
+	display: none;
+}
+
 .faq-card::before {
 	content: '';
 	position: absolute;
@@ -251,14 +309,14 @@ function toggleFaq(id) {
 	transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.faq-card.is-open {
+.faq-card[open] {
 	border-color: rgba(87, 187, 255, 0.22);
 	background: linear-gradient(135deg, rgba(44, 170, 255, 0.1), rgba(0, 170, 128, 0.055));
 	box-shadow: 0 18px 55px rgba(0, 5, 81, 0.2), inset 0 1px rgba(255, 255, 255, 0.04);
 	transform: translateY(-2px);
 }
 
-.faq-card.is-open::before {
+.faq-card[open]::before {
 	transform: scaleX(1);
 }
 
@@ -288,7 +346,7 @@ function toggleFaq(id) {
 	transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), color 300ms ease;
 }
 
-.is-open .faq-question {
+.faq-card[open] .faq-question {
 	color: #b0f7e6;
 	transform: translateX(0.3rem);
 }
@@ -325,18 +383,18 @@ function toggleFaq(id) {
 	transform: rotate(90deg);
 }
 
-.is-open .faq-toggle {
+.faq-card[open] .faq-toggle {
 	background: #00aa80;
 	box-shadow: 0 0 0 0.4rem rgba(0, 209, 160, 0.09), 0 0 1.6rem rgba(44, 170, 255, 0.22);
 	transform: rotate(180deg);
 }
 
-.is-open .faq-toggle::before,
-.is-open .faq-toggle::after {
+.faq-card[open] .faq-toggle::before,
+.faq-card[open] .faq-toggle::after {
 	background: #07102b;
 }
 
-.is-open .faq-toggle::after {
+.faq-card[open] .faq-toggle::after {
 	transform: rotate(90deg) scaleX(0);
 }
 
@@ -353,7 +411,7 @@ function toggleFaq(id) {
 		transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.is-open .faq-answer-shell {
+.faq-card[open] .faq-answer-shell {
 	grid-template-rows: 1fr;
 	opacity: 1;
 	filter: blur(0);
@@ -388,13 +446,13 @@ function toggleFaq(id) {
 }
 
 @media (hover: hover) {
-	.faq-card:not(.is-open):hover {
+	.faq-card:not([open]):hover {
 		border-color: rgba(87, 187, 255, 0.2);
 		background: rgba(44, 170, 255, 0.035);
 		transform: translateY(-2px);
 	}
 
-	.faq-card:not(.is-open):hover .faq-toggle {
+	.faq-card:not([open]):hover .faq-toggle {
 		box-shadow: 0 0 1.2rem rgba(0, 209, 160, 0.2);
 		transform: rotate(90deg);
 	}
