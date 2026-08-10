@@ -44,6 +44,50 @@ const curryear = new Date().getFullYear();
     <meta name="geo.placename" content="Ciudad de Guatemala, Guatemala" />
     <meta name="google-site-verification" content="VjWljaxyJbf68bXWX6Wna-Zcj84e_y8UWPRUKivFHKw" />
     <ViewTransitions fallback="animate" />
+    <script is:inline>
+      // Activa el estado visual antes de que el navegador empiece a dibujar
+      // las imágenes del body, evitando que el texto alternativo aparezca
+      // como contenido roto durante una primera visita.
+      document.documentElement.classList.add('enhanced-image-loading');
+
+      const setImageState = (image, state) => {
+        image.dataset.imageState = state;
+        const shell = image.closest('[data-image-shell]');
+        if (shell) shell.dataset.imageState = state;
+      };
+
+      const revealImage = (image) => {
+        if (image.dataset.imageState === 'loaded') return;
+        const finish = () => setImageState(image, 'loaded');
+        if (typeof image.decode === 'function') {
+          image.decode().catch(() => {}).finally(finish);
+        } else {
+          finish();
+        }
+      };
+
+      const prepareImages = (root = document) => {
+        root.querySelectorAll('img').forEach((image) => {
+          if (image.complete) {
+            if (image.naturalWidth > 0) revealImage(image);
+            else setImageState(image, 'error');
+          } else {
+            setImageState(image, 'loading');
+          }
+        });
+      };
+
+      document.addEventListener('load', (event) => {
+        if (event.target instanceof HTMLImageElement) revealImage(event.target);
+      }, true);
+      document.addEventListener('error', (event) => {
+        if (event.target instanceof HTMLImageElement) {
+          setImageState(event.target, 'error');
+        }
+      }, true);
+      document.addEventListener('DOMContentLoaded', () => prepareImages());
+      document.addEventListener('astro:page-load', () => prepareImages());
+    </script>
     <!-- Medición diferida para no bloquear el contenido principal -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
@@ -688,6 +732,48 @@ const curryear = new Date().getFullYear();
   });
 </script>
 <style is:global>
+  html.enhanced-image-loading img:not([aria-hidden="true"]):not([alt=""]):not([data-image-state="loaded"]) {
+    color: transparent !important;
+    background-color: #07102b;
+    background-image:
+      radial-gradient(circle at 28% 30%, rgb(44 170 255 / 22%), transparent 34%),
+      linear-gradient(
+        108deg,
+        transparent 20%,
+        rgb(87 187 255 / 8%) 37%,
+        rgb(0 221 177 / 28%) 48%,
+        rgb(255 255 255 / 22%) 52%,
+        rgb(44 170 255 / 8%) 63%,
+        transparent 80%
+      );
+    background-position: center, 140% 0;
+    background-size: 100% 100%, 240% 100%;
+  }
+
+  html.enhanced-image-loading img[data-image-state="loading"]:not([aria-hidden="true"]):not([alt=""]) {
+    opacity: .48;
+    filter: blur(2px) saturate(.82);
+    animation: campus-image-loading 1.35s ease-in-out infinite;
+    transition: opacity 520ms ease, filter 620ms ease;
+  }
+
+  html.enhanced-image-loading img[data-image-state="loaded"] {
+    opacity: 1;
+  }
+
+  html.enhanced-image-loading img[data-image-state="error"]:not([aria-hidden="true"]):not([alt=""]) {
+    min-height: 7rem;
+    opacity: .78;
+    background-image:
+      radial-gradient(circle at center, rgb(0 221 177 / 18%), transparent 44%),
+      linear-gradient(135deg, #000051, #07102b);
+  }
+
+  @keyframes campus-image-loading {
+    0% { background-position: center, 140% 0; }
+    100% { background-position: center, -140% 0; }
+  }
+
   [data-scroll-reveal] {
     opacity: 0;
     translate: 0 3.5rem;
@@ -732,6 +818,12 @@ const curryear = new Date().getFullYear();
     opacity: 1;
     translate: 0 0;
     filter: blur(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.enhanced-image-loading img[data-image-state="loading"] {
+      animation: none;
+    }
   }
 
   [data-motion-heading="true"] {
