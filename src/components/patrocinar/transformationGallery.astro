@@ -11,7 +11,8 @@ const scenes = [
     alt: "Campers de Campuslands Guatemala durante una sesión de formación presencial",
     label: "Formación",
     className: "scene--one",
-    loading: "lazy" as const,
+    loading: "eager" as const,
+    fetchpriority: "high" as const,
   },
   {
     src: comunidadAprendizaje,
@@ -19,6 +20,7 @@ const scenes = [
     label: "Comunidad",
     className: "scene--two",
     loading: "lazy" as const,
+    fetchpriority: "auto" as const,
   },
   {
     src: programacionCampus,
@@ -26,6 +28,7 @@ const scenes = [
     label: "Programación",
     className: "scene--three",
     loading: "lazy" as const,
+    fetchpriority: "auto" as const,
   },
   {
     src: talentoTecnologico,
@@ -33,6 +36,7 @@ const scenes = [
     label: "Talento tech",
     className: "scene--four",
     loading: "lazy" as const,
+    fetchpriority: "auto" as const,
   },
 ];
 ---
@@ -110,6 +114,7 @@ const scenes = [
         format="avif"
         quality={64}
         loading={scene.loading}
+        fetchpriority={scene.fetchpriority}
         decoding="async"
         sizes="(max-width: 767px) 48vw, (max-width: 1023px) 36vw, 300px"
       />

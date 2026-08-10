@@ -45,48 +45,109 @@ const curryear = new Date().getFullYear();
     <meta name="google-site-verification" content="VjWljaxyJbf68bXWX6Wna-Zcj84e_y8UWPRUKivFHKw" />
     <ViewTransitions fallback="animate" />
     <script is:inline>
-      // Activa el estado visual antes de que el navegador empiece a dibujar
-      // las imágenes del body, evitando que el texto alternativo aparezca
-      // como contenido roto durante una primera visita.
-      document.documentElement.classList.add('enhanced-image-loading');
+      // Sistema global de carga progresiva: reserva el espacio de cada imagen,
+      // prioriza el contenido principal y revela el recurso después de decodificarlo.
+      (() => {
+        document.documentElement.classList.add('enhanced-image-loading');
 
-      const setImageState = (image, state) => {
-        image.dataset.imageState = state;
-        const shell = image.closest('[data-image-shell]');
-        if (shell) shell.dataset.imageState = state;
-      };
+        const runtime = window.__campusImageLoading ??= {};
 
-      const revealImage = (image) => {
-        if (image.dataset.imageState === 'loaded') return;
-        const finish = () => setImageState(image, 'loaded');
-        if (typeof image.decode === 'function') {
-          image.decode().catch(() => {}).finally(finish);
-        } else {
-          finish();
-        }
-      };
+        const setImageState = (image, state) => {
+          image.dataset.imageState = state;
+          const shell = image.closest('[data-image-shell]');
+          if (shell) shell.dataset.imageState = state;
+        };
 
-      const prepareImages = (root = document) => {
-        root.querySelectorAll('img').forEach((image) => {
+        const isContentImage = (image) => {
+          const source = (image.currentSrc || image.src || '').split('?')[0].toLowerCase();
+          if (source.endsWith('.svg')) return false;
+
+          const declaredWidth = Number(image.getAttribute('width')) || 0;
+          const declaredHeight = Number(image.getAttribute('height')) || 0;
+          return Boolean(
+            image.closest('figure, [data-image-shell]') ||
+            declaredWidth >= 240 ||
+            declaredHeight >= 180
+          );
+        };
+
+        const revealImage = (image) => {
+          if (image.dataset.imageState === 'loaded') return;
+          const expectedSource = image.currentSrc || image.src;
+          const finish = () => {
+            if ((image.currentSrc || image.src) !== expectedSource) return;
+            setImageState(image, 'loaded');
+          };
+
+          if (typeof image.decode === 'function') {
+            image.decode().catch(() => {}).finally(finish);
+          } else {
+            finish();
+          }
+        };
+
+        const prepareImage = (image) => {
+          image.dataset.imageKind = isContentImage(image) ? 'content' : 'utility';
+          if (!image.hasAttribute('decoding')) image.decoding = 'async';
+
           if (image.complete) {
             if (image.naturalWidth > 0) revealImage(image);
             else setImageState(image, 'error');
           } else {
             setImageState(image, 'loading');
           }
-        });
-      };
+        };
 
-      document.addEventListener('load', (event) => {
-        if (event.target instanceof HTMLImageElement) revealImage(event.target);
-      }, true);
-      document.addEventListener('error', (event) => {
-        if (event.target instanceof HTMLImageElement) {
-          setImageState(event.target, 'error');
+        const prepareImages = (root = document) => {
+          if (root instanceof HTMLImageElement) prepareImage(root);
+          root.querySelectorAll?.('img').forEach(prepareImage);
+        };
+
+        runtime.prepareImages = prepareImages;
+
+        if (!runtime.bound) {
+          runtime.bound = true;
+
+          document.addEventListener('load', (event) => {
+            if (event.target instanceof HTMLImageElement) revealImage(event.target);
+          }, true);
+          document.addEventListener('error', (event) => {
+            if (event.target instanceof HTMLImageElement) setImageState(event.target, 'error');
+          }, true);
+          document.addEventListener('DOMContentLoaded', () => prepareImages());
+          document.addEventListener('astro:page-load', () => prepareImages());
+
+          const startObserver = () => {
+            if (runtime.observer || !document.body) return;
+            runtime.observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes') {
+                  const image = mutation.target;
+                  if (!(image instanceof HTMLImageElement)) return;
+                  delete image.dataset.imageState;
+                  prepareImage(image);
+                  return;
+                }
+                mutation.addedNodes.forEach((node) => {
+                  if (node instanceof Element) prepareImages(node);
+                });
+              });
+            });
+            runtime.observer.observe(document.body, {
+              childList: true,
+              subtree: true,
+              attributes: true,
+              attributeFilter: ['src', 'srcset'],
+            });
+          };
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startObserver, { once: true });
+          } else {
+            startObserver();
+          }
         }
-      }, true);
-      document.addEventListener('DOMContentLoaded', () => prepareImages());
-      document.addEventListener('astro:page-load', () => prepareImages());
+      })();
     </script>
     <!-- Medición diferida para no bloquear el contenido principal -->
     <script is:inline>
@@ -1077,11 +1138,16 @@ const curryear = new Date().getFullYear();
     to { opacity: 0; transform: translate3d(1rem, -0.35rem, 0); }
   }
 
-  html.enhanced-image-loading img:not([aria-hidden="true"]):not([alt=""]):not([data-image-state="loaded"]) {
+  html.enhanced-image-loading img:not([data-image-state="loaded"]) {
     color: transparent !important;
+    opacity: 0.01;
+    transition: opacity 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html.enhanced-image-loading img[data-image-kind="content"]:not([data-image-state="loaded"]) {
     background-color: #07102b;
     background-image:
-      radial-gradient(circle at 28% 30%, rgb(44 170 255 / 22%), transparent 34%),
+      radial-gradient(circle at 28% 30%, rgb(44 170 255 / 18%), transparent 34%),
       linear-gradient(
         108deg,
         transparent 20%,
@@ -1095,18 +1161,17 @@ const curryear = new Date().getFullYear();
     background-size: 100% 100%, 240% 100%;
   }
 
-  html.enhanced-image-loading img[data-image-state="loading"]:not([aria-hidden="true"]):not([alt=""]) {
-    opacity: .48;
-    filter: blur(2px) saturate(.82);
+  html.enhanced-image-loading img[data-image-kind="content"][data-image-state="loading"] {
+    opacity: .56;
     animation: campus-image-loading 1.35s ease-in-out infinite;
-    transition: opacity 520ms ease, filter 620ms ease;
   }
 
   html.enhanced-image-loading img[data-image-state="loaded"] {
     opacity: 1;
+    animation: campus-image-reveal 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  html.enhanced-image-loading img[data-image-state="error"]:not([aria-hidden="true"]):not([alt=""]) {
+  html.enhanced-image-loading img[data-image-kind="content"][data-image-state="error"] {
     min-height: 7rem;
     opacity: .78;
     background-image:
@@ -1117,6 +1182,11 @@ const curryear = new Date().getFullYear();
   @keyframes campus-image-loading {
     0% { background-position: center, 140% 0; }
     100% { background-position: center, -140% 0; }
+  }
+
+  @keyframes campus-image-reveal {
+    from { opacity: 0.16; }
+    to { opacity: 1; }
   }
 
   [data-scroll-reveal] {
@@ -1167,6 +1237,10 @@ const curryear = new Date().getFullYear();
 
   @media (prefers-reduced-motion: reduce) {
     html.enhanced-image-loading img[data-image-state="loading"] {
+      animation: none;
+    }
+
+    html.enhanced-image-loading img[data-image-state="loaded"] {
       animation: none;
     }
   }
