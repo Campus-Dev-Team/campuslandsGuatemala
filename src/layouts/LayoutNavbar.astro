@@ -44,13 +44,14 @@ const curryear = new Date().getFullYear();
     <meta name="geo.placename" content="Ciudad de Guatemala, Guatemala" />
     <meta name="google-site-verification" content="VjWljaxyJbf68bXWX6Wna-Zcj84e_y8UWPRUKivFHKw" />
     <ViewTransitions fallback="animate" />
-    <script is:inline>
-      // Sistema global de carga progresiva: reserva el espacio de cada imagen,
-      // prioriza el contenido principal y revela el recurso después de decodificarlo.
+    <script is:inline data-astro-rerun>
+      // Sistema global de carga progresiva: oculta el recurso reemplazado antes
+      // del primer pintado y lo revela únicamente cuando el navegador lo decodifica.
       (() => {
         document.documentElement.classList.add('enhanced-image-loading');
 
         const runtime = window.__campusImageLoading ??= {};
+        let observedBody;
 
         const setImageState = (image, state) => {
           image.dataset.imageState = state;
@@ -76,7 +77,7 @@ const curryear = new Date().getFullYear();
           const expectedSource = image.currentSrc || image.src;
           const finish = () => {
             if ((image.currentSrc || image.src) !== expectedSource) return;
-            setImageState(image, 'loaded');
+            requestAnimationFrame(() => setImageState(image, 'loaded'));
           };
 
           if (typeof image.decode === 'function') {
@@ -89,12 +90,11 @@ const curryear = new Date().getFullYear();
         const prepareImage = (image) => {
           image.dataset.imageKind = isContentImage(image) ? 'content' : 'utility';
           if (!image.hasAttribute('decoding')) image.decoding = 'async';
+          setImageState(image, 'loading');
 
           if (image.complete) {
             if (image.naturalWidth > 0) revealImage(image);
             else setImageState(image, 'error');
-          } else {
-            setImageState(image, 'loading');
           }
         };
 
@@ -115,16 +115,16 @@ const curryear = new Date().getFullYear();
             if (event.target instanceof HTMLImageElement) setImageState(event.target, 'error');
           }, true);
           document.addEventListener('DOMContentLoaded', () => prepareImages());
-          document.addEventListener('astro:page-load', () => prepareImages());
 
           const startObserver = () => {
-            if (runtime.observer || !document.body) return;
+            if (!document.body || observedBody === document.body) return;
+            runtime.observer?.disconnect();
+            observedBody = document.body;
             runtime.observer = new MutationObserver((mutations) => {
               mutations.forEach((mutation) => {
                 if (mutation.type === 'attributes') {
                   const image = mutation.target;
                   if (!(image instanceof HTMLImageElement)) return;
-                  delete image.dataset.imageState;
                   prepareImage(image);
                   return;
                 }
@@ -140,6 +140,15 @@ const curryear = new Date().getFullYear();
               attributeFilter: ['src', 'srcset'],
             });
           };
+
+          document.addEventListener('astro:before-swap', (event) => {
+            event.newDocument.documentElement.classList.add('enhanced-image-loading');
+            prepareImages(event.newDocument);
+          });
+          document.addEventListener('astro:page-load', () => {
+            prepareImages();
+            startObserver();
+          });
 
           if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', startObserver, { once: true });
@@ -187,6 +196,7 @@ const curryear = new Date().getFullYear();
       transition:persist="stellar-route-transition"
       aria-hidden="true"
     >
+      <span class="stellar-route-transition__scan"></span>
       <div class="stellar-route-transition__trajectory">
         <span class="stellar-route-transition__tail"></span>
         <span class="stellar-route-transition__core"></span>
@@ -197,6 +207,11 @@ const curryear = new Date().getFullYear();
       <code class="stellar-route-transition__token stellar-route-transition__token--binary">{`{01}`}</code>
       <code class="stellar-route-transition__token stellar-route-transition__token--tag">&lt;/&gt;</code>
       <code class="stellar-route-transition__token stellar-route-transition__token--commit">commit();</code>
+      <div class="stellar-route-transition__console">
+        <span class="stellar-route-transition__console-dot"></span>
+        <code><b>&gt;</b> route.next()</code>
+        <span class="stellar-route-transition__console-progress"></span>
+      </div>
     </div>
     <button
       id="go-up"
@@ -273,7 +288,7 @@ const curryear = new Date().getFullYear();
     <div
       class="site-content-layer relative z-[1] flex flex-col"
       transition:name="page-content"
-      transition:animate={slide({ duration: 360 })}
+      transition:animate={slide({ duration: 440 })}
     >
       <main id="contenido-principal" class="flex flex-col gap-[5.5rem]">
         <slot />
@@ -949,6 +964,17 @@ const curryear = new Date().getFullYear();
     visibility: hidden;
   }
 
+  .stellar-route-transition__scan {
+    position: absolute;
+    inset: 22% -12%;
+    opacity: 0;
+    background:
+      linear-gradient(90deg, transparent 0 9%, rgb(44 170 255 / 8%) 9.1% 9.2%, transparent 9.3% 100%),
+      repeating-linear-gradient(0deg, transparent 0 2.15rem, rgb(87 187 255 / 5%) 2.2rem 2.25rem);
+    mask-image: linear-gradient(90deg, transparent, #000 18% 82%, transparent);
+    transform: skewX(-12deg) translate3d(-4%, 0, 0);
+  }
+
   .stellar-route-transition__trajectory {
     position: absolute;
     top: 50%;
@@ -1061,6 +1087,62 @@ const curryear = new Date().getFullYear();
     left: 76%;
   }
 
+  .stellar-route-transition__console {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(1.5rem, 8vh, 5rem);
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    gap: 0.45rem;
+    width: min(18rem, 72vw);
+    padding: 0.6rem 0.75rem 0.52rem;
+    border: 1px solid rgb(87 187 255 / 30%);
+    border-radius: 0.75rem;
+    color: rgb(213 242 255 / 92%);
+    background: rgb(3 10 43 / 76%);
+    box-shadow: 0 0 1.4rem rgb(44 170 255 / 12%);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transform: translate3d(-50%, 0.75rem, 0) scale(0.97);
+  }
+
+  .stellar-route-transition__console-dot {
+    width: 0.42rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #00ddb1;
+    box-shadow: 0 0 0.75rem rgb(0 221 177 / 88%);
+  }
+
+  .stellar-route-transition__console code {
+    font: 700 0.68rem/1.2 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.055em;
+  }
+
+  .stellar-route-transition__console code b {
+    color: #00ddb1;
+  }
+
+  .stellar-route-transition__console-progress {
+    grid-column: 1 / -1;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgb(87 187 255 / 14%);
+  }
+
+  .stellar-route-transition__console-progress::before {
+    display: block;
+    width: 42%;
+    height: 100%;
+    border-radius: inherit;
+    content: "";
+    background: linear-gradient(90deg, #00ddb1, #2caaff, #fff);
+    box-shadow: 0 0 0.75rem rgb(44 170 255 / 65%);
+    transform: translateX(-110%);
+  }
+
   .stellar-route-transition[data-route-phase] {
     visibility: visible;
     opacity: 1;
@@ -1068,7 +1150,9 @@ const curryear = new Date().getFullYear();
 
   .stellar-route-transition[data-route-phase] .stellar-route-transition__trajectory,
   .stellar-route-transition[data-route-phase] .stellar-route-transition__token,
-  .stellar-route-transition[data-route-phase] .stellar-route-transition__spark {
+  .stellar-route-transition[data-route-phase] .stellar-route-transition__spark,
+  .stellar-route-transition[data-route-phase] .stellar-route-transition__scan,
+  .stellar-route-transition[data-route-phase] .stellar-route-transition__console {
     will-change: transform, translate, opacity;
   }
 
@@ -1100,6 +1184,18 @@ const curryear = new Date().getFullYear();
     animation-delay: 120ms;
   }
 
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__scan {
+    animation: stellar-route-scan 440ms ease-out both;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__console {
+    animation: stellar-route-console-in 430ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__console-progress::before {
+    animation: stellar-route-progress 430ms cubic-bezier(0.32, 0.04, 0.2, 1) both;
+  }
+
   .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__trajectory {
     animation: stellar-route-arrive 430ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
@@ -1107,6 +1203,11 @@ const curryear = new Date().getFullYear();
   .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__token,
   .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__spark {
     animation: stellar-route-settle 300ms ease-out both;
+  }
+
+  .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__scan,
+  .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__console {
+    animation: stellar-route-console-out 320ms ease-out both;
   }
 
   @keyframes stellar-route-depart {
@@ -1138,13 +1239,39 @@ const curryear = new Date().getFullYear();
     to { opacity: 0; transform: translate3d(1rem, -0.35rem, 0); }
   }
 
-  html.enhanced-image-loading img:not([data-image-state="loaded"]) {
-    color: transparent !important;
-    opacity: 0.01;
-    transition: opacity 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  @keyframes stellar-route-scan {
+    0% { opacity: 0; transform: skewX(-12deg) translate3d(-9%, 0, 0); }
+    35% { opacity: 0.72; }
+    100% { opacity: 0; transform: skewX(-12deg) translate3d(9%, 0, 0); }
   }
 
-  html.enhanced-image-loading img[data-image-kind="content"]:not([data-image-state="loaded"]) {
+  @keyframes stellar-route-console-in {
+    0% { opacity: 0; transform: translate3d(-50%, 0.75rem, 0) scale(0.97); }
+    30%, 78% { opacity: 0.94; transform: translate3d(-50%, 0, 0) scale(1); }
+    100% { opacity: 0; transform: translate3d(-50%, -0.2rem, 0) scale(1); }
+  }
+
+  @keyframes stellar-route-console-out {
+    from { opacity: 0.42; transform: translate3d(-50%, 0, 0) scale(1); }
+    to { opacity: 0; transform: translate3d(-50%, -0.45rem, 0) scale(0.98); }
+  }
+
+  @keyframes stellar-route-progress {
+    from { transform: translateX(-110%); }
+    to { transform: translateX(245%); }
+  }
+
+  img[data-image-state]:not([data-image-state="loaded"]) {
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    font-size: 0 !important;
+    text-indent: -9999px;
+    content: "";
+    opacity: 1;
+    transition: opacity 460ms cubic-bezier(0.16, 1, 0.3, 1), filter 460ms ease;
+  }
+
+  img[data-image-state]:not([data-image-state="loaded"]) {
     background-color: #07102b;
     background-image:
       radial-gradient(circle at 28% 30%, rgb(44 170 255 / 18%), transparent 34%),
@@ -1161,19 +1288,25 @@ const curryear = new Date().getFullYear();
     background-size: 100% 100%, 240% 100%;
   }
 
-  html.enhanced-image-loading img[data-image-kind="content"][data-image-state="loading"] {
-    opacity: .56;
+  img[data-image-state="loading"] {
     animation: campus-image-loading 1.35s ease-in-out infinite;
   }
 
-  html.enhanced-image-loading img[data-image-state="loaded"] {
+  img[data-image-kind="utility"][data-image-state="loading"] {
+    background-image:
+      radial-gradient(circle at center, rgb(87 187 255 / 16%), transparent 58%),
+      linear-gradient(108deg, transparent 30%, rgb(0 221 177 / 24%) 50%, transparent 70%);
+  }
+
+  img[data-image-state="loaded"] {
+    content: normal;
     opacity: 1;
     animation: campus-image-reveal 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  html.enhanced-image-loading img[data-image-kind="content"][data-image-state="error"] {
+  img[data-image-state="error"] {
+    content: "";
     min-height: 7rem;
-    opacity: .78;
     background-image:
       radial-gradient(circle at center, rgb(0 221 177 / 18%), transparent 44%),
       linear-gradient(135deg, #000051, #07102b);
