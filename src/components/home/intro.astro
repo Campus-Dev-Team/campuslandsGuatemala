@@ -1,14 +1,13 @@
 ---
 import { Image } from 'astro:assets';
 import myImage from '~/assets/img/campers/camper-home-campus-tec.webp';
+import orbitImage from '~/assets/img/brand/orbit-hero.webp';
 import ContactButton from '../common/ContactButton.astro';
 ---
 <section class="page-hero principal self-center sections relative w-full px-4 lg:px-9" aria-label="Sección de introducción sobre Campuslands">
 	<div class="relative flex flex-col lg:flex-row flex-wrap justify-center lg:justify-between h-fit w-full max-w-[1150px] items-center gap-8 lg:gap-10 m-0 p-0">
 		<!-- Contenedor de texto y botón -->
 		<div class="relative flex flex-col w-full md:max-w-[550px] lg:max-w-[425px] gap-y-4 lg:gap-y-8 items-center lg:items-start px-4 lg:px-0" title="Información sobre Campuslands">
-			<img src="/img/cohete1.webp" alt="Cohete ilustrativo despegando" width="122" height="122" class="absolute -right-28 hidden lg:block" loading="lazy" decoding="async">
-
             <h1 class="page-title gradient-text text-center lg:text-start">
                 Formación en programación para jóvenes en Guatemala
 			</h1>
@@ -22,6 +21,37 @@ import ContactButton from '../common/ContactButton.astro';
 
 		<!-- Fotografía optimizada con marco vectorial animado -->
 		<figure class="hero-media w-full max-w-[635px] lg:w-auto" aria-label="Imagen representativa de estudiantes">
+			<div class="orbit-companion">
+				<div class="orbit-hologram" aria-hidden="true">
+					<span class="orbit-hologram__symbol orbit-hologram__symbol--binary">&#123;01&#125;</span>
+					<span class="orbit-hologram__symbol orbit-hologram__symbol--code">&lt;/&gt;</span>
+					<span class="orbit-hologram__line orbit-hologram__line--one"></span>
+					<span class="orbit-hologram__line orbit-hologram__line--two"></span>
+					<span class="orbit-hologram__line orbit-hologram__line--three"></span>
+					<svg class="orbit-hologram__beam" viewBox="0 0 180 78" fill="none">
+						<path d="M176 61C140 58 132 23 98 24C70 25 63 51 35 43C23 40 14 32 4 19" pathLength="100" />
+					</svg>
+				</div>
+
+				<div class="orbit-companion__figure">
+					<Image
+						src={orbitImage}
+						alt="Orbit, personaje espacial de Campuslands Guatemala, presenta la formación tecnológica"
+						width={639}
+						widths={[120, 160, 200, 240, 320, 480, 639]}
+						format="avif"
+						quality={70}
+						loading="eager"
+						fetchpriority="low"
+						decoding="async"
+						sizes="(max-width: 767px) 128px, (max-width: 1023px) 150px, 190px"
+						class="orbit-companion__image"
+					/>
+					<span class="orbit-companion__visor" aria-hidden="true"></span>
+					<span class="orbit-companion__wave" aria-hidden="true"></span>
+				</div>
+			</div>
+
 			<div class="hero-media__surface">
 				<Image
 					src={myImage}
@@ -45,6 +75,9 @@ import ContactButton from '../common/ContactButton.astro';
 					class="hero-media__frame"
 					decoding="async"
 				/>
+				<svg class="hero-media__trace" viewBox="0 0 1600 900" fill="none" aria-hidden="true">
+					<rect x="18" y="18" width="1564" height="864" rx="46" pathLength="100" />
+				</svg>
 			</div>
 		</figure>
 	</div>
@@ -52,8 +85,127 @@ import ContactButton from '../common/ContactButton.astro';
 
 <style scoped>
 .hero-media {
+    position: relative;
     margin: 0;
     filter: drop-shadow(0 22px 42px rgb(0 0 81 / 0.34));
+}
+
+.orbit-companion {
+    position: relative;
+    z-index: 5;
+    width: 148px;
+    height: 118px;
+    margin: 0 auto -18px;
+    pointer-events: none;
+}
+
+.orbit-companion__figure {
+    position: absolute;
+    z-index: 2;
+    right: 50%;
+    bottom: -40px;
+    width: 128px;
+    transform: translateX(50%) rotate(-4deg);
+    transform-origin: 70% 22%;
+    animation: orbit-float-mobile 5.8s ease-in-out infinite;
+    filter: drop-shadow(0 14px 20px rgb(0 0 81 / 0.42)) drop-shadow(0 0 14px rgb(44 170 255 / 0.22));
+}
+
+.orbit-companion__image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.orbit-companion__visor {
+    position: absolute;
+    top: 16.5%;
+    left: 31%;
+    width: 25%;
+    height: 2px;
+    border-radius: 999px;
+    opacity: 0.35;
+    background: linear-gradient(90deg, transparent, #57bbff, #00e5b2, transparent);
+    box-shadow: 0 0 7px #2caaff;
+    animation: orbit-visor 4.6s ease-in-out infinite;
+}
+
+.orbit-companion__wave {
+    position: absolute;
+    top: 7%;
+    right: 0;
+    width: 31%;
+    aspect-ratio: 1;
+    border: 1px solid rgb(87 187 255 / 0.45);
+    border-radius: 999px;
+    opacity: 0;
+    transform: scale(0.6);
+}
+
+.orbit-hologram {
+    position: absolute;
+    z-index: 1;
+    top: 22px;
+    left: -44px;
+    width: 122px;
+    height: 70px;
+    color: #57bbff;
+    opacity: 0.78;
+    transform: scale(0.82);
+    transform-origin: right center;
+    filter: drop-shadow(0 0 9px rgb(44 170 255 / 0.55));
+    animation: hologram-breathe 4.8s ease-in-out infinite;
+}
+
+.orbit-hologram__symbol {
+    position: absolute;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 8px currentColor;
+}
+
+.orbit-hologram__symbol--binary {
+    top: 3px;
+    left: 5px;
+    font-size: 12px;
+}
+
+.orbit-hologram__symbol--code {
+    top: 24px;
+    left: 27px;
+    color: #00e5b2;
+    font-size: 18px;
+}
+
+.orbit-hologram__line {
+    position: absolute;
+    left: 4px;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #00aa80, #57bbff, transparent);
+    transform-origin: left;
+    animation: hologram-code-line 2.8s ease-in-out infinite alternate;
+}
+
+.orbit-hologram__line--one { top: 52px; width: 51px; }
+.orbit-hologram__line--two { top: 59px; width: 37px; animation-delay: -0.8s; }
+.orbit-hologram__line--three { top: 66px; width: 64px; animation-delay: -1.5s; }
+
+.orbit-hologram__beam {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.orbit-hologram__beam path {
+    stroke: #57bbff;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-dasharray: 11 7;
+    animation: hologram-beam 3.8s linear infinite;
 }
 
 .hero-media__surface {
@@ -93,15 +245,137 @@ import ContactButton from '../common/ContactButton.astro';
     pointer-events: none;
 }
 
-@media (hover: hover) and (pointer: fine) {
-    .hero-media__surface:hover .hero-media__photo {
-        filter: saturate(1.04) contrast(1.02);
-        transform: scale(1.012);
+.hero-media__trace {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.hero-media__trace rect {
+    stroke: #eaf8ff;
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-dasharray: 5 95;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 12px #2caaff) drop-shadow(0 0 5px #00aa80);
+    animation: hero-frame-trace 8s linear infinite;
+}
+
+@media (min-width: 1024px) {
+    .orbit-companion {
+        position: absolute;
+        top: -62px;
+        left: -108px;
+        width: 210px;
+        height: 272px;
+        margin: 0;
+    }
+
+    .orbit-companion__figure {
+        right: 0;
+        bottom: 0;
+        width: 190px;
+        transform: rotate(-5deg);
+        animation-name: orbit-float-desktop;
+    }
+
+    .orbit-hologram {
+        top: 74px;
+        left: -105px;
+        width: 170px;
+        height: 82px;
+        transform: none;
     }
 }
 
+@media (hover: hover) and (pointer: fine) {
+    .hero-media:hover .hero-media__photo {
+        filter: saturate(1.04) contrast(1.02);
+        transform: scale(1.012);
+    }
+
+    .hero-media:hover .orbit-companion__figure {
+        animation: orbit-greeting 760ms cubic-bezier(.16, 1, .3, 1) both;
+    }
+
+    .hero-media:hover .orbit-hologram {
+        opacity: 1;
+        transform: scale(1.12) translateX(-5px);
+        filter: drop-shadow(0 0 14px rgb(44 170 255 / 0.78));
+        transition: transform 520ms cubic-bezier(.16, 1, .3, 1), opacity 300ms ease, filter 300ms ease;
+    }
+
+    .hero-media:hover .orbit-companion__wave {
+        animation: orbit-wave-ring 900ms ease-out 2;
+    }
+
+    .hero-media:hover .hero-media__trace rect {
+        stroke-dasharray: 12 88;
+        animation-duration: 1.8s;
+        opacity: 1;
+    }
+}
+
+@keyframes orbit-float-mobile {
+    0%, 100% { transform: translateX(50%) translateY(0) rotate(-4deg); }
+    50% { transform: translateX(50%) translateY(-5px) rotate(-2deg); }
+}
+
+@keyframes orbit-float-desktop {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-9px) rotate(-2deg); }
+}
+
+@keyframes orbit-greeting {
+    0% { transform: translateY(0) rotate(-5deg) scale(1); }
+    38% { transform: translateY(-8px) rotate(2deg) scale(1.045); }
+    66% { transform: translateY(-5px) rotate(-2deg) scale(1.035); }
+    100% { transform: translateY(-7px) rotate(0deg) scale(1.04); }
+}
+
+@keyframes orbit-visor {
+    0%, 44%, 50%, 100% { opacity: 0.25; transform: scaleX(0.76); }
+    47% { opacity: 1; transform: scaleX(1.15); }
+}
+
+@keyframes hologram-breathe {
+    0%, 100% { opacity: 0.62; filter: drop-shadow(0 0 7px rgb(44 170 255 / 0.42)); }
+    50% { opacity: 0.9; filter: drop-shadow(0 0 13px rgb(0 229 178 / 0.65)); }
+}
+
+@keyframes hologram-code-line {
+    from { transform: scaleX(0.58); opacity: 0.45; }
+    to { transform: scaleX(1); opacity: 1; }
+}
+
+@keyframes hologram-beam {
+    to { stroke-dashoffset: -36; }
+}
+
+@keyframes orbit-wave-ring {
+    0% { opacity: 0; transform: scale(0.55); }
+    35% { opacity: 0.9; }
+    100% { opacity: 0; transform: scale(1.45); }
+}
+
+@keyframes hero-frame-trace {
+    to { stroke-dashoffset: -100; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .hero-media__photo {
+    .hero-media__photo,
+    .orbit-companion__figure,
+    .orbit-companion__visor,
+    .orbit-hologram,
+    .orbit-hologram__line,
+    .orbit-hologram__beam path,
+    .orbit-companion__wave,
+    .hero-media__trace rect {
+        animation: none !important;
         transition: none;
     }
 }
