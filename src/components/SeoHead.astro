@@ -55,8 +55,11 @@ if (!noindex) {
     description: pageDescription,
     dateModified: LAST_CONTENT_UPDATE,
     inLanguage: SITE.language,
+    isAccessibleForFree: true,
     isPartOf: { "@id": `${SITE_URL}/#website` },
     about: { "@id": `${SITE_URL}/#organization` },
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    keywords: pageSeo.keywords,
     contentLocation: {
       "@type": "Place",
       name: "Campuslands Guatemala",
@@ -105,9 +108,13 @@ const jsonLd = JSON.stringify({
 
 <title>{pageTitle}</title>
 <meta name="description" content={pageDescription} />
+<meta http-equiv="content-language" content={SITE.language} />
 <meta name="robots" content={robots} />
 <meta name="googlebot" content={robots} />
 <link rel="canonical" href={canonical} />
+<link rel="alternate" type="text/plain" href={`${SITE_URL}/llms.txt`} title="Resumen para asistentes" />
+<link rel="alternate" type="text/markdown" href={`${SITE_URL}/informacion-campuslands.md`} title="Información oficial en Markdown" />
+<link rel="alternate" type="application/json" href={`${SITE_URL}/informacion-campuslands.json`} title="Información oficial en JSON" />
 {
   !noindex && (
     <>
@@ -124,6 +131,7 @@ const jsonLd = JSON.stringify({
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={pageDescription} />
 <meta property="og:url" content={canonical} />
+<meta property="og:updated_time" content={LAST_CONTENT_UPDATE} />
 <meta property="og:image" content={socialImage} />
 <meta property="og:image:alt" content={`Campuslands Guatemala — ${pageTitle}`} />
 <meta name="twitter:card" content="summary_large_image" />

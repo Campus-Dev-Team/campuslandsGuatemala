@@ -2,7 +2,7 @@
 
 Fuente oficial: https://www.campuslands.pro/
 Idioma principal: español de Guatemala (es-GT)
-Última actualización del contenido: 2026-08-07
+Última actualización del contenido: 2026-08-10
 
 ## Entidad
 
@@ -63,3 +63,5 @@ Este contenido corresponde a Campuslands Guatemala y al dominio campuslands.pro.
 - Sitemap: https://www.campuslands.pro/sitemap-index.xml
 - Robots: https://www.campuslands.pro/robots.txt
 - Manifiesto web: https://www.campuslands.pro/site.webmanifest
+- Información oficial en Markdown: https://www.campuslands.pro/informacion-campuslands.md
+- Catálogo oficial en JSON: https://www.campuslands.pro/informacion-campuslands.json

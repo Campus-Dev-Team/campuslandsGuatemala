@@ -13,7 +13,8 @@
         "build": "astro build && cp public/.htaccess dist/.htaccess",
         "audit:seo": "npm run build && node scripts/audit-seo.mjs",
         "audit:images": "npm run build && node scripts/audit-images.mjs",
-        "audit:quality": "npm run build && node scripts/audit-seo.mjs && node scripts/audit-images.mjs",
+        "audit:scraping": "npm run build && node scripts/audit-scraping.mjs",
+        "audit:quality": "npm run build && node scripts/audit-seo.mjs && node scripts/audit-images.mjs && node scripts/audit-scraping.mjs",
         "preview": "astro preview",
         "preview:host": "astro preview --host 0.0.0.0",
         "astro": "astro"
