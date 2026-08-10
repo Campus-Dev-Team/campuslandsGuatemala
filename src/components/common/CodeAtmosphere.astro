@@ -2,6 +2,12 @@
   <span></span>
 </div>
 
+<canvas
+  class="meteor-cursor-trail"
+  data-meteor-cursor-trail
+  aria-hidden="true"
+></canvas>
+
 <div class="code-atmosphere" aria-hidden="true">
   <div class="code-atmosphere__pointer"></div>
   <div class="code-aurora code-aurora--cyan"></div>
@@ -48,6 +54,18 @@
 </div>
 
 <style>
+  .meteor-cursor-trail {
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    width: 100vw;
+    height: 100vh;
+    contain: strict;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    transform: translateZ(0);
+  }
+
   .experience-progress {
     position: fixed;
     top: 0;
@@ -438,6 +456,10 @@
   }
 
   @media (max-width: 767px) {
+    .meteor-cursor-trail {
+      display: none;
+    }
+
     .code-token {
       opacity: 0.075;
     }
@@ -472,6 +494,10 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .meteor-cursor-trail {
+      display: none;
+    }
+
     .code-token,
     .code-atmosphere__grid,
     .code-atmosphere__scan,

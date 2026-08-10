@@ -325,11 +325,217 @@ const curryear = new Date().getFullYear();
 
   document.querySelector("#go-up").addEventListener("click", goUp);
 
+  function initializeMeteorCursorTrail() {
+    const canvas = document.querySelector<HTMLCanvasElement>(
+      "[data-meteor-cursor-trail]",
+    );
+    const context = canvas?.getContext("2d", {
+      alpha: true,
+      desynchronized: true,
+    });
+
+    if (!canvas || !context) return () => {};
+
+    const trail: Array<{ x: number; y: number; bornAt: number }> = [];
+    const sparks: Array<{
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      life: number;
+      decay: number;
+      aqua: boolean;
+    }> = [];
+    const maxSparks = 72;
+    const trailDuration = 210;
+    let animationFrame = 0;
+    let lastX = -100;
+    let lastY = -100;
+    let lastSparkAt = 0;
+    let pixelRatio = 1;
+
+    const resizeCanvas = () => {
+      const ratioByPixelBudget = Math.sqrt(
+        5_000_000 / Math.max(window.innerWidth * window.innerHeight, 1),
+      );
+      pixelRatio = Math.max(
+        0.75,
+        Math.min(window.devicePixelRatio || 1, 1.75, ratioByPixelBudget),
+      );
+      canvas.width = Math.round(window.innerWidth * pixelRatio);
+      canvas.height = Math.round(window.innerHeight * pixelRatio);
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    };
+
+    const drawMeteor = (now: number) => {
+      animationFrame = 0;
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      while (trail.length && now - trail[0].bornAt > trailDuration) {
+        trail.shift();
+      }
+
+      if (trail.length > 1) {
+        const head = trail[trail.length - 1];
+        const tail = trail[0];
+        const gradient = context.createLinearGradient(
+          tail.x,
+          tail.y,
+          head.x,
+          head.y,
+        );
+        gradient.addColorStop(0, "rgb(44 170 255 / 0%)");
+        gradient.addColorStop(0.52, "rgb(44 170 255 / 24%)");
+        gradient.addColorStop(0.82, "rgb(87 187 255 / 70%)");
+        gradient.addColorStop(1, "rgb(255 255 255 / 96%)");
+
+        context.save();
+        context.globalCompositeOperation = "lighter";
+        context.lineCap = "round";
+        context.lineJoin = "round";
+        context.strokeStyle = gradient;
+        context.lineWidth = 2.2;
+        context.shadowColor = "rgb(44 170 255 / 82%)";
+        context.shadowBlur = 12;
+        context.beginPath();
+        trail.forEach((point, index) => {
+          if (index === 0) context.moveTo(point.x, point.y);
+          else context.lineTo(point.x, point.y);
+        });
+        context.stroke();
+
+        const glow = context.createRadialGradient(
+          head.x,
+          head.y,
+          0,
+          head.x,
+          head.y,
+          13,
+        );
+        glow.addColorStop(0, "rgb(255 255 255 / 100%)");
+        glow.addColorStop(0.18, "rgb(193 235 255 / 92%)");
+        glow.addColorStop(0.52, "rgb(44 170 255 / 38%)");
+        glow.addColorStop(1, "rgb(44 170 255 / 0%)");
+        context.fillStyle = glow;
+        context.beginPath();
+        context.arc(head.x, head.y, 13, 0, Math.PI * 2);
+        context.fill();
+        context.restore();
+      }
+
+      context.save();
+      context.globalCompositeOperation = "lighter";
+      for (let index = sparks.length - 1; index >= 0; index -= 1) {
+        const spark = sparks[index];
+        spark.x += spark.vx;
+        spark.y += spark.vy;
+        spark.vx *= 0.982;
+        spark.vy = spark.vy * 0.982 + 0.008;
+        spark.life -= spark.decay;
+
+        if (spark.life <= 0) {
+          sparks.splice(index, 1);
+          continue;
+        }
+
+        const color = spark.aqua ? "0 221 177" : "87 187 255";
+        context.strokeStyle = `rgb(${color} / ${spark.life * 72}%)`;
+        context.fillStyle = `rgb(255 255 255 / ${spark.life * 88}%)`;
+        context.shadowColor = `rgb(${color} / 80%)`;
+        context.shadowBlur = 7;
+        context.lineWidth = Math.max(0.45, spark.size * 0.45);
+        context.beginPath();
+        context.moveTo(spark.x - spark.vx * 5, spark.y - spark.vy * 5);
+        context.lineTo(spark.x + spark.vx * 1.5, spark.y + spark.vy * 1.5);
+        context.stroke();
+        context.beginPath();
+        context.arc(spark.x, spark.y, spark.size * spark.life, 0, Math.PI * 2);
+        context.fill();
+      }
+      context.restore();
+
+      if (trail.length || sparks.length) {
+        animationFrame = window.requestAnimationFrame(drawMeteor);
+      }
+    };
+
+    const startAnimation = () => {
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(drawMeteor);
+      }
+    };
+
+    const updateTrail = (event: PointerEvent) => {
+      const points = event.getCoalescedEvents?.() ?? [event];
+      const now = performance.now();
+
+      for (const point of points) {
+        const dx = point.clientX - lastX;
+        const dy = point.clientY - lastY;
+        const distance = Math.hypot(dx, dy);
+        if (distance < 2) continue;
+
+        trail.push({ x: point.clientX, y: point.clientY, bornAt: now });
+        if (trail.length > 18) trail.shift();
+
+        if (now - lastSparkAt > 18) {
+          const speed = Math.min(distance, 30);
+          const amount = Math.min(3, Math.max(1, Math.round(speed / 9)));
+          for (let index = 0; index < amount && sparks.length < maxSparks; index += 1) {
+            const drift = (Math.random() - 0.5) * 1.15;
+            sparks.push({
+              x: point.clientX - dx * Math.random() * 0.34,
+              y: point.clientY - dy * Math.random() * 0.34,
+              vx: -dx * 0.025 + drift,
+              vy: -dy * 0.025 + (Math.random() - 0.5) * 1.15,
+              size: 0.75 + Math.random() * 1.35,
+              life: 0.72 + Math.random() * 0.28,
+              decay: 0.026 + Math.random() * 0.018,
+              aqua: Math.random() > 0.66,
+            });
+          }
+          lastSparkAt = now;
+        }
+
+        lastX = point.clientX;
+        lastY = point.clientY;
+      }
+
+      startAnimation();
+    };
+
+    const clearTrail = () => {
+      trail.splice(0, trail.length);
+      lastX = -100;
+      lastY = -100;
+      startAnimation();
+    };
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas, { passive: true });
+    window.addEventListener("pointermove", updateTrail, { passive: true });
+    document.documentElement.addEventListener("pointerleave", clearTrail, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("pointermove", updateTrail);
+      document.documentElement.removeEventListener("pointerleave", clearTrail);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    };
+  }
+
   function initializeScrollMotion() {
     const previousCleanup = window.__campusScrollMotionCleanup;
     previousCleanup?.();
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finePointer = window.matchMedia("(pointer: fine)").matches;
+    const cleanupMeteorTrail =
+      !reduceMotion && finePointer ? initializeMeteorCursorTrail() : () => {};
     const root = document.documentElement;
     const sections = Array.from(
       document.querySelectorAll<HTMLElement>("#contenido-principal > :not(style):not(script)"),
@@ -393,6 +599,7 @@ const curryear = new Date().getFullYear();
       window.__campusScrollMotionCleanup = () => {
         footerObserver.disconnect();
         visualConsole?.removeAttribute("data-footer-hidden");
+        cleanupMeteorTrail();
       };
       return;
     }
@@ -457,7 +664,7 @@ const curryear = new Date().getFullYear();
     };
 
     window.addEventListener("scroll", updateScrollDetails, { passive: true });
-    if (window.matchMedia("(pointer: fine)").matches) {
+    if (finePointer) {
       window.addEventListener("pointermove", updatePointerDetails, { passive: true });
     }
     updateScrollDetails();
@@ -471,6 +678,7 @@ const curryear = new Date().getFullYear();
       if (frame) window.cancelAnimationFrame(frame);
       if (pointerFrame) window.cancelAnimationFrame(pointerFrame);
       window.cancelAnimationFrame(heroFrame);
+      cleanupMeteorTrail();
     };
   }
 
