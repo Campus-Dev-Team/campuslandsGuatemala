@@ -1,38 +1,98 @@
 ---
 import ContactButton from '../common/ContactButton.astro'
-import Students from '~/assets/img/nosotros/students.png'
-import StudentsTwo from '~/assets/img/nosotros/students-two.png'
-import StudentsThree from '~/assets/img/nosotros/students-three.png'
+import Students from '~/assets/img/nosotros/astronautas-campuslands-guatemala.webp'
+import StudentsTwo from '~/assets/img/nosotros/formacion-tecnologica-campuslands-guatemala.webp'
+import StudentsThree from '~/assets/img/nosotros/motor-talento-tech-latinoamerica.webp'
 import { Image } from 'astro:assets';
 
 ---
 
-<section class="principal flex sections max-w-[1150px] self-center gap-16">
+<section class="page-hero principal flex flex-col min-[1200px]:flex-row sections max-w-[1150px] w-full self-center items-center justify-center min-[1200px]:justify-between gap-10 min-[1200px]:gap-16">
     <div class="flex flex-col flex-grow-1 md:w-[560px] gap-y-3 self-center items-center min-[1200px]:items-start">
-      <p class="gradient-text font-bold leading-9 lg:!leading-[60px] text-2xl text-center min-[1200px]:text-start md:text-[40px]">
-        Juntos, transformamos el futuro de la tecnología en Latinoamérica
-      </p>
+      <h1 class="page-title gradient-text text-center min-[1200px]:text-start">
+        Campuslands Guatemala: formación tecnológica que transforma vidas
+      </h1>
       <p class="text-base font-medium text-center min-[1200px]:text-start text-white">
-        Somos un equipo dedicado a transformar jóvenes talentos en profesionales listos para revolucionar la industria tecnológica.
+        Somos un centro de formación bootcamp e IA dedicado a transformar a los jóvenes talentos en profesionales que construirán la tecnología del mañana.
       </p>
       <ContactButton tipo="emplear" whatsApp='+50232705200' iconName='arm.svg' StylesAnchor='place-items-center'/>
-      <div class="flex-col items-center flex max-[1199px]:flex hidden min-[1200px]:hidden gap-y-6">
-        <Image src={Students} alt="estudiantes" class="w-auto h-[276px]" />
-      </div>
     </div>
-    <Image src={Students} alt="estudiantes" class="hidden min-[1200px]:block w-[430px] h-[435px]" />
+    <figure class="nosotros-hero-media w-full max-w-[460px]" aria-label="Equipo de Campuslands Guatemala">
+      <div class="nosotros-hero-media__surface">
+        <span class="nosotros-hero-media__code" aria-hidden="true">mission_gt::01</span>
+        <img
+          src="/img/frames/nosotros-hero-frame-back.svg"
+          alt=""
+          aria-hidden="true"
+          width="920"
+          height="1000"
+          class="nosotros-hero-media__frame nosotros-hero-media__frame--back"
+          decoding="async"
+        />
+        <Image
+          src={Students}
+          alt="Dos integrantes de Campuslands Guatemala con trajes de astronauta, banderas de Guatemala y cascos de Orbit"
+          width={900}
+          widths={[280, 360, 460, 600, 760, 900]}
+          format="avif"
+          quality={72}
+          sizes="(max-width: 1199px) min(82vw, 460px), 460px"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          class="nosotros-hero-media__photo"
+        />
+        <img
+          src="/img/frames/nosotros-hero-frame-front.svg"
+          alt=""
+          aria-hidden="true"
+          width="920"
+          height="1000"
+          class="nosotros-hero-media__frame nosotros-hero-media__frame--front"
+          decoding="async"
+        />
+      </div>
+    </figure>
   </section>
-<section id="students-two" class="flex sections max-w-[1150px] w-full mx-auto px-4 lg:px-0 flex-col-reverse min-[1200px]:flex-row gap-8 lg:gap-16">
+<section id="students-two" class="flex sections max-w-[1150px] w-full mx-auto px-4 lg:px-0 flex-col-reverse min-[1200px]:flex-row items-center gap-8 lg:gap-16">
     <!-- Contenedor de la imagen -->
     <div class="flex justify-center w-full min-[1200px]:w-auto">
-        <Image src={StudentsTwo} alt="estudiantes" class="w-full max-w-[328px] md:max-w-[488px] h-auto" />
+        <figure class="talent-lab" aria-label="Formación tecnológica en Campuslands Guatemala">
+            <div class="talent-lab__surface">
+                <div class="talent-lab__viewport">
+                    <Image
+                        src={StudentsTwo}
+                        alt="Estudiantes de Campuslands Guatemala durante una jornada de formación tecnológica en Campus Tec"
+                        width={960}
+                        widths={[328, 488, 640, 800, 960]}
+                        format="avif"
+                        quality={70}
+                        sizes="(max-width: 1199px) min(90vw, 488px), 488px"
+                        loading="lazy"
+                        decoding="async"
+                        class="talent-lab__photo"
+                    />
+                    <span class="talent-lab__grid" aria-hidden="true"></span>
+                    <span class="talent-lab__scan" aria-hidden="true"></span>
+                    <span class="talent-lab__corner talent-lab__corner--top" aria-hidden="true"></span>
+                    <span class="talent-lab__corner talent-lab__corner--bottom" aria-hidden="true"></span>
+                    <span class="talent-lab__status" aria-hidden="true">
+                        <i></i> laboratorio activo
+                    </span>
+                    <span class="talent-lab__caption" aria-hidden="true">
+                        <small>GT://FORMACIÓN_02</small>
+                        <strong>Talento en construcción</strong>
+                    </span>
+                </div>
+            </div>
+        </figure>
     </div>
 
     <!-- Contenedor de texto y botón -->
     <div class="flex flex-col gap-y-4 lg:gap-y-5 w-full min-[1200px]:max-w-[471px] items-center lg:items-start px-4">
-        <p class="gradient-text font-extrabold leading-7 lg:!leading-[1.6] text-xl md:text-2xl lg:text-[32px] text-center lg:text-start">
+        <h2 class="gradient-text font-extrabold leading-7 lg:!leading-[1.6] text-xl md:text-2xl lg:text-[32px] text-center lg:text-start">
             Democratizar el talento tech y transformar vidas
-        </p>
+        </h2>
         <p class="text-center lg:text-start text-sm md:text-base leading-5 lg:leading-6 text-white">
             En Campuslands, formamos a la próxima generación de desarrolladores con una educación integral y humana. Impulsamos el crecimiento de jóvenes como agentes de cambio, listos para liderar la transformación tecnológica en empresas que buscan innovación, productividad y un impacto real en la economía global.
         </p>
@@ -43,9 +103,9 @@ import { Image } from 'astro:assets';
 </section>
 <section class="flex justify-center items-center flex-col min-[1200px]:flex-row gap-8 lg:gap-16 w-full px-6 py-10">
     <div class="flex flex-col gap-y-4 lg:gap-y-5 w-full min-[1200px]:max-w-[471px] items-center min-[1200px]:items-start px-4 md:px-6">
-        <p class="gradient-text font-extrabold leading-7 lg:!leading-[1.6] text-xl md:text-2xl lg:text-[32px] text-center min-[1200px]:text-start">
+        <h2 class="gradient-text font-extrabold leading-7 lg:!leading-[1.6] text-xl md:text-2xl lg:text-[32px] text-center min-[1200px]:text-start">
             Ser el mayor motor de talento tech en Latinoamérica
-        </p>
+        </h2>
         <p class="text-center min-[1200px]:text-start text-sm md:text-base leading-5 lg:leading-6 text-white">
             Convertirnos en el referente en la formación de desarrolladores, creativos digitales y expertos en marketing, impulsando mentes brillantes en espacios de innovación y aprendizaje ágil. Nuestro objetivo: acelerar el crecimiento de empresas y transformar la economía con talento listo para liderar el futuro.
         </p>
@@ -55,7 +115,35 @@ import { Image } from 'astro:assets';
     </div>
 
     <div class="flex justify-center w-full min-[1200px]:w-auto">
-        <Image src={StudentsThree} alt="estudiantes" class="w-full max-w-[328px] md:max-w-[488px] h-auto" />
+        <figure class="talent-lab talent-lab--vision" aria-label="Talento tecnológico de Campuslands Guatemala">
+            <div class="talent-lab__surface">
+                <div class="talent-lab__viewport">
+                    <Image
+                        src={StudentsThree}
+                        alt="Estudiantes de Campuslands Guatemala colaborando durante su formación tecnológica en Campus Tec"
+                        width={960}
+                        widths={[328, 488, 640, 800, 960]}
+                        format="avif"
+                        quality={70}
+                        sizes="(max-width: 1199px) min(90vw, 488px), 488px"
+                        loading="lazy"
+                        decoding="async"
+                        class="talent-lab__photo"
+                    />
+                    <span class="talent-lab__grid" aria-hidden="true"></span>
+                    <span class="talent-lab__scan" aria-hidden="true"></span>
+                    <span class="talent-lab__corner talent-lab__corner--top" aria-hidden="true"></span>
+                    <span class="talent-lab__corner talent-lab__corner--bottom" aria-hidden="true"></span>
+                    <span class="talent-lab__status" aria-hidden="true">
+                        <i></i> red activa
+                    </span>
+                    <span class="talent-lab__caption" aria-hidden="true">
+                        <small>LATAM://TALENTO_03</small>
+                        <strong>Visión en movimiento</strong>
+                    </span>
+                </div>
+            </div>
+        </figure>
     </div>
 </section>
 
@@ -64,10 +152,398 @@ import { Image } from 'astro:assets';
 
 <style>
 
-	.principal {
-		margin-bottom: 10rem;
+.talent-lab {
+    width: min(100%, 31rem);
+    margin: 0;
+    padding: clamp(.5rem, 1.5vw, .85rem);
+    perspective: 1000px;
+}
 
-	}
+.talent-lab__surface {
+    position: relative;
+    isolation: isolate;
+    aspect-ratio: 4 / 3;
+    padding: 3px;
+    border-radius: clamp(20px, 3vw, 30px);
+    background: linear-gradient(115deg, #00aaa0, #2caaff 42%, #57bbff 67%, #00aaa0);
+    background-size: 260% 260%;
+    box-shadow:
+      0 22px 48px rgb(0 0 81 / .42),
+      0 0 0 1px rgb(87 187 255 / .12);
+    transform: translateZ(0);
+    animation: talent-border-flow 7s ease-in-out infinite;
+    transition:
+      transform 650ms cubic-bezier(.2, .8, .2, 1),
+      box-shadow 650ms ease;
+}
+
+.talent-lab__surface::before,
+.talent-lab__surface::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.talent-lab__surface::before {
+    inset: -10px;
+    border: 1px solid rgb(44 170 255 / .18);
+    opacity: .72;
+}
+
+.talent-lab__surface::after {
+    inset: 12% 8%;
+    background: linear-gradient(100deg, rgb(0 170 128 / .3), rgb(44 170 255 / .38));
+    filter: blur(32px);
+    opacity: .52;
+    transition: opacity 500ms ease, filter 500ms ease;
+}
+
+.talent-lab__viewport {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: calc(clamp(20px, 3vw, 30px) - 3px);
+    background: #07102b;
+}
+
+.talent-lab__photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
+    filter: saturate(.98) contrast(1.025);
+    transform: scale(1.005);
+    transition:
+      transform 850ms cubic-bezier(.16, 1, .3, 1),
+      filter 700ms ease;
+}
+
+.talent-lab__grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background-image:
+      linear-gradient(rgb(87 187 255 / .13) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(87 187 255 / .13) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mix-blend-mode: screen;
+    transition: opacity 500ms ease;
+}
+
+.talent-lab__scan {
+    position: absolute;
+    inset-inline: 0;
+    top: -20%;
+    height: 16%;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(to bottom, transparent, rgb(87 187 255 / .4), transparent);
+    filter: blur(2px);
+}
+
+.talent-lab__corner {
+    position: absolute;
+    z-index: 2;
+    width: 42px;
+    height: 42px;
+    pointer-events: none;
+    opacity: .8;
+    transition: width 500ms ease, height 500ms ease, opacity 500ms ease;
+}
+
+.talent-lab__corner--top {
+    top: 16px;
+    right: 16px;
+    border-top: 2px solid #57bbff;
+    border-right: 2px solid #57bbff;
+}
+
+.talent-lab__corner--bottom {
+    bottom: 16px;
+    left: 16px;
+    border-bottom: 2px solid #00aaa0;
+    border-left: 2px solid #00aaa0;
+}
+
+.talent-lab__status {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .45rem .65rem;
+    border: 1px solid rgb(87 187 255 / .38);
+    border-radius: 999px;
+    color: #e9fbff;
+    background: rgb(0 0 81 / .68);
+    backdrop-filter: blur(10px);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.56rem, 1.5vw, .7rem);
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+}
+
+.talent-lab__status i {
+    width: .48rem;
+    height: .48rem;
+    border-radius: 50%;
+    background: #00d7b1;
+    box-shadow: 0 0 0 0 rgb(0 215 177 / .6);
+    animation: talent-status-pulse 2.3s ease-out infinite;
+}
+
+.talent-lab__caption {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .12rem;
+    padding: .65rem .75rem;
+    border-right: 2px solid #2caaff;
+    color: white;
+    background: linear-gradient(90deg, transparent, rgb(0 0 81 / .82));
+    opacity: .88;
+    transform: translateY(4px);
+    transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.talent-lab__caption small {
+    color: #57bbff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.55rem, 1.5vw, .68rem);
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.talent-lab__caption strong {
+    font-size: clamp(.72rem, 2vw, .9rem);
+    font-weight: 700;
+}
+
+.talent-lab--vision .talent-lab__surface {
+    background: linear-gradient(245deg, #00aaa0, #57bbff 38%, #2caaff 68%, #00aaa0);
+    background-size: 260% 260%;
+    animation-direction: reverse;
+}
+
+.talent-lab--vision .talent-lab__grid {
+    background-image:
+      linear-gradient(30deg, rgb(0 215 177 / .12) 1px, transparent 1px),
+      linear-gradient(120deg, rgb(87 187 255 / .12) 1px, transparent 1px);
+    background-size: 42px 42px;
+}
+
+.talent-lab--vision .talent-lab__caption {
+    right: auto;
+    left: 16px;
+    align-items: flex-start;
+    border-right: 0;
+    border-left: 2px solid #00aaa0;
+    background: linear-gradient(90deg, rgb(0 0 81 / .82), transparent);
+}
+
+.talent-lab--vision .talent-lab__status {
+    right: 16px;
+    left: auto;
+}
+
+@keyframes talent-border-flow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes talent-status-pulse {
+    0% { box-shadow: 0 0 0 0 rgb(0 215 177 / .55); }
+    70%, 100% { box-shadow: 0 0 0 8px transparent; }
+}
+
+@keyframes talent-scan-pass {
+    0% { top: -20%; opacity: 0; }
+    12% { opacity: .85; }
+    88% { opacity: .7; }
+    100% { top: 110%; opacity: 0; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .talent-lab__surface:hover {
+        box-shadow:
+          0 30px 64px rgb(0 0 81 / .52),
+          0 0 36px rgb(44 170 255 / .18);
+        transform: translateY(-7px) rotateX(1.2deg) rotateY(-1.2deg);
+    }
+
+    .talent-lab__surface:hover::after {
+        filter: blur(38px);
+        opacity: .82;
+    }
+
+    .talent-lab__surface:hover .talent-lab__photo {
+        filter: saturate(1.08) contrast(1.045);
+        transform: scale(1.045);
+    }
+
+    .talent-lab__surface:hover .talent-lab__grid {
+        opacity: .5;
+    }
+
+    .talent-lab__surface:hover .talent-lab__scan {
+        animation: talent-scan-pass 1.7s cubic-bezier(.2, .7, .2, 1) infinite;
+    }
+
+    .talent-lab__surface:hover .talent-lab__corner {
+        width: 58px;
+        height: 58px;
+        opacity: 1;
+    }
+
+    .talent-lab__surface:hover .talent-lab__caption {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .talent-lab--vision .talent-lab__surface:hover {
+        transform: translateY(-7px) rotateX(1.2deg) rotateY(1.2deg);
+    }
+
+    .talent-lab--vision .talent-lab__surface:hover .talent-lab__photo {
+        transform: scale(1.045) translateX(-.7%);
+    }
+}
+
+@media (max-width: 420px) {
+    .talent-lab__status { top: 10px; left: 10px; }
+    .talent-lab__caption { right: 10px; bottom: 10px; }
+    .talent-lab__corner { display: none; }
+    .talent-lab--vision .talent-lab__status { right: 10px; }
+    .talent-lab--vision .talent-lab__caption { left: 10px; }
+}
+
+.nosotros-hero-media {
+    margin: 0;
+    padding-block: clamp(1.5rem, 3vw, 2.75rem);
+    filter: drop-shadow(0 24px 46px rgb(0 0 81 / .4));
+}
+
+.nosotros-hero-media__surface {
+    position: relative;
+    aspect-ratio: 23 / 25;
+    isolation: isolate;
+    border-radius: clamp(18px, 2.5vw, 30px);
+    background:
+      radial-gradient(circle at 50% 36%, rgb(44 170 255 / .2), transparent 38%),
+      radial-gradient(circle at 22% 78%, rgb(0 170 128 / .15), transparent 34%),
+      linear-gradient(150deg, #000051 0%, #000087 58%, #07102b 100%);
+    transform: translateZ(0);
+}
+
+.nosotros-hero-media__surface::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    content: "";
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: .18;
+    background-image:
+      radial-gradient(circle, rgb(87 187 255 / .55) 1px, transparent 1.5px),
+      linear-gradient(rgb(87 187 255 / .16) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(87 187 255 / .16) 1px, transparent 1px);
+    background-position: 0 0, 0 0, 0 0;
+    background-size: 58px 58px, 46px 46px, 46px 46px;
+    mask-image: linear-gradient(to bottom, black, transparent 84%);
+}
+
+.nosotros-hero-media__surface::after {
+    position: absolute;
+    z-index: 0;
+    top: 14%;
+    left: 15%;
+    width: 70%;
+    aspect-ratio: 1;
+    content: "";
+    pointer-events: none;
+    border: 1px solid rgb(87 187 255 / .22);
+    border-radius: 50%;
+    box-shadow: 0 0 34px rgb(44 170 255 / .12), inset 0 0 28px rgb(0 170 128 / .08);
+    animation: nosotros-orbit-breathe 5.5s ease-in-out infinite;
+}
+
+.nosotros-hero-media__code {
+    position: absolute;
+    top: 7%;
+    left: 8%;
+    z-index: 1;
+    color: rgb(87 187 255 / .48);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(.6rem, 1.3vw, .76rem);
+    font-weight: 700;
+    letter-spacing: .1em;
+}
+
+.nosotros-hero-media__photo {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    bottom: -9%;
+    display: block;
+    width: auto;
+    max-width: none;
+    height: 120%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 20px 26px rgb(0 0 0 / .24));
+    transition: transform 700ms cubic-bezier(.2, .8, .2, 1), filter 700ms ease;
+}
+
+.nosotros-hero-media__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.nosotros-hero-media__frame--back { z-index: 1; }
+.nosotros-hero-media__frame--front { z-index: 3; }
+
+@keyframes nosotros-orbit-breathe {
+    0%, 100% { opacity: .45; transform: rotate(-5deg) scale(.94); }
+    50% { opacity: 1; transform: rotate(5deg) scale(1.06); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .nosotros-hero-media__surface:hover .nosotros-hero-media__photo {
+        filter: drop-shadow(0 24px 34px rgb(0 0 0 / .3)) saturate(1.04);
+        transform: translateX(-50%) scale(1.012);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .talent-lab__surface,
+    .talent-lab__status i,
+    .talent-lab__scan,
+    .talent-lab__photo,
+    .talent-lab__caption,
+    .talent-lab__corner {
+        animation: none;
+        transition: none;
+    }
+
+    .nosotros-hero-media__photo,
+    .nosotros-hero-media__surface::after {
+        animation: none;
+        transition: none;
+    }
+}
+
 .icon-circle-arrow {
 	animation: move-circle 2s infinite;
 }

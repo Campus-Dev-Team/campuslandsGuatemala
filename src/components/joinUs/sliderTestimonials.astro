@@ -19,7 +19,10 @@ const totalSlides = testimonials.length;
                 <img
                   src={image}
                   class="w-full max-w-[200px] md:max-w-[275px] h-auto object-cover rounded-lg"
+                  width="340"
+                  height="340"
                   loading="lazy"
+                  decoding="async"
                   alt={`Testimonio de ${name}`}
                 />
               </div>
@@ -28,7 +31,9 @@ const totalSlides = testimonials.length;
               <div class="w-full lg:w-2/3 flex flex-col relative text-center lg:text-left">
                 <img
                   src="/img/quote.svg"
-                  alt="comillas-icono"
+                  alt=""
+                  width="115"
+                  height="90"
                   class="hidden lg:block absolute top-[-31px] left-[-90px] w-[115px]"
                 />
                 <h3 class="gradient-text text-xl md:text-3xl lg:text-4xl mb-2 md:mb-4">
@@ -51,77 +56,84 @@ const totalSlides = testimonials.length;
 
     <!-- Navigation buttons -->
     <div class="flex justify-center lg:justify-end gap-x-3 z-30 mt-4 md:mt-8">
-      <div
+      <button
         id="prev-testimonials"
-        class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#02D9A4] hover:bg-opacity-80 transition-colors"
+        type="button"
+        aria-controls="slider-container"
+        class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#00AA80] hover:bg-opacity-80 transition-colors"
         aria-label="Anterior testimonio"
       >
         <img
           src="/img/icons/arrow-left.svg"
-          alt="flecha-izquierda-icono"
+          alt=""
           width="14"
+          height="14"
           draggable="false"
         />
-      </div>
-      <div
+      </button>
+      <button
         id="next-testimonials"
-        class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#02D9A4] hover:bg-opacity-80 transition-colors"
+        type="button"
+        aria-controls="slider-container"
+        class="flex items-center justify-center size-6 min-w-6 rounded-full cursor-pointer bg-[#00AA80] hover:bg-opacity-80 transition-colors"
         aria-label="Siguiente testimonio"
       >
         <img
           src="/img/icons/arrow-right.svg"
-          alt="fleha-derecha-icono"
+          alt=""
           width="14"
+          height="14"
           draggable="false"
         />
-      </div>
+      </button>
     </div>
   </div>
 </section>
 
 <script define:vars={{ totalSlides }}>
 let currentIndex = 0;
-const sliderContainer = document.getElementById("slider-container");
-
-function showSlide(index = 0) {
-  if (sliderContainer) {
-    // Calculate the exact percentage to move
-    const percentage = (index * 100) / totalSlides;
-    sliderContainer.style.transform = `translateX(-${percentage}%)`;
-  }
-}
-
-function nextSlide() {
-  currentIndex = (currentIndex + 1) % totalSlides;
-  showSlide(currentIndex);
-}
-
-function prevSlide() {
-  currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-  showSlide(currentIndex);
-}
 
 function setupSlider() {
+  const sliderContainer = document.getElementById("slider-container");
   const prevButton = document.getElementById("prev-testimonials");
   const nextButton = document.getElementById("next-testimonials");
-  
-  if (prevButton && nextButton) {
-    prevButton.addEventListener("click", prevSlide);
-    nextButton.addEventListener("click", nextSlide);
-  }
-  
-  // Initialize the slider position
+
+  if (!sliderContainer || !prevButton || !nextButton) return;
+
+  const showSlide = (index = 0) => {
+    const percentage = (index * 100) / totalSlides;
+    sliderContainer.style.transform = `translateX(-${percentage}%)`;
+  };
+
+  const nextSlide = () => {
+    currentIndex = (currentIndex + 1) % totalSlides;
+    showSlide(currentIndex);
+  };
+
+  const prevSlide = () => {
+    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+    showSlide(currentIndex);
+  };
+
+  prevButton.addEventListener("click", prevSlide);
+  nextButton.addEventListener("click", nextSlide);
   showSlide(currentIndex);
-  
-  // Start autoplay
+
   const interval = setInterval(nextSlide, 12000);
-  
-  // Clean up interval when user leaves the page
-  return () => clearInterval(interval);
+
+  const cleanupSlider = () => {
+    clearInterval(interval);
+    prevButton.removeEventListener("click", prevSlide);
+    nextButton.removeEventListener("click", nextSlide);
+  };
+
+  document.addEventListener("astro:before-swap", cleanupSlider, { once: true });
 }
 
-// Wait for DOM to be ready
-document.addEventListener("DOMContentLoaded", setupSlider);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", setupSlider, { once: true });
+} else {
+  setupSlider();
+}
 
 </script>
-

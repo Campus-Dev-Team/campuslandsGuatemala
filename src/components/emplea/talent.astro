@@ -1,16 +1,11 @@
 ---
+import TalentScanner from "./TalentScanner.astro";
 ---
 
 <section class="sections max-w-[1150px] w-full mx-auto px-4 lg:px-0 flex flex-col-reverse lg:flex-row gap-8 lg:gap-16 relative h-fit overflow-hidden">
-    <!-- Contenedor del video -->
+    <!-- Contenedor visual -->
     <div class="w-full lg:w-1/2 flex justify-center items-center">
-        <video 
-            src="https://res.cloudinary.com/dqgxt985j/video/upload/v1740778135/Kristina_Masabi_final_con_voz_vicbca.mp4" 
-            autoplay 
-            loop 
-            controls 
-            class="w-full h-auto max-w-[600px] sm:max-w-[400px] [@media_(max-width:639px)]:max-w-[350px] rounded-lg md:rounded-[40px]"
-        ></video>
+        <TalentScanner />
     </div>
 
     <!-- Contenedor de texto y lista -->

@@ -1,0 +1,576 @@
+---
+import LayoutNavbar from '../layouts/LayoutNavbar.astro';
+import {
+  introduccionTerminos,
+  terminosCondicionesGuatemala,
+} from '../content/terminosCondicionesGuatemala';
+import '~/styles/index.css';
+
+const dataFooter = {
+  title: '¿Tienes dudas sobre estos términos?',
+  content:
+    'Nuestro equipo puede orientarte sobre las condiciones de participación en los programas de Campuslands Guatemala.',
+  buttonType: 'contacto',
+  buttonIcon: 'happyFace.svg',
+  buttonLink:
+    'mailto:contacto@campuslands.com?subject=Consulta sobre términos y condiciones',
+};
+---
+
+<LayoutNavbar
+  title="Términos y condiciones | Campuslands Guatemala"
+  description="Consulta los términos y condiciones de participación en los programas formativos de Campuslands Guatemala."
+  dataFooter={dataFooter}
+  pageType="WebPage"
+>
+  <div class="legal-page">
+    <section class="legal-hero sections" aria-labelledby="legal-title">
+      <div class="legal-orbit legal-orbit-one" aria-hidden="true"></div>
+      <div class="legal-orbit legal-orbit-two" aria-hidden="true"></div>
+      <div class="legal-hero-content">
+        <div class="legal-kicker">
+          <span class="legal-kicker-dot"></span>
+          Documento legal · Guatemala
+        </div>
+        <h1 id="legal-title">
+          Términos
+          <span>y condiciones</span>
+        </h1>
+        <p>
+          Conoce las condiciones que regulan la inscripción, participación y
+          uso de los recursos formativos de Campuslands Guatemala.
+        </p>
+        <div class="legal-meta" aria-label="Información del documento">
+          <div>
+            <span>Organización</span>
+            <strong>Campuslands Guatemala</strong>
+          </div>
+          <div>
+            <span>Ámbito</span>
+            <strong>Programas formativos</strong>
+          </div>
+          <div>
+            <span>Jurisdicción</span>
+            <strong>República de Guatemala</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="legal-layout sections">
+      <aside class="legal-index" aria-label="Contenido de los términos">
+        <div class="legal-index-sticky">
+          <p class="legal-index-label">En este documento</p>
+          <nav>
+            {
+              terminosCondicionesGuatemala.map((section) => (
+                <a href={`#${section.id}`}>
+                  <span>{section.number}</span>
+                  {section.title}
+                </a>
+              ))
+            }
+          </nav>
+          <a
+            class="legal-contact"
+            href="mailto:contacto@campuslands.com?subject=Consulta sobre términos y condiciones"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M4 5h16v14H4z"></path>
+              <path d="m4 7 8 6 8-6"></path>
+            </svg>
+            Consultar al equipo
+          </a>
+        </div>
+      </aside>
+
+      <article class="legal-document" aria-label="Términos y condiciones completos">
+        <div class="legal-document-heading">
+          <div>
+            <span>Documento completo</span>
+            <h2>Condiciones de participación</h2>
+          </div>
+          <div class="legal-document-icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+            >
+              <path d="M6 3h9l3 3v15H6z"></path>
+              <path d="M15 3v4h4M9 11h6M9 15h6"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="legal-content">
+          <div class="legal-introduction">
+            {introduccionTerminos.map((paragraph) => <p>{paragraph}</p>)}
+          </div>
+          {
+            terminosCondicionesGuatemala.map((section) => (
+              <section id={section.id} class="legal-section">
+                <div class="legal-section-number">{section.number}</div>
+                <div>
+                  <h2>{section.title}</h2>
+                  {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+                </div>
+              </section>
+            ))
+          }
+          <p class="legal-source-note">
+            Contenido basado en los términos generales publicados por
+            Campuslands y adaptado para Campuslands Guatemala.
+          </p>
+        </div>
+      </article>
+    </section>
+  </div>
+</LayoutNavbar>
+
+<style>
+  .legal-page {
+    --legal-blue: #2ca2ff;
+    --legal-green: #02d9a4;
+    position: relative;
+    margin-top: -5.5rem;
+    overflow: clip;
+  }
+
+  .legal-hero {
+    position: relative;
+    min-height: 620px;
+    display: flex;
+    align-items: center;
+    padding-top: 10rem;
+    padding-bottom: 7rem;
+    background:
+      radial-gradient(circle at 78% 30%, rgba(44, 162, 255, 0.2), transparent 27rem),
+      radial-gradient(circle at 16% 80%, rgba(2, 217, 164, 0.12), transparent 25rem),
+      linear-gradient(145deg, #000019 8%, #080056 58%, #000048 100%);
+  }
+
+  .legal-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.25;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 52px 52px;
+    mask-image: linear-gradient(to bottom, black, transparent 90%);
+  }
+
+  .legal-hero-content {
+    position: relative;
+    z-index: 2;
+    width: min(1180px, 100%);
+    margin: 0 auto;
+  }
+
+  .legal-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid rgba(176, 247, 230, 0.25);
+    border-radius: 999px;
+    color: #b0f7e6;
+    background: rgba(0, 0, 41, 0.45);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    backdrop-filter: blur(12px);
+  }
+
+  .legal-kicker-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--legal-green);
+    box-shadow: 0 0 0.8rem var(--legal-green);
+  }
+
+  .legal-hero h1 {
+    max-width: 900px;
+    margin-top: 1.75rem;
+    color: #fff;
+    font-size: clamp(3rem, 7.3vw, 6.75rem);
+    font-weight: 900;
+    line-height: 0.98;
+    letter-spacing: -0.055em;
+  }
+
+  .legal-hero h1 span {
+    display: block;
+    color: transparent;
+    background: linear-gradient(90deg, #19f5bf 5%, #2ca2ff 78%);
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+
+  .legal-hero-content > p {
+    max-width: 700px;
+    margin-top: 1.6rem;
+    color: #d8ddf5;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    line-height: 1.8;
+  }
+
+  .legal-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 980px;
+    margin-top: 3.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 1.4rem;
+    background: rgba(0, 0, 30, 0.55);
+    backdrop-filter: blur(18px);
+  }
+
+  .legal-meta > div {
+    min-height: 108px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .legal-meta > div + div {
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .legal-meta span,
+  .legal-index-label {
+    color: #92a0c8;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .legal-meta strong {
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .legal-orbit {
+    position: absolute;
+    z-index: 1;
+    border: 1px solid rgba(44, 162, 255, 0.2);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .legal-orbit::after {
+    content: '';
+    position: absolute;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--legal-green);
+    box-shadow: 0 0 1.4rem var(--legal-green);
+  }
+
+  .legal-orbit-one {
+    width: 480px;
+    height: 480px;
+    top: 6rem;
+    right: -8rem;
+    transform: rotate(-20deg);
+  }
+
+  .legal-orbit-one::after {
+    top: 24%;
+    left: 3%;
+  }
+
+  .legal-orbit-two {
+    width: 240px;
+    height: 240px;
+    right: 11rem;
+    bottom: -7rem;
+    transform: rotate(35deg);
+  }
+
+  .legal-orbit-two::after {
+    right: 8%;
+    bottom: 18%;
+  }
+
+  .legal-layout {
+    width: min(1280px, 100%);
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    margin: 0 auto;
+    padding-top: 5.5rem;
+    padding-bottom: 7rem;
+  }
+
+  .legal-index-sticky {
+    position: sticky;
+    top: 7rem;
+  }
+
+  .legal-index-label {
+    margin-bottom: 1.1rem;
+  }
+
+  .legal-index nav {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255, 255, 255, 0.13);
+  }
+
+  .legal-index nav a {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.65rem;
+    margin-left: -1px;
+    padding: 0.72rem 0 0.72rem 1rem;
+    border-left: 2px solid transparent;
+    color: #abb3d1;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    transition: 180ms ease;
+  }
+
+  .legal-index nav a:hover {
+    border-left-color: var(--legal-green);
+    color: #fff;
+    transform: translateX(0.2rem);
+  }
+
+  .legal-index nav a span {
+    color: var(--legal-green);
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  .legal-contact {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(2, 217, 164, 0.25);
+    border-radius: 0.9rem;
+    color: #dffbf4;
+    background: rgba(2, 217, 164, 0.07);
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: 180ms ease;
+  }
+
+  .legal-contact:hover {
+    border-color: var(--legal-green);
+    background: rgba(2, 217, 164, 0.13);
+  }
+
+  .legal-contact svg {
+    width: 1.25rem;
+    flex: 0 0 auto;
+    color: var(--legal-green);
+  }
+
+  .legal-document {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 2rem;
+    background:
+      linear-gradient(140deg, rgba(255, 255, 255, 0.055), transparent 30%),
+      rgba(0, 0, 40, 0.7);
+    box-shadow: 0 2.5rem 6rem rgba(0, 0, 20, 0.3);
+  }
+
+  .legal-document-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: clamp(1.5rem, 4vw, 2.8rem);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(44, 162, 255, 0.05);
+  }
+
+  .legal-document-heading span {
+    color: var(--legal-green);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .legal-document-heading h2 {
+    margin-top: 0.4rem;
+    color: #fff;
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .legal-document-icon {
+    width: 3.4rem;
+    height: 3.4rem;
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid rgba(2, 217, 164, 0.3);
+    border-radius: 50%;
+    color: var(--legal-green);
+    background: rgba(2, 217, 164, 0.08);
+  }
+
+  .legal-document-icon svg {
+    width: 1.75rem;
+  }
+
+  .legal-content {
+    padding: clamp(1.5rem, 5vw, 4.5rem);
+    color: #d9dcec;
+  }
+
+  .legal-content p {
+    margin: 0.75rem 0;
+    font-size: 0.94rem;
+    line-height: 1.9;
+  }
+
+  .legal-introduction {
+    padding: 0.25rem 0 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .legal-introduction p:first-child {
+    color: #fff;
+    font-size: 1.05rem;
+  }
+
+  .legal-section {
+    scroll-margin-top: 7rem;
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 2.6rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .legal-section-number {
+    width: 2.6rem;
+    height: 2.6rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(2, 217, 164, 0.3);
+    border-radius: 50%;
+    color: var(--legal-green);
+    background: rgba(2, 217, 164, 0.07);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .legal-section h2 {
+    margin-bottom: 1rem;
+    color: #fff;
+    font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .legal-source-note {
+    margin-top: 2.5rem !important;
+    padding: 1rem 1.2rem;
+    border-left: 2px solid var(--legal-blue);
+    color: #aeb8db;
+    background: rgba(44, 162, 255, 0.06);
+    font-size: 0.78rem !important;
+  }
+
+  @media (max-width: 900px) {
+    .legal-hero {
+      min-height: auto;
+      padding-top: 9rem;
+      padding-bottom: 5rem;
+    }
+
+    .legal-meta {
+      grid-template-columns: 1fr;
+    }
+
+    .legal-meta > div {
+      min-height: auto;
+    }
+
+    .legal-meta > div + div {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-left: 0;
+    }
+
+    .legal-layout {
+      grid-template-columns: 1fr;
+      padding-top: 2.5rem;
+    }
+
+    .legal-index-sticky {
+      position: static;
+    }
+
+    .legal-index nav {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+      border-left: 0;
+    }
+
+    .legal-index nav a {
+      margin-left: 0;
+      padding: 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .legal-index nav a:hover {
+      border-color: var(--legal-green);
+      transform: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .legal-hero h1 {
+      font-size: clamp(2.75rem, 13.5vw, 4.25rem);
+    }
+
+    .legal-orbit {
+      opacity: 0.5;
+    }
+
+    .legal-index nav {
+      grid-template-columns: 1fr;
+    }
+
+    .legal-document {
+      border-radius: 1.25rem;
+    }
+
+    .legal-document-heading {
+      align-items: flex-start;
+    }
+
+    .legal-section {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

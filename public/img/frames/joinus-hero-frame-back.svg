@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1200" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="back-gradient" x1="24" y1="26" x2="1076" y2="1174" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00AA80" />
+      <stop offset=".48" stop-color="#2CAAFF" />
+      <stop offset="1" stop-color="#57BBFF" />
+    </linearGradient>
+    <filter id="back-glow" x="-12%" y="-12%" width="124%" height="124%">
+      <feGaussianBlur stdDeviation="9" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.173 0 0 0 0 0.667 0 0 0 0 1 0 0 0 .48 0" />
+      <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+
+  <rect x="14" y="14" width="1072" height="1172" rx="54" stroke="url(#back-gradient)" stroke-width="20" />
+  <rect x="35" y="35" width="1030" height="1130" rx="37" stroke="#57BBFF" stroke-opacity=".2" stroke-width="3" />
+  <rect class="back-runner" x="14" y="14" width="1072" height="1172" rx="54" stroke="#EAF8FF" stroke-width="6" stroke-linecap="round" filter="url(#back-glow)" pathLength="100" />
+
+  <circle class="signal signal--one" cx="80" cy="80" r="9" fill="#00AA80" />
+  <circle class="signal signal--two" cx="1020" cy="1120" r="9" fill="#57BBFF" />
+
+  <style>
+    .back-runner { stroke-dasharray: 4 96; animation: back-run 5.8s linear infinite; }
+    .signal { transform-box: fill-box; transform-origin: center; animation: signal-pulse 2.8s ease-in-out infinite; }
+    .signal--two { animation-delay: -1.4s; }
+    @keyframes back-run { to { stroke-dashoffset: -100; } }
+    @keyframes signal-pulse { 0%, 100% { opacity: .35; transform: scale(.75); } 50% { opacity: 1; transform: scale(1.5); } }
+    @media (prefers-reduced-motion: reduce) { .back-runner, .signal { animation: none; } }
+  </style>
+</svg>

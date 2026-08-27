@@ -1,16 +1,15 @@
 ---
-import { Image } from "astro:assets";
-import myImage from "~/assets/img/patrocina/patrocina-home.png";
+import TransformationGallery from "./transformationGallery.astro";
 ---
 
 <section
-  class="principal flex flex-col sections max-w-[1150px] self-center relative h-fit items-center md:flex-row gap-8 z-20"
+  class="page-hero principal flex flex-col sections max-w-[1150px] self-center relative items-center justify-center md:flex-row md:justify-between gap-10 lg:gap-16 z-20"
 >
   <div
     class="relative flex-wrap w-full md:max-w-[350px] lg:w-[425px] lg:max-w-[425px] flex flex-col gap-8 items-center md:items-start"
   >
     <h1
-      class="gradient-text text-center lg:text-start text-2xl lg:text-[40px] leading-8 lg:leading-[60px] f-700"
+      class="page-title gradient-text text-center lg:text-start"
     >
       Transforma vidas, transforma futuro
     </h1>
@@ -24,73 +23,25 @@ import myImage from "~/assets/img/patrocina/patrocina-home.png";
       href="https://mail.google.com/mail/?view=cm&fs=1&to=jorge@quantic.la&su=Interés en Programa de Patrocinio - [Nombre Empresa]" 
       target="_blank" 
       rel="noopener noreferrer" 
-      class="flex justify-center items-center w-full sm:max-w-[316px] lg:me-auto"
+      class="btn-primary w-full sm:max-w-[316px] h-12 lg:h-14 px-6 flex justify-center items-center gap-x-2 f-600 lg:me-auto"
     >
-      <button
-        class="btn-primary w-full h-12 lg:h-14 px-6 flex justify-center items-center gap-x-2 f-600"
-      >
-        Patrocina nuestros Campers
-        <img
-          src="/img/icons/heartdark.svg"
-          alt="icono de corazón"
-          class="hidden lg:block"
-        />
-      </button>
+      Patrocina nuestros Campers
+      <img
+        src="/img/icons/heartdark.svg"
+        alt=""
+        class="hidden lg:block"
+      />
     </a>
   </div>
 
-  <div class="relative flex-grow lg:flex-1 text-center z-20">
-    <div class="hidden lg:block">
-      <Image
-        src={myImage}
-        alt="Grupo de campers de Campuslands que reciben formación tecnológica gracias al patrocinio"
-        width={530}
-        widths={[100, 500, 1024]}
-        height={480}
-        loading="lazy"
-        sizes="(max-width: 750px) 100vw, 550px"
-        class="mx-auto"
-      />
-    </div>
-    <div class="lg:hidden mt-5">
-      <Image
-        src={myImage}
-        alt="Grupo de campers de Campuslands que reciben formación tecnológica gracias al patrocinio"
-        width={300}
-        height={300}
-        loading="lazy"
-        sizes="(max-width: 300px) 100vw, 100px"
-        class="mx-auto"
-      />
-    </div>
+  <div class="relative flex-grow lg:flex-1 z-20 w-full max-w-[545px]">
+    <TransformationGallery />
   </div>
 
-  <img
-    src="/img/textura-lateral-derecha.svg"
-    alt=""
-    class="absolute top-0 right-0 z-[-1]"
-  />
-  <img
-    src="/img/textura-lateral-izquierda.svg"
-    alt=""
-    class="absolute top-0 left-0 z-[-1]"
-  />
 </section>
 
 <style scoped>
-  .bg-students {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 90%;
-    max-width: 90%;
-    max-height: 70%;
-  }
-
   .principal {
-    margin-bottom: 10rem;
-
-    /* background-image: url('img/texxture.svg'); */
     background-position: 80% 0%;
     background-repeat: no-repeat;
     background-size: 75%;

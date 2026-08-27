@@ -1,45 +1,749 @@
 ---
 import { Image } from 'astro:assets';
-import CoworkingLogo from '~/assets/img/nosotros/campus502.svg'
-import Coworking1 from '~/assets/img/nosotros/coworking_site1.png'
-import Coworking2 from '~/assets/img/nosotros/coworking_site2.png'
-import Coworking3 from '~/assets/img/nosotros/coworking_site3.png'
-import Coworking4 from '~/assets/img/nosotros/coworking_site4.png'
+import CampuslandsLogo from '~/assets/img/logos/logoCampus_v2.svg';
+import CampusTecFacade from '~/assets/img/nosotros/fachada-campus-tec-guatemala.webp';
+import CampusTecStudents from '~/assets/img/nosotros/galeria-campus-tec-estudiantes.webp';
+import CampusTecCoding from '~/assets/img/nosotros/galeria-campus-tec-programacion.webp';
+import CampusTecCommunity from '~/assets/img/nosotros/galeria-campus-tec-comunidad.webp';
 ---
 
+<section class="sections campus-space" aria-labelledby="campus-space-title">
+    <div class="campus-space__header">
+        <div class="campus-space__intro">
+            <span class="campus-space__eyebrow" aria-hidden="true">campus_tec://guatemala</span>
+            <h2 id="campus-space-title" class="campus-space__title">
+                ¡Impulsa tus ideas en el corazón del talento digital!
+            </h2>
+            <p class="campus-space__description">
+                Descubre nuestro espacio en Campuslands Guatemala: un lugar diseñado para conectar, innovar y crear sin límites.
+            </p>
+        </div>
 
-<section class="flex flex-col items-center sections max-w-[1150px] w-full mx-auto px-4 lg:px-0 gap-6">
-    <!-- Contenedor de texto -->
-    <div class="w-full md:w-[691px] flex flex-col gap-y-4 lg:gap-y-8 px-4 lg:px-0">
-        <p class="bg-gradient-to-r from-[#02D9A4] to-[#2CA2FF] bg-clip-text text-transparent text-[18px] md:text-4xl lg:text-4xl mx-auto text-center font-bold">
-            ¡Impulsa tus ideas en el <br /> corazón del talento digital!
-        </p>
-        <p class="font-semibold text-white leading-5 md:leading-6 text-sm md:text-lg mx-auto text-center">
-            Descubre nuestro espacio en Campuslands Guatemala: Un lugar diseñado para conectar, innovar y crear sin límites.
-        </p>
+        <div class="campus-space__brand" aria-label="Campuslands Guatemala">
+            <span class="campus-space__brand-line" aria-hidden="true"></span>
+            <Image
+                src={CampuslandsLogo}
+                alt="Campuslands Guatemala"
+                class="campus-space__logo"
+            />
+            <span class="campus-space__brand-status">
+                <span aria-hidden="true"></span>
+                Campus activo
+            </span>
+        </div>
     </div>
 
-    <!-- Contenedor del logo -->
-    <div class="flex flex-wrap justify-center mb-6 lg:mb-10 w-full">
-        <Image src={CoworkingLogo} alt="campuslands-coworking" class="w-full max-w-[300px] md:max-w-[400px] lg:max-w-[500px]" />
-    </div>
+    <div class="campus-showcase">
+        <figure class="campus-facade" tabindex="0">
+            <div class="campus-facade__glow" aria-hidden="true"></div>
+            <div class="campus-facade__frame">
+                <div class="campus-facade__media">
+                    <Image
+                        src={CampusTecFacade}
+                        alt="Fachada de Campus Tec en Ciudad de Guatemala con la bandera de Guatemala y Orbit"
+                        widths={[480, 768, 1080, 1440, 1800]}
+                        sizes="(min-width: 1150px) 1100px, calc(100vw - 2rem)"
+                        format="avif"
+                        quality={72}
+                        loading="lazy"
+                        decoding="async"
+                        class="campus-facade__photo"
+                    />
+                    <span class="campus-facade__grid" aria-hidden="true"></span>
+                    <span class="campus-facade__scan" aria-hidden="true"></span>
+                    <span class="campus-facade__corner campus-facade__corner--start" aria-hidden="true"></span>
+                    <span class="campus-facade__corner campus-facade__corner--end" aria-hidden="true"></span>
+                    <figcaption class="campus-facade__caption">
+                        <span class="campus-facade__status" aria-hidden="true"></span>
+                        <span>Campus Tec</span>
+                        <span class="campus-facade__location">Zona 4 · Guatemala</span>
+                    </figcaption>
+                </div>
+            </div>
+        </figure>
 
-    <!-- Contenedor de las imágenes -->
-    <div class="flex flex-col md:flex-row flex-wrap justify-center gap-4 w-full">
-        <div class="w-full md:w-1/2 lg:w-2/12 flex items-center justify-center">
-            <Image src={Coworking1} alt="Coworking 1" class="w-full max-w-[200px] md:max-w-[250px] lg:max-w-[300px]" />
-        </div>
-        <div class="w-full md:w-1/2 lg:w-2/12 flex items-center justify-center">
-            <Image src={Coworking2} alt="Coworking 2" class="w-full max-w-[200px] md:max-w-[250px] lg:max-w-[300px]" />
-        </div>
-        <div class="w-full md:w-1/2 lg:w-2/12 flex items-center justify-center">
-            <Image src={Coworking3} alt="Coworking 3" class="w-full max-w-[200px] md:max-w-[250px] lg:max-w-[300px]" />
-        </div>
-        <div class="w-full md:w-1/2 lg:w-2/12 flex items-center justify-center">
-            <Image src={Coworking4} alt="Coworking 4" class="w-full max-w-[200px] md:max-w-[250px] lg:max-w-[300px]" />
+        <div class="campus-gallery" aria-label="Experiencias de aprendizaje en Campuslands Guatemala">
+            <figure class="campus-gallery__card" tabindex="0">
+                <div class="campus-gallery__frame">
+                    <div class="campus-gallery__media">
+                        <Image
+                            src={CampusTecStudents}
+                            alt="Campers de Campuslands Guatemala con audífonos durante una jornada de formación en Campus Tec"
+                            widths={[360, 540, 720, 900]}
+                            sizes="(min-width: 768px) 30vw, 78vw"
+                            format="avif"
+                            quality={70}
+                            loading="lazy"
+                            decoding="async"
+                            class="campus-gallery__photo"
+                        />
+                        <span class="campus-gallery__grid" aria-hidden="true"></span>
+                        <span class="campus-gallery__scan" aria-hidden="true"></span>
+                        <figcaption class="campus-gallery__caption">
+                            <span class="campus-gallery__number">01</span>
+                            <span>Aprendizaje conectado</span>
+                        </figcaption>
+                    </div>
+                </div>
+            </figure>
+
+            <figure class="campus-gallery__card" tabindex="0">
+                <div class="campus-gallery__frame">
+                    <div class="campus-gallery__media">
+                        <Image
+                            src={CampusTecCoding}
+                            alt="Camper de Campuslands Guatemala desarrollando software en su laptop y monitor"
+                            widths={[360, 540, 720, 900]}
+                            sizes="(min-width: 768px) 30vw, 78vw"
+                            format="avif"
+                            quality={70}
+                            loading="lazy"
+                            decoding="async"
+                            class="campus-gallery__photo"
+                        />
+                        <span class="campus-gallery__grid" aria-hidden="true"></span>
+                        <span class="campus-gallery__scan" aria-hidden="true"></span>
+                        <figcaption class="campus-gallery__caption">
+                            <span class="campus-gallery__number">02</span>
+                            <span>Código con propósito</span>
+                        </figcaption>
+                    </div>
+                </div>
+            </figure>
+
+            <figure class="campus-gallery__card" tabindex="0">
+                <div class="campus-gallery__frame">
+                    <div class="campus-gallery__media">
+                        <Image
+                            src={CampusTecCommunity}
+                            alt="Grupo de Campers de Campuslands Guatemala participando en una sesión de aprendizaje"
+                            widths={[360, 540, 720, 900]}
+                            sizes="(min-width: 768px) 30vw, 78vw"
+                            format="avif"
+                            quality={70}
+                            loading="lazy"
+                            decoding="async"
+                            class="campus-gallery__photo"
+                        />
+                        <span class="campus-gallery__grid" aria-hidden="true"></span>
+                        <span class="campus-gallery__scan" aria-hidden="true"></span>
+                        <figcaption class="campus-gallery__caption">
+                            <span class="campus-gallery__number">03</span>
+                            <span>Comunidad que impulsa</span>
+                        </figcaption>
+                    </div>
+                </div>
+            </figure>
         </div>
     </div>
 </section>
-<style>
 
+<style>
+    .campus-space {
+        width: min(100%, 1150px);
+        margin-inline: auto;
+        padding-inline: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: clamp(1.5rem, 3vw, 2.5rem);
+    }
+
+    .campus-space__header {
+        width: min(100%, 1080px);
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(250px, 340px);
+        align-items: center;
+        gap: clamp(2rem, 6vw, 5.5rem);
+        padding: clamp(1rem, 2vw, 1.5rem) clamp(.25rem, 2vw, 1.5rem);
+    }
+
+    .campus-space__intro {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: .9rem;
+    }
+
+    .campus-space__eyebrow {
+        color: #57bbff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: clamp(.68rem, 1.2vw, .8rem);
+        font-weight: 750;
+        letter-spacing: .11em;
+        text-transform: uppercase;
+    }
+
+    .campus-space__title {
+        margin: 0;
+        background: linear-gradient(90deg, #00aa80, #2caaff);
+        background-clip: text;
+        color: transparent;
+        font-size: clamp(1.8rem, 3.8vw, 3rem);
+        font-weight: 800;
+        line-height: 1.08;
+        text-wrap: balance;
+    }
+
+    .campus-space__description {
+        max-width: 670px;
+        margin: 0;
+        color: #fff;
+        font-size: clamp(.95rem, 1.65vw, 1.1rem);
+        font-weight: 550;
+        line-height: 1.55;
+    }
+
+    .campus-space__brand {
+        position: relative;
+        isolation: isolate;
+        min-height: 150px;
+        display: grid;
+        place-items: center;
+        padding: 1.4rem 1.25rem 1.15rem;
+        border: 1px solid rgba(87, 187, 255, .2);
+        border-radius: 1.5rem;
+        background: linear-gradient(145deg, rgba(44, 170, 255, .07), rgba(0, 170, 128, .04));
+        overflow: hidden;
+        box-shadow: inset 0 1px rgba(255, 255, 255, .05), 0 18px 48px rgba(0, 0, 81, .2);
+    }
+
+    .campus-space__brand::before {
+        content: "";
+        position: absolute;
+        inset: -60%;
+        z-index: -1;
+        background: conic-gradient(from 90deg, transparent, rgba(44, 170, 255, .18), transparent 32%, rgba(0, 170, 128, .18), transparent 65%);
+        animation: brand-orbit 12s linear infinite;
+    }
+
+    .campus-space__brand-line {
+        position: absolute;
+        inset: 0 12% auto;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00aa80, #2caaff, transparent);
+        box-shadow: 0 0 18px rgba(44, 170, 255, .5);
+    }
+
+    :global(.campus-space__logo) {
+        width: min(100%, 290px);
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 10px 24px rgba(0, 0, 81, .24));
+    }
+
+    .campus-space__brand-status {
+        display: flex;
+        align-items: center;
+        gap: .48rem;
+        color: rgba(255, 255, 255, .72);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: .68rem;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+    }
+
+    .campus-space__brand-status > span {
+        width: .45rem;
+        height: .45rem;
+        border-radius: 50%;
+        background: #00aa80;
+        box-shadow: 0 0 0 4px rgba(0, 170, 128, .13), 0 0 13px rgba(0, 170, 128, .8);
+        animation: status-pulse 2.2s ease-in-out infinite;
+    }
+
+    .campus-showcase {
+        position: relative;
+        isolation: isolate;
+        width: min(100%, 1100px);
+        padding: .3rem .3rem 0;
+    }
+
+    .campus-showcase::before {
+        content: "";
+        position: absolute;
+        inset: 12% 5% 7%;
+        z-index: -2;
+        border-radius: 2.5rem;
+        background: radial-gradient(circle at 20% 42%, rgba(0, 170, 128, .2), transparent 36%), radial-gradient(circle at 80% 52%, rgba(44, 170, 255, .22), transparent 38%);
+        filter: blur(30px);
+    }
+
+    .campus-facade {
+        position: relative;
+        isolation: isolate;
+        width: 100%;
+        margin: 0;
+        padding: .25rem;
+        outline: none;
+    }
+
+    .campus-facade__glow {
+        position: absolute;
+        inset: 10% 7% 2%;
+        z-index: -1;
+        border-radius: 2.5rem;
+        background: linear-gradient(110deg, rgba(0, 170, 128, .3), rgba(44, 170, 255, .34));
+        filter: blur(30px);
+        opacity: .64;
+        transition: opacity .5s ease, transform .65s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .campus-facade__frame,
+    .campus-gallery__frame {
+        position: relative;
+        isolation: isolate;
+        padding: 3px;
+        overflow: hidden;
+        background: linear-gradient(110deg, #00aa80, #2caaff 32%, #57bbff 52%, #00aa80 72%, #2caaff);
+        background-size: 280% 280%;
+        box-shadow: 0 24px 64px rgba(0, 0, 81, .34), 0 0 0 1px rgba(87, 187, 255, .12);
+        animation: border-flow 7s ease-in-out infinite;
+        transition: transform .6s cubic-bezier(.18, .8, .2, 1), box-shadow .6s ease;
+    }
+
+    .campus-facade__frame::before,
+    .campus-gallery__frame::before {
+        content: "";
+        position: absolute;
+        inset: -85% -25%;
+        z-index: 0;
+        pointer-events: none;
+        background: conic-gradient(
+            from 25deg,
+            transparent 0deg 242deg,
+            rgba(44, 170, 255, .18) 258deg,
+            #57bbff 278deg,
+            rgba(255, 255, 255, .96) 294deg,
+            #00aa80 312deg,
+            rgba(0, 170, 128, .2) 330deg,
+            transparent 346deg 360deg
+        );
+        filter: blur(.2px);
+        animation: perimeter-run 4.8s linear infinite;
+        will-change: transform;
+    }
+
+    .campus-facade__frame::after,
+    .campus-gallery__frame::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        border: 1px solid rgba(87, 187, 255, .42);
+        border-radius: inherit;
+        box-shadow:
+            inset 0 0 0 1px rgba(0, 170, 128, .12),
+            inset 0 0 18px rgba(44, 170, 255, .08),
+            0 0 16px rgba(44, 170, 255, .14);
+        animation: perimeter-pulse 3.2s ease-in-out infinite;
+        transition: border-color .45s ease, box-shadow .45s ease;
+    }
+
+    .campus-facade__frame {
+        border-radius: clamp(1.15rem, 2.5vw, 2rem);
+    }
+
+    .campus-facade__media {
+        position: relative;
+        z-index: 1;
+        aspect-ratio: 16 / 8;
+        max-height: 520px;
+        overflow: hidden;
+        border-radius: calc(clamp(1.15rem, 2.5vw, 2rem) - 3px);
+        background: #07102b;
+    }
+
+    :global(.campus-facade__photo),
+    :global(.campus-gallery__photo) {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        filter: saturate(1.02) contrast(1.035);
+        transition: transform .8s cubic-bezier(.18, .8, .2, 1), filter .6s ease;
+    }
+
+    :global(.campus-facade__photo) {
+        object-position: center 47%;
+    }
+
+    .campus-facade__grid,
+    .campus-gallery__grid {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        background-image: linear-gradient(rgba(87, 187, 255, .13) 1px, transparent 1px), linear-gradient(90deg, rgba(87, 187, 255, .13) 1px, transparent 1px);
+        background-size: 30px 30px;
+        mix-blend-mode: screen;
+        transition: opacity .45s ease;
+    }
+
+    .campus-facade__scan,
+    .campus-gallery__scan {
+        position: absolute;
+        inset: -40% -15%;
+        pointer-events: none;
+        opacity: 0;
+        background: linear-gradient(110deg, transparent 40%, rgba(87, 187, 255, .08) 46%, rgba(0, 170, 128, .4) 50%, rgba(87, 187, 255, .08) 54%, transparent 60%);
+        transform: translateX(-68%);
+    }
+
+    .campus-facade__corner {
+        position: absolute;
+        width: clamp(2.6rem, 7vw, 5.5rem);
+        height: clamp(2.6rem, 7vw, 5.5rem);
+        pointer-events: none;
+        opacity: .72;
+        filter: drop-shadow(0 0 7px rgba(87, 187, 255, .52));
+        animation: corner-signal 3.4s ease-in-out infinite;
+        transition: width .5s ease, height .5s ease, opacity .5s ease;
+    }
+
+    .campus-facade__corner--start {
+        inset: clamp(.8rem, 2vw, 1.4rem) auto auto clamp(.8rem, 2vw, 1.4rem);
+        border-top: 2px solid #57bbff;
+        border-left: 2px solid #57bbff;
+    }
+
+    .campus-facade__corner--end {
+        inset: auto clamp(.8rem, 2vw, 1.4rem) clamp(5rem, 9vw, 6.5rem) auto;
+        border-right: 2px solid #00aa80;
+        border-bottom: 2px solid #00aa80;
+    }
+
+    .campus-facade__caption,
+    .campus-gallery__caption {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        gap: .55rem;
+        max-width: calc(100% - 1.5rem);
+        border: 1px solid rgba(87, 187, 255, .44);
+        color: #fff;
+        background: rgba(7, 16, 43, .8);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .28);
+        backdrop-filter: blur(12px);
+        font-weight: 750;
+        letter-spacing: .02em;
+        transition: transform .45s ease, background .45s ease, border-color .45s ease;
+    }
+
+    .campus-facade__caption {
+        inset: auto clamp(.75rem, 2vw, 1.35rem) clamp(5rem, 9vw, 6.5rem) auto;
+        padding: .58rem .78rem;
+        border-radius: .8rem;
+        font-size: clamp(.72rem, 1.5vw, .9rem);
+    }
+
+    .campus-facade__status {
+        width: .55rem;
+        height: .55rem;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        background: #00aa80;
+        box-shadow: 0 0 0 4px rgba(0, 170, 128, .17), 0 0 16px rgba(0, 170, 128, .8);
+        animation: status-pulse 2s ease-in-out infinite;
+    }
+
+    .campus-facade__location,
+    .campus-gallery__number {
+        color: #57bbff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .campus-facade__location {
+        font-size: .78em;
+    }
+
+    .campus-gallery {
+        position: relative;
+        z-index: 4;
+        width: 91%;
+        margin: clamp(-5.2rem, -7vw, -4rem) auto 0;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: clamp(.7rem, 1.7vw, 1.15rem);
+        padding-inline: .25rem;
+    }
+
+    .campus-gallery__card {
+        min-width: 0;
+        margin: 0;
+        outline: none;
+    }
+
+    .campus-gallery__frame {
+        height: 100%;
+        border-radius: clamp(.9rem, 1.7vw, 1.35rem);
+    }
+
+    .campus-gallery__card:nth-child(2) .campus-gallery__frame::before {
+        animation-delay: -1.6s;
+    }
+
+    .campus-gallery__card:nth-child(3) .campus-gallery__frame::before {
+        animation-delay: -3.2s;
+    }
+
+    .campus-gallery__card:nth-child(2) .campus-gallery__frame::after {
+        animation-delay: -1.05s;
+    }
+
+    .campus-gallery__card:nth-child(3) .campus-gallery__frame::after {
+        animation-delay: -2.1s;
+    }
+
+    .campus-gallery__media {
+        position: relative;
+        z-index: 1;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border-radius: calc(clamp(.9rem, 1.7vw, 1.35rem) - 3px);
+        background: #07102b;
+    }
+
+    .campus-gallery__caption {
+        inset: auto .55rem .55rem;
+        width: fit-content;
+        padding: .45rem .6rem;
+        border-radius: .65rem;
+        font-size: clamp(.64rem, 1.05vw, .79rem);
+    }
+
+    .campus-gallery__number {
+        font-size: .9em;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .campus-facade:hover .campus-facade__frame,
+        .campus-facade:focus-visible .campus-facade__frame {
+            transform: translateY(-6px) scale(1.006);
+            box-shadow: 0 32px 82px rgba(44, 170, 255, .25), 0 0 0 1px rgba(0, 170, 128, .28);
+        }
+
+        .campus-facade:hover .campus-facade__frame::before,
+        .campus-facade:focus-visible .campus-facade__frame::before,
+        .campus-gallery__card:hover .campus-gallery__frame::before,
+        .campus-gallery__card:focus-visible .campus-gallery__frame::before {
+            animation-duration: 2.35s;
+        }
+
+        .campus-facade:hover .campus-facade__frame::after,
+        .campus-facade:focus-visible .campus-facade__frame::after,
+        .campus-gallery__card:hover .campus-gallery__frame::after,
+        .campus-gallery__card:focus-visible .campus-gallery__frame::after {
+            border-color: rgba(87, 187, 255, .85);
+            box-shadow:
+                inset 0 0 0 1px rgba(0, 170, 128, .32),
+                inset 0 0 24px rgba(44, 170, 255, .16),
+                0 0 24px rgba(44, 170, 255, .34),
+                0 0 42px rgba(0, 170, 128, .16);
+        }
+
+        .campus-facade:hover .campus-facade__glow,
+        .campus-facade:focus-visible .campus-facade__glow {
+            opacity: 1;
+            transform: scale(1.025);
+        }
+
+        .campus-facade:hover :global(.campus-facade__photo),
+        .campus-facade:focus-visible :global(.campus-facade__photo),
+        .campus-gallery__card:hover :global(.campus-gallery__photo),
+        .campus-gallery__card:focus-visible :global(.campus-gallery__photo) {
+            transform: scale(1.035);
+            filter: saturate(1.12) contrast(1.05) brightness(1.025);
+        }
+
+        .campus-facade:hover .campus-facade__grid,
+        .campus-facade:focus-visible .campus-facade__grid,
+        .campus-gallery__card:hover .campus-gallery__grid,
+        .campus-gallery__card:focus-visible .campus-gallery__grid {
+            opacity: .32;
+        }
+
+        .campus-facade:hover .campus-facade__scan,
+        .campus-facade:focus-visible .campus-facade__scan,
+        .campus-gallery__card:hover .campus-gallery__scan,
+        .campus-gallery__card:focus-visible .campus-gallery__scan {
+            opacity: 1;
+            animation: media-scan 1.35s cubic-bezier(.2, .72, .25, 1) both;
+        }
+
+        .campus-gallery__card:hover .campus-gallery__frame,
+        .campus-gallery__card:focus-visible .campus-gallery__frame {
+            z-index: 3;
+            transform: translateY(-9px) scale(1.02);
+            box-shadow: 0 26px 62px rgba(44, 170, 255, .26), 0 0 0 1px rgba(87, 187, 255, .2);
+        }
+
+        .campus-gallery__card:hover .campus-gallery__caption,
+        .campus-gallery__card:focus-visible .campus-gallery__caption {
+            transform: translateY(-3px);
+            border-color: rgba(0, 170, 128, .78);
+            background: rgba(7, 16, 43, .92);
+        }
+    }
+
+    @keyframes border-flow {
+        0%, 100% { background-position: 0% 48%; }
+        50% { background-position: 100% 52%; }
+    }
+
+    @keyframes perimeter-run {
+        to { transform: rotate(1turn); }
+    }
+
+    @keyframes perimeter-pulse {
+        0%, 100% {
+            opacity: .58;
+            box-shadow:
+                inset 0 0 0 1px rgba(0, 170, 128, .1),
+                inset 0 0 14px rgba(44, 170, 255, .06),
+                0 0 10px rgba(44, 170, 255, .1);
+        }
+        50% {
+            opacity: 1;
+            box-shadow:
+                inset 0 0 0 1px rgba(0, 170, 128, .24),
+                inset 0 0 22px rgba(44, 170, 255, .12),
+                0 0 22px rgba(44, 170, 255, .25);
+        }
+    }
+
+    @keyframes corner-signal {
+        0%, 100% { opacity: .55; filter: drop-shadow(0 0 4px rgba(87, 187, 255, .32)); }
+        50% { opacity: 1; filter: drop-shadow(0 0 12px rgba(0, 170, 128, .75)); }
+    }
+
+    @keyframes media-scan {
+        from { transform: translateX(-68%); }
+        to { transform: translateX(68%); }
+    }
+
+    @keyframes brand-orbit {
+        to { transform: rotate(1turn); }
+    }
+
+    @keyframes status-pulse {
+        0%, 100% { transform: scale(.9); opacity: .72; }
+        50% { transform: scale(1.12); opacity: 1; }
+    }
+
+    @media (max-width: 767px) {
+        .campus-space {
+            padding-inline: 1rem;
+            gap: 1.25rem;
+        }
+
+        .campus-space__header {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            padding: .25rem 0 .75rem;
+            text-align: center;
+        }
+
+        .campus-space__intro {
+            align-items: center;
+        }
+
+        .campus-space__brand {
+            width: min(100%, 330px);
+            min-height: 120px;
+            justify-self: center;
+            padding: 1rem 1.1rem .85rem;
+        }
+
+        :global(.campus-space__logo) {
+            width: min(100%, 240px);
+        }
+
+        .campus-showcase {
+            width: calc(100% + .25rem);
+            padding: .15rem 0 0;
+        }
+
+        .campus-facade {
+            padding: .15rem;
+        }
+
+        .campus-facade__frame,
+        .campus-gallery__frame {
+            padding: 2px;
+        }
+
+        .campus-facade__media {
+            aspect-ratio: 16 / 10;
+        }
+
+        :global(.campus-facade__photo) {
+            object-position: 48% center;
+        }
+
+        .campus-facade__corner--end {
+            inset: auto .8rem .8rem auto;
+        }
+
+        .campus-facade__caption {
+            inset: auto .6rem .6rem;
+            width: calc(100% - 1.2rem);
+            justify-content: center;
+            padding: .5rem .58rem;
+        }
+
+        .campus-gallery {
+            width: calc(100% + 1rem);
+            margin: .8rem -.5rem 0;
+            padding: .2rem .5rem .9rem;
+            display: flex;
+            gap: .8rem;
+            overflow-x: auto;
+            overscroll-behavior-inline: contain;
+            scroll-snap-type: inline mandatory;
+            scrollbar-width: thin;
+            scrollbar-color: #2caaff rgba(7, 16, 43, .45);
+        }
+
+        .campus-gallery__card {
+            flex: 0 0 min(78vw, 310px);
+            scroll-snap-align: center;
+        }
+
+        .campus-gallery__media {
+            aspect-ratio: 4 / 3;
+        }
+
+        .campus-gallery__caption {
+            font-size: .72rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .campus-space__brand::before,
+        .campus-space__brand-status > span,
+        .campus-facade__frame,
+        .campus-facade__frame::before,
+        .campus-facade__frame::after,
+        .campus-facade__glow,
+        :global(.campus-facade__photo),
+        .campus-facade__scan,
+        .campus-facade__caption,
+        .campus-gallery__frame,
+        .campus-gallery__frame::before,
+        .campus-gallery__frame::after,
+        :global(.campus-gallery__photo),
+        .campus-gallery__scan,
+        .campus-gallery__caption {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        .campus-gallery {
+            scroll-behavior: auto;
+        }
+    }
 </style>

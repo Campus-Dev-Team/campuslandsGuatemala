@@ -30,9 +30,9 @@ const companies = [
 ---
 
 <section class="allied-companies self-center sections overflow-hidden relative">
-  <h3 class="text-2xl text-center mb-10 px-4 lg:px-0 text-white font-bold">
+  <h2 class="text-2xl text-center mb-10 px-4 lg:px-0 text-white font-bold">
     Empresas que cuentan con nuestro talento tech
-  </h3>
+  </h2>
   <div
     class="infinite-slider-container w-[500%] md:w-[200%] overflow-hidden flex flex-wraps gap-6 mx-auto justify-center lg:justify-normal items-center"
   >
@@ -41,8 +41,11 @@ const companies = [
         <div class="slider w-full">
           <Image
             src={company.img}
-            alt="Unete a nuestra comunidad"
+            alt={company.alt}
             class="w-full"
+            loading="lazy"
+            widths={[320, 480, 640]}
+            sizes="(max-width: 768px) 80vw, 25vw"
           />
         </div>
       ))

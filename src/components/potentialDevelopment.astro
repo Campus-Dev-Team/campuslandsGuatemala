@@ -1,7 +1,10 @@
 ---
+import { Image } from "astro:assets";
+import CampersProgramacion from "~/assets/img/home/campers-programacion-monitores-codigo.webp";
+import CampersColaboracion from "~/assets/img/joinUs/campers-aprendizaje-colaborativo.webp";
 ---
 
-<section class="flex sections self-center gap-16 relative h-fit overflow-hidden">
+<section class="potential-development flex sections self-center gap-10 lg:gap-16 relative h-fit w-full max-w-[1150px] overflow-visible">
     <div class="flex flex-col gap-y-8 w-full px-4 lg:px-0 lg:w-1/2 lg:max-w-[500px]">
         <h2 class="gradient-text text-lg text-center lg:text-start lg:text-3xl font-bold"> Aprende a programar desde cero y desarrolla tu potencial desde tres perspectivas clave</h2>
         <p class="text-white mx-auto font-semibold"> Potencia tus habilidades para convertirte en el profesional integral que las empresas buscan. </p>
@@ -29,8 +32,259 @@
             </div>
         </div>
     </div>
-    <div class="w-1/2 hidden lg:block">
-        <img src="/img/campers/campers-computers-1.png" alt="" width="432" height="245" class="ms-auto mb-10">
-        <img src="/img/campers/campers-computers-2.png" alt="" width="432" height="245">
-    </div>
+    <figure
+        class="learning-gallery w-full lg:w-1/2"
+        aria-label="Campers de Campuslands Guatemala desarrollando sus habilidades"
+    >
+        <div class="learning-card learning-card--right" data-image-shell="learning-programming">
+            <span class="learning-card__code" aria-hidden="true">01 · PROGRAMACIÓN</span>
+            <Image
+                src={CampersProgramacion}
+                alt="Tres campers de Campuslands Guatemala practicando programación en el aula de Campus Tec"
+                width={1200}
+                widths={[360, 520, 720, 960, 1200]}
+                format="avif"
+                quality={72}
+                loading="lazy"
+                decoding="async"
+                sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1023px) 70vw, 433px"
+                class="learning-card__image"
+            />
+            <span class="learning-card__scan" aria-hidden="true"></span>
+        </div>
+
+        <div class="learning-card learning-card--left" data-image-shell="learning-teamwork">
+            <span class="learning-card__code" aria-hidden="true">02 · COLABORACIÓN</span>
+            <Image
+                src={CampersColaboracion}
+                alt="Campers de Campuslands Guatemala colaborando frente a sus computadores en Campus Tec"
+                width={1200}
+                widths={[360, 520, 720, 960, 1200]}
+                format="avif"
+                quality={72}
+                loading="lazy"
+                decoding="async"
+                sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1023px) 70vw, 433px"
+                class="learning-card__image"
+            />
+            <span class="learning-card__scan" aria-hidden="true"></span>
+        </div>
+    </figure>
 </section>
+
+<style scoped>
+    .potential-development {
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .learning-gallery {
+        display: grid;
+        gap: clamp(1rem, 2vw, 2rem);
+        margin: 0;
+        isolation: isolate;
+    }
+
+    .learning-card {
+        position: relative;
+        width: min(100%, 433px);
+        aspect-ratio: 16 / 9;
+        padding: 2px;
+        overflow: hidden;
+        isolation: isolate;
+        border-radius: clamp(1.1rem, 2vw, 1.65rem);
+        background: linear-gradient(115deg, #00aa80, #2caaff, #57bbff, #00aa80);
+        background-size: 280% 100%;
+        box-shadow:
+            0 18px 46px rgb(0 0 81 / .34),
+            0 0 0 1px rgb(87 187 255 / .2);
+        transform: translateZ(0);
+        transition:
+            transform 520ms cubic-bezier(.16, 1, .3, 1),
+            box-shadow 520ms ease;
+        animation: learning-border-flow 5.5s linear infinite;
+    }
+
+    .learning-card--right {
+        justify-self: end;
+    }
+
+    .learning-card--left {
+        justify-self: start;
+    }
+
+    .learning-card::before {
+        position: absolute;
+        inset: 2px;
+        z-index: 2;
+        border: 1px solid rgb(255 255 255 / .16);
+        border-radius: calc(clamp(1.1rem, 2vw, 1.65rem) - 2px);
+        content: "";
+        pointer-events: none;
+        box-shadow: inset 0 0 28px rgb(44 170 255 / .08);
+        transition: box-shadow 420ms ease, border-color 420ms ease;
+    }
+
+    .learning-card::after {
+        position: absolute;
+        inset: 2px;
+        z-index: 1;
+        border-radius: calc(clamp(1.1rem, 2vw, 1.65rem) - 2px);
+        content: "";
+        pointer-events: none;
+        opacity: .34;
+        background:
+            linear-gradient(115deg, transparent 24%, rgb(87 187 255 / .22) 48%, transparent 70%),
+            linear-gradient(to top, rgb(0 0 81 / .44), transparent 42%);
+        background-size: 220% 100%, 100% 100%;
+        background-position: 120% 0, center;
+        transition: opacity 420ms ease;
+    }
+
+    .learning-card__image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: calc(clamp(1.1rem, 2vw, 1.65rem) - 2px);
+        object-fit: cover;
+        object-position: center;
+        transform: scale(1.002);
+        filter: saturate(.98) contrast(1.01);
+        transition:
+            transform 720ms cubic-bezier(.16, 1, .3, 1),
+            filter 520ms ease;
+    }
+
+    .learning-card__code {
+        position: absolute;
+        right: .85rem;
+        bottom: .7rem;
+        z-index: 4;
+        padding: .38rem .62rem;
+        border: 1px solid rgb(87 187 255 / .38);
+        border-radius: .55rem;
+        color: #fff;
+        background: rgb(7 16 43 / .78);
+        box-shadow: 0 8px 24px rgb(0 0 81 / .28);
+        font: 700 clamp(.58rem, 1vw, .7rem)/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        letter-spacing: .12em;
+        backdrop-filter: blur(8px);
+        transition: transform 480ms cubic-bezier(.16, 1, .3, 1), border-color 420ms ease;
+    }
+
+    .learning-card__scan {
+        position: absolute;
+        top: 2px;
+        bottom: 2px;
+        left: -28%;
+        z-index: 3;
+        width: 18%;
+        pointer-events: none;
+        opacity: 0;
+        transform: skewX(-16deg);
+        background: linear-gradient(90deg, transparent, rgb(87 187 255 / .34), rgb(255 255 255 / .5), transparent);
+        filter: blur(2px);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .learning-card:hover {
+            z-index: 5;
+            transform: translateY(-7px) scale(1.018);
+            box-shadow:
+                0 26px 64px rgb(0 0 81 / .5),
+                0 0 28px rgb(44 170 255 / .2),
+                0 0 0 1px rgb(0 221 177 / .28);
+        }
+
+        .learning-card:hover::before {
+            border-color: rgb(255 255 255 / .34);
+            box-shadow: inset 0 0 38px rgb(44 170 255 / .16);
+        }
+
+        .learning-card:hover::after {
+            opacity: .55;
+            animation: learning-light-pass 1.25s ease-out both;
+        }
+
+        .learning-card:hover .learning-card__image {
+            transform: scale(1.055);
+            filter: saturate(1.05) contrast(1.035) brightness(1.02);
+        }
+
+        .learning-card:hover .learning-card__code {
+            transform: translate3d(-.35rem, -.25rem, 0);
+            border-color: rgb(0 221 177 / .7);
+        }
+
+        .learning-card:hover .learning-card__scan {
+            animation: learning-scan-pass 950ms cubic-bezier(.16, 1, .3, 1) both;
+        }
+    }
+
+    @keyframes learning-border-flow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 280% 50%; }
+    }
+
+    @keyframes learning-light-pass {
+        from { background-position: 120% 0, center; }
+        to { background-position: -120% 0, center; }
+    }
+
+    @keyframes learning-scan-pass {
+        0% { left: -28%; opacity: 0; }
+        18% { opacity: .75; }
+        100% { left: 112%; opacity: 0; }
+    }
+
+    @media (min-width: 1024px) {
+        .potential-development {
+            flex-direction: row;
+        }
+
+        .learning-gallery {
+            gap: 2rem;
+        }
+
+        .learning-card--right {
+            margin-left: auto;
+        }
+
+        .learning-card--left {
+            margin-right: auto;
+        }
+    }
+
+    @media (min-width: 640px) and (max-width: 1023px) {
+        .learning-gallery {
+            width: min(100%, 760px);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 639px) {
+        .learning-gallery {
+            margin-top: .5rem;
+        }
+
+        .learning-card {
+            justify-self: center;
+        }
+
+        .learning-card__code {
+            right: .65rem;
+            bottom: .58rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .learning-card,
+        .learning-card::after,
+        .learning-card__image,
+        .learning-card__code,
+        .learning-card__scan {
+            animation: none !important;
+            transition-duration: .01ms !important;
+        }
+    }
+</style>

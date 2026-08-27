@@ -1,27 +1,376 @@
 ---
+import { Image } from "astro:assets";
+import camperPuente from "~/assets/img/emplea/camper-puente-contacto-guatemala-corregido.webp";
 import ContactButton from "../common/ContactButton.astro";
+
 const contactNumber = "+50232705200";
 ---
-<section class="max-w-[1150px] self-center location overflow-hidden relative px-4 md:px-8">
-    <div class="flex flex-col max-w-[1130px] lg:mx-auto gap-x-20 lg:flex-row">
-        <div class="max-w-[550px] my-auto flex flex-col gap-y-8 items-center md:items-start lg:mx-8">
-            <h1 class="gradient-text text-4xl mb-1 font-bold text-center lg:text-left">
+
+<section class="location relative self-center overflow-hidden px-4 py-10 md:px-8 lg:py-4">
+    <div class="mx-auto flex max-w-[1130px] flex-col items-center gap-12 lg:min-h-[700px] lg:flex-row lg:gap-16">
+        <div class="flex max-w-[550px] flex-col items-center gap-y-8 lg:items-start lg:pl-8">
+            <h2 class="gradient-text mb-1 text-center text-4xl font-bold lg:text-left">
                 Conviértete en el puente hacia el futuro de un joven desarrollador
-            </h1>
-            <p class="text-white font-normal text-center lg:text-left">
-                En Campuslands, nos enorgullece transformar el talento emergente en protagonistas del mundo TI. 
+            </h2>
+            <p class="text-center font-normal text-white lg:text-left">
+                En Campuslands, nos enorgullece transformar el talento emergente en protagonistas del mundo TI.
                 Estos son los pasos para emplear a un joven desarrollador con nosotros:
             </p>
             <h2 class="sr-only">Opciones para contactar a Campuslands</h2>
-            <div class="flex flex-col md:flex-row gap-x-6 items-center gap-4">
+            <div class="flex flex-col items-center gap-4 md:flex-row md:gap-x-6">
                 <ContactButton tipo="agendar" whatsApp={contactNumber} iconName="agenda.svg" />
                 <ContactButton tipo="chatear" whatsApp={contactNumber} iconName="heart.svg" isOutline />
             </div>
         </div>
-        <div class="flex justify-center items-center lg:h-[700px] w-full">
-            <img src="/img/emplea/student.png" alt="Joven desarrollador listo para ser contratado" class="w-[300px] sm:w-[350px] md:w-[400px] lg:w-[500px] xl:w-[550px] h-auto scale-x-[-1]" />
-        </div>
+
+        <figure
+            class="bridge-visual"
+            tabindex="0"
+            aria-label="Camper de Campuslands Guatemala señalando nuevas oportunidades para jóvenes desarrolladores"
+        >
+            <div class="bridge-visual__stage">
+                <span class="bridge-visual__glow" aria-hidden="true"></span>
+                <span class="bridge-visual__grid" aria-hidden="true"></span>
+                <span class="bridge-visual__orbit bridge-visual__orbit--outer" aria-hidden="true"></span>
+                <span class="bridge-visual__orbit bridge-visual__orbit--inner" aria-hidden="true"></span>
+                <span class="bridge-visual__beam" aria-hidden="true"></span>
+
+                <span class="bridge-visual__frame bridge-visual__frame--back" aria-hidden="true"></span>
+
+                <div class="bridge-visual__hud" aria-hidden="true">
+                    <span class="bridge-visual__tag">GT://NEXT_TALENT</span>
+                    <span class="bridge-visual__status"><i></i> READY_TO_CONNECT</span>
+                    <span class="bridge-visual__code bridge-visual__code--one">&#123; talento: "activo" &#125;</span>
+                    <span class="bridge-visual__code bridge-visual__code--two">&lt;/futuro&gt;</span>
+                    <span class="bridge-visual__code bridge-visual__code--three">01</span>
+                </div>
+
+                <Image
+                    src={camperPuente}
+                    alt="Joven camper de Campuslands Guatemala señalando hacia las opciones para emplear talento tecnológico"
+                    width={809}
+                    widths={[280, 360, 480, 600, 809]}
+                    format="avif"
+                    quality={68}
+                    loading="lazy"
+                    decoding="async"
+                    sizes="(max-width: 1023px) min(92vw, 440px), 500px"
+                    class="bridge-visual__photo"
+                />
+
+                <span class="bridge-visual__frame bridge-visual__frame--front" aria-hidden="true"></span>
+                <span class="bridge-visual__pulse" aria-hidden="true"><i></i></span>
+            </div>
+        </figure>
     </div>
-    <img src="/img/texxture.svg" alt="Textura decorativa digital" class="w-1/2 absolute top-[290px] -right-[340px]" />
-    <img src="/img/texxture.svg" alt="Textura decorativa invertida" class="w-1/2 rotate-180 absolute top-[520px] -left-[340px]" />
+
+    <img src="/img/texxture.svg" alt="" aria-hidden="true" width="1034" height="740" loading="lazy" decoding="async" fetchpriority="low" class="absolute -right-[340px] top-[290px] w-1/2" />
+    <img src="/img/texxture.svg" alt="" aria-hidden="true" width="1034" height="740" loading="lazy" decoding="async" fetchpriority="low" class="absolute -left-[340px] top-[520px] w-1/2 rotate-180" />
 </section>
+
+<style scoped>
+    .bridge-visual {
+        --bridge-blue: #2caaff;
+        --bridge-cyan: #57bbff;
+        --bridge-green: #00aa80;
+        position: relative;
+        z-index: 1;
+        width: min(92vw, 520px);
+        flex: 0 0 auto;
+        outline: none;
+        perspective: 1100px;
+    }
+
+    .bridge-visual__stage {
+        position: relative;
+        isolation: isolate;
+        aspect-ratio: 809 / 1080;
+        transform-style: preserve-3d;
+    }
+
+    .bridge-visual__glow {
+        position: absolute;
+        z-index: 0;
+        inset: 13% 5% 5%;
+        border-radius: 48% 52% 42% 58% / 38% 42% 58% 62%;
+        background:
+            radial-gradient(circle at 70% 23%, rgb(87 187 255 / .72), transparent 27%),
+            radial-gradient(circle at 32% 57%, rgb(0 170 128 / .58), transparent 43%),
+            radial-gradient(circle at 55% 50%, rgb(44 170 255 / .46), transparent 62%);
+        filter: blur(clamp(24px, 4vw, 44px));
+        opacity: .72;
+        animation: bridge-glow 5.2s cubic-bezier(.45, 0, .55, 1) infinite;
+        transition: opacity 600ms ease, filter 600ms ease;
+    }
+
+    .bridge-visual__grid {
+        position: absolute;
+        z-index: 1;
+        inset: 14% 3% 6%;
+        border-radius: 2rem;
+        background-image:
+            linear-gradient(rgb(87 187 255 / .2) 1px, transparent 1px),
+            linear-gradient(90deg, rgb(0 170 128 / .16) 1px, transparent 1px);
+        background-size: 34px 34px;
+        mask-image: radial-gradient(ellipse at center, black 8%, transparent 74%);
+        opacity: .3;
+        animation: bridge-grid 12s linear infinite;
+    }
+
+    .bridge-visual__orbit {
+        position: absolute;
+        z-index: 1;
+        top: 49%;
+        left: 53%;
+        aspect-ratio: 1;
+        border: 1px solid rgb(87 187 255 / .28);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    .bridge-visual__orbit--outer {
+        width: 78%;
+        border-style: dashed;
+        animation: bridge-orbit 18s linear infinite;
+    }
+
+    .bridge-visual__orbit--inner {
+        width: 55%;
+        border-color: rgb(0 170 128 / .34);
+        animation: bridge-orbit-reverse 13s linear infinite;
+    }
+
+    .bridge-visual__beam {
+        position: absolute;
+        z-index: 5;
+        top: 10%;
+        left: 9%;
+        width: 82%;
+        height: 10%;
+        border-top: 1px solid rgb(87 187 255 / .88);
+        background: linear-gradient(to bottom, rgb(44 170 255 / .18), transparent);
+        filter: drop-shadow(0 0 9px rgb(44 170 255 / .72));
+        opacity: 0;
+        pointer-events: none;
+        animation: bridge-scan 6.2s ease-in-out infinite;
+    }
+
+    .bridge-visual__frame {
+        position: absolute;
+        pointer-events: none;
+        border-radius: 2.25rem;
+    }
+
+    .bridge-visual__frame--back {
+        z-index: 2;
+        inset: 11% 5% 5%;
+        padding: 2px;
+        background: linear-gradient(135deg, var(--bridge-green), var(--bridge-cyan), var(--bridge-blue), var(--bridge-green));
+        background-size: 260% 260%;
+        mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+        opacity: .72;
+        animation: bridge-frame-flow 5s linear infinite;
+        filter: drop-shadow(0 0 12px rgb(44 170 255 / .25));
+    }
+
+    .bridge-visual__frame--front {
+        z-index: 7;
+        inset: 11% 5% 5%;
+        border-right: 3px solid var(--bridge-cyan);
+        border-bottom: 3px solid var(--bridge-green);
+        clip-path: polygon(73% 0, 100% 0, 100% 100%, 0 100%, 0 82%, 3px 82%, 3px calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 3px, 73% 3px);
+        filter: drop-shadow(0 0 8px rgb(87 187 255 / .5));
+    }
+
+    .bridge-visual__photo {
+        position: absolute;
+        z-index: 4;
+        right: 0;
+        bottom: 1%;
+        width: 100%;
+        height: 98%;
+        object-fit: contain;
+        object-position: center bottom;
+        filter: drop-shadow(0 20px 25px rgb(0 0 0 / .28));
+        transform: translateZ(36px);
+        transform-origin: center bottom;
+        transition: transform 750ms cubic-bezier(.16, 1, .3, 1), filter 600ms ease;
+    }
+
+    .bridge-visual__hud {
+        position: absolute;
+        inset: 0;
+        z-index: 8;
+        color: #eaf8ff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: clamp(.48rem, 1vw, .66rem);
+        font-weight: 700;
+        letter-spacing: .08em;
+        pointer-events: none;
+    }
+
+    .bridge-visual__tag,
+    .bridge-visual__status {
+        position: absolute;
+        padding: .42rem .58rem;
+        border: 1px solid rgb(87 187 255 / .36);
+        background: rgb(0 0 81 / .68);
+        box-shadow: 0 0 20px rgb(44 170 255 / .14), inset 0 0 14px rgb(0 170 128 / .08);
+        backdrop-filter: blur(8px);
+    }
+
+    .bridge-visual__tag {
+        top: 13%;
+        left: 2%;
+        color: var(--bridge-cyan);
+    }
+
+    .bridge-visual__status {
+        right: 1%;
+        bottom: 9%;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        color: #fff;
+    }
+
+    .bridge-visual__status i {
+        width: .42rem;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--bridge-green);
+        box-shadow: 0 0 10px var(--bridge-green);
+        animation: bridge-status 1.8s ease-in-out infinite;
+    }
+
+    .bridge-visual__code {
+        position: absolute;
+        color: var(--bridge-cyan);
+        text-shadow: 0 0 10px rgb(87 187 255 / .75);
+        opacity: 0;
+        transform: translateY(10px) scale(.9);
+        transition: opacity 420ms ease, transform 650ms cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .bridge-visual__code--one { top: 24%; right: 0; }
+    .bridge-visual__code--two { bottom: 24%; left: 0; color: var(--bridge-green); transition-delay: 70ms; }
+    .bridge-visual__code--three { top: 35%; left: 8%; font-size: 1.25rem; opacity: .2; }
+
+    .bridge-visual__pulse {
+        position: absolute;
+        z-index: 9;
+        top: 36%;
+        right: 3%;
+        width: 2.2rem;
+        aspect-ratio: 1;
+        border: 1px solid rgb(87 187 255 / .52);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: bridge-target 2.8s ease-in-out infinite;
+    }
+
+    .bridge-visual__pulse i {
+        position: absolute;
+        inset: 35%;
+        border-radius: 50%;
+        background: var(--bridge-green);
+        box-shadow: 0 0 10px var(--bridge-green);
+    }
+
+    .bridge-visual:is(:hover, :focus-visible) .bridge-visual__photo {
+        transform: translate3d(-5px, -7px, 54px) scale(1.018);
+        filter: drop-shadow(0 25px 34px rgb(0 170 128 / .25));
+    }
+
+    .bridge-visual:is(:hover, :focus-visible) .bridge-visual__glow {
+        opacity: .98;
+        filter: blur(clamp(27px, 4.5vw, 48px));
+    }
+
+    .bridge-visual:is(:hover, :focus-visible) .bridge-visual__code {
+        opacity: .92;
+        transform: translateY(0) scale(1);
+    }
+
+    .bridge-visual:is(:hover, :focus-visible) .bridge-visual__code--three {
+        opacity: .38;
+    }
+
+    @keyframes bridge-glow {
+        0%, 100% { transform: scale(.96) rotate(-1deg); opacity: .62; }
+        50% { transform: scale(1.04) rotate(1deg); opacity: .9; }
+    }
+
+    @keyframes bridge-grid {
+        to { background-position: 34px 34px, 34px 34px; }
+    }
+
+    @keyframes bridge-orbit {
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @keyframes bridge-orbit-reverse {
+        to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+
+    @keyframes bridge-scan {
+        0%, 15%, 100% { transform: translateY(0); opacity: 0; }
+        24% { opacity: .8; }
+        72% { opacity: .55; }
+        82% { transform: translateY(700%); opacity: 0; }
+    }
+
+    @keyframes bridge-frame-flow {
+        0% { background-position: 0 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0 50%; }
+    }
+
+    @keyframes bridge-status {
+        0%, 100% { opacity: .45; transform: scale(.85); }
+        50% { opacity: 1; transform: scale(1.12); }
+    }
+
+    @keyframes bridge-target {
+        0%, 100% { transform: scale(.86); opacity: .45; box-shadow: 0 0 0 0 rgb(44 170 255 / .3); }
+        50% { transform: scale(1); opacity: .9; box-shadow: 0 0 0 10px rgb(44 170 255 / 0); }
+    }
+
+    @media (max-width: 1023px) {
+        .bridge-visual {
+            width: min(90vw, 450px);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .bridge-visual__tag {
+            top: 14%;
+            left: 0;
+        }
+
+        .bridge-visual__status {
+            right: 0;
+            bottom: 8%;
+        }
+
+        .bridge-visual__code--one {
+            top: 27%;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .bridge-visual *,
+        .bridge-visual *::before,
+        .bridge-visual *::after {
+            animation-duration: .01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+        }
+
+        .bridge-visual__photo,
+        .bridge-visual__code {
+            transition: none;
+        }
+    }
+</style>

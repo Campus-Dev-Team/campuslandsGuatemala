@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 1000" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="nosotros-front-gradient" x1="14" y1="560" x2="906" y2="986" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00AA80" />
+      <stop offset=".5" stop-color="#2CAAFF" />
+      <stop offset="1" stop-color="#57BBFF" />
+    </linearGradient>
+    <filter id="nosotros-front-glow" x="-14%" y="-24%" width="128%" height="148%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.173 0 0 0 0 0.667 0 0 0 0 1 0 0 0 .64 0" />
+      <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+
+  <path class="front-base" d="M14 560V932Q14 986 68 986H852Q906 986 906 932V560" stroke="url(#nosotros-front-gradient)" stroke-width="20" stroke-linecap="round" />
+  <path class="front-runner" d="M14 560V932Q14 986 68 986H852Q906 986 906 932V560" stroke="#F1FBFF" stroke-width="7" stroke-linecap="round" filter="url(#nosotros-front-glow)" pathLength="100" />
+  <path class="energy-mark" d="M384 966H536" stroke="#EAF8FF" stroke-width="5" stroke-linecap="round" filter="url(#nosotros-front-glow)" />
+
+  <style>
+    .front-runner { stroke-dasharray: 12 88; animation: nosotros-front-run 4.3s cubic-bezier(.45, 0, .55, 1) infinite; }
+    .energy-mark { transform-box: fill-box; transform-origin: center; animation: nosotros-energy 2.1s ease-in-out infinite; }
+    @keyframes nosotros-front-run { to { stroke-dashoffset: -100; } }
+    @keyframes nosotros-energy { 0%, 100% { opacity: .25; transform: scaleX(.6); } 50% { opacity: 1; transform: scaleX(1); } }
+    @media (prefers-reduced-motion: reduce) { .front-runner, .energy-mark { animation: none; } }
+  </style>
+</svg>

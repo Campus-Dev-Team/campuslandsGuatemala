@@ -1,141 +1,307 @@
 ---
 import { Image } from "astro:assets";
-import { AstroFont } from "astro-font";
-// import { ViewTransitions } from 'astro:transitions';
-import MenuResponsive from "../components/navbar/menuResponsive.vue";
+import MenuResponsive from "../components/navbar/menuResponsive.astro";
 import ContactButton from "~/components/common/ContactButton.astro";
+import CodeAtmosphere from "~/components/common/CodeAtmosphere.astro";
+import SeoHead from "~/components/SeoHead.astro";
 import Circular from "~/assets/img/CircularPattern.svg";
+import { ViewTransitions } from "astro:transitions";
 
 import logoCampus from "~/assets/img/logos/logoCampus_v2.svg";
-import logoCampus502 from "~/assets/img/nosotros/campus502.svg";
 import facebook from "~/assets/img/icons/Facebook.svg";
 import instagram from "~/assets/img/icons/Instagram.svg";
 import linkedin from "~/assets/img/icons/LinkedIn.svg";
-import youtube from "~/assets/img/icons/YouTube.svg";
 
-const { dataFooter, title = "Campuslands", description = "Campuslands, donde la tecnología transforma el talento"} = Astro.props;
-const currentPath = Astro.url.pathname;
+const {
+  dataFooter,
+  title,
+  description,
+  image,
+  noindex = false,
+  pageType,
+  structuredData,
+} = Astro.props;
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 const curryear = new Date().getFullYear();
 ---
 
 <!doctype html>
-<html lang="es" data-theme="dark">
+<html lang="es-GT" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
+    <SeoHead
+      title={title}
+      description={description}
+      image={image}
+      noindex={noindex}
+      pageType={pageType}
+      structuredData={structuredData}
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta name="geo.region" content="GT-GUA" />
     <meta name="geo.placename" content="Ciudad de Guatemala, Guatemala" />
-    <meta name="geo.position" content="14.6349;-90.5069" />
-    <meta name="ICBM" content="14.6349, -90.5069" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
-    <title>{title}</title>
-    <!-- <ViewTransitions /> -->
-    <AstroFont
-      config={[
-        {
-          name: "Poppins",
-          src: [
-            {
-              style: "normal",
-              weight: "400",
-              path: "/public/fonts/Poppins-Regular.ttf",
-            },
-            {
-              style: "medium",
-              weight: "500",
-              path: "./public/fonts/Afacad-Medium.woff2",
-            },
-          ],
-          preload: false,
-          display: "swap",
-          selector: "body",
-          fallback: "sans-serif",
-        },
-      ]}
-    />
     <meta name="google-site-verification" content="VjWljaxyJbf68bXWX6Wna-Zcj84e_y8UWPRUKivFHKw" />
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XTZ0LV0CT"></script>
+    <ViewTransitions fallback="animate" />
+    <script is:inline data-astro-rerun>
+      // Sistema global de carga progresiva: oculta el recurso reemplazado antes
+      // del primer pintado y lo revela únicamente cuando el navegador lo decodifica.
+      (() => {
+        document.documentElement.classList.add('enhanced-image-loading');
+
+        const runtime = window.__campusImageLoading ??= {};
+        let observedBody;
+
+        const setImageState = (image, state) => {
+          image.dataset.imageState = state;
+          const shell = image.closest('[data-image-shell]');
+          if (shell) shell.dataset.imageState = state;
+        };
+
+        const isContentImage = (image) => {
+          const source = (image.currentSrc || image.src || '').split('?')[0].toLowerCase();
+          if (source.endsWith('.svg')) return false;
+
+          const declaredWidth = Number(image.getAttribute('width')) || 0;
+          const declaredHeight = Number(image.getAttribute('height')) || 0;
+          return Boolean(
+            image.closest('figure, [data-image-shell]') ||
+            declaredWidth >= 240 ||
+            declaredHeight >= 180
+          );
+        };
+
+        const markImageLoaded = (image, instant = false) => {
+          if (instant) image.dataset.imageReveal = 'instant';
+          else delete image.dataset.imageReveal;
+          setImageState(image, 'loaded');
+        };
+
+        const revealImage = (image) => {
+          if (image.dataset.imageState === 'loaded') return;
+          const expectedSource = image.currentSrc || image.src;
+          const finish = () => {
+            if ((image.currentSrc || image.src) !== expectedSource) return;
+            requestAnimationFrame(() => markImageLoaded(image));
+          };
+
+          if (typeof image.decode === 'function') {
+            image.decode().catch(() => {}).finally(finish);
+          } else {
+            finish();
+          }
+        };
+
+        const prepareImage = (image) => {
+          image.dataset.imageKind = isContentImage(image) ? 'content' : 'utility';
+          if (!image.hasAttribute('decoding')) image.decoding = 'async';
+
+          if (image.complete) {
+            // Un recurso servido desde caché debe mostrarse en el mismo cuadro,
+            // sin reiniciar el skeleton ni una transición que parezca otra carga.
+            if (image.naturalWidth > 0) markImageLoaded(image, true);
+            else setImageState(image, 'error');
+            return;
+          }
+
+          delete image.dataset.imageReveal;
+          if (image.dataset.imageState !== 'loading') setImageState(image, 'loading');
+        };
+
+        const prepareImages = (root = document) => {
+          if (root instanceof HTMLImageElement) prepareImage(root);
+          root.querySelectorAll?.('img').forEach(prepareImage);
+        };
+
+        runtime.prepareImages = prepareImages;
+
+        if (!runtime.bound) {
+          runtime.bound = true;
+
+          document.addEventListener('load', (event) => {
+            if (event.target instanceof HTMLImageElement) revealImage(event.target);
+          }, true);
+          document.addEventListener('error', (event) => {
+            if (event.target instanceof HTMLImageElement) setImageState(event.target, 'error');
+          }, true);
+          document.addEventListener('DOMContentLoaded', () => prepareImages());
+
+          const startObserver = () => {
+            if (!document.body || observedBody === document.body) return;
+            runtime.observer?.disconnect();
+            observedBody = document.body;
+            runtime.observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes') {
+                  const image = mutation.target;
+                  if (!(image instanceof HTMLImageElement)) return;
+                  prepareImage(image);
+                  return;
+                }
+                mutation.addedNodes.forEach((node) => {
+                  if (node instanceof Element) prepareImages(node);
+                });
+              });
+            });
+            runtime.observer.observe(document.body, {
+              childList: true,
+              subtree: true,
+              attributes: true,
+              attributeFilter: ['src', 'srcset'],
+            });
+          };
+
+          document.addEventListener('astro:before-swap', (event) => {
+            event.newDocument.documentElement.classList.add('enhanced-image-loading');
+            prepareImages(event.newDocument);
+          });
+          document.addEventListener('astro:page-load', () => {
+            prepareImages();
+            startObserver();
+          });
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startObserver, { once: true });
+          } else {
+            startObserver();
+          }
+        }
+      })();
+    </script>
+    <!-- Medición diferida para no bloquear el contenido principal -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){ dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-3XTZ0LV0CT');
+      let analyticsLoaded = false;
+      function loadAnalytics() {
+        if (analyticsLoaded) return;
+        analyticsLoaded = true;
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-3XTZ0LV0CT';
+        document.head.appendChild(script);
+        gtag('js', new Date());
+        gtag('config', 'G-3XTZ0LV0CT');
+      }
+      ['pointerdown', 'keydown', 'touchstart'].forEach((eventName) => {
+        window.addEventListener(eventName, loadAnalytics, { once: true, passive: true });
+      });
+      window.setTimeout(loadAnalytics, 12000);
+      document.addEventListener('astro:page-load', () => {
+        if (!analyticsLoaded) return;
+        gtag('event', 'page_view', {
+          page_location: window.location.href,
+          page_path: window.location.pathname,
+          page_title: document.title
+        });
+      });
     </script>
-  </script>
   </head>
-  <body class="relative flex flex-col overflow-x-hidden gap-[5.5rem]">
+  <body class="relative flex flex-col overflow-x-hidden">
+    <a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
+    <CodeAtmosphere />
     <div
+      class="stellar-route-transition"
+      data-stellar-route-transition
+      transition:persist="stellar-route-transition"
+      aria-hidden="true"
+    >
+      <span class="stellar-route-transition__surface"></span>
+      <span class="stellar-route-transition__scan"></span>
+      <div class="stellar-route-transition__trajectory">
+        <span class="stellar-route-transition__tail"></span>
+        <span class="stellar-route-transition__core"></span>
+      </div>
+      <span class="stellar-route-transition__spark stellar-route-transition__spark--one"></span>
+      <span class="stellar-route-transition__spark stellar-route-transition__spark--two"></span>
+      <span class="stellar-route-transition__spark stellar-route-transition__spark--three"></span>
+      <code class="stellar-route-transition__token stellar-route-transition__token--binary">{`{01}`}</code>
+      <code class="stellar-route-transition__token stellar-route-transition__token--tag">&lt;/&gt;</code>
+      <code class="stellar-route-transition__token stellar-route-transition__token--commit">commit();</code>
+      <div class="stellar-route-transition__console">
+        <span class="stellar-route-transition__console-dot"></span>
+        <code><b>&gt;</b> route.next()</code>
+        <span class="stellar-route-transition__console-progress"></span>
+      </div>
+    </div>
+    <button
       id="go-up"
+      type="button"
+      aria-label="Volver al inicio de la página"
+      transition:persist="go-up-control"
       class="flex justify-center align-middle bg-primary rounded-full size-10 fixed right-10 bottom-[5%] cursor-pointer z-50"
     >
-      <img src="/img/icons/arrow-up.svg" alt="icono-flecha" width="25" />
-    </div>
-    <MenuResponsive client:load>
+      <span aria-hidden="true" class="text-white text-xl leading-none">↑</span>
+    </button>
+    <MenuResponsive>
       <Image
         slot="logo"
         src={logoCampus}
         alt="logoCampus"
         class="py-6 w-[13rem] lg:p-0 lg:w-[15rem]"
+        loading="eager"
       />
       <div class="content-redirects items-center hidden md:flex h-full">
         <a
           href="/"
-          aria-label="Home"
+          aria-label="Inicio"
+          aria-current={currentPath === "/" ? "page" : undefined}
           class={currentPath === "/"
             ? "active"
             : "text-white hover:text-gray-200"}>Inicio</a
         >
-        <a href="/joinUs" class={currentPath === "/joinUs" ? "active" : ""}
+        <a
+          href="/joinUs/"
+          aria-current={currentPath === "/joinUs" ? "page" : undefined}
+          class={currentPath === "/joinUs" ? "active" : ""}
           >Sé un Camper</a
         >
         <a
-          href="/emplea"
+          href="/emplea/"
           aria-label="Impulsa a tu equipo"
+          aria-current={currentPath === "/emplea" ? "page" : undefined}
           class={currentPath === "/emplea"
             ? "active"
             : "text-white hover:text-gray-200"}>Emplea</a
         >
         <a
-          href="/patrocina"
+          href="/patrocina/"
           aria-label="Patrocina nuestros Campers"
+          aria-current={currentPath === "/patrocina" ? "page" : undefined}
           class={currentPath === "/patrocina"
             ? "active"
             : "text-white hover:text-gray-200"}>Patrocina</a
         >
         <a
-          href="/nosotros"
+          href="/nosotros/"
+          aria-current={currentPath === "/nosotros" ? "page" : undefined}
           class={currentPath === "/nosotros"
             ? "active"
             : "text-white hover:text-gray-200"}>Nosotros</a
         >
         <!-- <a href="#" class={ currentPath === '#' ? 'active' : 'text-white hover:text-gray-200' }>Comunidad</a> -->
       </div>
-      <div slot="menuMobile" class="md:hidden mt-5">
-        <div class="flex flex-col items-center space-y-4 px-4 py-2 gap-y-3">
-          <a href="/" class="text-white hover:text-gray-200">Inicio</a>
-          <a href="/joinUs" class="text-white hover:text-gray-200"
-            >Se un Camper</a
+      <div slot="menuMobile" class="md:hidden">
+        <div class="mobile-menu-links flex flex-col items-center gap-y-2 px-5 py-6">
+          <a href="/" class="mobile-menu-link">Inicio</a>
+          <a href="/joinUs/" class="mobile-menu-link"
+            >Sé un Camper</a
           >
-          <a href="/emplea" class="text-white hover:text-gray-200">Emplea</a>
-          <a href="/patrocina" class="text-white hover:text-gray-200"
+          <a href="/emplea/" class="mobile-menu-link">Emplea</a>
+          <a href="/patrocina/" class="mobile-menu-link"
             >Patrocina</a
           >
-          <a href="/nosotros" class="text-white hover:text-gray-200">Nosotros</a
+          <a href="/nosotros/" class="mobile-menu-link">Nosotros</a
           >
         </div>
       </div>
     </MenuResponsive>
-    <slot />
-    <footer class="faq flex flex-col relative">
+    <div class="site-content-layer relative z-[1] flex flex-col">
+      <main id="contenido-principal" class="flex flex-col gap-[5.5rem]">
+        <slot />
+      </main>
+      <footer class="faq flex flex-col relative">
       <div
         class={`max-w-[1150px] relative sections self-center vstext my-auto flex flex-col gap-y-8 py-20`}
       >
@@ -157,7 +323,7 @@ const curryear = new Date().getFullYear();
         </p>
         <ContactButton
           tipo={dataFooter ? dataFooter.buttonType : "contacto"}
-          linkPage="https://estudiante-guate.campuslands.com/login"
+          linkPage={dataFooter?.buttonLink ?? "https://estudiante-guate.campuslands.com/login"}
           iconName={dataFooter ? dataFooter.buttonIcon : "happyFace.svg"}
           StylesAnchor="self-center"
         />
@@ -174,8 +340,8 @@ const curryear = new Date().getFullYear();
           <div class="text-white font-bold mb-7 md:m-0">
             <a href="/">
               <Image
-                src={logoCampus502}
-                alt="logo-Campus502"
+                src={logoCampus}
+                alt="logo Campuslands"
                 class="py-2 w-[10rem] lg:w-[14rem]"
               />
             </a>
@@ -189,20 +355,20 @@ const curryear = new Date().getFullYear();
               class="text-white hover:text-gray-200 !mx-4">Inicio</a
             >
             <a
-              href="/joinUs"
-              aria-label="Impulsa a tu equipo"
+              href="/joinUs/"
+              aria-label="Sé un Camper"
               class="text-white hover:text-gray-200 !mx-4 break-keep"
               >Sé un Camper</a
             >
-            <a href="/emplea" class="text-white hover:text-gray-200 !mx-4"
+            <a href="/emplea/" class="text-white hover:text-gray-200 !mx-4"
               >Emplea</a
             >
             <a
-              href="/patrocina"
+              href="/patrocina/"
               aria-label="Patrocina nuestros Campers"
               class="text-white hover:text-gray-200 !mx-4">Patrocina</a
             >
-            <a href="/nosotros" class="text-white hover:text-gray-200 !mx-4"
+            <a href="/nosotros/" class="text-white hover:text-gray-200 !mx-4"
               >Nosotros</a
             >
           </div>
@@ -210,46 +376,133 @@ const curryear = new Date().getFullYear();
         <div
           class="flex items-center flex-col-reverse md:flex-row justify-between px-6"
         >
-          <p
-            class="text-sm text-white text-center md:text-start justify-around"
-          >
-            © Campuslands Sociedad Anonima {curryear}. Todos los derechos
-            reservados
-          </p>
+          <div class="flex flex-col items-center gap-2 md:items-start">
+            <p class="text-sm font-semibold text-white text-center md:text-start">
+              Campuslands Sociedad Anonima
+            </p>
+            <p class="text-sm font-semibold text-white text-center md:text-start">
+              Campuslands Guatemala
+            </p>
+            <p class="text-xs text-white/80 text-center md:text-start">
+              © {curryear} Campuslands Sociedad Anonima - Guatemala. Todos los derechos reservados
+            </p>
+            <nav
+              aria-label="Información legal"
+              class="flex flex-col items-center gap-2 md:flex-row md:items-start md:gap-4"
+            >
+              <a
+                href="/terminos-condiciones/"
+                class="text-xs text-[#B0F7E6] underline decoration-[#02D9A4]/60 underline-offset-4 transition-colors hover:text-primary"
+              >
+                Términos y condiciones
+              </a>
+              <a
+                href="/politica-de-privacidad/"
+                class="text-xs text-[#B0F7E6] underline decoration-[#02D9A4]/60 underline-offset-4 transition-colors hover:text-primary"
+              >
+                Política de privacidad y seguridad de datos
+              </a>
+            </nav>
+          </div>
           <div
             class="flex items-center w-full md:w-fit justify-evenly md:gap-x-10"
           >
             <a
-              href="https://www.facebook.com/share/1A7C6VczMB/"
+              href="https://www.facebook.com/campuslandsgt/"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook de Campuslands Guatemala"
               class="w-7 h-7 content-center place-items-center"
               ><Image src={facebook} alt="Logo facebook" /></a
             >
             <a
               href="https://www.instagram.com/campuslands502/"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram de Campuslands Guatemala"
               class="w-7 h-7 content-center place-items-center"
               ><Image src={instagram} alt="Logo instagram" /></a
             >
-            <!-- <a
-              href=""
+            <a
+              href="https://www.linkedin.com/company/campuslands-guatemala/"
               target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn de Campuslands Guatemala"
               class="w-7 h-7 content-center place-items-center"
               ><Image src={linkedin} alt="Logo linkedin" /></a
             >
-            <a
-              href=""
-              target="_blank"
-              class="w-7 h-7 content-center place-items-center"
-              ><Image src={youtube} alt="Logo youtube" /></a
-            > -->
           </div>
         </div>
       </div>
-    </footer>
+      </footer>
+    </div>
   </body>
 </html>
 <script>
+  function bindStellarRouteTransition() {
+    if (window.__campusStellarRouteTransitionBound) return;
+    window.__campusStellarRouteTransitionBound = true;
+    let settleTimer = 0;
+    const reduceRouteMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const minimumDepartureTime = reduceRouteMotion ? 0 : 190;
+    const arrivalTime = reduceRouteMotion ? 0 : 680;
+
+    const getOverlay = () =>
+      document.querySelector<HTMLElement>("[data-stellar-route-transition]");
+
+    document.addEventListener("astro:before-preparation", (event) => {
+      const overlay = getOverlay();
+      if (!overlay) return;
+      window.clearTimeout(settleTimer);
+      overlay.dataset.routePhase = "departing";
+      document.documentElement.dataset.routeTransition = "active";
+
+      const originalLoader = event.loader;
+      event.loader = async () => {
+        try {
+          await Promise.all([
+            originalLoader(),
+            new Promise((resolve) => window.setTimeout(resolve, minimumDepartureTime)),
+          ]);
+        } catch (error) {
+          delete overlay.dataset.routePhase;
+          delete document.documentElement.dataset.routeTransition;
+          throw error;
+        }
+      };
+    });
+
+    document.addEventListener("astro:after-swap", () => {
+      const overlay = getOverlay();
+      if (!overlay) return;
+      document.documentElement.dataset.routeTransition = "arriving";
+      overlay.dataset.routePhase = "arriving";
+
+      let settled = false;
+      const settle = () => {
+        if (settled || overlay.dataset.routePhase !== "arriving") return;
+        settled = true;
+        window.clearTimeout(settleTimer);
+        window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+          delete overlay.dataset.routePhase;
+          delete document.documentElement.dataset.routeTransition;
+        }));
+      };
+
+      overlay
+        .querySelector(".stellar-route-transition__surface")
+        ?.addEventListener("animationend", settle, { once: true });
+      settleTimer = window.setTimeout(settle, arrivalTime);
+    });
+
+    document.addEventListener("astro:page-load", () => {
+      if (getOverlay()?.dataset.routePhase === "arriving") return;
+      delete document.documentElement.dataset.routeTransition;
+    });
+  }
+
+  bindStellarRouteTransition();
+
   function updateActiveLinks() {
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll(
@@ -280,8 +533,1053 @@ const curryear = new Date().getFullYear();
   }
 
   document.querySelector("#go-up").addEventListener("click", goUp);
+
+  function initializeMeteorCursorTrail() {
+    const canvas = document.querySelector<HTMLCanvasElement>(
+      "[data-meteor-cursor-trail]",
+    );
+    const context = canvas?.getContext("2d", {
+      alpha: true,
+      desynchronized: true,
+    });
+
+    if (!canvas || !context) return () => {};
+
+    const trail: Array<{ x: number; y: number; bornAt: number }> = [];
+    const sparks: Array<{
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      life: number;
+      decay: number;
+      aqua: boolean;
+    }> = [];
+    const clickBursts: Array<{
+      x: number;
+      y: number;
+      bornAt: number;
+      rotation: number;
+    }> = [];
+    const maxSparks = 96;
+    const trailDuration = 210;
+    const clickBurstDuration = 620;
+    let animationFrame = 0;
+    let lastX = -100;
+    let lastY = -100;
+    let lastSparkAt = 0;
+    let pixelRatio = 1;
+
+    const resizeCanvas = () => {
+      const ratioByPixelBudget = Math.sqrt(
+        5_000_000 / Math.max(window.innerWidth * window.innerHeight, 1),
+      );
+      pixelRatio = Math.max(
+        0.75,
+        Math.min(window.devicePixelRatio || 1, 1.75, ratioByPixelBudget),
+      );
+      canvas.width = Math.round(window.innerWidth * pixelRatio);
+      canvas.height = Math.round(window.innerHeight * pixelRatio);
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    };
+
+    const drawMeteor = (now: number) => {
+      animationFrame = 0;
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      while (trail.length && now - trail[0].bornAt > trailDuration) {
+        trail.shift();
+      }
+
+      if (trail.length > 1) {
+        const head = trail[trail.length - 1];
+        const tail = trail[0];
+        const gradient = context.createLinearGradient(
+          tail.x,
+          tail.y,
+          head.x,
+          head.y,
+        );
+        gradient.addColorStop(0, "rgb(44 170 255 / 0%)");
+        gradient.addColorStop(0.52, "rgb(44 170 255 / 24%)");
+        gradient.addColorStop(0.82, "rgb(87 187 255 / 70%)");
+        gradient.addColorStop(1, "rgb(255 255 255 / 96%)");
+
+        context.save();
+        context.globalCompositeOperation = "lighter";
+        context.lineCap = "round";
+        context.lineJoin = "round";
+        context.strokeStyle = gradient;
+        context.lineWidth = 2.2;
+        context.shadowColor = "rgb(44 170 255 / 82%)";
+        context.shadowBlur = 12;
+        context.beginPath();
+        trail.forEach((point, index) => {
+          if (index === 0) context.moveTo(point.x, point.y);
+          else context.lineTo(point.x, point.y);
+        });
+        context.stroke();
+
+        const glow = context.createRadialGradient(
+          head.x,
+          head.y,
+          0,
+          head.x,
+          head.y,
+          13,
+        );
+        glow.addColorStop(0, "rgb(255 255 255 / 100%)");
+        glow.addColorStop(0.18, "rgb(193 235 255 / 92%)");
+        glow.addColorStop(0.52, "rgb(44 170 255 / 38%)");
+        glow.addColorStop(1, "rgb(44 170 255 / 0%)");
+        context.fillStyle = glow;
+        context.beginPath();
+        context.arc(head.x, head.y, 13, 0, Math.PI * 2);
+        context.fill();
+        context.restore();
+      }
+
+      context.save();
+      context.globalCompositeOperation = "lighter";
+      for (let index = clickBursts.length - 1; index >= 0; index -= 1) {
+        const burst = clickBursts[index];
+        const progress = Math.min((now - burst.bornAt) / clickBurstDuration, 1);
+
+        if (progress >= 1) {
+          clickBursts.splice(index, 1);
+          continue;
+        }
+
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        const opacity = Math.pow(1 - progress, 2);
+        const primaryRadius = 7 + easedProgress * 30;
+        const secondaryRadius = 4 + easedProgress * 19;
+
+        context.save();
+        context.translate(burst.x, burst.y);
+        context.rotate(burst.rotation + easedProgress * 0.16);
+        context.shadowColor = `rgb(44 170 255 / ${opacity * 75}%)`;
+        context.shadowBlur = 13 * opacity;
+
+        context.strokeStyle = `rgb(87 187 255 / ${opacity * 68}%)`;
+        context.lineWidth = Math.max(0.55, 1.45 * (1 - progress));
+        context.beginPath();
+        context.arc(0, 0, primaryRadius, 0, Math.PI * 2);
+        context.stroke();
+
+        context.strokeStyle = `rgb(0 221 177 / ${opacity * 54}%)`;
+        context.lineWidth = Math.max(0.45, 1.05 * (1 - progress));
+        context.beginPath();
+        context.arc(0, 0, secondaryRadius, 0, Math.PI * 2);
+        context.stroke();
+
+        const outerRadius = 12 + easedProgress * 5;
+        const innerRadius = 2.2 + (1 - progress) * 1.8;
+        context.fillStyle = `rgb(235 250 255 / ${opacity * 94}%)`;
+        context.beginPath();
+        for (let pointIndex = 0; pointIndex < 8; pointIndex += 1) {
+          const angle = -Math.PI / 2 + pointIndex * Math.PI / 4;
+          const radius = pointIndex % 2 === 0 ? outerRadius : innerRadius;
+          const pointX = Math.cos(angle) * radius;
+          const pointY = Math.sin(angle) * radius;
+          if (pointIndex === 0) context.moveTo(pointX, pointY);
+          else context.lineTo(pointX, pointY);
+        }
+        context.closePath();
+        context.fill();
+
+        const coreGlow = context.createRadialGradient(0, 0, 0, 0, 0, 9);
+        coreGlow.addColorStop(0, `rgb(255 255 255 / ${opacity * 100}%)`);
+        coreGlow.addColorStop(0.3, `rgb(87 187 255 / ${opacity * 78}%)`);
+        coreGlow.addColorStop(1, "rgb(44 170 255 / 0%)");
+        context.fillStyle = coreGlow;
+        context.beginPath();
+        context.arc(0, 0, 9, 0, Math.PI * 2);
+        context.fill();
+        context.restore();
+      }
+      context.restore();
+
+      context.save();
+      context.globalCompositeOperation = "lighter";
+      for (let index = sparks.length - 1; index >= 0; index -= 1) {
+        const spark = sparks[index];
+        spark.x += spark.vx;
+        spark.y += spark.vy;
+        spark.vx *= 0.982;
+        spark.vy = spark.vy * 0.982 + 0.008;
+        spark.life -= spark.decay;
+
+        if (spark.life <= 0) {
+          sparks.splice(index, 1);
+          continue;
+        }
+
+        const color = spark.aqua ? "0 221 177" : "87 187 255";
+        context.strokeStyle = `rgb(${color} / ${spark.life * 72}%)`;
+        context.fillStyle = `rgb(255 255 255 / ${spark.life * 88}%)`;
+        context.shadowColor = `rgb(${color} / 80%)`;
+        context.shadowBlur = 7;
+        context.lineWidth = Math.max(0.45, spark.size * 0.45);
+        context.beginPath();
+        context.moveTo(spark.x - spark.vx * 5, spark.y - spark.vy * 5);
+        context.lineTo(spark.x + spark.vx * 1.5, spark.y + spark.vy * 1.5);
+        context.stroke();
+        context.beginPath();
+        context.arc(spark.x, spark.y, spark.size * spark.life, 0, Math.PI * 2);
+        context.fill();
+      }
+      context.restore();
+
+      if (trail.length || sparks.length || clickBursts.length) {
+        animationFrame = window.requestAnimationFrame(drawMeteor);
+      }
+    };
+
+    const startAnimation = () => {
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(drawMeteor);
+      }
+    };
+
+    const updateTrail = (event: PointerEvent) => {
+      const points = event.getCoalescedEvents?.() ?? [event];
+      const now = performance.now();
+
+      for (const point of points) {
+        const dx = point.clientX - lastX;
+        const dy = point.clientY - lastY;
+        const distance = Math.hypot(dx, dy);
+        if (distance < 2) continue;
+
+        trail.push({ x: point.clientX, y: point.clientY, bornAt: now });
+        if (trail.length > 18) trail.shift();
+
+        if (now - lastSparkAt > 18) {
+          const speed = Math.min(distance, 30);
+          const amount = Math.min(3, Math.max(1, Math.round(speed / 9)));
+          for (let index = 0; index < amount && sparks.length < maxSparks; index += 1) {
+            const drift = (Math.random() - 0.5) * 1.15;
+            sparks.push({
+              x: point.clientX - dx * Math.random() * 0.34,
+              y: point.clientY - dy * Math.random() * 0.34,
+              vx: -dx * 0.025 + drift,
+              vy: -dy * 0.025 + (Math.random() - 0.5) * 1.15,
+              size: 0.75 + Math.random() * 1.35,
+              life: 0.72 + Math.random() * 0.28,
+              decay: 0.026 + Math.random() * 0.018,
+              aqua: Math.random() > 0.66,
+            });
+          }
+          lastSparkAt = now;
+        }
+
+        lastX = point.clientX;
+        lastY = point.clientY;
+      }
+
+      startAnimation();
+    };
+
+    const createClickBurst = (event: PointerEvent) => {
+      if (!event.isPrimary || event.button !== 0) return;
+
+      const now = performance.now();
+      clickBursts.push({
+        x: event.clientX,
+        y: event.clientY,
+        bornAt: now,
+        rotation: Math.random() * Math.PI * 0.5,
+      });
+      if (clickBursts.length > 3) clickBursts.shift();
+
+      const particleCount = 18;
+      for (let index = 0; index < particleCount && sparks.length < maxSparks; index += 1) {
+        const angle = (Math.PI * 2 * index) / particleCount + (Math.random() - 0.5) * 0.24;
+        const velocity = 1.1 + Math.random() * 2.7;
+        sparks.push({
+          x: event.clientX + Math.cos(angle) * 4,
+          y: event.clientY + Math.sin(angle) * 4,
+          vx: Math.cos(angle) * velocity,
+          vy: Math.sin(angle) * velocity,
+          size: 0.75 + Math.random() * 1.25,
+          life: 0.82 + Math.random() * 0.18,
+          decay: 0.032 + Math.random() * 0.018,
+          aqua: index % 3 === 0,
+        });
+      }
+
+      startAnimation();
+    };
+
+    const clearTrail = () => {
+      trail.splice(0, trail.length);
+      lastX = -100;
+      lastY = -100;
+      startAnimation();
+    };
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas, { passive: true });
+    window.addEventListener("pointermove", updateTrail, { passive: true });
+    window.addEventListener("pointerdown", createClickBurst, { passive: true });
+    document.documentElement.addEventListener("pointerleave", clearTrail, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("pointermove", updateTrail);
+      window.removeEventListener("pointerdown", createClickBurst);
+      document.documentElement.removeEventListener("pointerleave", clearTrail);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    };
+  }
+
+  function initializeScrollMotion() {
+    const previousCleanup = window.__campusScrollMotionCleanup;
+    previousCleanup?.();
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finePointer = window.matchMedia("(pointer: fine)").matches;
+    const cleanupMeteorTrail =
+      !reduceMotion && finePointer ? initializeMeteorCursorTrail() : () => {};
+    const root = document.documentElement;
+    const sections = Array.from(
+      document.querySelectorAll<HTMLElement>("#contenido-principal > :not(style):not(script)"),
+    );
+    const headings = Array.from(
+      document.querySelectorAll<HTMLElement>("#contenido-principal h1, #contenido-principal h2"),
+    );
+
+    headings.forEach((heading, index) => {
+      heading.dataset.motionHeading = "true";
+      heading.dataset.motionIndex = String(index + 1).padStart(2, "0");
+    });
+
+    document
+      .querySelectorAll<HTMLElement>("#contenido-principal .btn-primary, #contenido-principal .btn-outline")
+      .forEach((action) => action.dataset.motionAction = "true");
+
+    document.querySelectorAll<HTMLImageElement>("#contenido-principal img").forEach((image) => {
+      const imageBox = image.getBoundingClientRect();
+      if (
+        !image.closest(".page-hero") &&
+        imageBox.width >= 240 &&
+        imageBox.height >= 140
+      ) {
+        image.dataset.motionMedia = "true";
+      }
+    });
+
+    const hero = sections[0];
+    const heroPieces = hero
+      ? Array.from(
+          hero.querySelectorAll<HTMLElement>("h1, h2, p, a[href], button"),
+        )
+          .slice(0, 10)
+      : [];
+
+    hero?.setAttribute("data-hero-intro", "true");
+    heroPieces.forEach((piece, index) => {
+      piece.dataset.heroPiece = "true";
+      piece.style.setProperty("--motion-delay", `${120 + index * 90}ms`);
+    });
+
+    const visualConsole = document.querySelector<HTMLElement>(".code-console-shell");
+    const pageFooter = document.querySelector<HTMLElement>("footer");
+    const footerObserver = new IntersectionObserver((entries) => {
+      const footerIsVisible = entries.some((entry) => entry.isIntersecting);
+      if (visualConsole) {
+        visualConsole.dataset.footerHidden = String(footerIsVisible);
+      }
+    }, { threshold: 0.01 });
+
+    if (pageFooter && visualConsole) {
+      footerObserver.observe(pageFooter);
+    }
+
+    if (reduceMotion) {
+      sections.forEach((section) => section.dataset.scrollVisible = "true");
+      hero?.setAttribute("data-hero-ready", "true");
+      root.style.setProperty("--code-scroll", "0px");
+      root.style.setProperty("--scroll-progress", "0");
+      window.__campusScrollMotionCleanup = () => {
+        footerObserver.disconnect();
+        visualConsole?.removeAttribute("data-footer-hidden");
+        cleanupMeteorTrail();
+      };
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          (entry.target as HTMLElement).dataset.scrollVisible = "true";
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.08, rootMargin: "0px 0px -8%" },
+    );
+
+    sections.forEach((section, index) => {
+      if (index === 0) {
+        section.dataset.scrollVisible = "true";
+        return;
+      }
+      section.dataset.scrollReveal = index % 2 === 0 ? "left" : "right";
+      if (section.getBoundingClientRect().top < window.innerHeight * 0.92) {
+        section.dataset.scrollVisible = "true";
+      } else {
+        observer.observe(section);
+      }
+    });
+
+    let frame = 0;
+    let pointerFrame = 0;
+    let pointerX = window.innerWidth * 0.7;
+    let pointerY = window.innerHeight * 0.35;
+    const heroFrame = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => hero?.setAttribute("data-hero-ready", "true"));
+    });
+
+    const updateScrollDetails = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        root.style.setProperty("--code-scroll", `${window.scrollY}px`);
+        const scrollableHeight = Math.max(
+          document.documentElement.scrollHeight - window.innerHeight,
+          1,
+        );
+        root.style.setProperty(
+          "--scroll-progress",
+          String(Math.min(window.scrollY / scrollableHeight, 1)),
+        );
+        frame = 0;
+      });
+    };
+
+    const updatePointerDetails = (event: PointerEvent) => {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      if (pointerFrame) return;
+      pointerFrame = window.requestAnimationFrame(() => {
+        root.style.setProperty("--pointer-x", `${pointerX}px`);
+        root.style.setProperty("--pointer-y", `${pointerY}px`);
+        pointerFrame = 0;
+      });
+    };
+
+    window.addEventListener("scroll", updateScrollDetails, { passive: true });
+    if (finePointer) {
+      window.addEventListener("pointermove", updatePointerDetails, { passive: true });
+    }
+    updateScrollDetails();
+
+    window.__campusScrollMotionCleanup = () => {
+      observer.disconnect();
+      footerObserver.disconnect();
+      visualConsole?.removeAttribute("data-footer-hidden");
+      window.removeEventListener("scroll", updateScrollDetails);
+      window.removeEventListener("pointermove", updatePointerDetails);
+      if (frame) window.cancelAnimationFrame(frame);
+      if (pointerFrame) window.cancelAnimationFrame(pointerFrame);
+      window.cancelAnimationFrame(heroFrame);
+      cleanupMeteorTrail();
+    };
+  }
+
+  document.addEventListener("astro:page-load", initializeScrollMotion);
+  document.addEventListener("astro:before-swap", () => {
+    window.__campusScrollMotionCleanup?.();
+  });
 </script>
 <style is:global>
+  .stellar-route-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    overflow: hidden;
+    contain: strict;
+    isolation: isolate;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .stellar-route-transition__surface {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(circle at 72% 34%, rgb(44 170 255 / 16%), transparent 38%),
+      radial-gradient(circle at 26% 66%, rgb(0 221 177 / 10%), transparent 34%),
+      linear-gradient(112deg, #000051 0%, #060a48 48%, #07102b 100%);
+    opacity: 0;
+    transform: translateZ(0);
+  }
+
+  html[data-route-transition="active"],
+  html[data-route-transition="active"] body {
+    background: #000051;
+  }
+
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+    mix-blend-mode: normal !important;
+  }
+
+  html[data-route-transition="arriving"] .site-content-layer {
+    animation: campus-page-arrive 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+
+  .stellar-route-transition__scan {
+    position: absolute;
+    inset: 22% -12%;
+    opacity: 0;
+    background:
+      linear-gradient(90deg, transparent 0 9%, rgb(44 170 255 / 8%) 9.1% 9.2%, transparent 9.3% 100%),
+      repeating-linear-gradient(0deg, transparent 0 2.15rem, rgb(87 187 255 / 5%) 2.2rem 2.25rem);
+    mask-image: linear-gradient(90deg, transparent, #000 18% 82%, transparent);
+    transform: skewX(-12deg) translate3d(-4%, 0, 0);
+  }
+
+  .stellar-route-transition__trajectory {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(54rem, 72vw);
+    height: 2px;
+    opacity: 0;
+    rotate: -12deg;
+    translate: -82vw -50%;
+  }
+
+  .stellar-route-transition__tail {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(44 170 255 / 12%) 24%,
+      rgb(44 170 255 / 72%) 72%,
+      rgb(255 255 255 / 96%)
+    );
+    filter: drop-shadow(0 0 5px rgb(44 170 255 / 68%));
+    transform-origin: right center;
+  }
+
+  .stellar-route-transition__core {
+    position: absolute;
+    top: 50%;
+    right: -0.25rem;
+    width: 0.48rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+      0 0 0.35rem #fff,
+      0 0 0.9rem #57bbff,
+      0 0 1.8rem rgb(0 221 177 / 72%);
+    translate: 0 -50%;
+  }
+
+  .stellar-route-transition__core::before,
+  .stellar-route-transition__core::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    content: "";
+    background: linear-gradient(90deg, transparent, #fff, transparent);
+    translate: -50% -50%;
+  }
+
+  .stellar-route-transition__core::before {
+    width: 2.3rem;
+    height: 1px;
+  }
+
+  .stellar-route-transition__core::after {
+    width: 1px;
+    height: 2.3rem;
+    background: linear-gradient(180deg, transparent, #fff, transparent);
+  }
+
+  .stellar-route-transition__token {
+    position: absolute;
+    color: rgb(173 229 255 / 84%);
+    font: 700 clamp(0.62rem, 1vw, 0.78rem)/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 0.85rem rgb(44 170 255 / 75%);
+    opacity: 0;
+  }
+
+  .stellar-route-transition__token--binary {
+    top: 38%;
+    left: 28%;
+  }
+
+  .stellar-route-transition__token--tag {
+    top: 53%;
+    left: 48%;
+    color: rgb(83 244 205 / 86%);
+  }
+
+  .stellar-route-transition__token--commit {
+    top: 43%;
+    left: 68%;
+  }
+
+  .stellar-route-transition__spark {
+    position: absolute;
+    width: 3px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 0.7rem #57bbff;
+    opacity: 0;
+  }
+
+  .stellar-route-transition__spark--one {
+    top: 43%;
+    left: 39%;
+  }
+
+  .stellar-route-transition__spark--two {
+    top: 57%;
+    left: 57%;
+  }
+
+  .stellar-route-transition__spark--three {
+    top: 39%;
+    left: 76%;
+  }
+
+  .stellar-route-transition__console {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(1.5rem, 8vh, 5rem);
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    gap: 0.45rem;
+    width: min(18rem, 72vw);
+    padding: 0.6rem 0.75rem 0.52rem;
+    border: 1px solid rgb(87 187 255 / 30%);
+    border-radius: 0.75rem;
+    color: rgb(213 242 255 / 92%);
+    background: rgb(3 10 43 / 76%);
+    box-shadow: 0 0 1.4rem rgb(44 170 255 / 12%);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transform: translate3d(-50%, 0.75rem, 0) scale(0.97);
+  }
+
+  .stellar-route-transition__console-dot {
+    width: 0.42rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #00ddb1;
+    box-shadow: 0 0 0.75rem rgb(0 221 177 / 88%);
+  }
+
+  .stellar-route-transition__console code {
+    font: 700 0.68rem/1.2 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.055em;
+  }
+
+  .stellar-route-transition__console code b {
+    color: #00ddb1;
+  }
+
+  .stellar-route-transition__console-progress {
+    grid-column: 1 / -1;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgb(87 187 255 / 14%);
+  }
+
+  .stellar-route-transition__console-progress::before {
+    display: block;
+    width: 42%;
+    height: 100%;
+    border-radius: inherit;
+    content: "";
+    background: linear-gradient(90deg, #00ddb1, #2caaff, #fff);
+    box-shadow: 0 0 0.75rem rgb(44 170 255 / 65%);
+    transform: translateX(-110%);
+  }
+
+  .stellar-route-transition[data-route-phase] {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__surface {
+    animation: stellar-route-surface-in 190ms linear both;
+  }
+
+  .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__surface {
+    animation: stellar-route-surface-out 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .stellar-route-transition[data-route-phase] .stellar-route-transition__trajectory,
+  .stellar-route-transition[data-route-phase] .stellar-route-transition__token,
+  .stellar-route-transition[data-route-phase] .stellar-route-transition__spark,
+  .stellar-route-transition[data-route-phase] .stellar-route-transition__scan,
+  .stellar-route-transition[data-route-phase] .stellar-route-transition__console {
+    will-change: transform, translate, opacity;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__trajectory {
+    animation: stellar-route-depart 420ms cubic-bezier(0.32, 0.04, 0.2, 1) both;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__token {
+    animation: stellar-route-code 350ms ease-out both;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__token--tag {
+    animation-delay: 45ms;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__token--commit {
+    animation-delay: 90ms;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__spark {
+    animation: stellar-route-spark 360ms ease-out both;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__spark--two {
+    animation-delay: 65ms;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__spark--three {
+    animation-delay: 120ms;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__scan {
+    animation: stellar-route-scan 440ms ease-out both;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__console {
+    animation: stellar-route-console-in 430ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .stellar-route-transition[data-route-phase="departing"] .stellar-route-transition__console-progress::before {
+    animation: stellar-route-progress 430ms cubic-bezier(0.32, 0.04, 0.2, 1) both;
+  }
+
+  .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__trajectory {
+    animation: stellar-route-arrive 430ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__token,
+  .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__spark {
+    animation: stellar-route-settle 300ms ease-out both;
+  }
+
+  .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__scan,
+  .stellar-route-transition[data-route-phase="arriving"] .stellar-route-transition__console {
+    animation: stellar-route-console-out 320ms ease-out both;
+  }
+
+  @keyframes stellar-route-depart {
+    0% { opacity: 0; translate: -82vw -50%; scale: 0.7 1; }
+    18% { opacity: 1; }
+    72% { opacity: 1; }
+    100% { opacity: 0.86; translate: 38vw -50%; scale: 1 1; }
+  }
+
+  @keyframes stellar-route-arrive {
+    0% { opacity: 0.86; translate: 38vw -50%; scale: 1 1; }
+    100% { opacity: 0; translate: 76vw -50%; scale: 0.62 1; }
+  }
+
+  @keyframes stellar-route-code {
+    0% { opacity: 0; transform: translate3d(-1rem, 0.65rem, 0); }
+    38% { opacity: 0.9; }
+    100% { opacity: 0; transform: translate3d(1.35rem, -0.55rem, 0); }
+  }
+
+  @keyframes stellar-route-spark {
+    0% { opacity: 0; transform: scale(0.35); }
+    42% { opacity: 1; transform: scale(1.8); }
+    100% { opacity: 0; transform: translate3d(0.7rem, -0.55rem, 0) scale(0.25); }
+  }
+
+  @keyframes stellar-route-settle {
+    from { opacity: 0.55; transform: translate3d(0, 0, 0); }
+    to { opacity: 0; transform: translate3d(1rem, -0.35rem, 0); }
+  }
+
+  @keyframes stellar-route-scan {
+    0% { opacity: 0; transform: skewX(-12deg) translate3d(-9%, 0, 0); }
+    35% { opacity: 0.72; }
+    100% { opacity: 0; transform: skewX(-12deg) translate3d(9%, 0, 0); }
+  }
+
+  @keyframes stellar-route-console-in {
+    0% { opacity: 0; transform: translate3d(-50%, 0.75rem, 0) scale(0.97); }
+    30%, 78% { opacity: 0.94; transform: translate3d(-50%, 0, 0) scale(1); }
+    100% { opacity: 0; transform: translate3d(-50%, -0.2rem, 0) scale(1); }
+  }
+
+  @keyframes stellar-route-console-out {
+    from { opacity: 0.42; transform: translate3d(-50%, 0, 0) scale(1); }
+    to { opacity: 0; transform: translate3d(-50%, -0.45rem, 0) scale(0.98); }
+  }
+
+  @keyframes stellar-route-progress {
+    from { transform: translateX(-110%); }
+    to { transform: translateX(245%); }
+  }
+
+  @keyframes stellar-route-surface-in {
+    from { opacity: 0; }
+    to { opacity: 0.985; }
+  }
+
+  @keyframes stellar-route-surface-out {
+    0%, 24% { opacity: 0.985; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes campus-page-arrive {
+    from { transform: translate3d(2.25rem, 0, 0); }
+    to { transform: translate3d(0, 0, 0); }
+  }
+
+  html.enhanced-image-loading img:not([data-image-state]),
+  img[data-image-state]:not([data-image-state="loaded"]) {
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    font-size: 0 !important;
+    text-indent: -9999px;
+    content: "";
+    opacity: 1;
+    transition: opacity 460ms cubic-bezier(0.16, 1, 0.3, 1), filter 460ms ease;
+  }
+
+  img[data-image-state]:not([data-image-state="loaded"]) {
+    background-color: #07102b;
+    background-image:
+      radial-gradient(circle at 28% 30%, rgb(44 170 255 / 18%), transparent 34%),
+      linear-gradient(
+        108deg,
+        transparent 20%,
+        rgb(87 187 255 / 8%) 37%,
+        rgb(0 221 177 / 28%) 48%,
+        rgb(255 255 255 / 22%) 52%,
+        rgb(44 170 255 / 8%) 63%,
+        transparent 80%
+      );
+    background-position: center, 140% 0;
+    background-size: 100% 100%, 240% 100%;
+  }
+
+  img[data-image-state="loading"] {
+    animation: campus-image-loading 1.35s ease-in-out infinite;
+  }
+
+  img[data-image-kind="utility"][data-image-state="loading"] {
+    background-image:
+      radial-gradient(circle at center, rgb(87 187 255 / 16%), transparent 58%),
+      linear-gradient(108deg, transparent 30%, rgb(0 221 177 / 24%) 50%, transparent 70%);
+  }
+
+  img[data-image-state="loaded"] {
+    content: normal;
+    opacity: 1;
+    animation: campus-image-reveal 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  img[data-image-state="loaded"][data-image-reveal="instant"] {
+    animation: none;
+  }
+
+  img[data-image-state="error"] {
+    content: "";
+    min-height: 7rem;
+    background-image:
+      radial-gradient(circle at center, rgb(0 221 177 / 18%), transparent 44%),
+      linear-gradient(135deg, #000051, #07102b);
+  }
+
+  @keyframes campus-image-loading {
+    0% { background-position: center, 140% 0; }
+    100% { background-position: center, -140% 0; }
+  }
+
+  @keyframes campus-image-reveal {
+    from { opacity: 0.16; }
+    to { opacity: 1; }
+  }
+
+  [data-scroll-reveal] {
+    opacity: 0;
+    translate: 0 3.5rem;
+    scale: 0.975;
+    filter: blur(7px);
+    clip-path: inset(0 0 12% 0 round 1.5rem);
+    transition:
+      opacity 750ms cubic-bezier(0.16, 1, 0.3, 1),
+      translate 900ms cubic-bezier(0.16, 1, 0.3, 1),
+      scale 900ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter 800ms ease,
+      clip-path 950ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-scroll-reveal="left"] {
+    translate: -2.5rem 3.5rem;
+  }
+
+  [data-scroll-reveal="right"] {
+    translate: 2.5rem 3.5rem;
+  }
+
+  [data-scroll-visible="true"] {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    filter: blur(0);
+    clip-path: inset(0 0 0 0 round 0);
+  }
+
+  [data-hero-piece="true"] {
+    opacity: 0;
+    translate: 0 1.75rem;
+    filter: blur(7px);
+    transition:
+      opacity 700ms var(--motion-delay) cubic-bezier(0.16, 1, 0.3, 1),
+      translate 850ms var(--motion-delay) cubic-bezier(0.16, 1, 0.3, 1),
+      filter 750ms var(--motion-delay) ease;
+  }
+
+  [data-hero-ready="true"] [data-hero-piece="true"] {
+    opacity: 1;
+    translate: 0 0;
+    filter: blur(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.enhanced-image-loading img[data-image-state="loading"] {
+      animation: none;
+    }
+
+    html.enhanced-image-loading img[data-image-state="loaded"] {
+      animation: none;
+    }
+  }
+
+  [data-motion-heading="true"] {
+    position: relative;
+  }
+
+  [data-motion-heading="true"]::before {
+    content: "{" attr(data-motion-index) "}";
+    position: absolute;
+    top: 50%;
+    left: -3.4rem;
+    color: rgb(87 187 255 / 44%);
+    font: 700 0.68rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    translate: -0.75rem -50%;
+    transition: opacity 500ms 260ms ease, translate 650ms 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-motion-heading="true"]::after {
+    content: "";
+    position: absolute;
+    right: 12%;
+    bottom: -0.55rem;
+    left: 12%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(44 170 255 / 70%), #00aa80, transparent);
+    opacity: 0;
+    scale: 0 1;
+    transition: opacity 600ms 320ms ease, scale 800ms 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-scroll-visible="true"] [data-motion-heading="true"]::before,
+  [data-hero-ready="true"] [data-motion-heading="true"]::before {
+    opacity: 1;
+    translate: 0 -50%;
+  }
+
+  [data-scroll-visible="true"] [data-motion-heading="true"]::after,
+  [data-hero-ready="true"] [data-motion-heading="true"]::after {
+    opacity: 1;
+    scale: 1;
+  }
+
+  [data-motion-action="true"] {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transition: translate 260ms ease, box-shadow 260ms ease, filter 260ms ease;
+  }
+
+  [data-motion-action="true"]::after {
+    content: "";
+    position: absolute;
+    inset: -50% auto -50% -45%;
+    z-index: -1;
+    width: 35%;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 30%), transparent);
+    rotate: 16deg;
+    transition: translate 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-motion-action="true"]:hover {
+    translate: 0 -4px;
+    filter: saturate(1.12);
+    box-shadow: 0 1rem 2.5rem rgb(0 170 128 / 22%), 0 0 0 1px rgb(87 187 255 / 12%);
+  }
+
+  [data-motion-action="true"]:hover::after {
+    translate: 450% 0;
+  }
+
+  [data-motion-media="true"] {
+    transition: scale 600ms cubic-bezier(0.16, 1, 0.3, 1), filter 600ms ease;
+    will-change: scale;
+  }
+
+  [data-motion-media="true"]:hover {
+    scale: 1.018;
+    filter: saturate(1.08) drop-shadow(0 1.2rem 2.5rem rgb(44 170 255 / 12%));
+  }
+
+  @media (max-width: 767px) {
+    [data-motion-heading="true"]::before {
+      top: -1rem;
+      left: 0;
+      translate: 0 -0.4rem;
+    }
+
+    [data-scroll-visible="true"] [data-motion-heading="true"]::before,
+    [data-hero-ready="true"] [data-motion-heading="true"]::before {
+      translate: 0 0;
+    }
+
+    [data-scroll-reveal="left"],
+    [data-scroll-reveal="right"] {
+      translate: 0 2.5rem;
+    }
+  }
+
   nav.navbar {
     animation: bgHeader auto linear both;
     animation-timeline: scroll();
@@ -296,8 +1594,8 @@ const curryear = new Date().getFullYear();
         font-weight: 600;
       }
       a.active {
-        color: #02d9a4;
-        border-bottom: 3px solid #02d9a4;
+        color: var(--color-brand-cyan);
+        border-bottom: 3px solid var(--color-brand-cyan);
       }
     }
   }
@@ -310,20 +1608,50 @@ const curryear = new Date().getFullYear();
   }
 
   :root {
-    --accent: 136, 58, 234;
-    --accent-light: 224, 204, 250;
-    --accent-dark: 49, 10, 101;
+    --accent: 44, 170, 255;
+    --accent-light: 87, 187, 255;
+    --accent-dark: 7, 16, 43;
     --accent-gradient: linear-gradient(
       45deg,
       rgb(var(--accent)),
-      rgb(var(--accent-light)) 30%,
-      white 60%
+      var(--color-brand-aqua) 70%
     );
   }
   html {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
-    background-color: red;
+    background-color: var(--color-brand-gradient-start);
+    overflow-x: clip;
+    scroll-behavior: smooth;
+  }
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    transform: translateY(-150%);
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #07102b;
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+  :focus-visible {
+    outline: 3px solid #57bbff;
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
   code {
     font-family:

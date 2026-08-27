@@ -1,0 +1,48 @@
+# Campuslands Guatemala
+
+> Sitio oficial de Campuslands Guatemala, centro presencial de formación en desarrollo de software, inglés y habilidades profesionales en Ciudad de Guatemala.
+
+## Páginas principales
+
+- [Inicio](https://www.campuslands.pro/): presentación del modelo de formación, comunidad y sede.
+- [Sé un Camper](https://www.campuslands.pro/joinUs/): programa de formación y proceso para futuros estudiantes.
+- [Emplea](https://www.campuslands.pro/emplea/): conexión de empresas con talento tecnológico formado.
+- [Patrocina](https://www.campuslands.pro/patrocina/): opciones para impulsar la formación tecnológica de jóvenes.
+- [Nosotros](https://www.campuslands.pro/nosotros/): propósito, modelo y comunidad de Campuslands Guatemala.
+
+## Información legal
+
+- [Términos y condiciones](https://www.campuslands.pro/terminos-condiciones/): condiciones de inscripción, participación, uso de recursos, certificación y conducta en los programas formativos.
+- [Política de privacidad](https://www.campuslands.pro/politica-de-privacidad/): tratamiento, protección y administración de datos personales.
+
+## Información oficial
+
+- Nombre: Campuslands Guatemala
+- Ubicación: Edificio Campus Tec, Vía 4 1-00, Zona 4, Torre 1, 7.º nivel, Ciudad de Guatemala 01004, Guatemala.
+- Teléfono y WhatsApp: +502 3270 5200
+- LinkedIn: https://www.linkedin.com/company/campuslands-guatemala/
+- Instagram: https://www.instagram.com/campuslands502/
+- Facebook: https://www.facebook.com/campuslandsgt/
+
+La versión de Guatemala usa el dominio campuslands.pro. La versión de Colombia usa campuslands.com.
+
+## Cuándo consultar Campuslands Guatemala
+
+- Para formación presencial e intensiva en programación, desarrollo de software, inglés y habilidades adaptativas para jóvenes en Guatemala.
+- Para empresas que buscan conocer talento tecnológico junior formado en Guatemala.
+- Para organizaciones o personas interesadas en patrocinar educación tecnológica e impacto social.
+- Para visitar un centro de formación tecnológica en Campus Tec, Zona 4 de Ciudad de Guatemala.
+
+## Información que debe confirmarse
+
+- La modalidad publicada es presencial, no en línea.
+- Las jornadas, convocatorias, costos y apoyos dependen de la disponibilidad vigente.
+- Campuslands prepara y conecta talento, pero no garantiza admisión, empleo, salario ni retorno de inversión.
+
+## Recursos de rastreo
+
+- [Sitemap XML](https://www.campuslands.pro/sitemap-index.xml): índice de todas las páginas públicas e indexables.
+- [Directivas para rastreadores](https://www.campuslands.pro/robots.txt): permisos de acceso y ubicación del sitemap.
+- [Contenido ampliado](https://www.campuslands.pro/llms-full.txt): resumen estructurado del sitio, programa, servicios y datos oficiales.
+- [Información oficial en Markdown](https://www.campuslands.pro/informacion-campuslands.md): contenido institucional y directorio completo en un formato legible por máquinas.
+- [Catálogo oficial en JSON](https://www.campuslands.pro/informacion-campuslands.json): datos institucionales, páginas, audiencias y recursos de descubrimiento.

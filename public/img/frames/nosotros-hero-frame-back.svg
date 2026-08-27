@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 1000" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="nosotros-back-gradient" x1="16" y1="18" x2="904" y2="982" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00AA80" />
+      <stop offset=".5" stop-color="#2CAAFF" />
+      <stop offset="1" stop-color="#57BBFF" />
+    </linearGradient>
+    <filter id="nosotros-back-glow" x="-14%" y="-14%" width="128%" height="128%">
+      <feGaussianBlur stdDeviation="9" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.173 0 0 0 0 0.667 0 0 0 0 1 0 0 0 .52 0" />
+      <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+
+  <rect x="14" y="14" width="892" height="972" rx="54" stroke="url(#nosotros-back-gradient)" stroke-width="20" />
+  <rect x="34" y="34" width="852" height="932" rx="37" stroke="#57BBFF" stroke-opacity=".2" stroke-width="3" />
+  <rect class="back-runner" x="14" y="14" width="892" height="972" rx="54" stroke="#F1FBFF" stroke-width="7" stroke-linecap="round" filter="url(#nosotros-back-glow)" pathLength="100" />
+
+  <ellipse class="orbit orbit--one" cx="460" cy="465" rx="340" ry="205" stroke="#2CAAFF" stroke-opacity=".24" stroke-width="3" stroke-dasharray="12 18" />
+  <ellipse class="orbit orbit--two" cx="460" cy="465" rx="272" ry="338" stroke="#00AA80" stroke-opacity=".18" stroke-width="3" stroke-dasharray="8 22" />
+  <circle class="signal signal--one" cx="120" cy="465" r="9" fill="#00AA80" />
+  <circle class="signal signal--two" cx="732" cy="465" r="9" fill="#57BBFF" />
+
+  <style>
+    .back-runner { stroke-dasharray: 6 94; animation: nosotros-back-run 5.7s linear infinite; }
+    .orbit { transform-box: fill-box; transform-origin: center; animation: nosotros-orbit-spin 18s linear infinite; }
+    .orbit--two { animation-direction: reverse; animation-duration: 14s; }
+    .signal { transform-box: fill-box; transform-origin: center; animation: nosotros-signal 2.6s ease-in-out infinite; }
+    .signal--two { animation-delay: -1.3s; }
+    @keyframes nosotros-back-run { to { stroke-dashoffset: -100; } }
+    @keyframes nosotros-orbit-spin { to { transform: rotate(360deg); } }
+    @keyframes nosotros-signal { 0%, 100% { opacity: .3; transform: scale(.7); } 50% { opacity: 1; transform: scale(1.45); } }
+    @media (prefers-reduced-motion: reduce) { .back-runner, .orbit, .signal { animation: none; } }
+  </style>
+</svg>
