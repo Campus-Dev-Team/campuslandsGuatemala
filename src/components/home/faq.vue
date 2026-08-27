@@ -111,7 +111,7 @@ const tabFaqCampersData = [
 	{
 		id: 12,
 		title: '¿Qué diferencia a Campuslands de una universidad o instituto tradicional?',
-		description: 'Campuslands ofrece un modelo intensivo, presencial y práctico enfocado en programación, inglés y habilidades profesionales. No sustituye una carrera universitaria; es una ruta de formación distinta, orientada a desarrollar competencias para el sector tecnológico.'
+		description: 'Campuslands ofrece un modelo intensivo, presencial y práctico enfocado en programación, inteligencia artificial, inglés y habilidades profesionales. No sustituye una carrera universitaria; es una ruta de formación distinta, orientada a desarrollar competencias para el sector tecnológico.'
 	},
 	{
 		id: 13,
