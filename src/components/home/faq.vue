@@ -116,7 +116,7 @@ const tabFaqCampersData = [
 	{
 		id: 13,
 		title: '¿Puedo estudiar y trabajar al mismo tiempo mientras hago el programa?',
-		description: 'Por la intensidad del programa, combinarlo con un trabajo puede ser difícil. Consulta la jornada vigente con admisiones y evalúa tu disponibilidad antes de iniciar el proceso.'
+		description: 'Por la intensidad del programa, combinarlo con un trabajo puede ser un reto. Es difícil pero no imposible; es manejar tiempos, sacrificio y disciplina. Consulta la jornada vigente con admisiones y evalúa tu disponibilidad antes de iniciar el proceso.'
 	},
 	{
 		id: 14,
