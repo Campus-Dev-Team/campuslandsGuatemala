@@ -56,7 +56,7 @@ const tabFaqCampersData = [
 	{
 		id: 1,
 		title: '¿Qué es Campuslands y cómo funciona?',
-		description: 'Campuslands Guatemala es una experiencia educativa intensiva y presencial que forma a jóvenes en programación, inglés y habilidades profesionales para integrarse al sector tecnológico. El aprendizaje práctico, la disciplina y el acompañamiento de mentores son parte central del proceso.'
+		description: 'Campuslands Guatemala es una experiencia educativa intensiva y presencial que forma a jóvenes en programación, inteligencia artificial, inglés y habilidades profesionales para integrarse al sector tecnológico. El aprendizaje práctico, la disciplina y el acompañamiento de mentores son parte central del proceso.'
 	},
 	{
 		id: 2,
