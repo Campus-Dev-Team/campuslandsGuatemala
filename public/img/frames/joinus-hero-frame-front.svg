@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1200" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="front-gradient" x1="14" y1="690" x2="1086" y2="1186" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00AA80" />
+      <stop offset=".5" stop-color="#2CAAFF" />
+      <stop offset="1" stop-color="#57BBFF" />
+    </linearGradient>
+    <filter id="front-glow" x="-12%" y="-22%" width="124%" height="144%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.173 0 0 0 0 0.667 0 0 0 0 1 0 0 0 .62 0" />
+      <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+
+  <path class="front-base" d="M14 690V1132Q14 1186 68 1186H1032Q1086 1186 1086 1132V690" stroke="url(#front-gradient)" stroke-width="20" stroke-linecap="round" />
+  <path class="front-inner" d="M35 720V1128Q35 1165 72 1165H1028Q1065 1165 1065 1128V720" stroke="#57BBFF" stroke-opacity=".2" stroke-width="3" stroke-linecap="round" />
+  <path class="front-runner" d="M14 690V1132Q14 1186 68 1186H1032Q1086 1186 1086 1132V690" stroke="#F1FBFF" stroke-width="7" stroke-linecap="round" filter="url(#front-glow)" pathLength="100" />
+  <path class="energy-mark" d="M474 1165H626" stroke="#EAF8FF" stroke-width="5" stroke-linecap="round" filter="url(#front-glow)" />
+
+  <style>
+    .front-runner { stroke-dasharray: 11 89; animation: front-run 4.6s cubic-bezier(.45, 0, .55, 1) infinite; }
+    .energy-mark { transform-box: fill-box; transform-origin: center; animation: energy-breathe 2.3s ease-in-out infinite; }
+    @keyframes front-run { to { stroke-dashoffset: -100; } }
+    @keyframes energy-breathe { 0%, 100% { opacity: .28; transform: scaleX(.65); } 50% { opacity: 1; transform: scaleX(1); } }
+    @media (prefers-reduced-motion: reduce) { .front-runner, .energy-mark { animation: none; } }
+  </style>
+</svg>

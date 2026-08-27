@@ -9,34 +9,53 @@ import tools from "./skillsArrays/tools";
     class="relative flex flex-col flex-wrap justify-center gap-8 h-fit w-full items-center"
   >
     <div class="self-center flex w-full flex-col gap-y-8">
-      <p
+      <h2
         class="gradient-text text-center f-40 leading-8 lg:leading-[60px] f-700"
       >
         Habilidades que aprenden nuestros Campers
-      </p>
+      </h2>
       <p class="text-center text-sm lg:text-base leading-6 text-white">
         En Campuslands, nuestros estudiantes adquieren el equilibrio perfecto
         entre conocimiento técnico y humano para afrontar los retos de la
-        industria tech.
+        industria tech. 
       </p>
     </div>
-    <div class="indicators px-4 max-w-[980px]">
+    <div class="indicators px-4 max-w-[980px]" data-skills-tabs>
       <div
         class="flex flex-col md:flex-row items-center gap-2 mx-auto max-w-fit border bg-primary border-white rounded-[15px] p-2 mb-10"
+        role="tablist"
+        aria-label="Tipos de habilidades"
       >
         <button
+          type="button"
+          role="tab"
+          id="hardSkills-tab"
+          aria-controls="hardSkills"
+          aria-selected="true"
           class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-12 w-[196px] bg-primary_action text-white font-semibold"
           data-tab="hardSkills"
         >
           Habilidades técnicas
         </button>
         <button
+          type="button"
+          role="tab"
+          id="tools-tab"
+          aria-controls="tools"
+          aria-selected="false"
+          tabindex="-1"
           class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-9 w-[196px] text-black"
           data-tab="tools"
         >
           Herramientas
         </button>
         <button
+          type="button"
+          role="tab"
+          id="softSkills-tab"
+          aria-controls="softSkills"
+          aria-selected="false"
+          tabindex="-1"
           class="tab-btn flex items-center justify-center rounded-[15px] cursor-pointer hover:bg-primary_action h-12 w-[196px] text-black"
           data-tab="softSkills"
         >
@@ -46,6 +65,8 @@ import tools from "./skillsArrays/tools";
 
       <div
         id="hardSkills"
+        role="tabpanel"
+        aria-labelledby="hardSkills-tab"
         class="skill-content flex flex-wrap justify-center gap-5 lg:gap-5"
       >
         {
@@ -53,8 +74,12 @@ import tools from "./skillsArrays/tools";
             <img
               src={skill.asset}
               alt={skill.name}
+              width="205"
+              height="60"
               class="max-h-[55px]
 min-w-[130px] lg:max-h-[60px] lg:min-w-[205px]"
+              loading="lazy"
+              decoding="async"
               draggable="false"
               title={skill.name}
             />
@@ -64,24 +89,46 @@ min-w-[130px] lg:max-h-[60px] lg:min-w-[205px]"
 
       <div
         id="tools"
-        class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-4"
+        role="tabpanel"
+        aria-labelledby="tools-tab"
+        class="skill-content tools-grid hidden"
       >
         {
           tools.map((skill) => (
-            <img
-              src={skill.asset}
-              alt={skill.name}
-              title={skill.name}
-              class="max-h-[55px]
-min-w-[130px] lg:max-h-[95px] lg:min-w-[170px]"
-              draggable="false"
-            />
+            <div
+              class:list={[
+                "tool-card",
+                {
+                  "tool-card--monochrome": [
+                    "Docker",
+                    "DBeaver",
+                    "Gemini",
+                    "Claude",
+                    "Copilot",
+                  ].includes(skill.name),
+                },
+              ]}
+            >
+              <img
+                src={skill.asset}
+                alt={skill.name}
+                title={skill.name}
+                width={skill.width}
+                height={skill.height}
+                class="tool-card__logo"
+                loading="lazy"
+                decoding="async"
+                draggable="false"
+              />
+            </div>
           ))
         }
       </div>
 
       <div
         id="softSkills"
+        role="tabpanel"
+        aria-labelledby="softSkills-tab"
         class="skill-content hidden flex flex-wrap justify-center gap-5 lg:gap-4"
       >
         {
@@ -91,7 +138,11 @@ min-w-[130px] lg:max-h-[95px] lg:min-w-[170px]"
                 src={skill.asset}
                 alt={skill.name}
                 title={skill.name}
+                width="28"
+                height="28"
                 class="size-7"
+                loading="lazy"
+                decoding="async"
                 draggable="false"
               />
               <p>{skill.name}</p>
@@ -104,27 +155,157 @@ min-w-[130px] lg:max-h-[95px] lg:min-w-[170px]"
 </section>
 
 <script>
-  const tabButtons = document.querySelectorAll(".tab-btn");
-  const skillContents = document.querySelectorAll(".skill-content");
+  const initializedSkillTabs = new WeakSet<Element>();
 
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      tabButtons.forEach((btn) => {
-        btn.classList.remove(
-          "bg-primary_action",
-          "text-white",
-          "font-semibold"
-        );
-        btn.classList.add("text-black");
+  function setupSkillTabs() {
+    const tabs = document.querySelector<HTMLElement>("[data-skills-tabs]");
+
+    if (!tabs || initializedSkillTabs.has(tabs)) return;
+
+    const tabButtons = Array.from(
+      tabs.querySelectorAll<HTMLButtonElement>(".tab-btn")
+    );
+    const skillContents = Array.from(
+      tabs.querySelectorAll<HTMLElement>(".skill-content")
+    );
+
+    if (!tabButtons.length || !skillContents.length) return;
+
+    initializedSkillTabs.add(tabs);
+
+    const activateTab = (button: HTMLButtonElement) => {
+      tabButtons.forEach((tabButton) => {
+        const isActive = tabButton === button;
+
+        tabButton.classList.toggle("bg-primary_action", isActive);
+        tabButton.classList.toggle("text-white", isActive);
+        tabButton.classList.toggle("font-semibold", isActive);
+        tabButton.classList.toggle("text-black", !isActive);
+        tabButton.setAttribute("aria-selected", String(isActive));
+        tabButton.tabIndex = isActive ? 0 : -1;
       });
 
-      button.classList.remove("text-black");
-      button.classList.add("bg-primary_action", "text-white", "font-semibold");
-
-      skillContents.forEach((content) => content.classList.add("hidden"));
-
       const tabId = button.dataset.tab;
-      document.getElementById(tabId).classList.remove("hidden");
+
+      skillContents.forEach((content) => {
+        const isActive = content.id === tabId;
+
+        content.classList.toggle("hidden", !isActive);
+        content.hidden = !isActive;
+      });
+    };
+
+    tabButtons.forEach((button, index) => {
+      button.addEventListener("click", () => activateTab(button));
+      button.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+          return;
+        }
+
+        event.preventDefault();
+
+        let nextIndex = index;
+
+        if (event.key === "ArrowLeft") {
+          nextIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+        } else if (event.key === "ArrowRight") {
+          nextIndex = (index + 1) % tabButtons.length;
+        } else if (event.key === "Home") {
+          nextIndex = 0;
+        } else if (event.key === "End") {
+          nextIndex = tabButtons.length - 1;
+        }
+
+        const nextButton = tabButtons[nextIndex];
+        activateTab(nextButton);
+        nextButton.focus();
+      });
     });
-  });
+
+    const initialTab =
+      tabButtons.find((button) => button.getAttribute("aria-selected") === "true") ??
+      tabButtons[0];
+
+    activateTab(initialTab);
+  }
+
+  document.addEventListener("astro:page-load", setupSkillTabs);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupSkillTabs, { once: true });
+  } else {
+    setupSkillTabs();
+  }
 </script>
+
+<style>
+  .tools-grid:not(.hidden) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+    width: 100%;
+    max-width: 980px;
+    margin-inline: auto;
+  }
+
+  .tool-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    height: 92px;
+    padding: 1rem;
+    overflow: hidden;
+    border: 1px solid rgb(87 187 255 / 0.26);
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgb(7 16 82 / 0.82), rgb(27 0 191 / 0.2));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08), 0 12px 28px rgb(0 0 81 / 0.22);
+  }
+
+  .tool-card__logo {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 58px;
+    object-fit: contain;
+  }
+
+  .tool-card--monochrome .tool-card__logo {
+    filter: brightness(0) invert(1) drop-shadow(0 0 12px rgb(87 187 255 / 0.2));
+  }
+
+  @media (min-width: 640px) {
+    .tools-grid:not(.hidden) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .tool-card {
+      height: 112px;
+      padding: 1.15rem 1.4rem;
+    }
+
+    .tool-card__logo {
+      max-height: 70px;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .tool-card {
+      transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+    }
+
+    .tool-card:hover {
+      border-color: rgb(87 187 255 / 0.72);
+      box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12), 0 16px 34px rgb(44 170 255 / 0.17);
+      transform: translateY(-3px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tool-card {
+      transition: none;
+    }
+  }
+</style>

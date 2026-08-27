@@ -1,29 +1,418 @@
 ---
+import { Image } from "astro:assets";
+import donationScene from "../../assets/img/patrocina/donacion-campuslands-guatemala.webp";
+
+const donationLink = "https://mail.google.com/mail/?view=cm&fs=1&to=jorge@quantic.la&su=Interés en Programa de Patrocinio - [Nombre Empresa]";
 ---
-<section class="w-full sections max-w-[1150px] self-center">
-	<a href="https://mail.google.com/mail/?view=cm&fs=1&to=jorge@quantic.la&su=Interés en Programa de Patrocinio - [Nombre Empresa]" 
-	target="_blank" 
-	rel="noopener noreferrer"  class=" w-full hidden lg:block">
-		<img src="img/patrocina/donation.png" alt="" class="">
-	</a>
-	<div class="w-full flex flex-col gap-y-6 lg:hidden border-gradiante rounded-2xl py-10 text-center px-4">
-		<p class="gradient-text text-lg font-semibold leading-[28px]">Haz una donación y marca la diferencia</p>
-		<p class="text-sm ">Con tu donación, ayudas a transformar vidas. Puedes elegir hacer una donación única o configurar una suscripción para apoyar de forma recurrente a nuestros Campers.</p>
-		<a href="https://mail.google.com/mail/?view=cm&fs=1&to=jorge@quantic.la&su=Interés en Programa de Patrocinio - [Nombre Empresa]" 
-		target="_blank" 
-		rel="noopener noreferrer"  >
-			<button class="btn-primary max-w-[320px] mx-auto h-14 px-6 flex items-center gap-x-2">
-				Patrocina nuestros campers
-			</button>
-		</a>
+
+<section class="donation-section sections" aria-labelledby="donation-title">
+	<div class="donation-card">
+		<div class="donation-copy">
+			<span class="donation-code" aria-hidden="true">&#123;03&#125; DONATE://IMPACT</span>
+			<h2 id="donation-title">Haz una donación y<br />marca la diferencia</h2>
+			<p>
+				Con tu donación, ayudas a transformar vidas. Puedes elegir hacer una donación única o
+				configurar una suscripción para apoyar de forma recurrente a nuestros Campers.
+			</p>
+			<a href={donationLink} target="_blank" rel="noopener noreferrer" class="donation-button">
+				<span>Haz tu donación</span>
+				<svg viewBox="0 0 32 32" aria-hidden="true">
+					<path d="M16 27.2s-10-5.8-10-13.3A5.9 5.9 0 0 1 16 9.5a5.9 5.9 0 0 1 10 4.4C26 21.4 16 27.2 16 27.2Z" />
+					<path d="M16 9.5V4.8M12.8 6.9 16 4.2l3.2 2.7" />
+				</svg>
+			</a>
+		</div>
+
+		<div class="donation-visual" data-donation-visual>
+			<div class="visual-glow" aria-hidden="true"></div>
+			<svg class="depth-frame depth-frame--rear" viewBox="0 0 620 510" fill="none" aria-hidden="true">
+				<defs>
+					<linearGradient id="donationRear" x1="32" y1="42" x2="588" y2="468" gradientUnits="userSpaceOnUse">
+						<stop stop-color="#2CAAFF" />
+						<stop offset=".5" stop-color="#00E8C0" />
+						<stop offset="1" stop-color="#00AA80" />
+					</linearGradient>
+				</defs>
+				<path d="M90 458H64c-24 0-42-18-42-42V88c0-24 18-42 42-42h492c24 0 42 18 42 42v328c0 24-18 42-42 42h-28" stroke="url(#donationRear)" stroke-width="7" stroke-linecap="round" />
+			</svg>
+
+			<div class="visual-grid" aria-hidden="true"></div>
+			<div class="visual-label visual-label--top" aria-hidden="true"><span></span> IMPACT_ONLINE</div>
+			<div class="visual-label visual-label--side" aria-hidden="true">GT://FUTURO</div>
+
+			<Image
+				src={donationScene}
+				alt="Instructora acompañando a jóvenes de Campuslands Guatemala durante su formación tecnológica"
+				class="donation-image"
+				widths={[360, 520, 720, 900]}
+				sizes="(max-width: 767px) 92vw, (max-width: 1100px) 52vw, 600px"
+				format="avif"
+				quality={68}
+				loading="lazy"
+				decoding="async"
+			/>
+
+			<svg class="depth-frame depth-frame--front" viewBox="0 0 620 510" fill="none" aria-hidden="true">
+				<defs>
+					<linearGradient id="donationFront" x1="102" y1="458" x2="520" y2="458" gradientUnits="userSpaceOnUse">
+						<stop stop-color="#00AA80" />
+						<stop offset=".5" stop-color="#00E8C0" />
+						<stop offset="1" stop-color="#2CAAFF" />
+					</linearGradient>
+				</defs>
+				<path d="M90 458h438" stroke="#07102B" stroke-opacity=".72" stroke-width="15" stroke-linecap="round" />
+				<path d="M90 458h438" stroke="url(#donationFront)" stroke-width="7" stroke-linecap="round" />
+			</svg>
+			<div class="visual-status" aria-hidden="true"><i></i><i></i><i></i><span>future.ready()</span></div>
+		</div>
 	</div>
-	<img src="/img/textura-lateral-derecha.svg" alt="" class="absolute top-0 right-0">
-	<img src="/img/textura-lateral-izquierda.svg" alt="" class="absolute top-0 left-0">
 </section>
 
-<style scoped>
-.border-gradiante {
-	border: 6px solid transparent;
-	border-image: linear-gradient(93.45deg, #19F5BF 11.32%, #2CA2FF 96.83%) 1;
-}
+<style>
+	.donation-section {
+		width: min(100%, 1220px);
+		align-self: center;
+		position: relative;
+		padding-inline: clamp(1rem, 4vw, 3rem);
+	}
+
+	.donation-card {
+		position: relative;
+		display: grid;
+		grid-template-columns: minmax(0, .82fr) minmax(470px, 1.18fr);
+		align-items: center;
+		gap: clamp(1.5rem, 4vw, 4.5rem);
+		min-height: 560px;
+		padding: clamp(2rem, 4vw, 4rem);
+		border: 1px solid rgba(44, 170, 255, .24);
+		border-radius: clamp(1.75rem, 4vw, 3.5rem);
+		background:
+			radial-gradient(circle at 82% 35%, rgba(0, 170, 128, .12), transparent 34%),
+			linear-gradient(125deg, rgba(0, 0, 81, .68), rgba(7, 16, 43, .46));
+		box-shadow: inset 0 1px 0 rgba(87, 187, 255, .14), 0 30px 80px rgba(0, 0, 45, .28);
+		overflow: hidden;
+		isolation: isolate;
+	}
+
+	.donation-card::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background-image: linear-gradient(rgba(44, 170, 255, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(44, 170, 255, .035) 1px, transparent 1px);
+		background-size: 42px 42px;
+		mask-image: linear-gradient(90deg, transparent, #000 54%, #000);
+	}
+
+	.donation-copy {
+		position: relative;
+		z-index: 5;
+	}
+
+	.donation-code {
+		display: inline-flex;
+		align-items: center;
+		gap: .55rem;
+		margin-bottom: 1rem;
+		color: #57BBFF;
+		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+		font-size: .72rem;
+		font-weight: 700;
+		letter-spacing: .14em;
+	}
+
+	.donation-code::before {
+		content: "";
+		width: .55rem;
+		height: .55rem;
+		border-radius: 999px;
+		background: #00E8C0;
+		box-shadow: 0 0 0 6px rgba(0, 232, 192, .1), 0 0 18px #00E8C0;
+	}
+
+	.donation-copy h2 {
+		margin: 0;
+		font-size: clamp(2rem, 3.25vw, 3.55rem);
+		font-weight: 750;
+		line-height: 1.08;
+		letter-spacing: -.035em;
+		background: linear-gradient(100deg, #2CAAFF 0%, #57BBFF 38%, #00E8C0 100%);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
+	.donation-copy p {
+		max-width: 34rem;
+		margin: 1.5rem 0 2rem;
+		color: rgba(255, 255, 255, .9);
+		font-size: clamp(1rem, 1.3vw, 1.2rem);
+		line-height: 1.65;
+	}
+
+	.donation-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: .8rem;
+		min-height: 58px;
+		padding: .9rem 1.65rem;
+		border-radius: 999px;
+		background: linear-gradient(110deg, #00AA80, #00D5A8);
+		color: #07102B;
+		font-size: 1.05rem;
+		font-weight: 650;
+		box-shadow: 0 12px 36px rgba(0, 170, 128, .23);
+		transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s ease, background-position .35s ease;
+	}
+
+	.donation-button svg {
+		width: 1.65rem;
+		height: 1.65rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.8;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.donation-button:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 18px 44px rgba(0, 232, 192, .3);
+	}
+
+	.donation-button:focus-visible {
+		outline: 3px solid #57BBFF;
+		outline-offset: 4px;
+	}
+
+	.donation-visual {
+		position: relative;
+		z-index: 2;
+		width: 100%;
+		max-width: 620px;
+		min-height: 500px;
+		margin-inline: auto;
+		perspective: 1000px;
+	}
+
+	.visual-glow {
+		position: absolute;
+		inset: 18% 10% 13%;
+		z-index: 0;
+		border-radius: 50%;
+		background: radial-gradient(circle, rgba(0, 232, 192, .26), rgba(44, 170, 255, .12) 46%, transparent 72%);
+		filter: blur(28px);
+		animation: donation-breathe 4.8s ease-in-out infinite;
+	}
+
+	.depth-frame {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		overflow: visible;
+	}
+
+	.depth-frame--rear {
+		z-index: 1;
+		filter: drop-shadow(0 0 10px rgba(44, 170, 255, .34));
+	}
+
+	.depth-frame--rear path {
+		stroke-dasharray: 1120 240;
+		animation: donation-circuit 8s linear infinite;
+	}
+
+	.depth-frame--front {
+		z-index: 5;
+		filter: drop-shadow(0 0 12px rgba(0, 232, 192, .45));
+	}
+
+	.depth-frame--front path:last-child {
+		stroke-dasharray: 250 60;
+		animation: donation-circuit-front 4.5s linear infinite;
+	}
+
+	.visual-grid {
+		position: absolute;
+		inset: 15% 7% 14%;
+		z-index: 0;
+		border-radius: 2.5rem;
+		background-image: linear-gradient(rgba(87, 187, 255, .08) 1px, transparent 1px), linear-gradient(90deg, rgba(87, 187, 255, .08) 1px, transparent 1px);
+		background-size: 24px 24px;
+		transform: perspective(560px) rotateX(58deg) translateY(30%);
+		mask-image: radial-gradient(ellipse, #000 25%, transparent 72%);
+		opacity: .6;
+		transition: opacity .45s ease, transform .7s cubic-bezier(.2, .8, .2, 1);
+	}
+
+	.donation-image {
+		position: absolute;
+		z-index: 3;
+		inset: 1% 0 0;
+		width: 100%;
+		height: 96%;
+		object-fit: contain;
+		object-position: center bottom;
+		filter: drop-shadow(0 24px 26px rgba(0, 0, 35, .4));
+		transform-origin: 50% 82%;
+		transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .7s ease;
+	}
+
+	.visual-label,
+	.visual-status {
+		position: absolute;
+		z-index: 6;
+		color: rgba(144, 221, 255, .82);
+		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+		font-weight: 700;
+		letter-spacing: .12em;
+		pointer-events: none;
+	}
+
+	.visual-label--top {
+		top: 3.8rem;
+		right: 1.5rem;
+		display: flex;
+		align-items: center;
+		gap: .55rem;
+		font-size: .64rem;
+	}
+
+	.visual-label--top span {
+		width: .45rem;
+		height: .45rem;
+		border-radius: 50%;
+		background: #00E8C0;
+		box-shadow: 0 0 12px #00E8C0;
+	}
+
+	.visual-label--side {
+		right: .1rem;
+		top: 48%;
+		font-size: .58rem;
+		writing-mode: vertical-rl;
+	}
+
+	.visual-status {
+		left: 3rem;
+		bottom: 1.4rem;
+		display: flex;
+		align-items: center;
+		gap: .4rem;
+		font-size: .58rem;
+	}
+
+	.visual-status i {
+		width: .36rem;
+		height: .36rem;
+		border-radius: 50%;
+		background: #2CAAFF;
+	}
+
+	.visual-status i:nth-child(2) { background: #57BBFF; }
+	.visual-status i:nth-child(3) { background: #00AA80; }
+	.visual-status span { margin-left: .25rem; }
+
+	.donation-visual:hover .donation-image {
+		transform: translate3d(0, -10px, 34px) scale(1.035);
+		filter: drop-shadow(0 34px 34px rgba(0, 0, 35, .52)) drop-shadow(0 0 18px rgba(44, 170, 255, .12));
+	}
+
+	.donation-visual:hover .visual-grid {
+		opacity: 1;
+		transform: perspective(560px) rotateX(54deg) translateY(25%) scale(1.08);
+	}
+
+	@keyframes donation-breathe {
+		0%, 100% { transform: scale(.94); opacity: .65; }
+		50% { transform: scale(1.08); opacity: 1; }
+	}
+
+	@keyframes donation-circuit {
+		to { stroke-dashoffset: -1360; }
+	}
+
+	@keyframes donation-circuit-front {
+		to { stroke-dashoffset: -310; }
+	}
+
+	@media (max-width: 1023px) {
+		.donation-card {
+			grid-template-columns: minmax(0, .9fr) minmax(390px, 1.1fr);
+			gap: 1rem;
+			padding: 2.5rem 2rem;
+		}
+
+		.donation-visual { min-height: 450px; }
+	}
+
+	@media (max-width: 767px) {
+		.donation-section { padding-inline: .9rem; }
+
+		.donation-card {
+			grid-template-columns: 1fr;
+			gap: 1rem;
+			min-height: 0;
+			padding: 2rem 1.1rem 1.25rem;
+			border-radius: 2rem;
+			overflow: hidden;
+		}
+
+		.donation-copy {
+			text-align: center;
+		}
+
+		.donation-code {
+			justify-content: center;
+			font-size: .62rem;
+		}
+
+		.donation-copy h2 {
+			font-size: clamp(2rem, 10.5vw, 2.8rem);
+		}
+
+		.donation-copy p {
+			margin: 1.2rem auto 1.5rem;
+			font-size: 1rem;
+			line-height: 1.58;
+		}
+
+		.donation-button {
+			width: min(100%, 320px);
+		}
+
+		.donation-visual {
+			width: min(112%, 520px);
+			min-height: 390px;
+			margin-left: 50%;
+			transform: translateX(-50%);
+		}
+
+		.visual-label--top { top: 3rem; right: 1rem; }
+		.visual-label--side { right: .4rem; }
+		.visual-status { left: 2.25rem; bottom: 1rem; }
+	}
+
+	@media (max-width: 420px) {
+		.donation-visual { min-height: 350px; }
+		.visual-label--top { display: none; }
+		.visual-label--side { display: none; }
+		.visual-status { left: 1.8rem; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.visual-glow,
+		.depth-frame path {
+			animation: none !important;
+		}
+
+		.donation-image,
+		.visual-grid,
+		.donation-button {
+			transition-duration: .01ms !important;
+		}
+	}
 </style>

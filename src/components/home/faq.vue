@@ -1,52 +1,67 @@
 <template>
 	<section class="indicators max-w-[1150px] self-center">
-		<p class="gradient-text text-4xl font-bold max-w-[472px] mx-auto text-center mb-16 pb-1"> Preguntas frecuentes
-		</p>
-		<div class="flex max-w-[305px] gap-x-[10px] mx-auto border bg-primary border-white rounded-full p-2 mb-10">
-			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px]  text-white"
-				:class="`${active === 'tabCampers' ? 'bg-primary_action' : ''}`" @click="activeTab('tabCampers')">
-				Campers
+		<h2 class="gradient-text text-4xl font-bold max-w-[472px] mx-auto text-center mb-16 pb-1">Preguntas frecuentes</h2>
+		<div class="faq-controller">
+			<input id="faq-tab-campers" class="faq-tab-input" type="radio" name="faq-category" checked>
+			<input id="faq-tab-sponsors" class="faq-tab-input" type="radio" name="faq-category">
+
+			<div class="faq-tablist" aria-label="Categorías de preguntas frecuentes">
+				<label for="faq-tab-campers" class="faq-tab">Campers</label>
+				<label for="faq-tab-sponsors" class="faq-tab">Patrocinadores</label>
 			</div>
-			<div class="font-semibold flex items-center justify-center rounded-full cursor-pointer hover:bg-primary_action h-9 w-[196px] text-white"
-				:class="`${active === 'tabSponsors' ? 'bg-primary_action' : ''}`" @click="activeTab('tabSponsors')">
-				Patrocinadores
+
+			<div class="faq-panel faq-panel-campers">
+				<div class="faq-grid mb-16">
+					<details v-for="faq in tabFaqCampersData" :key="`campers-${faq.id}`" class="faq-card">
+						<summary class="faq-summary">
+							<span class="faq-question">{{ faq.title }}</span>
+							<span class="faq-toggle" aria-hidden="true"></span>
+						</summary>
+						<div class="faq-answer-shell">
+							<div class="faq-answer-overflow">
+								<div class="faq-answer">
+									<span class="faq-answer-label" aria-hidden="true">response.ok</span>
+									<p>{{ faq.description }}</p>
+								</div>
+							</div>
+						</div>
+					</details>
+				</div>
 			</div>
-		</div>
-		<div class="items-center justify-center flex flex-wrap gap-y-4 lg:gap-y-3 mb-16">
-			<div v-for="(faq, index) in questionsAndAnswers" :key="index"
-				class="w-full md:w-1/2 md:max-w-[480px] px-4 lg:p-4 h-fit">
-				<details class="group">
-					<summary class="flex justify-between text-lg cursor-pointer font-semibold">
-						{{ faq.title }}
-						<img src="/img/icons/plus-svgrepo-com.svg" alt=""
-							class="size-5 cursor-pointer transition-transform duration-300 group-open:rotate-45">
-					</summary>
-					<hr class="m-3 opacity-45">
-					<p class="text-base font-normal mt-4 lg:mt-8">{{ faq.description }}</p>
-				</details>
-				<hr class="m-3 opacity-45">
+
+			<div class="faq-panel faq-panel-sponsors">
+				<div class="faq-grid mb-16">
+					<details v-for="faq in tabFaqSponsersData" :key="`sponsors-${faq.id}`" class="faq-card">
+						<summary class="faq-summary">
+							<span class="faq-question">{{ faq.title }}</span>
+							<span class="faq-toggle" aria-hidden="true"></span>
+						</summary>
+						<div class="faq-answer-shell">
+							<div class="faq-answer-overflow">
+								<div class="faq-answer">
+									<span class="faq-answer-label" aria-hidden="true">response.ok</span>
+									<p>{{ faq.description }}</p>
+								</div>
+							</div>
+						</div>
+					</details>
+				</div>
 			</div>
 		</div>
 	</section>
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from 'vue';
-
-const active = ref('tabCampers')
-
-const questionsAndAnswers = ref([])
-
-const tabFaqCampersData = ref([
+const tabFaqCampersData = [
 	{
 		id: 1,
 		title: '¿Qué es Campuslands y cómo funciona?',
-		description: 'Campuslands es una experiencia educativa intensiva que busca transformar vidas en solo un año, formando a jóvenes en habilidades de tecnología y competencias blandas para integrarse en el sector laboral del futuro. Nos especializamos en programación, inglés y desarrollo personal, todo en un ambiente presencial y 24/7. Aquí, nos enfocamos en brindar una experiencia completa que te prepara para obtener empleos bien remunerados en tecnología, acelerando tu camino hacia una carrera exitosa.'
+		description: 'Campuslands Guatemala es una experiencia educativa intensiva y presencial que forma a jóvenes en programación, inglés y habilidades profesionales para integrarse al sector tecnológico. El aprendizaje práctico, la disciplina y el acompañamiento de mentores son parte central del proceso.'
 	},
 	{
 		id: 2,
 		title: '¿Cuánto tiempo dura el programa de Campuslands?',
-		description: 'El programa tiene una duración de un año, con un enfoque intensivo de aprendizaje que maximiza tu formación en un tiempo reducido. Para ajustarnos a las necesidades de los estudiantes, Campuslands ofrece dos jornadas: una en horario matutino de 6:00 a.m. a 3:00 p.m. y otra en horario vespertino de 2:00 p.m. a 10:00 - 11:00 p.m., dependiendo de la disponibilidad. Con estas opciones, buscamos que puedas adaptarte al horario que mejor se acomode a tus necesidades sin comprometer la intensidad del programa.'
+		description: 'El programa tiene una duración de 10 meses, con un enfoque intensivo de aprendizaje que maximiza tu formación en un tiempo reducido. Para ajustarnos a las necesidades de los estudiantes, Campuslands ofrece dos jornadas: una en horario matutino de 6:00 a.m. a 2:00 p.m. y otra en horario vespertino de 2:00 p.m. a 10:00 p.m., dependiendo de la disponibilidad. Con estas opciones, buscamos que puedas adaptarte al horario que mejor se acomode a tus necesidades sin comprometer la intensidad del programa. Por favor solicita la información vigente al equipo de admisiones de Campuslands Guatemala.'
 	},
 	{
 		id: 3,
@@ -56,12 +71,12 @@ const tabFaqCampersData = ref([
 	{
 		id: 4,
 		title: '¿Cuál es el costo del programa y existen facilidades de pago?',
-		description: 'El programa tiene una inversión de 20 millones de pesos, pero en Campuslands estamos comprometidos con hacer la educación accesible. Contamos con planes de becas que cubren entre el 50% y el 100% del costo, además de opciones de financiamiento para quienes califiquen. Te invitamos a agendar una cita en el campus para conocer más sobre las oportunidades de apoyo financiero y ver cómo Campuslands puede ser el primer paso hacia tu futuro en tecnología.'
+		description: 'La inversión y las alternativas de apoyo dependen de la convocatoria vigente en Guatemala. Te invitamos a agendar una cita en el campus para recibir información actualizada sobre costos, requisitos y opciones disponibles.'
 	},
 	{
 		id: 5,
 		title: '¿Qué materias o habilidades voy a aprender en Campuslands?',
-		description: 'En Campuslands, aprenderás programación avanzada, inglés y habilidades blandas esenciales para el mundo laboral. El plan de estudios está diseñado para proporcionarte competencias técnicas en desarrollo de software y habilidades de comunicación en inglés que te abrirán puertas en el mercado global. Además, cultivamos habilidades interpersonales como trabajo en equipo, adaptabilidad y liderazgo, asegurándonos de que seas un profesional completo y preparado para enfrentar los desafíos del mercado.'
+		description: 'En Campuslands, aprenderás programación avanzada, inglés y habilidades adaptativas esenciales para el mundo laboral. El plan de estudios está diseñado para proporcionarte competencias técnicas en desarrollo de software y habilidades de comunicación en inglés que te abrirán puertas en el mercado global. Además, cultivamos habilidades interpersonales como trabajo en equipo, adaptabilidad y liderazgo, asegurándonos de que seas un profesional completo y preparado para enfrentar los desafíos del mercado.'
 	},
 	{
 		id: 6,
@@ -71,22 +86,22 @@ const tabFaqCampersData = ref([
 	{
 		id: 7,
 		title: '¿Cómo me ayudará Campuslands a conseguir empleo después de graduarme?',
-		description: 'En Campuslands, nuestro modelo educativo se enfoca no solo en la formación académica, sino en la conexión directa con el mercado laboral. Gracias a nuestras alianzas con empresas y nuestra reputación en la industria, logramos que nuestros estudiantes consigan empleo de calidad en un tiempo récord, en promedio, en solo 90 días después de finalizar la formación. Nuestra metodología orientada a resultados es lo que nos diferencia de cualquier otro modelo educativo.'
+		description: 'Nuestro modelo combina formación técnica, inglés y habilidades profesionales con preparación para procesos de selección y conexión con empresas. El equipo acompaña a los Campers en el desarrollo de un perfil competitivo; los resultados laborales dependen del desempeño de cada persona y de las condiciones del mercado.'
 	},
 	{
 		id: 8,
 		title: '¿Cuál es el retorno de inversión del programa?',
-		description: 'Campuslands ofrece uno de los retornos de inversión más rápidos en el ámbito educativo. Gracias a las oportunidades de empleo bien remuneradas que obtienen nuestros egresados, podrás recuperar tu inversión en menos de un año. Con salarios que duplican el mínimo legal vigente, Campuslands asegura que tu esfuerzo y dedicación se vean reflejados en beneficios económicos concretos en el corto plazo.'
+		description: 'El retorno depende del desempeño del estudiante, las oportunidades disponibles y las condiciones del mercado laboral. Nuestro objetivo es fortalecer habilidades técnicas y profesionales que mejoren las posibilidades de acceder al sector tecnológico.'
 	},
 	{
 		id: 9,
 		title: '¿Cuánto ganan en promedio los graduados de Campuslands?',
-		description: 'Los graduados de Campuslands suelen obtener empleos con un salario inicial de al menos dos veces el salario mínimo vigente, y muchos logran incrementos en sus ingresos a medida que avanzan en sus carreras en tecnología. Esta es una inversión que se traduce en estabilidad y crecimiento profesional, permitiéndote mejorar tu calidad de vida y construir un futuro sólido.'
+		description: 'Los salarios varían según el rol, la empresa, la experiencia y las condiciones del mercado. Campuslands prepara perfiles para posiciones iniciales en tecnología, pero no promete una remuneración específica.'
 	},
 	{
 		id: 10,
 		title: '¿Cuántas horas al día tendré que estudiar?',
-		description: 'El programa es intensivo y requiere un compromiso de 11 horas diarias. Esta intensidad garantiza que puedas absorber todo el conocimiento necesario en un solo año, preparando tu perfil para el mercado laboral en tiempo récord. Este esfuerzo es la clave para lograr resultados impactantes y una transformación profesional completa.'
+		description: 'El programa exige dedicación constante y disponibilidad para una formación intensiva. Antes de inscribirte, confirma con admisiones la jornada y la carga horaria de la convocatoria vigente.'
 	},
 	{
 		id: 11,
@@ -96,12 +111,12 @@ const tabFaqCampersData = ref([
 	{
 		id: 12,
 		title: '¿Qué diferencia a Campuslands de una universidad o instituto tradicional?',
-		description: 'Campuslands es una alternativa disruptiva a la educación tradicional. Nuestro modelo intensivo y 100% presencial está orientado a maximizar el aprendizaje práctico, preparándote para el mercado laboral en solo un año. A diferencia de las universidades, aquí encontrarás un enfoque en habilidades prácticas y una conexión directa con oportunidades laborales, acelerando tu crecimiento profesional.'
+		description: 'Campuslands ofrece un modelo intensivo, presencial y práctico enfocado en programación, inglés y habilidades profesionales. No sustituye una carrera universitaria; es una ruta de formación distinta, orientada a desarrollar competencias para el sector tecnológico.'
 	},
 	{
 		id: 13,
 		title: '¿Puedo estudiar y trabajar al mismo tiempo mientras hago el programa?',
-		description: 'Aunque el programa de Campuslands es intensivo, algunos estudiantes han logrado combinar estudio y trabajo. Esto requiere una alta disciplina y esfuerzo, ya que la carga académica es demandante. Con determinación, es posible hacerlo, y tenemos ejemplos de jóvenes que lo han logrado con éxito, pero debes estar preparado para el compromiso y la dedicación que esto implica.'
+		description: 'Por la intensidad del programa, combinarlo con un trabajo puede ser difícil. Consulta la jornada vigente con admisiones y evalúa tu disponibilidad antes de iniciar el proceso.'
 	},
 	{
 		id: 14,
@@ -121,7 +136,7 @@ const tabFaqCampersData = ref([
 	{
 		id: 17,
 		title: '¿Campuslands ofrece becas o apoyos financieros?',
-		description: 'Campuslands está comprometido en crear oportunidades de educación accesible para jóvenes talentosos que desean un futuro mejor. Ofrecemos opciones de financiamiento y becas que cubren entre el 50% y el 100% del costo, dependiendo del desempeño y logros del estudiante. Creemos en el potencial de los jóvenes y en su capacidad de cambio, y por eso buscamos que puedan acceder a una educación de calidad sin limitaciones económicas.'
+		description: 'Las opciones de apoyo pueden variar entre convocatorias. Consulta directamente con admisiones para conocer los requisitos, la disponibilidad y las condiciones vigentes en Guatemala.'
 	},
 	{
 		id: 18,
@@ -138,9 +153,9 @@ const tabFaqCampersData = ref([
 		title: '¿Qué tipo de trabajos puedo obtener al graduarme de Campuslands?',
 		description: 'Al finalizar el programa, estarás capacitado para roles como desarrollador de software, analista de datos, soporte técnico y otros puestos demandados en tecnología. Campuslands te abre las puertas a empleos que no solo ofrecen buenas remuneraciones, sino también oportunidades de crecimiento y desarrollo en un sector en constante expansión.'
 	}
-])
+]
 
-const tabFaqSponsersData = ref([
+const tabFaqSponsersData = [
 	{
 		id: 1,
 		title: "¿Qué significa ser patrocinador de Campuslands?",
@@ -154,7 +169,7 @@ const tabFaqSponsersData = ref([
 	{
 		id: 3,
 		title: "¿A quiénes se patrocina en Campuslands?",
-		description: "Se patrocina a jóvenes de estratos 1, 2 y 3 con un gran potencial, pero con recursos económicos limitados. Son personas con deseos de superación, pasión por la tecnología y compromiso con su aprendizaje. El patrocinio permite que estos jóvenes tengan acceso a una educación de calidad y oportunidades de empleo en la industria tecnológica."
+		description: "Se patrocina a jóvenes de niveles socioeconómicos C, C- y D con gran potencial y recursos económicos limitados. Son personas con deseos de superación, pasión por la tecnología y compromiso con su aprendizaje."
 	},
 	{
 		id: 4,
@@ -164,7 +179,7 @@ const tabFaqSponsersData = ref([
 	{
 		id: 5,
 		title: "¿Cuánto tiempo dura el patrocinio?",
-		description: "El patrocinio tiene una duración aproximada de 10 a 14 meses. Los primeros 10 meses se dedican al entrenamiento intensivo, donde los jóvenes aprenden desarrollo de software, inglés y habilidades socioemocionales. Luego, pueden pasar a la etapa de 'horas de vuelo', donde aplican sus conocimientos en proyectos reales, haciendo que su perfil sea mucho más competitivo para el mercado laboral."
+		description: "La duración y el alcance del patrocinio dependen del plan acordado y de la convocatoria vigente. El equipo de Campuslands Guatemala puede compartir el cronograma y las condiciones aplicables antes de formalizar el apoyo."
 	},
 	{
 		id: 6,
@@ -186,18 +201,299 @@ const tabFaqSponsersData = ref([
 		title: "¿Cuáles son los requisitos para ser patrocinador?",
 		description: "No existen requisitos estrictos. Solo se necesita la disposición para apoyar la educación de jóvenes y el compromiso de realizar las contribuciones económicas acordadas. Tanto personas naturales como empresas pueden ser patrocinadores."
 	}
-])
-
-onBeforeMount(() => {
-	questionsAndAnswers.value = tabFaqCampersData.value
-})
-
-function activeTab(tab) {
-	active.value = tab
-	questionsAndAnswers.value = tab === 'tabCampers'
-		? questionsAndAnswers.value = tabFaqCampersData.value
-		: questionsAndAnswers.value = tabFaqSponsersData.value
-}
+]
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.faq-controller {
+	position: relative;
+}
+
+.faq-tab-input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.faq-tablist {
+	display: flex;
+	width: min(100%, 32rem);
+	gap: 0.625rem;
+	margin: 0 auto 2.5rem;
+	padding: 0.5rem;
+	border: 1px solid #fff;
+	border-radius: 999px;
+	background: #00aa80;
+}
+
+.faq-tab {
+	display: flex;
+	width: 50%;
+	min-height: 2.75rem;
+	align-items: center;
+	justify-content: center;
+	border-radius: 999px;
+	background: #07102b;
+	color: #fff;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 250ms ease, color 250ms ease, transform 250ms ease;
+}
+
+#faq-tab-campers:checked ~ .faq-tablist label[for="faq-tab-campers"],
+#faq-tab-sponsors:checked ~ .faq-tablist label[for="faq-tab-sponsors"] {
+	background: #0076b7;
+}
+
+.faq-tab-input:focus-visible ~ .faq-tablist {
+	outline: 2px solid #57bbff;
+	outline-offset: 4px;
+}
+
+.faq-panel-sponsors {
+	display: none;
+}
+
+#faq-tab-sponsors:checked ~ .faq-panel-campers {
+	display: none;
+}
+
+#faq-tab-sponsors:checked ~ .faq-panel-sponsors {
+	display: block;
+}
+
+.faq-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem 1.5rem;
+}
+
+.faq-card {
+	position: relative;
+	align-self: start;
+	border: 1px solid transparent;
+	border-bottom-color: rgba(87, 187, 255, 0.3);
+	border-radius: 1.25rem;
+	background: rgba(7, 16, 43, 0);
+	overflow: hidden;
+	transition:
+		background 400ms ease,
+		border-color 400ms ease,
+		box-shadow 500ms ease,
+		transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-card > summary {
+	list-style: none;
+}
+
+.faq-card > summary::-webkit-details-marker {
+	display: none;
+}
+
+.faq-card::before {
+	content: '';
+	position: absolute;
+	inset: 0 auto auto 0;
+	width: 100%;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, #2caaff, #00aa80, transparent);
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-card[open] {
+	border-color: rgba(87, 187, 255, 0.22);
+	background: linear-gradient(135deg, rgba(44, 170, 255, 0.1), rgba(0, 170, 128, 0.055));
+	box-shadow: 0 18px 55px rgba(0, 5, 81, 0.2), inset 0 1px rgba(255, 255, 255, 0.04);
+	transform: translateY(-2px);
+}
+
+.faq-card[open]::before {
+	transform: scaleX(1);
+}
+
+.faq-summary {
+	position: relative;
+	display: flex;
+	width: 100%;
+	min-height: 5.25rem;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.25rem;
+	padding: 1.15rem 1.25rem;
+	text-align: left;
+	font-size: 1.125rem;
+	font-weight: 600;
+	line-height: 1.4;
+	cursor: pointer;
+}
+
+.faq-summary:focus-visible {
+	outline: 2px solid #57bbff;
+	outline-offset: -4px;
+	border-radius: 1rem;
+}
+
+.faq-question {
+	transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), color 300ms ease;
+}
+
+.faq-card[open] .faq-question {
+	color: #b0f7e6;
+	transform: translateX(0.3rem);
+}
+
+.faq-toggle {
+	position: relative;
+	display: grid;
+	width: 2.25rem;
+	height: 2.25rem;
+	flex: 0 0 2.25rem;
+	place-items: center;
+	border: 1px solid rgba(0, 209, 160, 0.38);
+	border-radius: 999px;
+	background: rgba(0, 170, 128, 0.08);
+	box-shadow: 0 0 0 0 rgba(0, 209, 160, 0);
+	transition:
+		transform 600ms cubic-bezier(0.16, 1, 0.3, 1),
+		background 300ms ease,
+		box-shadow 450ms ease;
+}
+
+.faq-toggle::before,
+.faq-toggle::after {
+	content: '';
+	position: absolute;
+	width: 0.95rem;
+	height: 2px;
+	border-radius: 999px;
+	background: #00d1a0;
+	transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background 300ms ease;
+}
+
+.faq-toggle::after {
+	transform: rotate(90deg);
+}
+
+.faq-card[open] .faq-toggle {
+	background: #00aa80;
+	box-shadow: 0 0 0 0.4rem rgba(0, 209, 160, 0.09), 0 0 1.6rem rgba(44, 170, 255, 0.22);
+	transform: rotate(180deg);
+}
+
+.faq-card[open] .faq-toggle::before,
+.faq-card[open] .faq-toggle::after {
+	background: #07102b;
+}
+
+.faq-card[open] .faq-toggle::after {
+	transform: rotate(90deg) scaleX(0);
+}
+
+.faq-answer-shell {
+	display: grid;
+	grid-template-rows: 0fr;
+	opacity: 0;
+	filter: blur(5px);
+	transform: translateY(-0.6rem);
+	transition:
+		grid-template-rows 600ms cubic-bezier(0.16, 1, 0.3, 1),
+		opacity 320ms ease,
+		filter 400ms ease,
+		transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-card[open] .faq-answer-shell {
+	grid-template-rows: 1fr;
+	opacity: 1;
+	filter: blur(0);
+	transform: translateY(0);
+}
+
+.faq-answer-overflow {
+	min-height: 0;
+	overflow: hidden;
+}
+
+.faq-answer {
+	position: relative;
+	margin: 0 1.25rem;
+	padding: 1.15rem 0 1.4rem;
+	border-top: 1px solid rgba(87, 187, 255, 0.2);
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.7;
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.faq-answer-label {
+	display: block;
+	margin-bottom: 0.55rem;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: #57bbff;
+}
+
+@media (hover: hover) {
+	.faq-card:not([open]):hover {
+		border-color: rgba(87, 187, 255, 0.2);
+		background: rgba(44, 170, 255, 0.035);
+		transform: translateY(-2px);
+	}
+
+	.faq-card:not([open]):hover .faq-toggle {
+		box-shadow: 0 0 1.2rem rgba(0, 209, 160, 0.2);
+		transform: rotate(90deg);
+	}
+}
+
+@media (max-width: 767px) {
+	.faq-grid {
+		grid-template-columns: 1fr;
+		gap: 0.8rem;
+		padding-inline: 0.75rem;
+	}
+
+	.faq-summary {
+		min-height: 4.75rem;
+		padding: 1rem;
+		font-size: 1rem;
+	}
+
+	.faq-answer {
+		margin-inline: 1rem;
+		padding: 1rem 0 1.2rem;
+		font-size: 0.95rem;
+		line-height: 1.65;
+	}
+
+	.faq-toggle {
+		width: 2rem;
+		height: 2rem;
+		flex-basis: 2rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.faq-card,
+	.faq-card::before,
+	.faq-question,
+	.faq-toggle,
+	.faq-toggle::before,
+	.faq-toggle::after,
+	.faq-answer-shell {
+		transition-duration: 0.01ms !important;
+	}
+}
+</style>

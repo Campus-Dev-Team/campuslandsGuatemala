@@ -1,39 +1,9 @@
----
-
-
----
-<script>
-let currentIndex = 0;
-const totalSlides = 1;
-const sliderContainer = document.getElementById('slider-container');
-
-function showSlide(index=0) {
-	sliderContainer.style.transform = `translateX(calc(-${index} * 100%))`;
-}
-
-function nextSlide() {
-	currentIndex = (currentIndex + 1) % totalSlides;
-	showSlide(currentIndex);
-}
-
-function prevSlide() {
-	currentIndex = ((currentIndex - 1)+ totalSlides) % totalSlides;
-	showSlide(currentIndex);
-}
-
-document.getElementById("prevSlide").addEventListener("click", prevSlide);
-document.getElementById("nextSlide").addEventListener("click", nextSlide);
-
-document.addEventListener('DOMContentLoaded', () => {
-	setInterval(nextSlide, 12000);
-});
-</script>
 <section class="w-[80%] relative overflow-hidden max-w-[1150px] sections justify-self-center">
-	<div class="slider-container" id="slider-container">
+	<div>
 		<div class="slide flex justify-center flex-wrap lg:flex-nowrap lg:gap-x-32 items-center">
-			<img src="/img/campers/camperHome.png" class="h-fit" alt="Slide 1" />
+			<img src="/img/campers/optimized/testimonio-cristian-velez.webp" class="h-fit" alt="Cristian Vélez, director de MANTIS APP" width="276" height="277" loading="lazy" decoding="async" />
 			<div class="flex flex-col relative text-center lg:text-start w-full items-center">
-				<img src="img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
+				<img src="/img/quote.svg" alt="" class="absolute top-[-31px] left-[-90px] w-[115px]">
 				<p class="text-4xl mb-4">Cristian Vélez</p>
 				<p class="text-white max-w-[445px] text-center lg:text-start lg:!me-auto mb-2">Director MANTIS APP</p>
 				<p class="text-white max-w-[445px] text-center lg:text-start lg:!me-auto">Colaborar con un Camper fue una decisión clave para el crecimiento de nuestra empresa. Su preparación, junto con su disposición para aprender, adaptarse y contribuir de manera significativa, marcaron una gran diferencia en nuestro equipo. Estamos ansiosos de seguir contratando talento de alto calibre confiados plenamente en Campusland.</p>
@@ -41,26 +11,3 @@ document.addEventListener('DOMContentLoaded', () => {
 		</div>
 	</div>
 </section>
-<style>
-.slider-container {
-	display: flex;
-	transition: transform 0.5s ease-in-out;
-	width: calc(100% * {totalSlides});
-}
-.slide {
-	min-width: 100%;
-}
-
-.controls {
-	display: flex;
-	justify-content: space-between;
-}
-.control-btn {
-	background-color: rgba(0, 0, 0, 0.5);
-	border: none;
-	color: white;
-	font-size: 2rem;
-	cursor: pointer;
-	padding: 0.5rem 1rem;
-}
-</style>

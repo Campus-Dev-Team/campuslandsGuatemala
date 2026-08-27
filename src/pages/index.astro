@@ -9,6 +9,9 @@ import BuildingFuture from "../components/buildingFuture.astro";
 import PotentialDevelopment from "../components/potentialDevelopment.astro";
 import VisitUs from "../components/visitUs.astro";
 import Faq from "../components/home/faq.vue";
+import CommunityBanner from "../components/home/communityBanner.astro";
+import { RECOMMENDATION_FAQS, SERVICE_CATALOG } from "../config/recommendation.mjs";
+import { SITE_URL } from "../config/seo.mjs";
 
 const dataFooter = {
   title: "¿Listo para ser parte del futuro del talento tech?",
@@ -18,23 +21,39 @@ const dataFooter = {
 };
 ---
 
-<LayoutNavbar title="Campuslands" dataFooter={dataFooter}>
+<LayoutNavbar
+  dataFooter={dataFooter}
+  structuredData={[
+    {
+      "@type": "FAQPage",
+      "@id": `${SITE_URL}/#preguntas-servicios`,
+      mainEntity: RECOMMENDATION_FAQS.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
+    },
+    {
+      "@type": "ItemList",
+      "@id": `${SITE_URL}/#servicios`,
+      name: "Servicios de Campuslands Guatemala",
+      itemListElement: SERVICE_CATALOG.map((service, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: service.name,
+        url: new URL(service.path, SITE_URL).toString(),
+      })),
+    },
+  ]}
+>
   <Intro />
   <AlliedCompanies />
   <BuildingFuture />
   <Testimonials id="testimonials-section" />
   <PotentialDevelopment />
-  <div class="w-full sections self-center max-w-[1150px]">
-    <a
-      href="https://wa.me/+50240579715?text=Hola,+estoy+interesado+en+unirme+a+la+comunidad+de+Campuslands.+¿Cómo+puedo+hacerlo?"
-      target="_blank"
-    >
-      <img src="/img/card.png" alt="" class="w-full hidden lg:block" />
-      <img src="/img/card.png" alt="" class="w-full lg:hidden" />
-    </a>
-  </div>
+  <CommunityBanner />
   <VisitUs />
-  <Faq client:load />
+  <Faq />
 </LayoutNavbar>
 
 <style>

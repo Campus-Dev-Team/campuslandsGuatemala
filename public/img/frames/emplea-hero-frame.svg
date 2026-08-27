@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="emplea-gradient" x1="18" y1="20" x2="1518" y2="1004" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00AA80" />
+      <stop offset=".5" stop-color="#2CAAFF" />
+      <stop offset="1" stop-color="#57BBFF" />
+    </linearGradient>
+    <filter id="emplea-glow" x="-10%" y="-16%" width="120%" height="132%">
+      <feGaussianBlur stdDeviation="9" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.173 0 0 0 0 0.667 0 0 0 0 1 0 0 0 .58 0" />
+      <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+  </defs>
+
+  <rect x="14" y="14" width="1508" height="996" rx="52" stroke="url(#emplea-gradient)" stroke-width="20" />
+  <rect x="34" y="34" width="1468" height="956" rx="36" stroke="#57BBFF" stroke-opacity=".2" stroke-width="3" />
+  <rect class="runner runner--primary" x="14" y="14" width="1508" height="996" rx="52" stroke="#F1FBFF" stroke-width="7" stroke-linecap="round" filter="url(#emplea-glow)" pathLength="100" />
+  <rect class="runner runner--secondary" x="24" y="24" width="1488" height="976" rx="44" stroke="#00AA80" stroke-width="4" stroke-linecap="round" filter="url(#emplea-glow)" pathLength="100" />
+
+  <path class="corner-signal corner-signal--start" d="M58 142V58H142" stroke="#00AA80" stroke-width="5" stroke-linecap="round" />
+  <path class="corner-signal corner-signal--end" d="M1394 966H1478V882" stroke="#57BBFF" stroke-width="5" stroke-linecap="round" />
+
+  <style>
+    .runner--primary { stroke-dasharray: 8 92; animation: emplea-run 6.8s linear infinite; }
+    .runner--secondary { stroke-dasharray: 2 98; animation: emplea-run-reverse 4.2s linear infinite; }
+    .corner-signal { animation: emplea-corner-pulse 3s ease-in-out infinite; }
+    .corner-signal--end { animation-delay: -1.5s; }
+    @keyframes emplea-run { to { stroke-dashoffset: -100; } }
+    @keyframes emplea-run-reverse { to { stroke-dashoffset: 100; } }
+    @keyframes emplea-corner-pulse { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .runner, .corner-signal { animation: none; } }
+  </style>
+</svg>

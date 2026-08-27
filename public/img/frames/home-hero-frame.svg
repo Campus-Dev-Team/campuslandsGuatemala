@@ -1,0 +1,78 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1600 900"
+  fill="none"
+  aria-hidden="true"
+>
+  <defs>
+    <linearGradient id="frame-gradient" x1="24" y1="24" x2="1576" y2="876" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00AA80" />
+      <stop offset="0.52" stop-color="#2CAAFF" />
+      <stop offset="1" stop-color="#57BBFF" />
+    </linearGradient>
+    <filter id="soft-glow" x="-10%" y="-20%" width="120%" height="140%">
+      <feGaussianBlur stdDeviation="9" result="blur" />
+      <feColorMatrix
+        in="blur"
+        type="matrix"
+        values="0 0 0 0 0.173 0 0 0 0 0.667 0 0 0 0 1 0 0 0 .55 0"
+      />
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect
+    x="14"
+    y="14"
+    width="1572"
+    height="872"
+    rx="48"
+    stroke="url(#frame-gradient)"
+    stroke-width="18"
+  />
+  <rect
+    x="31"
+    y="31"
+    width="1538"
+    height="838"
+    rx="34"
+    stroke="#57BBFF"
+    stroke-opacity=".22"
+    stroke-width="3"
+  />
+  <rect
+    class="frame-highlight"
+    x="14"
+    y="14"
+    width="1572"
+    height="872"
+    rx="48"
+    stroke="#EAF8FF"
+    stroke-width="7"
+    stroke-linecap="round"
+    filter="url(#soft-glow)"
+    pathLength="100"
+  />
+
+  <style>
+    .frame-highlight {
+      stroke-dasharray: 7 93;
+      animation: frame-trace 9s linear infinite;
+    }
+
+    @keyframes frame-trace {
+      to {
+        stroke-dashoffset: -100;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .frame-highlight {
+        animation: none;
+      }
+    }
+  </style>
+</svg>
