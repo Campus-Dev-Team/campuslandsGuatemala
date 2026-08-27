@@ -71,7 +71,7 @@ const tabFaqCampersData = [
 	{
 		id: 4,
 		title: '¿Cuál es el costo del programa y existen facilidades de pago?',
-		description: 'La inversión y las alternativas de apoyo dependen de la convocatoria vigente en Guatemala. Te invitamos a agendar una cita en el campus para recibir información actualizada sobre costos, requisitos y opciones disponibles.'
+		description: 'La inversión y las alternativas de apoyo dependen de la convocatoria vigente en Guatemala. Te invitamos a agendar una cita en el campus para recibir información actualizada sobre requisitos, costos, becas y facilidades de pago disponibles.'
 	},
 	{
 		id: 5,
