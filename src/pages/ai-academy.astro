@@ -14,7 +14,7 @@ const workshops = [
   {
     id: "automatizaciones",
     code: "AUTO.01",
-    title: "Automatizaciones con IA",
+    title: "Automatizaciones IA",
     promise:
       "Convierte tareas repetitivas en flujos que trabajan contigo y dejan tiempo para decisiones de mayor valor.",
     audience:
@@ -52,7 +52,7 @@ const workshops = [
   {
     id: "datos",
     code: "DATA.02",
-    title: "Análisis de Datos con IA",
+    title: "Análisis de Datos IA",
     promise:
       "Pasa de datos dispersos a hallazgos confiables, visualizaciones claras y decisiones accionables.",
     audience:
@@ -90,7 +90,7 @@ const workshops = [
   {
     id: "marketing",
     code: "MKT.03",
-    title: "Marketing con IA",
+    title: "Marketing IA",
     promise:
       "Construye un sistema de marketing que investiga, crea, distribuye y aprende con mayor velocidad.",
     audience:
@@ -98,7 +98,7 @@ const workshops = [
     tools: ["Prompts", "Automatización", "Agentes", "Contenido"],
     sessions: [
       {
-        title: "Entiende la marca",
+        title: "Comprende la marca",
         description:
           "Domina prompts, analiza la marca, define buyer personas y compara competidores.",
         output: "Diagnóstico de marca",
@@ -128,7 +128,7 @@ const workshops = [
   {
     id: "finanzas",
     code: "FIN.04",
-    title: "Finanzas con IA",
+    title: "Finanzas IA",
     promise:
       "Lleva finanzas de la operación transaccional a una función estratégica que recomienda y decide.",
     audience:
@@ -279,8 +279,9 @@ const structuredData = [
           </h1>
           <p class="ai-hero__lead">
             Cuatro talleres presenciales para aplicar inteligencia artificial
-            a automatización, datos, marketing y finanzas. Menos teoría
-            decorativa. Más sistemas que puedes usar desde el lunes.
+            a automatización, análisis de datos, marketing y finanzas. Menos
+            teoría y más manos a la obra para aprender. Convierte la IA en
+            sistemas que puedes usar en tu profesión.
           </p>
           <div class="ai-actions">
             <a class="ai-button ai-button--primary" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
@@ -301,11 +302,21 @@ const structuredData = [
               <dt>16</dt>
               <dd>horas</dd>
             </div>
-            <div>
+            <div class="ai-metrics__workshops">
               <dt>04</dt>
-              <dd>talleres</dd>
+              <dd>
+                <span>talleres</span>
+                <strong>distintos</strong>
+              </dd>
             </div>
           </dl>
+          <p class="ai-metrics__note">
+            <span class="ai-metrics__note-icon" aria-hidden="true">↳</span>
+            <span>
+              Elige tu ruta: cada taller es independiente y dura
+              <strong>4 sábados · 16 horas.</strong>
+            </span>
+          </p>
         </div>
 
         <figure class="ai-orbit" data-ai-orbit>
@@ -365,7 +376,7 @@ const structuredData = [
         <div class="ai-section-head" data-ai-reveal>
           <div>
             <p class="ai-section-code">02 / ELIGE TU MISIÓN</p>
-            <h2 id="ai-workshops-title">Cuatro rutas. Un resultado usable.</h2>
+            <h2 id="ai-workshops-title">Cuatro rutas. Un resultado aplicable.</h2>
           </div>
           <div class="ai-section-head__aside">
             <p>
@@ -464,7 +475,7 @@ const structuredData = [
         <ol class="ai-timeline" data-ai-reveal>
           <li>
             <div><span>01</span><small>4 horas</small></div>
-            <h3>Entiende</h3>
+            <h3>Comprende</h3>
             <p>Define el problema, el contexto y el estándar de una buena respuesta.</p>
           </li>
           <li>
@@ -490,7 +501,7 @@ const structuredData = [
       <div class="ai-shell ai-outcomes__layout">
         <div class="ai-outcomes__copy" data-ai-reveal>
           <p class="ai-section-code">04 / CRITERIO + EJECUCIÓN</p>
-          <h2 id="ai-outcomes-title">No solo usarás IA. Sabrás dirigirla.</h2>
+          <h2 id="ai-outcomes-title">No solo usarás IA. Podrás dirigirla.</h2>
           <p>
             La ventaja no está en aceptar la primera respuesta. Está en
             estructurar el problema, dar contexto, verificar y convertir la
@@ -891,9 +902,12 @@ const structuredData = [
 
   .ai-hero h1 span {
     display: block;
+    margin-bottom: 0;
+    padding-bottom: 0.18em;
     color: transparent;
     background: linear-gradient(110deg, #57bbff 2%, #dff5ff 38%, #b997ff 70%, #7a3cff);
     background-clip: text;
+    line-height: 1.02;
   }
 
   .ai-hero__lead {
@@ -980,6 +994,90 @@ const structuredData = [
     font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+  }
+
+  .ai-metrics__workshops {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .ai-metrics__workshops::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -0.7rem -0.8rem -0.55rem 0.45rem;
+    border: 1px solid rgb(0 217 164 / 20%);
+    border-radius: 0.8rem;
+    background:
+      linear-gradient(135deg, rgb(44 170 255 / 9%), rgb(0 217 164 / 5%)),
+      rgb(7 16 43 / 22%);
+    box-shadow: 0 0 24px rgb(0 170 128 / 7%);
+  }
+
+  .ai-metrics__workshops dt {
+    color: #f4feff;
+    text-shadow: 0 0 24px rgb(0 217 164 / 32%);
+  }
+
+  .ai-metrics__workshops dd {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.45rem;
+    color: var(--ai-ice);
+    font-weight: 800;
+  }
+
+  .ai-metrics__workshops dd strong {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.25rem;
+    padding: 0.18rem 0.45rem;
+    border: 1px solid rgb(0 217 164 / 42%);
+    border-radius: 999px;
+    color: #7fffdc;
+    background: rgb(0 170 128 / 13%);
+    font-size: 0.54rem;
+    letter-spacing: 0.13em;
+    box-shadow: inset 0 0 14px rgb(0 217 164 / 8%);
+    animation: ai-distinct-pulse 3.4s ease-in-out infinite;
+  }
+
+  .ai-metrics__note {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    max-width: 31rem;
+    margin: 0.95rem 0 0;
+    color: rgb(223 245 255 / 62%);
+    font-size: 0.69rem;
+    line-height: 1.55;
+    letter-spacing: 0.015em;
+  }
+
+  .ai-metrics__note-icon {
+    color: #7fffdc;
+    font: 700 0.78rem/1 Menlo, Monaco, Consolas, monospace;
+  }
+
+  .ai-metrics__note strong {
+    color: rgb(223 245 255 / 90%);
+    font-weight: 700;
+  }
+
+  @keyframes ai-distinct-pulse {
+    0%,
+    100% {
+      border-color: rgb(0 217 164 / 34%);
+      box-shadow: inset 0 0 14px rgb(0 217 164 / 8%);
+    }
+
+    50% {
+      border-color: rgb(127 255 220 / 70%);
+      box-shadow:
+        inset 0 0 14px rgb(0 217 164 / 16%),
+        0 0 16px rgb(0 217 164 / 14%);
+    }
   }
 
   .ai-orbit {
@@ -1843,6 +1941,20 @@ const structuredData = [
       display: none;
     }
 
+    .ai-metrics__workshops::after {
+      inset: -0.55rem -0.35rem -0.5rem 0.35rem;
+    }
+
+    .ai-metrics__workshops dd {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .ai-metrics__note {
+      align-items: flex-start;
+    }
+
     .ai-workshop-track {
       grid-auto-columns: calc(100vw - 2.25rem);
     }
@@ -1886,7 +1998,8 @@ const structuredData = [
     .ai-kicker span,
     .ai-orbit img,
     .ai-orbit__ring,
-    .ai-scroll-cue span::after {
+    .ai-scroll-cue span::after,
+    .ai-metrics__workshops dd strong {
       animation: none;
     }
 
