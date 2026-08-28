@@ -24,11 +24,14 @@ export default defineConfig({
 		tailwind(),
 		vue(),
 		sitemap({
-			filter: (page) => INDEXABLE_PATHS.includes(normalizePathname(new URL(page).pathname)),
+			filter: (page) => {
+				const pathname = normalizePathname(new URL(page).pathname);
+				return INDEXABLE_PATHS.includes(pathname) || pathname.startsWith('/blog/');
+			},
 			serialize(item) {
 				const pathname = normalizePathname(new URL(item.url).pathname);
 				const isLegalPage = pathname === '/terminos-condiciones/' || pathname === '/politica-de-privacidad/';
-				const isPrimaryPage = ['/', '/joinUs/', '/emplea/', '/patrocina/'].includes(pathname);
+				const isPrimaryPage = ['/', '/joinUs/', '/ai-academy/', '/blog/', '/emplea/', '/patrocina/'].includes(pathname);
 				return {
 					...item,
 					lastmod: new Date(LAST_CONTENT_UPDATE),

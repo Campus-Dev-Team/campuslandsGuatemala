@@ -3,7 +3,7 @@ import { SERVICE_CATALOG } from "./recommendation.mjs";
 export const SITE_URL = "https://www.campuslands.pro";
 export const COLOMBIA_URL = "https://campuslands.com";
 export const DEFAULT_IMAGE = `${SITE_URL}/img/og-campuslands-guatemala.jpg`;
-export const LAST_CONTENT_UPDATE = "2026-08-10";
+export const LAST_CONTENT_UPDATE = "2026-08-28";
 
 export const SITE = {
   name: "Campuslands Guatemala",
@@ -36,6 +36,30 @@ export const PAGE_SEO = {
     description:
       "Conviértete en Camper y fórmate en desarrollo de software, inglés y habilidades profesionales con Campuslands Guatemala.",
     keywords: ["estudiar programación", "curso de programación Guatemala", "Campuslands"],
+  },
+  "/ai-academy/": {
+    title: "Talleres de Inteligencia Artificial en Guatemala | Campuslands",
+    description:
+      "Aprende IA aplicada en talleres presenciales de automatización, análisis de datos, marketing y finanzas: cuatro sábados y 16 horas.",
+    keywords: [
+      "talleres de inteligencia artificial Guatemala",
+      "curso IA Guatemala",
+      "automatización con IA",
+      "AI Academy Campuslands",
+    ],
+  },
+  "/blog/": {
+    title: "Pulso Campuslands | Tecnología, comunidad y carrera",
+    description:
+      "Publicaciones de Campuslands Guatemala sobre inteligencia artificial, programación, comunidad y empleabilidad.",
+    dynamic: true,
+    keywords: [
+      "Pulso Campuslands",
+      "blog de tecnología Guatemala",
+      "inteligencia artificial",
+      "aprender programación",
+      "empleabilidad tecnológica",
+    ],
   },
   "/emplea/": {
     title: "Contrata Talento Tecnológico en Guatemala | Campuslands",
@@ -122,6 +146,7 @@ export function organizationSchema() {
     knowsAbout: [
       "Desarrollo de software",
       "Programación",
+      "Inteligencia artificial aplicada",
       "Inglés",
       "Habilidades adaptativas",
       "Empleabilidad tecnológica",

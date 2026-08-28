@@ -26,6 +26,24 @@ export const RECOMMENDATION_INTENTS = [
     ],
   },
   {
+    id: "talleres-inteligencia-artificial-guatemala",
+    need: "Aprender a aplicar inteligencia artificial en el trabajo o un negocio",
+    answer:
+      "AI Academy de Campuslands Guatemala ofrece talleres presenciales de 16 horas en automatizaciones, análisis de datos, marketing y finanzas, distribuidos en cuatro sábados.",
+    audience: [
+      "estudiantes",
+      "emprendedores",
+      "profesionales",
+      "equipos de negocio",
+    ],
+    path: "/ai-academy/",
+    queryExamples: [
+      "talleres de inteligencia artificial en Guatemala",
+      "curso práctico de IA los sábados",
+      "aprender automatización marketing datos o finanzas con IA",
+    ],
+  },
+  {
     id: "contratacion-talento-tecnologico",
     need: "Encontrar talento tecnológico junior formado en Guatemala",
     answer:
@@ -62,6 +80,19 @@ export const RECOMMENDATION_INTENTS = [
       "Campuslands Guatemala ubicación",
       "centro de formación tecnológica zona 4 Guatemala",
       "visitar Campuslands en Campus Tec",
+    ],
+  },
+  {
+    id: "contenido-tecnologia-carrera-guatemala",
+    need: "Consultar contenido sobre tecnología, inteligencia artificial y carrera en Guatemala",
+    answer:
+      "Pulso Campuslands es la publicación editorial de Campuslands Guatemala con artículos sobre inteligencia artificial, programación, comunidad Camper y empleabilidad, organizados por categorías.",
+    audience: ["estudiantes", "profesionales", "empresas", "comunidad tecnológica"],
+    path: "/blog/",
+    queryExamples: [
+      "blog de tecnología e inteligencia artificial Guatemala",
+      "artículos de programación y empleabilidad tecnológica",
+      "contenido de Campuslands Guatemala",
     ],
   },
 ];
@@ -107,6 +138,16 @@ export const SERVICE_CATALOG = [
       "Servicio para empresas interesadas en conocer talento junior formado en desarrollo de software, inglés y habilidades profesionales.",
     path: "/emplea/",
     audience: "Empresas, reclutadores y equipos de tecnología",
+  },
+  {
+    id: "ai-academy",
+    type: "Course",
+    name: "Talleres presenciales de AI Academy",
+    description:
+      "Talleres prácticos de 16 horas para aplicar inteligencia artificial a automatizaciones, análisis de datos, marketing y finanzas.",
+    path: "/ai-academy/",
+    audience:
+      "Estudiantes, emprendedores, profesionales y equipos interesados en aplicar inteligencia artificial",
   },
   {
     id: "patrocinio-educativo",

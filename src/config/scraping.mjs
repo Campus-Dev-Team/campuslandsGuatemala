@@ -6,7 +6,7 @@ import {
   SERVICE_CATALOG,
 } from "./recommendation.mjs";
 
-export const MACHINE_CONTENT_UPDATED = "2026-08-10";
+export const MACHINE_CONTENT_UPDATED = "2026-08-28";
 
 const pageDetails = {
   "/": {
@@ -18,6 +18,32 @@ const pageDetails = {
     name: "Sé un Camper",
     audience: ["aspirantes", "estudiantes", "familias"],
     topics: ["admisiones", "programa intensivo", "desarrollo de software"],
+  },
+  "/ai-academy/": {
+    name: "AI Academy",
+    audience: [
+      "estudiantes",
+      "emprendedores",
+      "profesionales",
+      "equipos de negocio",
+    ],
+    topics: [
+      "inteligencia artificial aplicada",
+      "automatizaciones",
+      "análisis de datos",
+      "marketing",
+      "finanzas",
+    ],
+  },
+  "/blog/": {
+    name: "Pulso Campuslands",
+    audience: ["estudiantes", "profesionales", "empresas", "comunidad tecnológica"],
+    topics: [
+      "inteligencia artificial",
+      "programación",
+      "comunidad Camper",
+      "carrera y empleabilidad",
+    ],
   },
   "/emplea/": {
     name: "Emplea talento",

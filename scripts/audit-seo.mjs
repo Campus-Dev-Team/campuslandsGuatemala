@@ -48,9 +48,15 @@ for (const [pathname, expected] of Object.entries(PAGE_SEO)) {
   const imagesWithoutAlt = images.filter((tag) => !/\salt=("[^"]*"|'[^']*')/i.test(tag));
   const jsonScripts = [...html.matchAll(/<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)];
   const expectedCanonical = new URL(pathname, `${SITE_URL}/`).toString();
+  const titleIsValid = expected.dynamic
+    ? title.length >= 30 && title.length <= 65 && title.includes("Campuslands")
+    : title === expected.title;
+  const descriptionIsValid = expected.dynamic
+    ? description.length >= 80 && description.length <= 170
+    : description === expected.description;
   const checks = [
-    [title === expected.title, "título esperado"],
-    [description === expected.description, "descripción esperada"],
+    [titleIsValid, expected.dynamic ? "título CMS descriptivo" : "título esperado"],
+    [descriptionIsValid, expected.dynamic ? "descripción CMS descriptiva" : "descripción esperada"],
     [canonical === expectedCanonical, "URL canónica"],
     [robots.includes("index") && robots.includes("follow"), "directiva index/follow"],
     [h1Count === 1, `un solo H1 (encontrados: ${h1Count})`],
