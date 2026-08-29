@@ -37,6 +37,34 @@ export type EditorSeo = {
   shareImage?: EditorMedia | null;
 };
 
+export type EditorArticleLink = {
+  label: string;
+  url: string;
+  description?: string;
+  image?: EditorMedia | null;
+  openInNewTab: boolean;
+  active: boolean;
+};
+
+export type EditorGallery = {
+  id?: number;
+  documentId: string;
+  title: string;
+  slug: string;
+  description: string;
+  images: EditorMedia[];
+  imageDetails?: EditorMedia[];
+  category: EditorCategory;
+  tags: string[];
+  featured: boolean;
+  publishDate: string;
+  seo?: EditorSeo | null;
+  publicationState?: "draft" | "published" | "modified";
+  publishedAt?: string | null;
+  publicPublishedAt?: string | null;
+  updatedAt?: string;
+};
+
 export type EditorArticle = {
   id?: number;
   documentId: string;
@@ -52,6 +80,8 @@ export type EditorArticle = {
   readingTime: number;
   publishDate: string;
   tags: string[];
+  links?: EditorArticleLink[];
+  attachments?: EditorMedia[];
   seo?: EditorSeo | null;
   publicationState?: "draft" | "published" | "modified";
   publishedAt?: string | null;
@@ -61,6 +91,7 @@ export type EditorArticle = {
 
 export type EditorDashboard = {
   articles: EditorArticle[];
+  galleries: EditorGallery[];
   categories: EditorCategory[];
   settings: Record<string, any>;
 };
@@ -163,6 +194,36 @@ export class BlogAdminApi {
     return this.request<void>(`/editor/articles/${encodeURIComponent(documentId)}`, { method: "DELETE" });
   }
 
+  gallery(documentId: string) {
+    return this.request<EditorGallery>(`/editor/galleries/${encodeURIComponent(documentId)}`);
+  }
+
+  createGallery(data: Record<string, unknown>, publish: boolean) {
+    return this.request<EditorGallery>("/editor/galleries", {
+      method: "POST",
+      body: JSON.stringify({ data, publish }),
+    });
+  }
+
+  updateGallery(documentId: string, data: Record<string, unknown>, publish: boolean) {
+    return this.request<EditorGallery>(`/editor/galleries/${encodeURIComponent(documentId)}`, {
+      method: "PUT",
+      body: JSON.stringify({ data, publish }),
+    });
+  }
+
+  publishGallery(documentId: string) {
+    return this.request<EditorGallery>(`/editor/galleries/${encodeURIComponent(documentId)}/publish`, { method: "POST" });
+  }
+
+  unpublishGallery(documentId: string) {
+    return this.request<EditorGallery>(`/editor/galleries/${encodeURIComponent(documentId)}/unpublish`, { method: "POST" });
+  }
+
+  deleteGallery(documentId: string) {
+    return this.request<void>(`/editor/galleries/${encodeURIComponent(documentId)}`, { method: "DELETE" });
+  }
+
   createCategory(data: Partial<EditorCategory>) {
     return this.request<EditorCategory>("/editor/categories", { method: "POST", body: JSON.stringify({ data }) });
   }
@@ -191,5 +252,14 @@ export class BlogAdminApi {
     const uploaded = await this.request<EditorMedia[]>("/upload", { method: "POST", body: form });
     if (!uploaded?.[0]) throw new Error("No se recibió el archivo cargado.");
     return uploaded[0];
+  }
+
+  async uploadMany(files: File[]): Promise<EditorMedia[]> {
+    if (!files.length) return [];
+    const form = new FormData();
+    files.forEach((file) => form.append("files", file));
+    const uploaded = await this.request<EditorMedia[]>("/upload", { method: "POST", body: form });
+    if (!Array.isArray(uploaded)) throw new Error("No se recibieron los archivos cargados.");
+    return uploaded;
   }
 }

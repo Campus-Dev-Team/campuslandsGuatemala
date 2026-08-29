@@ -10,7 +10,7 @@ import {
 import { SITE, SITE_URL } from "../../config/seo.mjs";
 import "~/styles/index.css";
 
-const { settings, categories, articles, source } = await getBlogData();
+const { settings, categories, articles, galleries, source } = await getBlogData();
 
 const dataFooter = settings
   ? {
@@ -105,6 +105,12 @@ const structuredData = settings
                   {category.name}
                 </button>
               ))}
+              {galleries.length > 0 && (
+                <a class="category-chip category-chip--gallery" href="/blog/galerias/">
+                  <span class="category-chip__signal"></span>
+                  {settings.galleriesLabel} · {galleries.length}
+                </a>
+              )}
             </div>
             <p
               class="category-console__description"
@@ -317,6 +323,7 @@ const structuredData = settings
     font-size: 0.8rem;
     transition: 180ms ease;
   }
+  .category-chip--gallery { --category-color: #00d9a4; --category-rgb: 0 217 164; text-decoration: none; }
 
   .category-chip:hover,
   .category-chip.is-active {

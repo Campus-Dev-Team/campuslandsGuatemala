@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
 import BlockEditor from "./BlockEditor.vue";
+import GalleryAdmin from "./GalleryAdmin.vue";
+import { renderBlogBlocks } from "../../lib/blog";
 import {
   BLOG_EDITOR_STORAGE_KEY,
   BlogAdminApi,
@@ -13,15 +15,26 @@ import {
   type EditorUser,
 } from "../../lib/blog-admin";
 
-type WorkspaceTab = "posts" | "categories" | "settings";
+type WorkspaceTab = "posts" | "galleries" | "categories" | "settings";
 type AppState = "checking" | "login" | "workspace";
+type ResourceLinkDraft = {
+  key: string;
+  label: string;
+  url: string;
+  description: string;
+  image: EditorMedia | null;
+  imageFile: File | null;
+  imagePreview: string;
+  openInNewTab: boolean;
+  active: boolean;
+};
 
 const cmsUrl = String(import.meta.env.PUBLIC_CMS_URL || "http://127.0.0.1:1337").replace(/\/+$/, "");
 const api = new BlogAdminApi(cmsUrl);
 const state = ref<AppState>("checking");
 const activeTab = ref<WorkspaceTab>("posts");
 const user = ref<EditorUser | null>(null);
-const dashboard = ref<EditorDashboard>({ articles: [], categories: [], settings: {} });
+const dashboard = ref<EditorDashboard>({ articles: [], galleries: [], categories: [], settings: {} });
 const loading = ref(false);
 const errorMessage = ref("");
 const notice = ref<{ type: "success" | "error"; message: string } | null>(null);
@@ -40,9 +53,19 @@ const editorSaving = ref(false);
 const editorError = ref("");
 const coverFile = ref<File | null>(null);
 const coverPreview = ref("");
+const attachmentFiles = ref<File[]>([]);
+const previewOpen = ref(false);
+const localDraftAvailable = ref(false);
+const lastAutosavedAt = ref("");
+const LOCAL_DRAFT_KEY = "campuslands_blog_editor_local_draft";
+let autosaveTimer: number | undefined;
 
 function today() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function draftKey() {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 function emptyArticle() {
@@ -60,6 +83,8 @@ function emptyArticle() {
     readingTime: 5,
     publishDate: today(),
     tagsText: "",
+    links: [] as ResourceLinkDraft[],
+    attachments: [] as EditorMedia[],
     seo: { metaTitle: "", metaDescription: "", keywords: "" },
   };
 }
@@ -107,6 +132,13 @@ const settingGroups = [
       ["articleFooterDescription", "Descripción del pie de artículo", "textarea", 320],
       ["contentsLabel", "Etiqueta de contenidos", "input", 60],
       ["tagsLabel", "Etiqueta de temas", "input", 40],
+      ["resourcesLabel", "Etiqueta de recursos", "input", 80],
+      ["attachmentsLabel", "Etiqueta de archivos", "input", 80],
+      ["galleriesLabel", "Etiqueta de galerías", "input", 80],
+      ["galleriesTitle", "Título del catálogo de galerías", "input", 120],
+      ["galleriesDescription", "Descripción de galerías", "textarea", 320],
+      ["viewGalleryLabel", "Acción para abrir galería", "input", 60],
+      ["galleryImagesLabel", "Etiqueta de imágenes", "input", 80],
       ["relatedEyebrow", "Etiqueta de relacionados", "input", 80],
       ["relatedTitle", "Título de relacionados", "input", 100],
       ["viewAllLabel", "Acción para ver todo", "input", 60],
@@ -139,6 +171,29 @@ const filteredArticles = computed(() => {
     return matchesSearch && matchesStatus && matchesCategory;
   });
 });
+
+function collectText(value: any): string[] {
+  if (Array.isArray(value)) return value.flatMap(collectText);
+  if (!value || typeof value !== "object") return typeof value === "string" ? [value] : [];
+  return [value.text, value.title, value.label, value.caption, value.description]
+    .filter((item) => typeof item === "string")
+    .concat(Object.entries(value).filter(([key]) => !["text", "title", "label", "caption", "description", "url"].includes(key)).flatMap(([, item]) => collectText(item)));
+}
+
+const articleWordCount = computed(() => collectText(articleForm.content).join(" ").trim().split(/\s+/).filter(Boolean).length);
+const suggestedReadingTime = computed(() => Math.max(1, Math.ceil(articleWordCount.value / 200)));
+const previewHtml = computed(() => renderBlogBlocks(articleForm.content as any[]));
+const selectedCategory = computed(() => dashboard.value.categories.find((category) => category.documentId === articleForm.categoryDocumentId));
+const activeLinks = computed(() => articleForm.links.filter((link) => link.active && link.label.trim() && link.url.trim()));
+const editorialChecks = computed(() => [
+  { label: "Título claro (35–65 caracteres)", ok: articleForm.title.trim().length >= 35 && articleForm.title.trim().length <= 65 },
+  { label: "Resumen completo", ok: articleForm.excerpt.trim().length >= 90 },
+  { label: "Contenido desarrollado", ok: articleWordCount.value >= 250 || activeLinks.value.length > 0 },
+  { label: "Portada con texto alternativo", ok: Boolean(coverPreview.value && articleForm.coverAlt.trim()) },
+  { label: "Jerarquía con al menos un H2", ok: articleForm.content.some((block: any) => block.type === "heading" && Number(block.level) === 2) },
+  { label: "SEO listo para publicar", ok: articleForm.seo.metaTitle.trim().length >= 30 && articleForm.seo.metaDescription.trim().length >= 120 },
+]);
+const editorialScore = computed(() => Math.round((editorialChecks.value.filter((check) => check.ok).length / editorialChecks.value.length) * 100));
 
 function showNotice(message: string, type: "success" | "error" = "success") {
   notice.value = { message, type };
@@ -197,7 +252,7 @@ function logout() {
   sessionStorage.removeItem(BLOG_EDITOR_STORAGE_KEY);
   api.setToken("");
   user.value = null;
-  dashboard.value = { articles: [], categories: [], settings: {} };
+  dashboard.value = { articles: [], galleries: [], categories: [], settings: {} };
   state.value = "login";
   editorOpen.value = false;
 }
@@ -219,8 +274,13 @@ async function loadDashboard(silent = false) {
 }
 
 function resetArticleForm() {
+  articleForm.links.forEach((link) => {
+    if (link.imagePreview.startsWith("blob:")) URL.revokeObjectURL(link.imagePreview);
+  });
   Object.assign(articleForm, emptyArticle());
   coverFile.value = null;
+  attachmentFiles.value = [];
+  previewOpen.value = false;
   if (coverPreview.value.startsWith("blob:")) URL.revokeObjectURL(coverPreview.value);
   coverPreview.value = "";
   editorError.value = "";
@@ -229,7 +289,42 @@ function resetArticleForm() {
 function newArticle() {
   resetArticleForm();
   editorOpen.value = true;
+  localDraftAvailable.value = Boolean(localStorage.getItem(LOCAL_DRAFT_KEY));
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function applyArticleDetail(detail: EditorArticle, asCopy = false) {
+  Object.assign(articleForm, {
+    documentId: asCopy ? "" : detail.documentId,
+    title: asCopy ? `Copia de ${detail.title || "publicación"}`.slice(0, 140) : detail.title || "",
+    slug: asCopy ? `${detail.slug || slugify(detail.title || "publicacion")}-copia`.slice(0, 140) : detail.slug || "",
+    excerpt: detail.excerpt || "",
+    content: JSON.parse(JSON.stringify(detail.content || [])),
+    categoryDocumentId: detail.category?.documentId || "",
+    coverImage: detail.coverImage || null,
+    coverAlt: detail.coverAlt || "",
+    authorName: detail.authorName || "Equipo Campuslands",
+    featured: asCopy ? false : Boolean(detail.featured),
+    readingTime: detail.readingTime || 5,
+    publishDate: asCopy ? today() : detail.publishDate || today(),
+    tagsText: Array.isArray(detail.tags) ? detail.tags.join(", ") : "",
+    links: (detail.links || []).map((link) => ({
+      key: draftKey(),
+      label: link.label || "", url: link.url || "", description: link.description || "",
+      image: link.image || null, imageFile: null,
+      imagePreview: mediaUrl(cmsUrl, link.image),
+      openInNewTab: Boolean(link.openInNewTab), active: link.active !== false,
+    })),
+    attachments: [...(detail.attachments || [])],
+    seo: {
+      metaTitle: asCopy ? `Copia de ${detail.seo?.metaTitle || detail.title || ""}`.slice(0, 60) : detail.seo?.metaTitle || "",
+      metaDescription: detail.seo?.metaDescription || "",
+      keywords: detail.seo?.keywords || "",
+    },
+  });
+  coverFile.value = null;
+  attachmentFiles.value = [];
+  coverPreview.value = mediaUrl(cmsUrl, detail.coverImage);
 }
 
 async function editArticle(article: EditorArticle) {
@@ -239,32 +334,53 @@ async function editArticle(article: EditorArticle) {
   window.scrollTo({ top: 0, behavior: "smooth" });
   try {
     const detail = await api.article(article.documentId);
-    Object.assign(articleForm, {
-      documentId: detail.documentId,
-      title: detail.title || "",
-      slug: detail.slug || "",
-      excerpt: detail.excerpt || "",
-      content: detail.content || [],
-      categoryDocumentId: detail.category?.documentId || "",
-      coverImage: detail.coverImage || null,
-      coverAlt: detail.coverAlt || "",
-      authorName: detail.authorName || "Equipo Campuslands",
-      featured: Boolean(detail.featured),
-      readingTime: detail.readingTime || 5,
-      publishDate: detail.publishDate || today(),
-      tagsText: Array.isArray(detail.tags) ? detail.tags.join(", ") : "",
-      seo: {
-        metaTitle: detail.seo?.metaTitle || "",
-        metaDescription: detail.seo?.metaDescription || "",
-        keywords: detail.seo?.keywords || "",
-      },
-    });
-    coverFile.value = null;
-    coverPreview.value = mediaUrl(cmsUrl, detail.coverImage);
+    applyArticleDetail(detail);
   } catch (error) {
     editorError.value = error instanceof Error ? error.message : "No se pudo abrir la publicación.";
   } finally {
     editorLoading.value = false;
+  }
+}
+
+async function duplicateArticle(article: EditorArticle) {
+  editorOpen.value = true;
+  editorLoading.value = true;
+  editorError.value = "";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  try {
+    const detail = await api.article(article.documentId);
+    applyArticleDetail(detail, true);
+    showNotice("La publicación se cargó como una copia nueva. Revisa título, slug y fecha antes de publicar.");
+  } catch (error) {
+    editorError.value = error instanceof Error ? error.message : "No se pudo duplicar la publicación.";
+  } finally {
+    editorLoading.value = false;
+  }
+}
+
+function restoreLocalDraft() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LOCAL_DRAFT_KEY) || "{}");
+    if (!saved?.article) return;
+    Object.assign(articleForm, saved.article);
+    articleForm.documentId = saved.article.documentId || "";
+    articleForm.links = Array.isArray(saved.article.links) ? saved.article.links.map((link: any) => ({
+      key: link.key || draftKey(),
+      label: link.label || "",
+      url: link.url || "",
+      description: link.description || "",
+      image: link.image || null,
+      imageFile: null,
+      imagePreview: mediaUrl(cmsUrl, link.image),
+      openInNewTab: link.openInNewTab !== false,
+      active: link.active !== false,
+    })) : [];
+    coverPreview.value = mediaUrl(cmsUrl, articleForm.coverImage);
+    localDraftAvailable.value = false;
+    showNotice("Borrador local recuperado.");
+  } catch {
+    localStorage.removeItem(LOCAL_DRAFT_KEY);
+    localDraftAvailable.value = false;
   }
 }
 
@@ -298,12 +414,71 @@ async function uploadInlineImage(file: File) {
   return api.upload(file);
 }
 
+function addResourceLink() {
+  articleForm.links.push({
+    key: draftKey(), label: "", url: "", description: "", image: null,
+    imageFile: null, imagePreview: "", openInNewTab: true, active: true,
+  });
+}
+
+function removeResourceLink(index: number) {
+  const preview = articleForm.links[index]?.imagePreview || "";
+  if (preview.startsWith("blob:")) URL.revokeObjectURL(preview);
+  articleForm.links.splice(index, 1);
+}
+
+function chooseResourceImage(index: number, event: Event) {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0] || null;
+  input.value = "";
+  if (!file) return;
+  const link = articleForm.links[index];
+  if (!link) return;
+  if (link.imagePreview.startsWith("blob:")) URL.revokeObjectURL(link.imagePreview);
+  link.imageFile = file;
+  link.imagePreview = URL.createObjectURL(file);
+}
+
+function removeResourceImage(index: number) {
+  const link = articleForm.links[index];
+  if (!link) return;
+  if (link.imagePreview.startsWith("blob:")) URL.revokeObjectURL(link.imagePreview);
+  link.image = null;
+  link.imageFile = null;
+  link.imagePreview = "";
+}
+
+function chooseAttachments(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const selected = Array.from(input.files || []);
+  input.value = "";
+  if (!selected.length) return;
+  const known = new Set(attachmentFiles.value.map((file) => `${file.name}:${file.size}:${file.lastModified}`));
+  attachmentFiles.value.push(...selected.filter((file) => !known.has(`${file.name}:${file.size}:${file.lastModified}`)));
+}
+
+function removePendingAttachment(index: number) {
+  attachmentFiles.value.splice(index, 1);
+}
+
+function removeStoredAttachment(index: number) {
+  articleForm.attachments.splice(index, 1);
+}
+
+function attachmentLabel(media: EditorMedia) {
+  return media.name || media.url.split("/").pop() || "Archivo adjunto";
+}
+
+function useSuggestedReadingTime() {
+  articleForm.readingTime = suggestedReadingTime.value;
+}
+
 function validateArticle() {
   if (!articleForm.title.trim()) return "Agrega el título de la publicación.";
   if (!articleForm.slug.trim()) return "Agrega el slug de la publicación.";
   if (!articleForm.excerpt.trim()) return "Agrega un resumen para el catálogo.";
   if (!articleForm.categoryDocumentId) return "Selecciona una categoría.";
-  if (!articleForm.content.length) return "El artículo necesita al menos un bloque de contenido.";
+  if (!articleForm.content.length && !activeLinks.value.length) return "Agrega contenido o al menos un recurso activo.";
   if (!articleForm.seo.metaTitle.trim()) return "Agrega el título SEO.";
   if (!articleForm.seo.metaDescription.trim()) return "Agrega la descripción SEO.";
   return "";
@@ -316,6 +491,19 @@ async function saveArticle(publish: boolean) {
   try {
     let cover = articleForm.coverImage;
     if (coverFile.value) cover = await api.upload(coverFile.value);
+    const uploadedAttachments = attachmentFiles.value.length ? await api.uploadMany(attachmentFiles.value) : [];
+    const attachments = [...articleForm.attachments, ...uploadedAttachments];
+    const links = await Promise.all(articleForm.links.map(async (link) => {
+      const image = link.imageFile ? await api.upload(link.imageFile) : link.image;
+      return {
+        label: link.label,
+        url: link.url,
+        description: link.description,
+        image,
+        openInNewTab: link.openInNewTab,
+        active: link.active,
+      };
+    }));
     const data = {
       title: articleForm.title,
       slug: slugify(articleForm.slug),
@@ -329,6 +517,8 @@ async function saveArticle(publish: boolean) {
       readingTime: articleForm.readingTime,
       publishDate: articleForm.publishDate,
       tags: articleForm.tagsText.split(",").map((tag) => tag.trim()).filter(Boolean),
+      links,
+      attachmentIds: attachments.map((attachment) => attachment.id),
       seo: {
         ...articleForm.seo,
         shareImageId: cover?.id || null,
@@ -336,6 +526,8 @@ async function saveArticle(publish: boolean) {
     };
     if (articleForm.documentId) await api.updateArticle(articleForm.documentId, data, publish);
     else await api.createArticle(data, publish);
+    localStorage.removeItem(LOCAL_DRAFT_KEY);
+    localDraftAvailable.value = false;
     await loadDashboard(true);
     closeEditor();
     showNotice(publish ? "Publicación guardada y publicada." : "Borrador guardado correctamente.");
@@ -431,10 +623,30 @@ function selectTab(tab: WorkspaceTab) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-onMounted(restoreSession);
+watch(articleForm, () => {
+  if (!editorOpen.value || editorLoading.value) return;
+  if (autosaveTimer) window.clearTimeout(autosaveTimer);
+  autosaveTimer = window.setTimeout(() => {
+    try {
+      localStorage.setItem(LOCAL_DRAFT_KEY, JSON.stringify({ savedAt: new Date().toISOString(), article: articleForm }));
+      lastAutosavedAt.value = new Intl.DateTimeFormat("es-GT", { hour: "2-digit", minute: "2-digit" }).format(new Date());
+    } catch {
+      // El guardado principal continúa disponible aunque el navegador bloquee el almacenamiento local.
+    }
+  }, 900);
+}, { deep: true });
+
+onMounted(() => {
+  localDraftAvailable.value = Boolean(localStorage.getItem(LOCAL_DRAFT_KEY));
+  restoreSession();
+});
 onBeforeUnmount(() => {
   if (noticeTimer) window.clearTimeout(noticeTimer);
+  if (autosaveTimer) window.clearTimeout(autosaveTimer);
   if (coverPreview.value.startsWith("blob:")) URL.revokeObjectURL(coverPreview.value);
+  articleForm.links.forEach((link) => {
+    if (link.imagePreview.startsWith("blob:")) URL.revokeObjectURL(link.imagePreview);
+  });
 });
 </script>
 
@@ -489,8 +701,9 @@ onBeforeUnmount(() => {
         </a>
         <nav aria-label="Administración editorial">
           <button :class="{ active: activeTab === 'posts' }" @click="selectTab('posts')"><b>01</b><span>Publicaciones</span><i>{{ articleStats.total }}</i></button>
-          <button :class="{ active: activeTab === 'categories' }" @click="selectTab('categories')"><b>02</b><span>Categorías</span><i>{{ dashboard.categories.length }}</i></button>
-          <button :class="{ active: activeTab === 'settings' }" @click="selectTab('settings')"><b>03</b><span>Identidad y SEO</span><i>↗</i></button>
+          <button :class="{ active: activeTab === 'galleries' }" @click="selectTab('galleries')"><b>02</b><span>Galerías</span><i>{{ dashboard.galleries.length }}</i></button>
+          <button :class="{ active: activeTab === 'categories' }" @click="selectTab('categories')"><b>03</b><span>Categorías</span><i>{{ dashboard.categories.length }}</i></button>
+          <button :class="{ active: activeTab === 'settings' }" @click="selectTab('settings')"><b>04</b><span>Identidad y SEO</span><i>↗</i></button>
         </nav>
         <div class="workspace-sidebar__bottom">
           <a href="/blog/" target="_blank" rel="noopener">Ver blog público ↗</a>
@@ -503,6 +716,7 @@ onBeforeUnmount(() => {
         <div class="brand-mark brand-mark--compact"><span></span><strong>PULSO</strong></div>
         <select :value="activeTab" aria-label="Sección administrativa" @change="selectTab(($event.target as HTMLSelectElement).value as WorkspaceTab)">
           <option value="posts">Publicaciones</option>
+          <option value="galleries">Galerías</option>
           <option value="categories">Categorías</option>
           <option value="settings">Identidad y SEO</option>
         </select>
@@ -520,10 +734,16 @@ onBeforeUnmount(() => {
             <header class="page-heading page-heading--editor">
               <div><button class="back-button" @click="closeEditor">← Publicaciones</button><p>DOCUMENTO EDITORIAL</p><h1>{{ articleForm.documentId ? "Editar publicación" : "Nueva publicación" }}</h1></div>
               <div class="editor-actions">
+                <button class="secondary-action" type="button" @click="previewOpen = true">Vista previa</button>
                 <button class="secondary-action" :disabled="editorSaving" @click="saveArticle(false)">{{ editorSaving ? "Guardando…" : "Guardar borrador" }}</button>
                 <button class="primary-action primary-action--small" :disabled="editorSaving" @click="saveArticle(true)"><span>{{ editorSaving ? "Procesando…" : "Publicar" }}</span><b>↑</b></button>
               </div>
             </header>
+
+            <div class="editor-status-line">
+              <button v-if="localDraftAvailable && !articleForm.documentId" type="button" @click="restoreLocalDraft">Recuperar borrador guardado en este navegador</button>
+              <span v-if="lastAutosavedAt">Respaldo local actualizado a las {{ lastAutosavedAt }}</span>
+            </div>
 
             <p v-if="editorError" class="form-error form-error--wide" role="alert">{{ editorError }}</p>
             <div v-if="editorLoading" class="editor-loading">Cargando documento…</div>
@@ -542,7 +762,37 @@ onBeforeUnmount(() => {
                 </section>
 
                 <section class="form-section">
-                  <div class="section-label"><span>03</span><div><h2>Posicionamiento</h2><p>Cómo se presenta la nota en búsquedas, redes y asistentes.</p></div></div>
+                  <div class="section-label"><span>03</span><div><h2>Recursos y llamadas a la acción</h2><p>Agrega enlaces útiles, inscripciones, descargas o referencias al final de la publicación.</p></div></div>
+                  <div class="resource-editor">
+                    <article v-for="(link, index) in articleForm.links" :key="link.key" class="resource-editor__row">
+                      <span>{{ String(index + 1).padStart(2, "0") }}</span>
+                      <div class="resource-editor__body">
+                        <div class="resource-image-field">
+                          <label :class="{ 'has-image': link.imagePreview }">
+                            <img v-if="link.imagePreview" :src="link.imagePreview" :alt="link.label || 'Imagen del enlace'" />
+                            <span v-else><b>＋</b> Imagen del enlace</span>
+                            <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" @change="chooseResourceImage(index, $event)" />
+                          </label>
+                          <button v-if="link.imagePreview" type="button" @click="removeResourceImage(index)">Quitar imagen</button>
+                        </div>
+                        <div class="field-grid">
+                          <label class="field"><span>Nombre visible</span><input v-model="link.label" maxlength="120" placeholder="Descargar plantilla" /></label>
+                          <label class="field"><span>URL</span><input v-model="link.url" placeholder="https://… o /ruta/" /></label>
+                          <label class="field field--full"><span>Descripción</span><input v-model="link.description" maxlength="180" placeholder="Explica qué encontrará la persona" /></label>
+                        </div>
+                      </div>
+                      <div class="resource-editor__controls">
+                        <label><input v-model="link.active" type="checkbox" /> Activo</label>
+                        <label><input v-model="link.openInNewTab" type="checkbox" /> Nueva pestaña</label>
+                        <button type="button" @click="removeResourceLink(index)">Eliminar</button>
+                      </div>
+                    </article>
+                    <button type="button" class="resource-add" @click="addResourceLink">＋ Agregar recurso o llamada a la acción</button>
+                  </div>
+                </section>
+
+                <section class="form-section">
+                  <div class="section-label"><span>04</span><div><h2>Posicionamiento</h2><p>Cómo se presenta la nota en búsquedas, redes y asistentes.</p></div></div>
                   <div class="field-grid">
                     <label class="field field--full"><span>Título SEO</span><input v-model="articleForm.seo.metaTitle" maxlength="60" required /><small :class="{ warning: articleForm.seo.metaTitle.length > 58 }">{{ articleForm.seo.metaTitle.length }}/60</small></label>
                     <label class="field field--full"><span>Descripción SEO</span><textarea v-model="articleForm.seo.metaDescription" rows="4" maxlength="160" required></textarea><small :class="{ warning: articleForm.seo.metaDescription.length > 155 }">{{ articleForm.seo.metaDescription.length }}/160</small></label>
@@ -565,6 +815,7 @@ onBeforeUnmount(() => {
                     <label class="field"><span>Fecha</span><input v-model="articleForm.publishDate" type="date" required /></label>
                     <label class="field"><span>Lectura</span><div class="number-field"><input v-model.number="articleForm.readingTime" type="number" min="1" max="120" /><b>min</b></div></label>
                   </div>
+                  <button type="button" class="reading-suggestion" @click="useSuggestedReadingTime">Usar cálculo editorial: {{ suggestedReadingTime }} min</button>
                   <label class="field"><span>Autor</span><input v-model="articleForm.authorName" maxlength="100" required /></label>
                   <label class="switch-field"><input v-model="articleForm.featured" type="checkbox" /><span><i></i></span><div><strong>Publicación destacada</strong><small>La tarjeta llevará una señal especial.</small></div></label>
                 </section>
@@ -585,7 +836,25 @@ onBeforeUnmount(() => {
                   <label class="field"><span>Etiquetas</span><textarea v-model="articleForm.tagsText" rows="4" placeholder="programación, aprendizaje, proyectos"></textarea><small>Separadas por coma</small></label>
                 </section>
 
+                <section class="inspector-card">
+                  <div class="inspector-card__title"><span>ARCHIVOS ADJUNTOS</span><i></i></div>
+                  <label class="attachment-drop">＋ Seleccionar archivos<input type="file" multiple @change="chooseAttachments" /></label>
+                  <div v-if="articleForm.attachments.length || attachmentFiles.length" class="attachment-list">
+                    <article v-for="(attachment, index) in articleForm.attachments" :key="`stored-${attachment.id}`"><span>✓</span><div><strong>{{ attachmentLabel(attachment) }}</strong><small>Ya cargado</small></div><button type="button" aria-label="Quitar archivo" @click="removeStoredAttachment(index)">×</button></article>
+                    <article v-for="(file, index) in attachmentFiles" :key="`new-${file.name}-${file.lastModified}`"><span>↑</span><div><strong>{{ file.name }}</strong><small>{{ Math.max(1, Math.round(file.size / 1024)) }} KB · se subirá al guardar</small></div><button type="button" aria-label="Quitar archivo" @click="removePendingAttachment(index)">×</button></article>
+                  </div>
+                  <p v-else class="attachment-empty">Puedes adjuntar PDF, hojas de cálculo, presentaciones, imágenes, audio o video.</p>
+                </section>
+
+                <section class="inspector-card quality-card">
+                  <div class="inspector-card__title"><span>CONTROL EDITORIAL</span><i></i><b>{{ editorialScore }}%</b></div>
+                  <div class="quality-meter"><i :style="`width:${editorialScore}%`"></i></div>
+                  <div class="quality-stats"><strong>{{ articleWordCount }}</strong><span>palabras</span><strong>{{ articleForm.content.length }}</strong><span>bloques</span></div>
+                  <ul><li v-for="check in editorialChecks" :key="check.label" :class="{ done: check.ok }"><span>{{ check.ok ? "✓" : "○" }}</span>{{ check.label }}</li></ul>
+                </section>
+
                 <div class="mobile-save-actions">
+                  <button type="button" class="secondary-action" @click="previewOpen = true">Vista previa</button>
                   <button type="button" class="secondary-action" :disabled="editorSaving" @click="saveArticle(false)">Guardar borrador</button>
                   <button type="button" class="primary-action primary-action--small" :disabled="editorSaving" @click="saveArticle(true)"><span>Publicar</span><b>↑</b></button>
                 </div>
@@ -629,6 +898,7 @@ onBeforeUnmount(() => {
                   </div>
                   <div class="article-row__actions">
                     <button title="Editar" @click="editArticle(article)">Editar</button>
+                    <button title="Crear una publicación nueva con esta estructura y contenido" @click="duplicateArticle(article)">Usar como base</button>
                     <a v-if="article.publicationState !== 'draft'" :href="articlePublicUrl(article)" target="_blank" rel="noopener" title="Ver en el blog">Ver ↗</a>
                     <button v-if="article.publicationState !== 'published'" title="Publicar" @click="quickPublish(article)">Publicar</button>
                     <button v-if="article.publicationState !== 'draft'" title="Retirar del sitio" @click="quickUnpublish(article)">Retirar</button>
@@ -640,6 +910,17 @@ onBeforeUnmount(() => {
             </section>
           </section>
         </template>
+
+        <GalleryAdmin
+          v-else-if="activeTab === 'galleries'"
+          :api="api"
+          :cms-url="cmsUrl"
+          :galleries="dashboard.galleries"
+          :categories="dashboard.categories"
+          :settings="settingsDraft"
+          @refresh="loadDashboard(true)"
+          @notice="showNotice($event.message, $event.type)"
+        />
 
         <section v-else-if="activeTab === 'categories'">
           <header class="page-heading"><div><p>PULSO / CATEGORÍAS</p><h1>Arquitectura de contenido</h1><span>Cada categoría define un tema, una señal cromática y su lugar en el catálogo.</span></div></header>
@@ -683,6 +964,22 @@ onBeforeUnmount(() => {
           <div class="settings-save-mobile"><button class="primary-action" :disabled="settingsSaving" @click="saveSettings"><span>{{ settingsSaving ? "Guardando…" : "Guardar identidad y SEO" }}</span><b>✓</b></button></div>
         </section>
       </main>
+    </div>
+
+    <div v-if="previewOpen" class="preview-overlay" role="dialog" aria-modal="true" aria-label="Vista previa de la publicación" @click.self="previewOpen = false">
+      <article class="preview-sheet" :style="`--preview-color:${selectedCategory?.color || '#2CAAFF'}`">
+        <header class="preview-toolbar"><div><span>VISTA PREVIA EDITORIAL</span><small>Representación del contenido público antes de guardar</small></div><button type="button" aria-label="Cerrar vista previa" @click="previewOpen = false">×</button></header>
+        <div class="preview-article">
+          <p class="preview-category"><i></i>{{ selectedCategory?.name || "Sin categoría" }}</p>
+          <h1>{{ articleForm.title || "Título de la publicación" }}</h1>
+          <p class="preview-excerpt">{{ articleForm.excerpt || "El resumen de la publicación aparecerá en este espacio." }}</p>
+          <div class="preview-meta"><span>{{ articleForm.authorName }}</span><span>{{ formatDate(articleForm.publishDate) }}</span><span>{{ articleForm.readingTime }} min de lectura</span></div>
+          <img v-if="coverPreview" class="preview-cover" :src="coverPreview" :alt="articleForm.coverAlt || ''" />
+          <div class="preview-body" v-html="previewHtml"></div>
+          <section v-if="activeLinks.length" class="preview-resources"><span>{{ settingsDraft.resourcesLabel || "RECURSOS PARA CONTINUAR" }}</span><a v-for="link in activeLinks" :key="link.key" :href="link.url" target="_blank" rel="noopener"><img v-if="link.imagePreview" :src="link.imagePreview" :alt="link.label" /><div><strong>{{ link.label }}</strong><small v-if="link.description">{{ link.description }}</small></div><b>↗</b></a></section>
+          <section v-if="articleForm.attachments.length || attachmentFiles.length" class="preview-resources"><span>{{ settingsDraft.attachmentsLabel || "ARCHIVOS DE LA PUBLICACIÓN" }}</span><a v-for="attachment in articleForm.attachments" :key="attachment.id" :href="mediaUrl(cmsUrl, attachment)" target="_blank" rel="noopener"><div><strong>{{ attachmentLabel(attachment) }}</strong><small>Archivo adjunto</small></div><b>↓</b></a><div v-for="file in attachmentFiles" :key="file.name" class="preview-file"><div><strong>{{ file.name }}</strong><small>Se publicará al guardar</small></div><b>↑</b></div></section>
+        </div>
+      </article>
     </div>
   </div>
 </template>
@@ -811,8 +1108,10 @@ onBeforeUnmount(() => {
 .empty-console p { color: var(--muted); font-size: 11px; }
 .empty-console button { margin-top: 12px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 9px; color: white; background: rgba(87,187,255,.08); }
 .article-editor { padding-bottom: 60px; }
-.editor-layout { display: grid; margin-top: 34px; grid-template-columns: minmax(0,1fr) 330px; align-items: start; gap: 22px; }
-.editor-canvas { display: grid; min-width: 0; gap: 18px; }
+.editor-layout { display: grid; margin-top: 34px; grid-template-columns: minmax(0,1fr) minmax(300px,330px); align-items: start; gap: 22px; }
+.editor-layout,.editor-layout * { box-sizing: border-box; }
+.editor-layout > *,.editor-canvas,.editor-inspector,.form-section,.inspector-card { width: 100%; max-width: 100%; min-width: 0; }
+.editor-canvas { display: grid; gap: 18px; }
 .form-section,.inspector-card,.category-create,.category-card,.settings-card { padding: clamp(18px,2.5vw,28px); border: 1px solid var(--line); border-radius: 22px; background: rgba(6,16,49,.67); }
 .form-section--lead { background: linear-gradient(145deg,rgba(11,28,73,.82),rgba(5,15,47,.7)); }
 .section-label { display: flex; margin-bottom: 25px; align-items: flex-start; gap: 13px; }
@@ -828,9 +1127,13 @@ onBeforeUnmount(() => {
 .field--title textarea { min-height: 105px; padding: 14px 15px; font-size: clamp(22px,3vw,34px); font-weight: 700; line-height: 1.15; letter-spacing: -.04em; }
 .slug-field,.number-field { display: flex; min-height: 46px; align-items: center; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: rgba(2,9,34,.7); overflow: hidden; }
 .slug-field b,.slug-field i,.number-field b { padding: 0 11px; color: rgba(255,255,255,.34); font: 600 10px/1 ui-monospace,monospace; font-style: normal; }
-.slug-field input,.number-field input { min-height: 44px; padding-inline: 0; border: 0; background: transparent; box-shadow: none; }
-.field-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 14px; }
+.slug-field input,.number-field input { width: 100%; min-width: 0; min-height: 44px; padding-inline: 0; border: 0; background: transparent; box-shadow: none; }
+.number-field input { flex: 1 1 0; }
+.number-field b { flex: 0 0 auto; }
+.field-grid { display: grid; min-width: 0; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 14px; }
+.field-grid > * { min-width: 0; }
 .field-grid--two { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.editor-inspector .field-grid--two { grid-template-columns: minmax(0,1.25fr) minmax(96px,.75fr); }
 .field--full { grid-column: 1/-1; }
 .search-preview { margin-top: 22px; padding: 18px; border: 1px solid rgba(87,187,255,.13); border-radius: 15px; background: rgba(0,0,20,.18); }
 .search-preview > span { color: rgba(255,255,255,.3); font: 700 8px/1 ui-monospace,monospace; letter-spacing: .1em; }
@@ -860,6 +1163,82 @@ onBeforeUnmount(() => {
 .cover-drop img { display: block; width: 100%; aspect-ratio: 16/10; object-fit: cover; }
 .text-action { padding: 7px 0; border: 0; color: var(--blue); background: transparent; font-size: 9px; cursor: pointer; }
 .text-action--danger { color: #ff8393; }
+.editor-status-line { display: flex; min-height: 26px; margin-top: 10px; align-items: center; justify-content: flex-end; gap: 14px; color: rgba(255,255,255,.36); font: 600 9px/1 ui-monospace,monospace; }
+.editor-status-line button { padding: 6px 9px; border: 1px solid rgba(0,217,164,.23); border-radius: 8px; color: #79ead0; background: rgba(0,217,164,.06); cursor: pointer; }
+.resource-editor { display: grid; gap: 10px; }
+.resource-editor__row { display: grid; padding: 14px; grid-template-columns: 30px minmax(0,1fr); gap: 0 10px; border: 1px solid rgba(87,187,255,.13); border-radius: 14px; background: rgba(1,8,30,.24); }
+.resource-editor__row > span { padding-top: 19px; color: var(--green); font: 700 9px/1 ui-monospace,monospace; }
+.resource-editor__body { display: grid; grid-template-columns: 145px minmax(0,1fr); gap: 12px; }
+.resource-image-field { display: grid; align-content: start; gap: 6px; }
+.resource-image-field label { display: grid; min-height: 112px; place-items: center; border: 1px dashed rgba(87,187,255,.25); border-radius: 11px; color: rgba(255,255,255,.45); background: rgba(87,187,255,.04); overflow: hidden; cursor: pointer; }
+.resource-image-field label.has-image { display: block; border-style: solid; }
+.resource-image-field label span { display: grid; padding: 12px; justify-items: center; gap: 7px; font-size: 8px; text-align: center; }
+.resource-image-field label b { color: var(--green); font-size: 20px; }
+.resource-image-field img { display: block; width: 100%; height: 112px; object-fit: cover; }
+.resource-image-field input { display: none; }
+.resource-image-field > button { padding: 0; border: 0; color: #ff8393; background: transparent; text-align: left; font-size: 8px; cursor: pointer; }
+.resource-editor__controls { display: flex; grid-column: 2; margin-top: 10px; align-items: center; gap: 14px; color: rgba(255,255,255,.48); font-size: 9px; }
+.resource-editor__controls label { display: flex; align-items: center; gap: 5px; }
+.resource-editor__controls button { margin-left: auto; border: 0; color: #ff8393; background: none; font-size: 9px; cursor: pointer; }
+.resource-add { min-height: 42px; border: 1px dashed rgba(0,217,164,.3); border-radius: 12px; color: #7debd0; background: rgba(0,217,164,.04); font-size: 10px; cursor: pointer; }
+.reading-suggestion { margin-top: 7px; padding: 0; border: 0; color: #72c9ff; background: none; font-size: 8px; cursor: pointer; }
+.attachment-drop { display: grid; min-height: 42px; place-content: center; border: 1px dashed rgba(87,187,255,.28); border-radius: 10px; color: #83d0ff; background: rgba(87,187,255,.04); font-size: 9px; cursor: pointer; }
+.attachment-drop input { display: none; }
+.attachment-list { display: grid; margin-top: 9px; gap: 6px; }
+.attachment-list article,.preview-file { display: grid; padding: 9px; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,.07); border-radius: 9px; background: rgba(0,0,20,.18); }
+.attachment-list article > span { color: var(--green); font: 700 9px/1 ui-monospace,monospace; }
+.attachment-list article > div,.preview-file > div { display: grid; min-width: 0; gap: 2px; }
+.attachment-list strong,.preview-file strong { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.attachment-list small,.preview-file small { color: rgba(255,255,255,.33); font-size: 7px; }
+.attachment-list button { width: 24px; height: 24px; border: 0; border-radius: 7px; color: #ff8393; background: rgba(255,100,120,.06); cursor: pointer; }
+.attachment-empty { margin: 10px 0 0; color: rgba(255,255,255,.36); font-size: 8px; line-height: 1.55; }
+.quality-card .inspector-card__title b { color: var(--green); font-size: 11px; }
+.quality-meter { height: 4px; margin-bottom: 13px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+.quality-meter i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#57bbff,#00d9a4); transition: width .25s ease; }
+.quality-stats { display: grid; margin-bottom: 14px; grid-template-columns: auto 1fr auto 1fr; align-items: baseline; gap: 3px 5px; }
+.quality-stats strong { color: white; font-size: 18px; font-weight: 500; }
+.quality-stats span { color: rgba(255,255,255,.35); font-size: 8px; }
+.quality-card ul { display: grid; margin: 0; padding: 0; gap: 7px; list-style: none; }
+.quality-card li { display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,.4); font-size: 8px; line-height: 1.35; }
+.quality-card li span { color: #ffb547; font: 700 10px/1 ui-monospace,monospace; }
+.quality-card li.done { color: rgba(255,255,255,.68); }
+.quality-card li.done span { color: var(--green); }
+.preview-overlay { display: grid; position: fixed; inset: 0; z-index: 90; padding: 24px; place-items: start center; background: rgba(0,4,20,.84); backdrop-filter: blur(18px); overflow-y: auto; }
+.preview-sheet { width: min(980px,100%); border: 1px solid color-mix(in srgb,var(--preview-color),transparent 58%); border-radius: 24px; background: #07102e; box-shadow: 0 40px 120px rgba(0,0,20,.65); overflow: hidden; }
+.preview-toolbar { display: flex; position: sticky; top: 0; z-index: 2; min-height: 62px; padding: 12px 18px; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.09); background: rgba(5,14,43,.95); backdrop-filter: blur(20px); }
+.preview-toolbar > div { display: grid; gap: 4px; }
+.preview-toolbar span { color: var(--preview-color); font: 700 9px/1 ui-monospace,monospace; letter-spacing: .14em; }
+.preview-toolbar small { color: rgba(255,255,255,.36); font-size: 8px; }
+.preview-toolbar button { width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.1); border-radius: 50%; color: white; background: rgba(255,255,255,.05); font-size: 20px; cursor: pointer; }
+.preview-article { width: min(760px,calc(100% - 40px)); margin: 0 auto; padding: clamp(36px,7vw,82px) 0; }
+.preview-category { display: flex; align-items: center; gap: 8px; color: var(--preview-color); font: 700 10px/1 ui-monospace,monospace; letter-spacing: .13em; text-transform: uppercase; }
+.preview-category i { width: 25px; height: 1px; background: currentColor; box-shadow: 0 0 9px currentColor; }
+.preview-article > h1 { max-width: 800px; margin: 22px 0 0; font-size: clamp(38px,6.3vw,76px); line-height: 1.03; letter-spacing: -.055em; }
+.preview-excerpt { margin: 24px 0 0; color: rgba(255,255,255,.62); font-size: clamp(15px,2vw,19px); line-height: 1.7; }
+.preview-meta { display: flex; margin-top: 22px; gap: 18px; color: rgba(255,255,255,.38); font: 600 9px/1 ui-monospace,monospace; flex-wrap: wrap; }
+.preview-cover { display: block; width: 100%; margin-top: 32px; aspect-ratio: 16/9; border-radius: 18px; object-fit: cover; }
+.preview-body { margin-top: 40px; color: rgba(255,255,255,.76); font-size: 16px; line-height: 1.85; }
+.preview-body :deep(h2),.preview-body :deep(h3),.preview-body :deep(h4) { margin: 2em 0 .65em; color: white; line-height: 1.2; letter-spacing: -.035em; }
+.preview-body :deep(h2) { font-size: 32px; }.preview-body :deep(h3) { font-size: 24px; }.preview-body :deep(h4) { font-size: 19px; }
+.preview-body :deep(p),.preview-body :deep(ul),.preview-body :deep(ol),.preview-body :deep(blockquote) { margin: 0 0 1.35em; }
+.preview-body :deep(a) { color: #72ccff; }.preview-body :deep(img) { max-width: 100%; border-radius: 14px; }
+.preview-body :deep(.article-image) { margin: 28px 0; }.preview-body :deep(.article-inline-image) { min-height: 360px; border-radius: 14px; background-position: center; background-size: cover; }
+.preview-body :deep(pre) { padding: 18px; border: 1px solid rgba(87,187,255,.16); border-radius: 13px; background: rgba(0,0,15,.38); overflow-x: auto; }
+.preview-body :deep(.article-callout) { margin: 24px 0; padding: 18px; border: 1px solid color-mix(in srgb,var(--preview-color),transparent 62%); border-radius: 14px; background: color-mix(in srgb,var(--preview-color),transparent 93%); }
+.preview-body :deep(.article-callout strong) { display: block; margin-bottom: 6px; color: var(--preview-color); }
+.preview-body :deep(.article-inline-cta a) { display: inline-flex; margin: 10px 0 24px; padding: 12px 18px; border: 1px solid var(--preview-color); border-radius: 999px; color: #03172b; background: var(--preview-color); text-decoration: none; font-weight: 700; }
+.preview-body :deep(.article-video),.preview-body :deep(.article-table) { width: 100%; margin: 26px 0; border-radius: 14px; overflow: hidden; }
+.preview-body :deep(.article-embed) { display: flex; margin: 24px 0; padding: 16px; align-items: center; gap: 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; }
+.preview-body :deep(.article-embed > div) { display: grid; gap: 4px; }
+.preview-body :deep(.article-divider) { height: 1px; margin: 40px 0; border: 0; background: linear-gradient(90deg,transparent,var(--preview-color),transparent); }
+.preview-body :deep(iframe),.preview-body :deep(video) { width: 100%; aspect-ratio: 16/9; border: 0; }
+.preview-body :deep(table) { width: 100%; border-collapse: collapse; }.preview-body :deep(th),.preview-body :deep(td) { padding: 10px; border: 1px solid rgba(255,255,255,.12); text-align: left; }
+.preview-resources { display: grid; margin-top: 34px; gap: 8px; }
+.preview-resources > span { margin-bottom: 4px; color: var(--preview-color); font: 700 9px/1 ui-monospace,monospace; letter-spacing: .12em; }
+.preview-resources > a,.preview-file { display: flex; padding: 14px; align-items: center; justify-content: space-between; gap: 18px; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; color: white; background: rgba(255,255,255,.035); text-decoration: none; }
+.preview-resources > a > img { width: 80px; height: 58px; flex: 0 0 auto; border-radius: 8px; object-fit: cover; }
+.preview-resources > a > div { flex: 1; }
+.preview-resources > a > div { display: grid; gap: 3px; }.preview-resources > a strong { font-size: 12px; }.preview-resources > a small { color: rgba(255,255,255,.42); font-size: 9px; }
 .mobile-save-actions,.settings-save-mobile { display: none; }
 .editor-loading { display: grid; min-height: 400px; place-content: center; border: 1px solid var(--line); border-radius: 20px; color: var(--muted); }
 .category-layout { display: grid; margin-top: 34px; grid-template-columns: 330px minmax(0,1fr); align-items: start; gap: 20px; }
@@ -881,7 +1260,9 @@ onBeforeUnmount(() => {
   .result-count { text-align: right; }
   .article-row { grid-template-columns: minmax(0,1fr) 145px; }
   .article-row__actions { grid-column: 1/-1; padding: 8px 14px 12px; border: 0; justify-content: flex-start; }
-  .editor-layout { grid-template-columns: minmax(0,1fr) 290px; }
+  .editor-layout { grid-template-columns: 1fr; }
+  .editor-inspector { position: static; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .editor-inspector > :first-child { grid-column: 1/-1; }
   .category-stack { grid-template-columns: 1fr; }
 }
 @media (max-width: 900px) {
@@ -901,7 +1282,7 @@ onBeforeUnmount(() => {
   .article-row__meta { display: flex; padding: 0 20px 12px 64px; align-items: center; flex-wrap: wrap; border: 0; }
   .article-row__actions { padding-left: 64px; }
   .editor-layout { grid-template-columns: 1fr; }
-  .editor-inspector { position: static; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .editor-inspector { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .editor-inspector > :first-child { grid-column: 1/-1; }
   .editor-actions { display: none; }
   .mobile-save-actions { display: flex; grid-column: 1/-1; gap: 10px; }
@@ -931,6 +1312,18 @@ onBeforeUnmount(() => {
   .field--full { grid-column: auto; }
   .editor-inspector { grid-template-columns: 1fr; }
   .editor-inspector > :first-child { grid-column: auto; }
+  .resource-editor__row { grid-template-columns: 24px minmax(0,1fr); padding: 11px; }
+  .resource-editor__body { grid-template-columns: 1fr; }
+  .resource-image-field label { min-height: 150px; }
+  .resource-image-field img { height: 150px; }
+  .resource-editor__controls { align-items: flex-start; flex-direction: column; }
+  .resource-editor__controls button { margin-left: 0; }
+  .editor-status-line { align-items: flex-end; flex-direction: column; }
+  .mobile-save-actions { flex-wrap: wrap; }
+  .mobile-save-actions > * { min-width: calc(50% - 5px); }
+  .preview-overlay { padding: 8px; }
+  .preview-sheet { border-radius: 16px; }
+  .preview-article { width: min(100% - 28px,760px); }
   .form-section,.inspector-card,.category-create,.category-card,.settings-card { padding: 17px 14px; }
   .category-stack { grid-template-columns: 1fr; }
   .settings-save-mobile { display: block; position: sticky; bottom: 10px; z-index: 8; margin-top: 16px; }
