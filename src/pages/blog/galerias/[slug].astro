@@ -1,6 +1,6 @@
 ---
 import LayoutNavbar from "../../../layouts/LayoutNavbar.astro";
-import { colorRgb, formatBlogDate, getBlogData, safeCategoryColor, type BlogGallery, type BlogSettings } from "../../../lib/blog";
+import { blogSeoDescription, blogSeoTitle, colorRgb, formatBlogDate, getBlogData, safeCategoryColor, type BlogGallery, type BlogSettings } from "../../../lib/blog";
 import { SITE, SITE_URL } from "../../../config/seo.mjs";
 import "~/styles/index.css";
 
@@ -16,6 +16,8 @@ const category = safeCategoryColor(gallery.category.color);
 const rgb = colorRgb(category);
 const pageUrl = `${SITE_URL}/blog/galerias/${gallery.slug}/`;
 const image = gallery.seo?.shareImage?.url || gallery.images[0]?.url;
+const seoTitle = blogSeoTitle(gallery.seo?.metaTitle, `${gallery.title} | ${settings.publicationName}`);
+const seoDescription = blogSeoDescription(gallery.seo?.metaDescription, gallery.description);
 const dataFooter = { title: settings.articleFooterTitle, content: settings.articleFooterDescription, buttonType: "contacto" };
 const structuredData = [{
   "@type": "ImageGallery",
@@ -38,8 +40,8 @@ const structuredData = [{
 }];
 ---
 
-<LayoutNavbar dataFooter={dataFooter} title={gallery.seo?.metaTitle || `${gallery.title} | ${settings.publicationName}`} description={gallery.seo?.metaDescription || gallery.description} image={image} pageType="Article" publishedTime={gallery.publishDate} structuredData={structuredData}>
-  <main class="gallery-page" style={`--category:${category};--category-rgb:${rgb}`}>
+<LayoutNavbar dataFooter={dataFooter} title={seoTitle} description={seoDescription} image={image} pageType="Article" publishedTime={gallery.publishDate} structuredData={structuredData}>
+  <div class="gallery-page" style={`--category:${category};--category-rgb:${rgb}`}>
     <header class="gallery-page__hero sections">
       <nav aria-label="Migas de pan"><a href="/">Inicio</a><span>/</span><a href="/blog/">{settings.publicationName}</a><span>/</span><a href="/blog/galerias/">{settings.galleriesLabel}</a></nav>
       <div><p><i></i>{gallery.category.name}</p><h1>{gallery.title}</h1><span>{gallery.description}</span><footer><small>{formatBlogDate(gallery.publishDate)}</small><b>{String(gallery.images.length).padStart(2, "0")} imágenes</b></footer></div>
@@ -49,7 +51,7 @@ const structuredData = [{
       <div class="gallery-page__grid" data-public-gallery>
         {gallery.images.map((item, index) => (
           <button type="button" data-public-gallery-image data-src={item.url} data-alt={item.alternativeText || gallery.title} data-caption={item.caption || ""} aria-label={`Abrir imagen ${index + 1} de ${gallery.images.length}`}>
-            <img src={item.url} alt={item.alternativeText || gallery.title} loading={index < 3 ? "eager" : "lazy"} decoding="async" />
+            <img src={item.url} alt={item.alternativeText || gallery.title} width={item.width} height={item.height} loading={index < 3 ? "eager" : "lazy"} decoding="async" />
             <span>{String(index + 1).padStart(2, "0")}</span>
             {item.caption && <small>{item.caption}</small>}
           </button>
@@ -57,7 +59,7 @@ const structuredData = [{
       </div>
       <a class="gallery-page__back" href="/blog/galerias/">← {settings.galleriesLabel}</a>
     </section>
-  </main>
+  </div>
 </LayoutNavbar>
 
 <script>

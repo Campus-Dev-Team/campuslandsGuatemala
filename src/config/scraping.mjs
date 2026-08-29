@@ -6,7 +6,7 @@ import {
   SERVICE_CATALOG,
 } from "./recommendation.mjs";
 
-export const MACHINE_CONTENT_UPDATED = "2026-08-28";
+export const MACHINE_CONTENT_UPDATED = "2026-08-29";
 
 const pageDetails = {
   "/": {
@@ -44,6 +44,11 @@ const pageDetails = {
       "comunidad Camper",
       "carrera y empleabilidad",
     ],
+  },
+  "/blog/galerias/": {
+    name: "Galerías de Campuslands",
+    audience: ["estudiantes", "familias", "empresas", "comunidad tecnológica"],
+    topics: ["vida en Campuslands", "actividades", "Campus Tec", "comunidad Camper"],
   },
   "/emplea/": {
     name: "Emplea talento",

@@ -35,6 +35,13 @@ const curryear = new Date().getFullYear();
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="preload"
+      href="/fonts/Poppins-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
     <SeoHead
       title={title}
       description={description}
@@ -272,7 +279,7 @@ const curryear = new Date().getFullYear();
         >
         <a
           href="/ai-academy/"
-          aria-label="Talleres de inteligencia artificial"
+          aria-label="AI Academy: talleres de inteligencia artificial"
           aria-current={currentPath === "/ai-academy" ? "page" : undefined}
           class={currentPath === "/ai-academy"
             ? "active"
@@ -393,7 +400,7 @@ const curryear = new Date().getFullYear();
             >
             <a
               href="/ai-academy/"
-              aria-label="Talleres de inteligencia artificial"
+              aria-label="AI Academy: talleres de inteligencia artificial"
               class="text-white hover:text-gray-200 !mx-4 break-keep"
               >AI Academy</a
             >

@@ -2,6 +2,8 @@
 import LayoutNavbar from "../../layouts/LayoutNavbar.astro";
 import BlogCover from "../../components/blog/BlogCover.astro";
 import {
+  blogSeoDescription,
+  blogSeoTitle,
   colorRgb,
   formatBlogDate,
   getBlogData,
@@ -41,6 +43,8 @@ const otherArticles = allArticles.filter((candidate) => candidate.id !== article
 const related = [...sameCategory, ...otherArticles].slice(0, 3);
 const articleUrl = `${SITE_URL}/blog/${article.slug}/`;
 const socialImage = article.seo?.shareImage?.url || article.coverImage?.url;
+const seoTitle = blogSeoTitle(article.seo?.metaTitle, `${article.title} | ${settings.publicationName}`);
+const seoDescription = blogSeoDescription(article.seo?.metaDescription, article.excerpt);
 
 const dataFooter = {
   title: settings.articleFooterTitle,
@@ -83,8 +87,8 @@ const structuredData = [
 
 <LayoutNavbar
   dataFooter={dataFooter}
-  title={article.seo?.metaTitle || `${article.title} | ${settings.publicationName}`}
-  description={article.seo?.metaDescription || article.excerpt}
+  title={seoTitle}
+  description={seoDescription}
   image={socialImage}
   pageType="Article"
   publishedTime={article.publishDate}
@@ -156,7 +160,7 @@ const structuredData = [
               {activeLinks.map((link, index) => (
                 <a href={link.url} target={link.openInNewTab ? "_blank" : undefined} rel={link.openInNewTab ? "noopener noreferrer" : undefined}>
                   {link.image
-                    ? <img src={link.image.url} alt={link.image.alternativeText || link.label} loading="lazy" decoding="async" />
+                    ? <img src={link.image.url} alt={link.image.alternativeText || link.label} width={link.image.width} height={link.image.height} loading="lazy" decoding="async" />
                     : <b>{String(index + 1).padStart(2, "0")}</b>}
                   <span><strong>{link.label}</strong>{link.description && <small>{link.description}</small>}</span>
                   <i aria-hidden="true">↗</i>
@@ -173,7 +177,7 @@ const structuredData = [
               {attachments.map((attachment, index) => (
                 <a href={attachment.url} target="_blank" rel="noopener noreferrer">
                   {attachment.mime?.startsWith("image/")
-                    ? <img src={attachment.url} alt={attachment.alternativeText || attachment.name || `Archivo ${index + 1}`} loading="lazy" />
+                    ? <img src={attachment.url} alt={attachment.alternativeText || attachment.name || `Archivo ${index + 1}`} width={attachment.width} height={attachment.height} loading="lazy" decoding="async" />
                     : <b aria-hidden="true">{attachment.mime?.split("/").pop()?.slice(0, 4).toUpperCase() || "FILE"}</b>}
                   <span>{attachment.caption || attachment.name || `Archivo ${index + 1}`}</span>
                   <i aria-hidden="true">↓</i>

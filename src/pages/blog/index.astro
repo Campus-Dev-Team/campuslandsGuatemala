@@ -70,6 +70,7 @@ const structuredData = settings
   structuredData={structuredData}
 >
   <div class="blog-index">
+    <a class="sr-only" href="/blog/galerias/">Explorar galerías de la comunidad Campuslands Guatemala</a>
     {settings ? (
       <>
         <header class="blog-toolbar sections">
@@ -162,6 +163,7 @@ const structuredData = settings
       <section class="blog-service-state sections" aria-live="polite">
         <span>CMS / {source === "unavailable" ? "SIN CONEXIÓN" : "SIN CONFIGURAR"}</span>
         <h1>La publicación está temporalmente en preparación.</h1>
+        <h2 class="sr-only">Artículos de tecnología, programación, inteligencia artificial y empleabilidad</h2>
         <p>El contenido editorial volverá a mostrarse cuando la administración esté disponible.</p>
       </section>
     )}

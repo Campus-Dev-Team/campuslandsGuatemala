@@ -162,6 +162,41 @@ export function formatBlogDate(value: string): string {
   }).format(date);
 }
 
+function compactSeoText(value?: string | null): string {
+  return String(value || "").replace(/\s+/g, " ").trim();
+}
+
+function truncateSeoText(value: string, maximum: number): string {
+  if (value.length <= maximum) return value;
+  const shortened = value.slice(0, maximum + 1);
+  const lastSpace = shortened.lastIndexOf(" ");
+  const end = lastSpace > maximum * 0.7 ? lastSpace : maximum;
+  return `${shortened.slice(0, end).trim()}…`;
+}
+
+export function blogSeoTitle(
+  preferred: string | null | undefined,
+  fallback: string,
+): string {
+  let title = compactSeoText(preferred) || compactSeoText(fallback);
+  if (title.length < 30 && !/campuslands/i.test(title)) {
+    title = `${title} | Campuslands Guatemala`;
+  }
+  return truncateSeoText(title, 64);
+}
+
+export function blogSeoDescription(
+  preferred: string | null | undefined,
+  fallback: string,
+): string {
+  let description = compactSeoText(preferred);
+  if (description.length < 80) description = compactSeoText(fallback);
+  if (description.length < 100) {
+    description = `${description} Conoce la información completa en Campuslands Guatemala.`;
+  }
+  return truncateSeoText(description, 165);
+}
+
 function mediaUrl(url?: string | null): string {
   if (!url) return "";
   if (/^https?:\/\//i.test(url)) return url;

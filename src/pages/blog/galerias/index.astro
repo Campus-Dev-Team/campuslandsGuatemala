@@ -1,12 +1,16 @@
 ---
 import LayoutNavbar from "../../../layouts/LayoutNavbar.astro";
-import { colorRgb, formatBlogDate, getBlogData, safeCategoryColor } from "../../../lib/blog";
-import { SITE, SITE_URL } from "../../../config/seo.mjs";
+import { blogSeoDescription, blogSeoTitle, colorRgb, formatBlogDate, getBlogData, safeCategoryColor } from "../../../lib/blog";
+import { PAGE_SEO, SITE, SITE_URL } from "../../../config/seo.mjs";
 import "~/styles/index.css";
 
 const { settings, galleries } = await getBlogData();
-const title = settings ? `${settings.galleriesTitle} | ${settings.publicationName}` : undefined;
-const description = settings?.galleriesDescription;
+const fallbackSeo = PAGE_SEO["/blog/galerias/"];
+const title = blogSeoTitle(
+  settings ? `${settings.galleriesTitle} | ${settings.publicationName}` : undefined,
+  fallbackSeo.title,
+);
+const description = blogSeoDescription(settings?.galleriesDescription, fallbackSeo.description);
 const dataFooter = settings ? { title: settings.footerTitle, content: settings.footerDescription, buttonType: "contacto" } : undefined;
 const structuredData = settings ? [{
   "@type": "CollectionPage",
@@ -28,7 +32,7 @@ const structuredData = settings ? [{
 ---
 
 <LayoutNavbar dataFooter={dataFooter} title={title} description={description} pageType="CollectionPage" structuredData={structuredData}>
-  <main class="gallery-index">
+  <div class="gallery-index">
     {settings ? (
       <>
         <header class="gallery-index__hero sections">
@@ -42,7 +46,7 @@ const structuredData = settings ? [{
             <article style={`--category:${safeCategoryColor(gallery.category.color)};--category-rgb:${colorRgb(gallery.category.color)}`}>
               <a href={`/blog/galerias/${gallery.slug}/`}>
                 <div class="gallery-index__mosaic">
-                  {gallery.images.slice(0, 3).map((image, imageIndex) => <img src={image.url} alt={image.alternativeText || gallery.title} loading={index < 2 ? "eager" : "lazy"} decoding="async" class:list={[{ main: imageIndex === 0 }]} />)}
+                  {gallery.images.slice(0, 3).map((image, imageIndex) => <img src={image.url} alt={image.alternativeText || gallery.title} width={image.width} height={image.height} loading={index < 2 ? "eager" : "lazy"} decoding="async" class:list={[{ main: imageIndex === 0 }]} />)}
                   {!gallery.images.length && <span>{`{ 00 }`}</span>}
                   <b>{String(gallery.images.length).padStart(2, "0")}</b>
                 </div>
@@ -53,8 +57,8 @@ const structuredData = settings ? [{
         </section>
         {!galleries.length && <section class="gallery-index__empty sections"><span>{`{ 00 }`}</span><h2>{settings.emptyTitle}</h2><p>{settings.emptyDescription}</p><a href="/blog/">{settings.emptyButtonLabel}</a></section>}
       </>
-    ) : <section class="gallery-index__empty sections"><span>CMS / SIN CONEXIÓN</span><h1>Las galerías están temporalmente en preparación.</h1></section>}
-  </main>
+    ) : <section class="gallery-index__empty sections"><span>CMS / SIN CONEXIÓN</span><h1>Las galerías están temporalmente en preparación.</h1><h2 class="sr-only">Experiencias y actividades de la comunidad Campuslands Guatemala</h2></section>}
+  </div>
 </LayoutNavbar>
 
 <style>

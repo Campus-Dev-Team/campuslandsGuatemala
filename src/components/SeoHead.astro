@@ -1,7 +1,7 @@
 ---
 import {
   absoluteUrl,
-  COLOMBIA_URL,
+  colombiaAlternateFor,
   DEFAULT_IMAGE,
   LAST_CONTENT_UPDATE,
   normalizePathname,
@@ -44,8 +44,9 @@ const pageDescription =
   pageSeo.description ??
   "Formación tecnológica intensiva y presencial en Ciudad de Guatemala.";
 const canonical = absoluteUrl(SITE_URL, pathname);
-const colombiaAlternate = absoluteUrl(COLOMBIA_URL, pathname);
+const colombiaAlternate = colombiaAlternateFor(pathname);
 const socialImage = image.startsWith("http") ? image : new URL(image, SITE_URL).toString();
+const usesDefaultSocialImage = socialImage === DEFAULT_IMAGE;
 const robots = noindex
   ? "noindex,nofollow"
   : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
@@ -114,6 +115,7 @@ const jsonLd = JSON.stringify({
 
 <title>{pageTitle}</title>
 <meta name="description" content={pageDescription} />
+<meta name="author" content={SITE.name} />
 <meta http-equiv="content-language" content={SITE.language} />
 <meta name="robots" content={robots} />
 <meta name="googlebot" content={robots} />
@@ -121,10 +123,10 @@ const jsonLd = JSON.stringify({
 <link rel="alternate" type="text/plain" href={`${SITE_URL}/llms.txt`} title="Resumen para asistentes" />
 <link rel="alternate" type="text/markdown" href={`${SITE_URL}/informacion-campuslands.md`} title="Información oficial en Markdown" />
 <link rel="alternate" type="application/json" href={`${SITE_URL}/informacion-campuslands.json`} title="Información oficial en JSON" />
+{!noindex && <link rel="alternate" hreflang="es-GT" href={canonical} />}
 {
-  !noindex && (
+  !noindex && colombiaAlternate && (
     <>
-      <link rel="alternate" hreflang="es-GT" href={canonical} />
       <link rel="alternate" hreflang="es-CO" href={colombiaAlternate} />
       <link rel="alternate" hreflang="x-default" href={colombiaAlternate} />
     </>
@@ -140,6 +142,9 @@ const jsonLd = JSON.stringify({
 <meta property="og:updated_time" content={LAST_CONTENT_UPDATE} />
 <meta property="og:image" content={socialImage} />
 <meta property="og:image:alt" content={`Campuslands Guatemala — ${pageTitle}`} />
+{usesDefaultSocialImage && <meta property="og:image:type" content="image/jpeg" />}
+{usesDefaultSocialImage && <meta property="og:image:width" content="1200" />}
+{usesDefaultSocialImage && <meta property="og:image:height" content="630" />}
 {pageType === "Article" && publishedTime && <meta property="article:published_time" content={publishedTime} />}
 {pageType === "Article" && modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
 {pageType === "Article" && author && <meta property="article:author" content={author} />}
@@ -147,6 +152,7 @@ const jsonLd = JSON.stringify({
 <meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={pageDescription} />
 <meta name="twitter:image" content={socialImage} />
+<meta name="twitter:image:alt" content={`Campuslands Guatemala — ${pageTitle}`} />
 <meta name="theme-color" content="#07102B" />
 <link rel="manifest" href="/site.webmanifest" />
 {!noindex && <script type="application/ld+json" set:html={jsonLd}></script>}

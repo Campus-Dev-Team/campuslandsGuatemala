@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 import {
 	absoluteUrl,
-	COLOMBIA_URL,
+	colombiaAlternateFor,
 	INDEXABLE_PATHS,
 	LAST_CONTENT_UPDATE,
 	normalizePathname,
@@ -30,18 +30,24 @@ export default defineConfig({
 			},
 			serialize(item) {
 				const pathname = normalizePathname(new URL(item.url).pathname);
+				const colombiaAlternate = colombiaAlternateFor(pathname);
 				const isLegalPage = pathname === '/terminos-condiciones/' || pathname === '/politica-de-privacidad/';
 				const isPrimaryPage = ['/', '/joinUs/', '/ai-academy/', '/blog/', '/emplea/', '/patrocina/'].includes(pathname);
+				const links = [
+					{ lang: 'es-GT', url: absoluteUrl(SITE_URL, pathname) },
+					...(colombiaAlternate
+						? [
+							{ lang: 'es-CO', url: colombiaAlternate },
+							{ lang: 'x-default', url: colombiaAlternate }
+						]
+						: [])
+				];
 				return {
 					...item,
 					lastmod: new Date(LAST_CONTENT_UPDATE),
 					changefreq: isLegalPage ? 'yearly' : isPrimaryPage ? 'weekly' : 'monthly',
 					priority: pathname === '/' ? 1 : isPrimaryPage ? 0.9 : isLegalPage ? 0.4 : 0.8,
-					links: [
-						{ lang: 'es-GT', url: absoluteUrl(SITE_URL, pathname) },
-						{ lang: 'es-CO', url: absoluteUrl(COLOMBIA_URL, pathname) },
-						{ lang: 'x-default', url: absoluteUrl(COLOMBIA_URL, pathname) }
-					]
+					links
 				};
 			},
 			customPages: Object.keys(PAGE_SEO).map((pathname) => absoluteUrl(SITE_URL, pathname))
