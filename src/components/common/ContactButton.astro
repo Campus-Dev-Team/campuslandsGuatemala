@@ -1,7 +1,7 @@
 ---
 
 interface Props {
-    tipo: "contacto" | "patrocinio" | "emplear" | "agendar" | "insripcion" | "chatear";
+    tipo: "contacto" | "patrocinio" | "emplear" | "agendar" | "insripcion" | "chatear" | "ia";
     whatsApp?: string;
     iconName?: string;
     alt?:string;
@@ -11,7 +11,7 @@ interface Props {
     linkPage?: string;
 }
 
-const {tipo,whatsApp,iconName,alt,isOutline, StylesAnchor, StylesButton, linkPage} = Astro.props;
+const {tipo,whatsApp = "50232705200",iconName,alt,isOutline, StylesAnchor, StylesButton, linkPage} = Astro.props;
 
 const presets = {
     "contacto": ["Contactanos", "¡Hola!+Me+gustaría+conocer+más+sobre+Campuslands+y+sus+programas+de+formación.+¿Podrían+brindarme+información+detallada?"],
@@ -24,7 +24,9 @@ const presets = {
     
     "agendar": ["Agenda tu visita", "¡Hola!+Me+gustaría+coordinar+una+visita+para+conocer+las+instalaciones+de+Campuslands+y+aprender+más+sobre+su+metodología+de+formación.+¿Qué+horarios+tienen+disponibles?"],
     
-    "insripcion": ["Inscríbete ahora", "¡Hola!+Estoy+muy+interesado+en+formarme+como+desarrollador+en+Campuslands.+¿Podrían+informarme+sobre+el+proceso+de+inscripción,+requisitos+y+próximas+fechas+de+inicio?"]
+    "insripcion": ["Inscríbete ahora", "¡Hola!+Estoy+muy+interesado+en+formarme+como+desarrollador+en+Campuslands.+¿Podrían+informarme+sobre+el+proceso+de+inscripción,+requisitos+y+próximas+fechas+de+inicio?"],
+
+    "ia": ["Quiero información", "¡Hola!+Me+interesan+los+talleres+de+AI+Academy+de+Campuslands+Guatemala.+¿Podrían+compartirme+fechas,+disponibilidad+y+costos?"]
 }
 
 const config = presets[tipo]

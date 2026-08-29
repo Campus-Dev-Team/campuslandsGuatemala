@@ -1,0 +1,22 @@
+---
+import SeoHead from "../components/SeoHead.astro";
+import BlogAdmin from "../components/blog-admin/BlogAdmin.vue";
+import "~/styles/index.css";
+---
+
+<!doctype html>
+<html lang="es-GT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SeoHead
+      title="Mesa editorial | Pulso Campuslands"
+      description="Interfaz privada para administrar las publicaciones de Pulso Campuslands."
+      noindex
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <BlogAdmin client:load />
+  </body>
+</html>

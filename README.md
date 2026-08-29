@@ -1,12 +1,13 @@
 # Campuslands Guatemala
 
 Sitio web público de Campuslands Guatemala. El proyecto presenta los programas
-de formación, vinculación laboral, patrocinio, información institucional y la
-política de privacidad de la sede de Guatemala.
+de formación, vinculación laboral, patrocinio, información institucional, blog
+editorial y la política de privacidad de la sede de Guatemala.
 
-Está construido como un sitio estático con Astro, Vue y Tailwind CSS. No
-requiere una base de datos, un servicio backend ni variables de entorno para
-ejecutarse localmente.
+Está construido como un sitio estático con Astro, Vue y Tailwind CSS. El blog
+consume exclusivamente el CMS independiente `campuslands-guatemala-backend` y
+se administra desde una interfaz propia del sitio, sin utilizar el panel de
+Strapi como herramienta editorial cotidiana.
 
 ## Rama consolidada
 
@@ -168,6 +169,10 @@ Astro está configurado para utilizar una barra final en las rutas.
 | --- | --- |
 | `/` | Inicio. |
 | `/joinUs/` | Información para futuros campers. |
+| `/ai-academy/` | Talleres presenciales de inteligencia artificial aplicada. |
+| `/blog/` | Portada editorial y filtros por categoría. |
+| `/blog/[slug]/` | Detalle estático de cada publicación del CMS. |
+| `/blog-admin/` | Mesa editorial privada para publicaciones, categorías, imágenes y SEO. |
 | `/emplea/` | Contratación de talento tecnológico. |
 | `/patrocina/` | Programa de patrocinio. |
 | `/nosotros/` | Información institucional. |
@@ -198,7 +203,11 @@ campuslandsGuatemala/
 
 ## Configuración y datos
 
-- El proyecto no necesita un archivo `.env` para ejecutarse.
+- `PUBLIC_CMS_URL` indica la URL pública del backend Strapi. Su valor local predeterminado es `http://127.0.0.1:1337`.
+- El archivo `.env.example` documenta la conexión; no se utiliza ningún token secreto en el navegador.
+- `/blog-admin/` inicia sesión con una cuenta del rol `blog-editor`. El JWT se
+  mantiene únicamente durante la sesión de la pestaña y la ruta está marcada
+  `noindex,nofollow` y excluida del sitemap.
 - El dominio canónico y los metadatos SEO se definen en `src/config/seo.mjs`.
 - El sitemap se genera automáticamente durante `npm run build`.
 - La configuración exige rutas con barra final, por ejemplo
@@ -213,6 +222,14 @@ El proyecto genera archivos estáticos y está preparado para Vercel:
 - Comando de construcción: `npm run build`
 - Directorio de salida: `dist`
 - Versión recomendada de Node.js: 20
+
+Configura `PUBLIC_CMS_URL` en Vercel con la URL desplegada del backend. Para que
+una publicación nueva aparezca automáticamente, crea un Deploy Hook de Vercel y
+guárdalo como `FRONTEND_DEPLOY_HOOK_URL` en el backend.
+
+La interfaz editorial necesita que `PUBLIC_CMS_URL` sea accesible desde el
+navegador del editor y que el backend permita el dominio administrativo dentro
+de `CORS_ORIGINS`.
 
 En Vercel, importa el repositorio, selecciona la rama que se desea publicar y
 confirma los valores anteriores. `vercel.json` ya contiene la configuración de

@@ -1,0 +1,2012 @@
+---
+import { Image } from "astro:assets";
+import LayoutNavbar from "../layouts/LayoutNavbar.astro";
+import orbitAI from "../assets/img/ai-academy/orbit-ai-academy.png";
+import { SITE_URL } from "../config/seo.mjs";
+import "~/styles/index.css";
+
+const whatsappMessage = encodeURIComponent(
+  "¡Hola! Me interesan los talleres de AI Academy de Campuslands Guatemala. ¿Podrían compartirme fechas, disponibilidad y costos?",
+);
+const whatsappUrl = `https://wa.me/50232705200?text=${whatsappMessage}`;
+
+const workshops = [
+  {
+    id: "automatizaciones",
+    code: "AUTO.01",
+    title: "Automatizaciones IA",
+    promise:
+      "Convierte tareas repetitivas en flujos que trabajan contigo y dejan tiempo para decisiones de mayor valor.",
+    audience:
+      "Emprendedores, estudiantes y equipos administrativos, comerciales u operativos.",
+    tools: ["Make", "n8n", "Zapier", "IA generativa"],
+    sessions: [
+      {
+        title: "Detecta oportunidades",
+        description:
+          "Mapea procesos, identifica cuellos de botella y crea un kit de prompts para la operación diaria.",
+        output: "Mapa de proceso + SOP",
+      },
+      {
+        title: "Conecta sin código",
+        description:
+          "Integra formularios, hojas de cálculo, correo, Notion, Airtable y mensajería.",
+        output: "3 automatizaciones diseñadas",
+      },
+      {
+        title: "Activa la inteligencia",
+        description:
+          "Clasifica información, resume documentos y genera reportes con salidas estructuradas.",
+        output: "Flujo con IA validado",
+      },
+      {
+        title: "Lanza tu sistema",
+        description:
+          "Construye, prueba y presenta una automatización completa con control humano y manejo de errores.",
+        output: "Automatización funcional",
+      },
+    ],
+    final:
+      "Una automatización implementada, checklist de validación y presentación ejecutiva.",
+  },
+  {
+    id: "datos",
+    code: "DATA.02",
+    title: "Análisis de Datos IA",
+    promise:
+      "Pasa de datos dispersos a hallazgos confiables, visualizaciones claras y decisiones accionables.",
+    audience:
+      "Analistas y equipos de negocio, operaciones, ventas, finanzas o marketing.",
+    tools: ["Copilot", "Excel", "KPIs", "Storytelling"],
+    sessions: [
+      {
+        title: "Pregunta y prepara",
+        description:
+          "Define la pregunta de negocio, limpia datos y establece criterios de validación.",
+        output: "Dataset listo para analizar",
+      },
+      {
+        title: "Encuentra patrones",
+        description:
+          "Explora tendencias, formula hipótesis y convierte hallazgos en visualizaciones comprensibles.",
+        output: "Resumen de insights",
+      },
+      {
+        title: "Diseña KPIs",
+        description:
+          "Construye métricas útiles y un flujo de análisis reutilizable con Copilot.",
+        output: "Sistema de KPIs",
+      },
+      {
+        title: "Influye con evidencia",
+        description:
+          "Crea una narrativa ejecutiva y un sistema de decisión que conecte insight, acción y seguimiento.",
+        output: "Blueprint de decisión",
+      },
+    ],
+    final:
+      "Un flujo de análisis reproducible con KPIs, visualización y narrativa ejecutiva.",
+  },
+  {
+    id: "marketing",
+    code: "MKT.03",
+    title: "Marketing IA",
+    promise:
+      "Construye un sistema de marketing que investiga, crea, distribuye y aprende con mayor velocidad.",
+    audience:
+      "Emprendedores, estudiantes, creadores de contenido y equipos comerciales.",
+    tools: ["Prompts", "Automatización", "Agentes", "Contenido"],
+    sessions: [
+      {
+        title: "Comprende la marca",
+        description:
+          "Domina prompts, analiza la marca, define buyer personas y compara competidores.",
+        output: "Diagnóstico de marca",
+      },
+      {
+        title: "Crea con dirección",
+        description:
+          "Genera ideas, hooks, copies, guiones y un calendario editorial de 30 días.",
+        output: "Sistema de contenidos",
+      },
+      {
+        title: "Convierte atención",
+        description:
+          "Define propuesta de valor, funnel, anuncios y secuencias para WhatsApp o mensajes directos.",
+        output: "Campaña de 7 días",
+      },
+      {
+        title: "Mide y escala",
+        description:
+          "Reutiliza contenido, analiza métricas y consolida una biblioteca de prompts para la marca.",
+        output: "Plan de marketing de 30 días",
+      },
+    ],
+    final:
+      "Un sistema de marketing para una marca: estrategia, contenido, campaña y medición.",
+  },
+  {
+    id: "finanzas",
+    code: "FIN.04",
+    title: "Finanzas IA",
+    promise:
+      "Lleva finanzas de la operación transaccional a una función estratégica que recomienda y decide.",
+    audience:
+      "Profesionales de finanzas, contabilidad, administración, planeación y negocio.",
+    tools: ["IA generativa", "Excel", "Escenarios", "KPIs"],
+    sessions: [
+      {
+        title: "Mapea el valor",
+        description:
+          "Identifica oportunidades de IA en flujos financieros y prioriza por impacto, riesgo y trazabilidad.",
+        output: "Mapa estratégico de IA",
+      },
+      {
+        title: "Ordena y reporta",
+        description:
+          "Estructura datos y transforma reportes financieros en información ejecutiva.",
+        output: "Reporte financiero optimizado",
+      },
+      {
+        title: "Anticipa escenarios",
+        description:
+          "Modela escenarios, analiza variaciones y rediseña procesos financieros críticos.",
+        output: "Modelo de escenarios",
+      },
+      {
+        title: "Decide e influye",
+        description:
+          "Conecta KPIs, recomendaciones y narrativa ejecutiva en un marco de decisión financiera.",
+        output: "Framework de decisión",
+      },
+    ],
+    final:
+      "Un blueprint financiero con procesos, escenarios, KPIs y narrativa para dirección.",
+  },
+];
+
+const faqs = [
+  {
+    question: "¿Necesito experiencia previa usando inteligencia artificial?",
+    answer:
+      "No. Los talleres parten de fundamentos prácticos y avanzan mediante ejercicios guiados. Sí ayuda sentir curiosidad, estar dispuesto a experimentar y conocer lo básico de tu área de interés.",
+  },
+  {
+    question: "¿Necesito saber programar?",
+    answer:
+      "No para los talleres iniciales. Automatizaciones se trabaja principalmente con herramientas no-code y los demás talleres se enfocan en aplicar IA a situaciones reales de negocio.",
+  },
+  {
+    question: "¿Cómo se distribuyen las 16 horas?",
+    answer:
+      "Cada taller se desarrolla en cuatro sábados consecutivos, con una sesión de cuatro horas por sábado. En cada encuentro se construye una parte del proyecto final.",
+  },
+  {
+    question: "¿Los talleres son presenciales?",
+    answer:
+      "La propuesta publicada de AI Academy es presencial en Campuslands Guatemala, dentro de Campus Tec, Zona 4. Confirma la cohorte y el horario disponibles con nuestro equipo.",
+  },
+  {
+    question: "¿Qué debo llevar?",
+    answer:
+      "Una computadora portátil y acceso a las cuentas o herramientas indicadas antes de iniciar. Los requisitos específicos pueden variar según el taller.",
+  },
+  {
+    question: "¿Las herramientas de IA están incluidas?",
+    answer:
+      "Algunas ofrecen planes gratuitos y otras pueden requerir una cuenta o licencia. Antes de cada cohorte te compartiremos la lista vigente para que puedas prepararte.",
+  },
+  {
+    question: "¿Con qué termino el taller?",
+    answer:
+      "Terminas con un proyecto aplicado a tu realidad: una automatización, un sistema de análisis, un sistema de marketing o un blueprint financiero, según el taller elegido.",
+  },
+  {
+    question: "¿Cuándo inicia la próxima cohorte y cuál es el costo?",
+    answer:
+      "Las fechas, cupos y costos se confirman directamente con el equipo de Campuslands Guatemala. Escríbenos por WhatsApp y te compartiremos la información vigente.",
+  },
+];
+
+const dataFooter = {
+  title: "Tu próximo sábado puede cambiar cómo trabajas toda la semana.",
+  content:
+    "Cuéntanos qué quieres transformar y te ayudaremos a elegir el taller de IA que mejor conecta con tu objetivo.",
+  buttonType: "ia",
+  buttonLink: whatsappUrl,
+};
+
+const structuredData = [
+  {
+    "@type": "ItemList",
+    "@id": `${SITE_URL}/ai-academy/#talleres`,
+    name: "Talleres de AI Academy de Campuslands Guatemala",
+    itemListElement: workshops.map((workshop, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Course",
+        "@id": `${SITE_URL}/ai-academy/#${workshop.id}`,
+        name: `Taller de ${workshop.title}`,
+        description: workshop.promise,
+        url: `${SITE_URL}/ai-academy/#${workshop.id}`,
+        inLanguage: "es-GT",
+        timeRequired: "PT16H",
+        educationalLevel: "Introductorio a intermedio",
+        provider: { "@id": `${SITE_URL}/#organization` },
+        hasCourseInstance: {
+          "@type": "CourseInstance",
+          courseMode: "Presencial",
+          courseWorkload: "PT16H",
+          location: {
+            "@type": "Place",
+            name: "Campuslands Guatemala",
+            address: "Campus Tec, Zona 4, Ciudad de Guatemala",
+          },
+        },
+      },
+    })),
+  },
+  {
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}/ai-academy/#preguntas`,
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  },
+];
+---
+
+<LayoutNavbar
+  dataFooter={dataFooter}
+  pageType="CollectionPage"
+  structuredData={structuredData}
+>
+  <div class="ai-page">
+    <section class="ai-hero" aria-labelledby="ai-hero-title">
+      <div class="ai-hero__grid" aria-hidden="true"></div>
+      <div class="ai-shell ai-hero__layout">
+        <div class="ai-hero__copy">
+          <p class="ai-kicker">
+            <span></span>
+            AI Academy · Campuslands Guatemala
+          </p>
+          <h1 id="ai-hero-title">
+            Aprende IA.
+            <span>Construye algo real.</span>
+          </h1>
+          <p class="ai-hero__lead">
+            Cuatro talleres presenciales para aplicar inteligencia artificial
+            a automatización, análisis de datos, marketing y finanzas. Menos
+            teoría y más manos a la obra para aprender. Convierte la IA en
+            sistemas que puedes usar en tu profesión.
+          </p>
+          <div class="ai-actions">
+            <a class="ai-button ai-button--primary" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+              Quiero información
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a class="ai-button ai-button--ghost" href="#talleres">
+              Explorar talleres
+              <span aria-hidden="true">↓</span>
+            </a>
+          </div>
+          <dl class="ai-metrics" aria-label="Formato de AI Academy">
+            <div>
+              <dt>04</dt>
+              <dd>sábados</dd>
+            </div>
+            <div>
+              <dt>16</dt>
+              <dd>horas</dd>
+            </div>
+            <div class="ai-metrics__workshops">
+              <dt>04</dt>
+              <dd>
+                <span>talleres</span>
+                <strong>distintos</strong>
+              </dd>
+            </div>
+          </dl>
+          <p class="ai-metrics__note">
+            <span class="ai-metrics__note-icon" aria-hidden="true">↳</span>
+            <span>
+              Elige tu ruta: cada taller es independiente y dura
+              <strong>4 sábados · 16 horas.</strong>
+            </span>
+          </p>
+        </div>
+
+        <figure class="ai-orbit" data-ai-orbit>
+          <div class="ai-orbit__halo" aria-hidden="true"></div>
+          <div class="ai-orbit__ring ai-orbit__ring--outer" aria-hidden="true"></div>
+          <div class="ai-orbit__ring ai-orbit__ring--inner" aria-hidden="true"></div>
+          <span class="ai-orbit__signal ai-orbit__signal--one" aria-hidden="true"></span>
+          <span class="ai-orbit__signal ai-orbit__signal--two" aria-hidden="true"></span>
+          <Image
+            src={orbitAI}
+            alt="Orbit, astronauta de Campuslands, conectado a una red de inteligencia artificial azul y morada"
+            format="avif"
+            widths={[240, 360, 480, 720, 960]}
+            sizes="(max-width: 719px) 64vw, (max-width: 1200px) 48vw, 620px"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+          />
+          <figcaption>
+            <span>ORBIT_AI</span>
+            Señal detectada · aprendizaje aplicado
+          </figcaption>
+        </figure>
+      </div>
+      <a class="ai-scroll-cue" href="#talleres">
+        <span aria-hidden="true"></span>
+        Desplázate para iniciar
+      </a>
+    </section>
+
+    <section class="ai-manifesto" aria-labelledby="ai-manifesto-title" data-ai-reveal>
+      <div class="ai-shell ai-manifesto__layout">
+        <p class="ai-section-code" aria-hidden="true">01 / CAMBIA EL MÉTODO</p>
+        <div>
+          <h2 id="ai-manifesto-title">
+            La IA no se aprende mirando.
+            <span>Se aprende haciendo.</span>
+          </h2>
+          <p>
+            Cada sábado convierte una pregunta real en un entregable. Aprendes
+            el criterio para pedir, revisar y mejorar el trabajo de la IA; no
+            una colección de trucos que caducan.
+          </p>
+        </div>
+        <div class="ai-manifesto__signal" aria-label="Principio de aprendizaje">
+          <span>Prompt</span>
+          <i aria-hidden="true"></i>
+          <span>Prototipo</span>
+          <i aria-hidden="true"></i>
+          <strong>Resultado</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="ai-workshops" id="talleres" aria-labelledby="ai-workshops-title">
+      <div class="ai-shell">
+        <div class="ai-section-head" data-ai-reveal>
+          <div>
+            <p class="ai-section-code">02 / ELIGE TU MISIÓN</p>
+            <h2 id="ai-workshops-title">Cuatro rutas. Un resultado aplicable.</h2>
+          </div>
+          <div class="ai-section-head__aside">
+            <p>
+              Arrastra, desliza o usa los controles para recorrer los talleres.
+            </p>
+            <div class="ai-track-controls" aria-label="Controles del catálogo">
+              <button type="button" data-ai-track-prev aria-label="Ver taller anterior">
+                ←
+              </button>
+              <span data-ai-track-count aria-live="polite">01 / 04</span>
+              <button type="button" data-ai-track-next aria-label="Ver taller siguiente">
+                →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="ai-workshop-track"
+        data-ai-workshop-track
+        tabindex="0"
+        aria-label="Catálogo horizontal de talleres"
+      >
+        {
+          workshops.map((workshop, workshopIndex) => (
+            <article
+              class="ai-workshop-card"
+              id={workshop.id}
+              data-ai-workshop-card
+              aria-labelledby={`workshop-${workshop.id}`}
+            >
+              <div class="ai-workshop-card__top">
+                <p>{workshop.code}</p>
+                <span>16H · PRESENCIAL</span>
+              </div>
+              <div class="ai-workshop-card__intro">
+                <div>
+                  <span class="ai-workshop-card__number" aria-hidden="true">
+                    {String(workshopIndex + 1).padStart(2, "0")}
+                  </span>
+                  <h3 id={`workshop-${workshop.id}`}>{workshop.title}</h3>
+                </div>
+                <p>{workshop.promise}</p>
+              </div>
+
+              <div class="ai-workshop-card__meta">
+                <p><span>Ideal para</span>{workshop.audience}</p>
+                <ul aria-label="Herramientas y enfoques">
+                  {workshop.tools.map((tool) => <li>{tool}</li>)}
+                </ul>
+              </div>
+
+              <ol class="ai-session-grid" aria-label="Ruta de cuatro sábados">
+                {workshop.sessions.map((session, sessionIndex) => (
+                  <li>
+                    <div class="ai-session-grid__index">
+                      <span>S{sessionIndex + 1}</span>
+                      <i aria-hidden="true"></i>
+                    </div>
+                    <h4>{session.title}</h4>
+                    <p>{session.description}</p>
+                    <strong>{session.output}</strong>
+                  </li>
+                ))}
+              </ol>
+
+              <div class="ai-workshop-card__final">
+                <p><span>Proyecto final</span>{workshop.final}</p>
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                  Consultar este taller <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+      <div class="ai-track-progress" aria-hidden="true">
+        <span data-ai-track-progress></span>
+      </div>
+    </section>
+
+    <section class="ai-format" aria-labelledby="ai-format-title">
+      <div class="ai-shell">
+        <div class="ai-section-head" data-ai-reveal>
+          <div>
+            <p class="ai-section-code">03 / CUATRO SÁBADOS</p>
+            <h2 id="ai-format-title">Una idea por semana. Un sistema al final.</h2>
+          </div>
+          <p class="ai-section-head__copy">
+            La experiencia avanza como un sprint: entender, construir, validar y
+            presentar. Cada bloque de cuatro horas deja evidencia de progreso.
+          </p>
+        </div>
+
+        <ol class="ai-timeline" data-ai-reveal>
+          <li>
+            <div><span>01</span><small>4 horas</small></div>
+            <h3>Comprende</h3>
+            <p>Define el problema, el contexto y el estándar de una buena respuesta.</p>
+          </li>
+          <li>
+            <div><span>02</span><small>8 horas</small></div>
+            <h3>Construye</h3>
+            <p>Convierte el método en prompts, flujos, análisis o activos concretos.</p>
+          </li>
+          <li>
+            <div><span>03</span><small>12 horas</small></div>
+            <h3>Valida</h3>
+            <p>Detecta errores, prueba supuestos y agrega control humano donde importa.</p>
+          </li>
+          <li>
+            <div><span>04</span><small>16 horas</small></div>
+            <h3>Activa</h3>
+            <p>Presenta un proyecto aplicable y una ruta clara para seguir mejorándolo.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ai-outcomes" aria-labelledby="ai-outcomes-title">
+      <div class="ai-shell ai-outcomes__layout">
+        <div class="ai-outcomes__copy" data-ai-reveal>
+          <p class="ai-section-code">04 / CRITERIO + EJECUCIÓN</p>
+          <h2 id="ai-outcomes-title">No solo usarás IA. Podrás dirigirla.</h2>
+          <p>
+            La ventaja no está en aceptar la primera respuesta. Está en
+            estructurar el problema, dar contexto, verificar y convertir la
+            salida en una decisión o un proceso.
+          </p>
+          <a class="ai-text-link" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+            Hablar con el equipo <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <ul class="ai-capability-grid" data-ai-reveal>
+          <li>
+            <span aria-hidden="true">⌁</span>
+            <div><h3>Preguntar mejor</h3><p>Prompts con objetivo, contexto, restricciones y formato.</p></div>
+          </li>
+          <li>
+            <span aria-hidden="true">◎</span>
+            <div><h3>Validar siempre</h3><p>Criterios para revisar datos, supuestos, riesgos y calidad.</p></div>
+          </li>
+          <li>
+            <span aria-hidden="true">↗</span>
+            <div><h3>Diseñar sistemas</h3><p>Flujos repetibles que conectan herramientas, personas y decisiones.</p></div>
+          </li>
+          <li>
+            <span aria-hidden="true">◇</span>
+            <div><h3>Comunicar valor</h3><p>Resultados claros para clientes, equipos y líderes.</p></div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="ai-faq" id="preguntas" aria-labelledby="ai-faq-title">
+      <div class="ai-shell ai-faq__layout">
+        <div class="ai-faq__intro" data-ai-reveal>
+          <p class="ai-section-code">05 / PREGUNTAS FRECUENTES</p>
+          <h2 id="ai-faq-title">Antes de despegar.</h2>
+          <p>
+            Lo esencial para elegir tu taller y llegar preparado a la primera
+            sesión.
+          </p>
+          <div class="ai-faq__status" aria-hidden="true">
+            <span></span>
+            Admisiones en línea
+          </div>
+        </div>
+        <div class="ai-faq__items" data-ai-reveal>
+          {
+            faqs.map((faq, index) => (
+              <details name="ai-academy-faq">
+                <summary>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  {faq.question}
+                  <i aria-hidden="true"></i>
+                </summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="ai-final-cta" aria-labelledby="ai-final-title">
+      <div class="ai-final-cta__grid" aria-hidden="true"></div>
+      <div class="ai-shell ai-final-cta__content" data-ai-reveal>
+        <p class="ai-section-code">SEÑAL ABIERTA · CUPOS POR COHORTE</p>
+        <h2 id="ai-final-title">¿Qué quieres hacer mejor con IA?</h2>
+        <p>
+          Escríbenos. Te ayudamos a elegir el taller según tu rol, tu reto y el
+          proyecto que quieres construir.
+        </p>
+        <a class="ai-button ai-button--primary" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+          Consultar fechas y cupos
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</LayoutNavbar>
+
+<script>
+  function initializeAiAcademy() {
+    window.__aiAcademyCleanup?.();
+
+    const track = document.querySelector<HTMLElement>("[data-ai-workshop-track]");
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-ai-workshop-card]"),
+    );
+    const previous = document.querySelector<HTMLButtonElement>("[data-ai-track-prev]");
+    const next = document.querySelector<HTMLButtonElement>("[data-ai-track-next]");
+    const count = document.querySelector<HTMLElement>("[data-ai-track-count]");
+    const progress = document.querySelector<HTMLElement>("[data-ai-track-progress]");
+    const orbit = document.querySelector<HTMLElement>("[data-ai-orbit]");
+    const revealItems = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-ai-reveal]"),
+    );
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finePointer = window.matchMedia("(pointer: fine)").matches;
+
+    if (!track || cards.length === 0) return;
+
+    let scrollFrame = 0;
+    let activeIndex = 0;
+
+    const updateTrackState = () => {
+      scrollFrame = 0;
+      const trackCenter = track.scrollLeft + track.clientWidth / 2;
+      activeIndex = cards.reduce((closest, card, index) => {
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const currentCenter =
+          cards[closest].offsetLeft + cards[closest].offsetWidth / 2;
+        return Math.abs(cardCenter - trackCenter) <
+          Math.abs(currentCenter - trackCenter)
+          ? index
+          : closest;
+      }, 0);
+
+      if (count) {
+        count.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(cards.length).padStart(2, "0")}`;
+      }
+      previous?.toggleAttribute("disabled", activeIndex === 0);
+      next?.toggleAttribute("disabled", activeIndex === cards.length - 1);
+
+      const maxScroll = Math.max(track.scrollWidth - track.clientWidth, 1);
+      progress?.style.setProperty(
+        "--ai-track-progress",
+        String(Math.min(track.scrollLeft / maxScroll, 1)),
+      );
+    };
+
+    const requestTrackUpdate = () => {
+      if (!scrollFrame) scrollFrame = window.requestAnimationFrame(updateTrackState);
+    };
+
+    const goToCard = (index: number) => {
+      const target = cards[Math.max(0, Math.min(index, cards.length - 1))];
+      target?.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    };
+
+    const goPrevious = () => goToCard(activeIndex - 1);
+    const goNext = () => goToCard(activeIndex + 1);
+    const handleKeyboard = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        goPrevious();
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        goNext();
+      }
+    };
+
+    const handleOrbitPointer = (event: PointerEvent) => {
+      if (!orbit) return;
+      const bounds = orbit.getBoundingClientRect();
+      orbit.style.setProperty("--orbit-pointer-x", `${event.clientX - bounds.left}px`);
+      orbit.style.setProperty("--orbit-pointer-y", `${event.clientY - bounds.top}px`);
+    };
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          (entry.target as HTMLElement).dataset.aiVisible = "true";
+          revealObserver.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8%" },
+    );
+
+    revealItems.forEach((item) => {
+      if (reduceMotion || item.getBoundingClientRect().top < window.innerHeight * 0.9) {
+        item.dataset.aiVisible = "true";
+      } else {
+        revealObserver.observe(item);
+      }
+    });
+
+    track.addEventListener("scroll", requestTrackUpdate, { passive: true });
+    track.addEventListener("keydown", handleKeyboard);
+    previous?.addEventListener("click", goPrevious);
+    next?.addEventListener("click", goNext);
+    if (finePointer) orbit?.addEventListener("pointermove", handleOrbitPointer);
+    window.addEventListener("resize", requestTrackUpdate, { passive: true });
+    updateTrackState();
+
+    window.__aiAcademyCleanup = () => {
+      revealObserver.disconnect();
+      track.removeEventListener("scroll", requestTrackUpdate);
+      track.removeEventListener("keydown", handleKeyboard);
+      previous?.removeEventListener("click", goPrevious);
+      next?.removeEventListener("click", goNext);
+      orbit?.removeEventListener("pointermove", handleOrbitPointer);
+      window.removeEventListener("resize", requestTrackUpdate);
+      if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
+    };
+  }
+
+  document.addEventListener("astro:page-load", initializeAiAcademy);
+  document.addEventListener("astro:before-swap", () => {
+    window.__aiAcademyCleanup?.();
+  });
+</script>
+
+<style is:global>
+  body.ai-academy-route {
+    --ai-void: #050507;
+    --ai-blue: #000051;
+    --ai-blue-bright: #2c67ba;
+    --ai-purple: #7a3cff;
+    --ai-glow: #b997ff;
+    --ai-ice: #dff5ff;
+    --color-primary: var(--ai-purple);
+    --color-primary-action: #965fff;
+    background:
+      radial-gradient(circle at 80% 4%, rgb(122 60 255 / 15%), transparent 26rem),
+      linear-gradient(155deg, #000051 0%, #030320 45%, #050507 100%);
+  }
+
+  body.ai-academy-route .site-content-layer {
+    isolation: isolate;
+  }
+
+  body.ai-academy-route #contenido-principal {
+    gap: 0;
+  }
+
+  body.ai-academy-route nav.navbar .content-redirects a {
+    padding-inline: clamp(0.55rem, 1vw, 0.9rem);
+  }
+
+  body.ai-academy-route nav.navbar .content-redirects a.active {
+    color: var(--ai-glow);
+    border-bottom-color: var(--ai-purple);
+  }
+
+  body.ai-academy-route .experience-progress span {
+    background: linear-gradient(90deg, #2c67ba, #7a3cff 58%, #b997ff);
+    box-shadow: 0 0 18px rgb(122 60 255 / 78%);
+  }
+
+  body.ai-academy-route .meteor-cursor-trail {
+    filter: hue-rotate(48deg) saturate(1.25);
+  }
+
+  body.ai-academy-route .code-aurora--aqua {
+    background: var(--ai-purple);
+  }
+
+  body.ai-academy-route .shooting-stars i {
+    background: linear-gradient(
+      90deg,
+      rgb(255 255 255 / 95%),
+      rgb(185 151 255 / 82%) 14%,
+      rgb(122 60 255 / 34%) 52%,
+      transparent
+    );
+    filter: drop-shadow(0 0 6px rgb(122 60 255 / 75%));
+  }
+
+  body.ai-academy-route .shooting-stars i::before,
+  body.ai-academy-route .code-nodes i {
+    box-shadow: 0 0 6px #fff, 0 0 15px #b997ff, 0 0 28px rgb(122 60 255 / 72%);
+  }
+
+  body.ai-academy-route .stellar-route-transition__surface {
+    background:
+      radial-gradient(circle at 72% 34%, rgb(122 60 255 / 22%), transparent 38%),
+      radial-gradient(circle at 26% 66%, rgb(44 103 186 / 14%), transparent 34%),
+      linear-gradient(112deg, #000051 0%, #09032b 48%, #050507 100%);
+  }
+
+  body.ai-academy-route .stellar-route-transition__tail {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(122 60 255 / 16%) 24%,
+      rgb(122 60 255 / 78%) 72%,
+      #fff
+    );
+    filter: drop-shadow(0 0 7px rgb(122 60 255 / 74%));
+  }
+
+  body.ai-academy-route .gradient-text {
+    background-image: linear-gradient(115deg, #57bbff, #b997ff 62%, #7a3cff);
+  }
+
+  body.ai-academy-route .btn-primary {
+    color: #fff;
+    background: linear-gradient(120deg, #6930e8, #8f58ff);
+    box-shadow: 0 0.9rem 2.5rem rgb(122 60 255 / 24%);
+  }
+
+  .ai-page {
+    position: relative;
+    overflow: clip;
+    color: #fff;
+    background:
+      radial-gradient(circle at 10% 26%, rgb(44 103 186 / 15%), transparent 30rem),
+      linear-gradient(180deg, rgb(0 0 81 / 30%), rgb(5 5 7 / 98%) 27%, #050507 100%);
+  }
+
+  .ai-shell {
+    width: min(100% - 2.25rem, 1200px);
+    margin-inline: auto;
+  }
+
+  .ai-hero {
+    position: relative;
+    display: grid;
+    min-height: calc(100svh - 5.5rem);
+    place-items: center;
+    overflow: hidden;
+    padding: clamp(3rem, 7vw, 6.5rem) 0 5rem;
+    isolation: isolate;
+  }
+
+  .ai-hero::before {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    content: "";
+    background:
+      radial-gradient(circle at 76% 44%, rgb(122 60 255 / 22%), transparent 27%),
+      radial-gradient(circle at 72% 46%, rgb(44 103 186 / 26%), transparent 43%),
+      linear-gradient(112deg, #000051 0%, #07052b 52%, #050507 100%);
+  }
+
+  .ai-hero::after {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: -1;
+    height: 16rem;
+    content: "";
+    background: linear-gradient(transparent, #050507);
+  }
+
+  .ai-hero__grid,
+  .ai-final-cta__grid {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.18;
+    background-image:
+      linear-gradient(rgb(185 151 255 / 15%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(87 187 255 / 12%) 1px, transparent 1px);
+    background-size: 74px 74px;
+    mask-image: linear-gradient(90deg, #000 0%, #000 68%, transparent 96%);
+  }
+
+  .ai-hero__layout {
+    display: grid;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .ai-hero__copy {
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-kicker,
+  .ai-section-code {
+    color: rgb(185 151 255 / 88%);
+    font: 700 0.7rem/1.4 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .ai-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .ai-kicker span {
+    width: 0.55rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--ai-purple);
+    box-shadow: 0 0 0 0.32rem rgb(122 60 255 / 13%), 0 0 1.15rem var(--ai-purple);
+    animation: ai-signal 2.4s ease-out infinite;
+  }
+
+  .ai-hero h1 {
+    max-width: 13ch;
+    margin: 0;
+    font-size: clamp(3rem, 12vw, 6.8rem);
+    font-weight: 800;
+    line-height: 0.94;
+    letter-spacing: -0.065em;
+    text-wrap: balance;
+  }
+
+  .ai-hero h1 span {
+    display: block;
+    margin-bottom: 0;
+    padding-bottom: 0.18em;
+    color: transparent;
+    background: linear-gradient(110deg, #57bbff 2%, #dff5ff 38%, #b997ff 70%, #7a3cff);
+    background-clip: text;
+    line-height: 1.02;
+  }
+
+  .ai-hero__lead {
+    max-width: 42rem;
+    margin-top: 1.6rem;
+    color: rgb(223 245 255 / 72%);
+    font-size: clamp(1rem, 2vw, 1.18rem);
+    line-height: 1.75;
+  }
+
+  .ai-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 2rem;
+  }
+
+  .ai-button {
+    display: inline-flex;
+    min-height: 3.35rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1.35rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease, background 260ms ease;
+  }
+
+  .ai-button:hover {
+    transform: translateY(-3px);
+  }
+
+  .ai-button--primary {
+    color: #fff;
+    background: linear-gradient(120deg, #6830e4, #8f58ff);
+    box-shadow: 0 1rem 3rem rgb(122 60 255 / 28%), inset 0 1px rgb(255 255 255 / 20%);
+  }
+
+  .ai-button--primary:hover {
+    box-shadow: 0 1.25rem 3.5rem rgb(122 60 255 / 42%), inset 0 1px rgb(255 255 255 / 28%);
+  }
+
+  .ai-button--ghost {
+    color: rgb(223 245 255 / 86%);
+    border-color: rgb(185 151 255 / 28%);
+    background: rgb(7 16 43 / 42%);
+    backdrop-filter: blur(12px);
+  }
+
+  .ai-button--ghost:hover {
+    border-color: rgb(185 151 255 / 58%);
+    background: rgb(122 60 255 / 12%);
+  }
+
+  .ai-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 31rem;
+    margin-top: 2.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgb(185 151 255 / 18%);
+  }
+
+  .ai-metrics div {
+    padding-right: 1rem;
+  }
+
+  .ai-metrics div + div {
+    padding-left: 1rem;
+    border-left: 1px solid rgb(185 151 255 / 18%);
+  }
+
+  .ai-metrics dt {
+    color: var(--ai-ice);
+    font: 800 clamp(1.4rem, 3vw, 2.15rem)/1 Menlo, Monaco, Consolas, monospace;
+  }
+
+  .ai-metrics dd {
+    margin-top: 0.35rem;
+    color: rgb(223 245 255 / 55%);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .ai-metrics__workshops {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .ai-metrics__workshops::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -0.7rem -0.8rem -0.55rem 0.45rem;
+    border: 1px solid rgb(0 217 164 / 20%);
+    border-radius: 0.8rem;
+    background:
+      linear-gradient(135deg, rgb(44 170 255 / 9%), rgb(0 217 164 / 5%)),
+      rgb(7 16 43 / 22%);
+    box-shadow: 0 0 24px rgb(0 170 128 / 7%);
+  }
+
+  .ai-metrics__workshops dt {
+    color: #f4feff;
+    text-shadow: 0 0 24px rgb(0 217 164 / 32%);
+  }
+
+  .ai-metrics__workshops dd {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.45rem;
+    color: var(--ai-ice);
+    font-weight: 800;
+  }
+
+  .ai-metrics__workshops dd strong {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.25rem;
+    padding: 0.18rem 0.45rem;
+    border: 1px solid rgb(0 217 164 / 42%);
+    border-radius: 999px;
+    color: #7fffdc;
+    background: rgb(0 170 128 / 13%);
+    font-size: 0.54rem;
+    letter-spacing: 0.13em;
+    box-shadow: inset 0 0 14px rgb(0 217 164 / 8%);
+    animation: ai-distinct-pulse 3.4s ease-in-out infinite;
+  }
+
+  .ai-metrics__note {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    max-width: 31rem;
+    margin: 0.95rem 0 0;
+    color: rgb(223 245 255 / 62%);
+    font-size: 0.69rem;
+    line-height: 1.55;
+    letter-spacing: 0.015em;
+  }
+
+  .ai-metrics__note-icon {
+    color: #7fffdc;
+    font: 700 0.78rem/1 Menlo, Monaco, Consolas, monospace;
+  }
+
+  .ai-metrics__note strong {
+    color: rgb(223 245 255 / 90%);
+    font-weight: 700;
+  }
+
+  @keyframes ai-distinct-pulse {
+    0%,
+    100% {
+      border-color: rgb(0 217 164 / 34%);
+      box-shadow: inset 0 0 14px rgb(0 217 164 / 8%);
+    }
+
+    50% {
+      border-color: rgb(127 255 220 / 70%);
+      box-shadow:
+        inset 0 0 14px rgb(0 217 164 / 16%),
+        0 0 16px rgb(0 217 164 / 14%);
+    }
+  }
+
+  .ai-orbit {
+    --orbit-pointer-x: 68%;
+    --orbit-pointer-y: 30%;
+    position: relative;
+    width: min(100%, 34rem);
+    aspect-ratio: 0.82;
+    margin-inline: auto;
+  }
+
+  .ai-orbit::before {
+    position: absolute;
+    top: var(--orbit-pointer-y);
+    left: var(--orbit-pointer-x);
+    width: 12rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    content: "";
+    background: radial-gradient(circle, rgb(185 151 255 / 24%), transparent 68%);
+    filter: blur(8px);
+    translate: -50% -50%;
+    transition: top 700ms cubic-bezier(0.16, 1, 0.3, 1), left 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ai-orbit img {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2rem 3.2rem rgb(0 0 0 / 48%));
+    animation: ai-float 6s ease-in-out infinite;
+  }
+
+  .ai-orbit__halo {
+    position: absolute;
+    inset: 19% 8% 12%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, rgb(122 60 255 / 24%), transparent 64%),
+      radial-gradient(circle at 38% 56%, rgb(44 103 186 / 35%), transparent 52%);
+    filter: blur(12px);
+  }
+
+  .ai-orbit__ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid rgb(185 151 255 / 20%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(-16deg);
+  }
+
+  .ai-orbit__ring--outer {
+    width: 102%;
+    aspect-ratio: 1;
+    border-style: dashed;
+    animation: ai-ring 34s linear infinite;
+  }
+
+  .ai-orbit__ring--inner {
+    width: 72%;
+    aspect-ratio: 1;
+    border-color: rgb(87 187 255 / 22%);
+    animation: ai-ring 25s linear infinite reverse;
+  }
+
+  .ai-orbit__signal {
+    position: absolute;
+    z-index: 3;
+    width: 0.58rem;
+    aspect-ratio: 1;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--ai-purple);
+    box-shadow: 0 0 1rem var(--ai-purple);
+  }
+
+  .ai-orbit__signal--one {
+    top: 22%;
+    right: 5%;
+  }
+
+  .ai-orbit__signal--two {
+    bottom: 21%;
+    left: 4%;
+    animation-delay: -1.2s;
+  }
+
+  .ai-orbit figcaption {
+    position: absolute;
+    right: 0;
+    bottom: 5%;
+    z-index: 4;
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgb(185 151 255 / 24%);
+    border-radius: 0.75rem;
+    color: rgb(223 245 255 / 62%);
+    background: rgb(5 5 7 / 66%);
+    font: 600 0.64rem/1.4 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.04em;
+    backdrop-filter: blur(14px);
+  }
+
+  .ai-orbit figcaption span {
+    color: var(--ai-glow);
+    font-weight: 800;
+  }
+
+  .ai-scroll-cue {
+    position: absolute;
+    bottom: 1.2rem;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: rgb(223 245 255 / 46%);
+    font: 700 0.62rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transform: translateX(-50%);
+  }
+
+  .ai-scroll-cue span {
+    width: 1.9rem;
+    height: 1px;
+    overflow: hidden;
+    background: rgb(185 151 255 / 26%);
+  }
+
+  .ai-scroll-cue span::after {
+    display: block;
+    width: 55%;
+    height: 100%;
+    content: "";
+    background: var(--ai-glow);
+    animation: ai-scroll-line 2s ease-in-out infinite;
+  }
+
+  .ai-manifesto,
+  .ai-format,
+  .ai-outcomes,
+  .ai-faq {
+    padding-block: clamp(5.5rem, 10vw, 9rem);
+  }
+
+  .ai-manifesto__layout {
+    display: grid;
+    gap: 2rem;
+    align-items: end;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border: 1px solid rgb(87 187 255 / 16%);
+    border-radius: 1.5rem;
+    background:
+      radial-gradient(circle at 82% 10%, rgb(122 60 255 / 12%), transparent 20rem),
+      linear-gradient(135deg, rgb(0 0 81 / 42%), rgb(7 16 43 / 35%));
+    box-shadow: inset 0 1px rgb(255 255 255 / 5%), 0 2rem 5rem rgb(0 0 0 / 18%);
+  }
+
+  .ai-manifesto h2,
+  .ai-section-head h2,
+  .ai-outcomes h2,
+  .ai-faq h2,
+  .ai-final-cta h2 {
+    margin-top: 0.8rem;
+    font-size: clamp(2.15rem, 6vw, 4.7rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.055em;
+    text-wrap: balance;
+  }
+
+  .ai-manifesto h2 span {
+    color: var(--ai-glow);
+  }
+
+  .ai-manifesto h2 + p {
+    max-width: 42rem;
+    margin-top: 1.3rem;
+    color: rgb(223 245 255 / 65%);
+    line-height: 1.8;
+  }
+
+  .ai-manifesto__signal {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: rgb(223 245 255 / 58%);
+    font: 700 0.65rem/1.4 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .ai-manifesto__signal i {
+    flex: 1;
+    min-width: 1.4rem;
+    height: 1px;
+    background: linear-gradient(90deg, rgb(87 187 255 / 40%), var(--ai-purple));
+  }
+
+  .ai-manifesto__signal strong {
+    color: var(--ai-glow);
+  }
+
+  [data-ai-reveal] {
+    opacity: 0;
+    transform: translateY(2.5rem);
+    filter: blur(8px);
+    transition: opacity 700ms ease, transform 900ms cubic-bezier(0.16, 1, 0.3, 1), filter 750ms ease;
+  }
+
+  [data-ai-reveal][data-ai-visible="true"] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .ai-workshops {
+    padding-block: clamp(4rem, 9vw, 8rem);
+    border-block: 1px solid rgb(185 151 255 / 11%);
+    background:
+      linear-gradient(90deg, transparent 0 49.9%, rgb(185 151 255 / 6%) 50%, transparent 50.1%),
+      radial-gradient(circle at 50% 0%, rgb(122 60 255 / 12%), transparent 34rem);
+  }
+
+  .ai-section-head {
+    display: grid;
+    gap: 1.5rem;
+    align-items: end;
+    margin-bottom: 2rem;
+  }
+
+  .ai-section-head h2 {
+    max-width: 13ch;
+  }
+
+  .ai-section-head__aside,
+  .ai-section-head__copy {
+    max-width: 31rem;
+    color: rgb(223 245 255 / 58%);
+    line-height: 1.7;
+  }
+
+  .ai-track-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .ai-track-controls button {
+    display: grid;
+    width: 2.8rem;
+    height: 2.8rem;
+    padding: 0;
+    place-items: center;
+    border: 1px solid rgb(185 151 255 / 24%);
+    border-radius: 50%;
+    color: #fff;
+    background: rgb(122 60 255 / 9%);
+  }
+
+  .ai-track-controls button:hover:not(:disabled) {
+    border-color: var(--ai-glow);
+    background: rgb(122 60 255 / 22%);
+  }
+
+  .ai-track-controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.28;
+  }
+
+  .ai-track-controls span {
+    min-width: 4rem;
+    text-align: center;
+    color: var(--ai-glow);
+    font: 700 0.72rem/1 Menlo, Monaco, Consolas, monospace;
+  }
+
+  .ai-workshop-track {
+    display: grid;
+    grid-auto-columns: min(1050px, calc(100vw - max(2.25rem, (100vw - 1200px) / 2)));
+    grid-auto-flow: column;
+    gap: 1.25rem;
+    overflow-x: auto;
+    padding: 0 max(1.125rem, calc((100vw - 1200px) / 2)) 2rem;
+    scroll-padding-inline: max(1.125rem, calc((100vw - 1200px) / 2));
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  .ai-workshop-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-workshop-track:focus-visible {
+    outline-offset: -4px;
+  }
+
+  .ai-workshop-card {
+    position: relative;
+    display: grid;
+    min-height: 44rem;
+    gap: 1.7rem;
+    padding: clamp(1.35rem, 3vw, 2.5rem);
+    overflow: hidden;
+    scroll-snap-align: center;
+    border: 1px solid rgb(185 151 255 / 18%);
+    border-radius: 1.5rem;
+    background:
+      radial-gradient(circle at 96% 4%, rgb(122 60 255 / 18%), transparent 22rem),
+      linear-gradient(135deg, rgb(8 13 57 / 94%), rgb(5 5 7 / 96%));
+    box-shadow: inset 0 1px rgb(255 255 255 / 5%), 0 2rem 5rem rgb(0 0 0 / 26%);
+  }
+
+  .ai-workshop-card::after {
+    position: absolute;
+    top: -32%;
+    right: -11%;
+    width: 24rem;
+    aspect-ratio: 1;
+    border: 1px dashed rgb(185 151 255 / 14%);
+    border-radius: 50%;
+    content: "";
+  }
+
+  .ai-workshop-card__top,
+  .ai-workshop-card__intro,
+  .ai-workshop-card__final {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .ai-workshop-card__top {
+    color: rgb(185 151 255 / 72%);
+    font: 700 0.65rem/1.2 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.12em;
+  }
+
+  .ai-workshop-card__top span {
+    color: rgb(223 245 255 / 46%);
+  }
+
+  .ai-workshop-card__intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(17rem, 0.6fr);
+    align-items: end;
+  }
+
+  .ai-workshop-card__intro > div {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.8rem;
+  }
+
+  .ai-workshop-card__number {
+    color: transparent;
+    font: 800 clamp(3rem, 8vw, 6rem)/0.82 Menlo, Monaco, Consolas, monospace;
+    -webkit-text-stroke: 1px rgb(185 151 255 / 25%);
+  }
+
+  .ai-workshop-card h3 {
+    max-width: 12ch;
+    font-size: clamp(2rem, 4.2vw, 3.5rem);
+    font-weight: 800;
+    line-height: 0.96;
+    letter-spacing: -0.05em;
+  }
+
+  .ai-workshop-card__intro > p {
+    max-width: 28rem;
+    color: rgb(223 245 255 / 67%);
+    line-height: 1.7;
+  }
+
+  .ai-workshop-card__meta {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 1rem;
+    padding-block: 1.2rem;
+    border-block: 1px solid rgb(185 151 255 / 12%);
+  }
+
+  .ai-workshop-card__meta p {
+    color: rgb(223 245 255 / 65%);
+    font-size: 0.84rem;
+  }
+
+  .ai-workshop-card__meta p span,
+  .ai-workshop-card__final p span {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--ai-glow);
+    font: 700 0.6rem/1.2 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .ai-workshop-card__meta ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .ai-workshop-card__meta li {
+    padding: 0.38rem 0.7rem;
+    border: 1px solid rgb(87 187 255 / 20%);
+    border-radius: 999px;
+    color: rgb(223 245 255 / 65%);
+    background: rgb(44 103 186 / 10%);
+    font-size: 0.68rem;
+  }
+
+  .ai-session-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .ai-session-grid li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    column-gap: 0.8rem;
+    padding: 1rem;
+    border: 1px solid rgb(255 255 255 / 7%);
+    border-radius: 0.9rem;
+    background: rgb(255 255 255 / 2.5%);
+  }
+
+  .ai-session-grid__index {
+    grid-row: 1 / 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--ai-glow);
+    font: 700 0.65rem/1 Menlo, Monaco, Consolas, monospace;
+  }
+
+  .ai-session-grid__index i {
+    width: 1px;
+    flex: 1;
+    background: linear-gradient(var(--ai-purple), transparent);
+  }
+
+  .ai-session-grid h4 {
+    font-size: 0.98rem;
+    font-weight: 700;
+  }
+
+  .ai-session-grid p {
+    margin-top: 0.3rem;
+    color: rgb(223 245 255 / 53%);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .ai-session-grid strong {
+    margin-top: 0.55rem;
+    color: rgb(87 187 255 / 86%);
+    font: 700 0.63rem/1.3 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .ai-workshop-card__final {
+    align-items: end;
+  }
+
+  .ai-workshop-card__final p {
+    max-width: 37rem;
+    color: rgb(223 245 255 / 66%);
+    font-size: 0.83rem;
+    line-height: 1.6;
+  }
+
+  .ai-workshop-card__final a,
+  .ai-text-link {
+    flex: none;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid rgb(185 151 255 / 42%);
+    color: var(--ai-glow);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .ai-track-progress {
+    width: min(calc(100% - 2.25rem), 1200px);
+    height: 2px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: rgb(185 151 255 / 12%);
+  }
+
+  .ai-track-progress span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #2c67ba, var(--ai-purple), var(--ai-glow));
+    box-shadow: 0 0 1rem rgb(122 60 255 / 80%);
+    transform: scaleX(var(--ai-track-progress, 0));
+    transform-origin: left;
+  }
+
+  .ai-format {
+    background: linear-gradient(180deg, rgb(0 0 81 / 12%), transparent);
+  }
+
+  .ai-timeline {
+    display: grid;
+    margin-top: 3rem;
+    border-top: 1px solid rgb(185 151 255 / 16%);
+  }
+
+  .ai-timeline li {
+    position: relative;
+    padding: 1.5rem 0 1.5rem 2rem;
+    border-bottom: 1px solid rgb(185 151 255 / 12%);
+  }
+
+  .ai-timeline li::before {
+    position: absolute;
+    top: 2rem;
+    left: -0.28rem;
+    width: 0.55rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    content: "";
+    background: var(--ai-purple);
+    box-shadow: 0 0 1rem var(--ai-purple);
+  }
+
+  .ai-timeline li > div {
+    display: flex;
+    justify-content: space-between;
+    color: var(--ai-glow);
+    font: 700 0.68rem/1 Menlo, Monaco, Consolas, monospace;
+  }
+
+  .ai-timeline small {
+    color: rgb(223 245 255 / 38%);
+  }
+
+  .ai-timeline h3 {
+    margin-top: 1.5rem;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+  }
+
+  .ai-timeline p {
+    margin-top: 0.55rem;
+    color: rgb(223 245 255 / 53%);
+    font-size: 0.86rem;
+    line-height: 1.65;
+  }
+
+  .ai-outcomes {
+    border-block: 1px solid rgb(185 151 255 / 10%);
+    background:
+      radial-gradient(circle at 12% 48%, rgb(44 103 186 / 18%), transparent 27rem),
+      radial-gradient(circle at 88% 52%, rgb(122 60 255 / 12%), transparent 28rem);
+  }
+
+  .ai-outcomes__layout {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .ai-outcomes__copy > p:not(.ai-section-code) {
+    max-width: 35rem;
+    margin: 1.3rem 0 1.6rem;
+    color: rgb(223 245 255 / 58%);
+    line-height: 1.75;
+  }
+
+  .ai-capability-grid {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .ai-capability-grid li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1rem;
+    padding: 1.15rem;
+    border: 1px solid rgb(185 151 255 / 13%);
+    border-radius: 1rem;
+    background: rgb(7 16 43 / 42%);
+  }
+
+  .ai-capability-grid li > span {
+    display: grid;
+    width: 3rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid rgb(185 151 255 / 24%);
+    border-radius: 0.8rem;
+    color: var(--ai-glow);
+    background: rgb(122 60 255 / 10%);
+    font-size: 1.25rem;
+  }
+
+  .ai-capability-grid h3 {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .ai-capability-grid p {
+    margin-top: 0.3rem;
+    color: rgb(223 245 255 / 50%);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .ai-faq__layout {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .ai-faq__intro {
+    position: sticky;
+    top: 8rem;
+  }
+
+  .ai-faq__intro > p:not(.ai-section-code) {
+    max-width: 28rem;
+    margin-top: 1rem;
+    color: rgb(223 245 255 / 55%);
+    line-height: 1.7;
+  }
+
+  .ai-faq__status {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    color: rgb(223 245 255 / 47%);
+    font: 700 0.65rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .ai-faq__status span {
+    width: 0.48rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #39e3b3;
+    box-shadow: 0 0 0.8rem #39e3b3;
+  }
+
+  .ai-faq__items {
+    border-top: 1px solid rgb(185 151 255 / 16%);
+  }
+
+  .ai-faq details {
+    border-bottom: 1px solid rgb(185 151 255 / 14%);
+  }
+
+  .ai-faq summary {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr 1.4rem;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 1.35rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.93rem;
+    font-weight: 600;
+  }
+
+  .ai-faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .ai-faq summary > span {
+    color: var(--ai-glow);
+    font: 700 0.65rem/1 Menlo, Monaco, Consolas, monospace;
+  }
+
+  .ai-faq summary i {
+    position: relative;
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  .ai-faq summary i::before,
+  .ai-faq summary i::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 1px;
+    content: "";
+    background: var(--ai-glow);
+    transform: translate(-50%, -50%);
+    transition: transform 260ms ease;
+  }
+
+  .ai-faq summary i::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .ai-faq details[open] summary i::after {
+    transform: translate(-50%, -50%) rotate(0);
+  }
+
+  .ai-faq details > p {
+    max-width: 44rem;
+    padding: 0 2rem 1.35rem 3.05rem;
+    color: rgb(223 245 255 / 56%);
+    font-size: 0.86rem;
+    line-height: 1.75;
+  }
+
+  .ai-final-cta {
+    position: relative;
+    min-height: 34rem;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-top: 1px solid rgb(185 151 255 / 14%);
+    background:
+      radial-gradient(circle at 50% 42%, rgb(122 60 255 / 24%), transparent 24rem),
+      linear-gradient(140deg, #000051, #0c053a 48%, #050507);
+    isolation: isolate;
+  }
+
+  .ai-final-cta__grid {
+    opacity: 0.24;
+    mask-image: radial-gradient(circle at 50% 50%, #000, transparent 72%);
+  }
+
+  .ai-final-cta__content {
+    padding-block: 6rem;
+    text-align: center;
+  }
+
+  .ai-final-cta h2 {
+    max-width: 15ch;
+    margin-inline: auto;
+  }
+
+  .ai-final-cta__content > p:not(.ai-section-code) {
+    max-width: 38rem;
+    margin: 1.4rem auto 2rem;
+    color: rgb(223 245 255 / 62%);
+    line-height: 1.75;
+  }
+
+  @keyframes ai-signal {
+    65%, 100% { box-shadow: 0 0 0 0.8rem transparent, 0 0 1.15rem var(--ai-purple); }
+  }
+
+  @keyframes ai-float {
+    0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+    50% { transform: translateY(-0.8rem) rotate(0.6deg); }
+  }
+
+  @keyframes ai-ring {
+    to { transform: translate(-50%, -50%) rotate(344deg); }
+  }
+
+  @keyframes ai-scroll-line {
+    0% { transform: translateX(-110%); }
+    100% { transform: translateX(290%); }
+  }
+
+  @media (min-width: 720px) {
+    .ai-shell {
+      width: min(100% - 4rem, 1200px);
+    }
+
+    .ai-hero__layout {
+      grid-template-columns: minmax(0, 1.05fr) minmax(21rem, 0.95fr);
+    }
+
+    .ai-section-head {
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.55fr);
+    }
+
+    .ai-workshop-track {
+      padding-inline: max(2rem, calc((100vw - 1200px) / 2));
+      scroll-padding-inline: max(2rem, calc((100vw - 1200px) / 2));
+    }
+
+    .ai-workshop-card__meta {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+    }
+
+    .ai-session-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ai-timeline {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-bottom: 1px solid rgb(185 151 255 / 16%);
+    }
+
+    .ai-timeline li {
+      padding: 2rem 1.5rem;
+      border-bottom: 0;
+    }
+
+    .ai-timeline li + li {
+      border-left: 1px solid rgb(185 151 255 / 12%);
+    }
+
+    .ai-timeline li::before {
+      top: -0.3rem;
+      left: 1.5rem;
+    }
+
+    .ai-outcomes__layout,
+    .ai-faq__layout {
+      grid-template-columns: minmax(0, 0.8fr) minmax(24rem, 1.2fr);
+    }
+
+    .ai-capability-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .ai-manifesto__layout {
+      grid-template-columns: 0.35fr 1.25fr 0.7fr;
+    }
+
+    .ai-session-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 719px) {
+    .ai-hero {
+      padding-top: 3rem;
+    }
+
+    .ai-orbit {
+      order: -1;
+      width: min(64vw, 14.5rem);
+      margin-top: -1.25rem;
+      margin-bottom: -1rem;
+    }
+
+    .ai-orbit figcaption {
+      right: 0.5rem;
+      bottom: 7%;
+    }
+
+    .ai-scroll-cue {
+      display: none;
+    }
+
+    .ai-metrics__workshops::after {
+      inset: -0.55rem -0.35rem -0.5rem 0.35rem;
+    }
+
+    .ai-metrics__workshops dd {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .ai-metrics__note {
+      align-items: flex-start;
+    }
+
+    .ai-workshop-track {
+      grid-auto-columns: calc(100vw - 2.25rem);
+    }
+
+    .ai-workshop-card {
+      min-height: auto;
+    }
+
+    .ai-workshop-card__intro,
+    .ai-workshop-card__final {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .ai-workshop-card__intro > div {
+      display: block;
+    }
+
+    .ai-workshop-card__number {
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+
+    .ai-workshop-card__meta {
+      align-items: start;
+    }
+
+    .ai-timeline {
+      margin-left: 0.3rem;
+      border-top: 0;
+      border-left: 1px solid rgb(185 151 255 / 16%);
+    }
+
+    .ai-faq__intro {
+      position: static;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ai-kicker span,
+    .ai-orbit img,
+    .ai-orbit__ring,
+    .ai-scroll-cue span::after,
+    .ai-metrics__workshops dd strong {
+      animation: none;
+    }
+
+    [data-ai-reveal] {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  }
+</style>

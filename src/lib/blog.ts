@@ -1,0 +1,554 @@
+export type BlogTextNode = {
+  type: string;
+  text?: string;
+  url?: string;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strikethrough?: boolean;
+  code?: boolean;
+  children?: BlogTextNode[];
+};
+
+export type BlogBlock = BlogTextNode & {
+  level?: number;
+  format?: "ordered" | "unordered";
+  image?: BlogMedia;
+  images?: BlogMedia[];
+  alignment?: "wide" | "full" | "left" | "center" | "right";
+  layout?: "grid" | "masonry" | "carousel";
+  autoplay?: boolean;
+  tone?: "info" | "success" | "warning" | "note";
+  title?: string;
+  label?: string;
+  variant?: "primary" | "secondary";
+  openInNewTab?: boolean;
+  caption?: string;
+  provider?: "youtube" | "vimeo" | "direct";
+  platform?: "instagram" | "facebook" | "x" | "other";
+  headers?: string[];
+  rows?: string[][];
+};
+
+export type BlogMedia = {
+  url: string;
+  alternativeText?: string | null;
+  caption?: string | null;
+  width?: number | null;
+  height?: number | null;
+  mime?: string | null;
+  name?: string | null;
+};
+
+export type BlogArticleLink = {
+  label: string;
+  url: string;
+  description: string;
+  image: BlogMedia | null;
+  openInNewTab: boolean;
+  active: boolean;
+};
+
+export type BlogGallery = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  images: BlogMedia[];
+  category: BlogCategory;
+  tags: string[];
+  featured: boolean;
+  publishDate: string;
+  seo: BlogSeo | null;
+};
+
+export type BlogCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  color: string;
+  order: number;
+};
+
+export type BlogSeo = {
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string;
+  shareImage?: BlogMedia | null;
+};
+
+export type BlogArticle = {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: BlogBlock[];
+  coverImage: BlogMedia | null;
+  coverAlt: string;
+  category: BlogCategory;
+  authorName: string;
+  featured: boolean;
+  readingTime: number;
+  publishDate: string;
+  tags: string[];
+  links: BlogArticleLink[];
+  attachments: BlogMedia[];
+  seo: BlogSeo | null;
+};
+
+export type BlogSettings = {
+  publicationName: string;
+  eyebrow: string;
+  heroTitle: string;
+  heroDescription: string;
+  filterLabel: string;
+  allCategoriesLabel: string;
+  categoryIntro: string;
+  featuredLabel: string;
+  readArticleLabel: string;
+  archiveEyebrow: string;
+  archiveTitle: string;
+  emptyTitle: string;
+  emptyDescription: string;
+  emptyButtonLabel: string;
+  footerTitle: string;
+  footerDescription: string;
+  articleFooterTitle: string;
+  articleFooterDescription: string;
+  contentsLabel: string;
+  tagsLabel: string;
+  resourcesLabel: string;
+  attachmentsLabel: string;
+  galleriesLabel: string;
+  galleriesTitle: string;
+  galleriesDescription: string;
+  viewGalleryLabel: string;
+  galleryImagesLabel: string;
+  relatedEyebrow: string;
+  relatedTitle: string;
+  viewAllLabel: string;
+  seoTitle: string;
+  seoDescription: string;
+};
+
+export type BlogData = {
+  settings: BlogSettings | null;
+  categories: BlogCategory[];
+  articles: BlogArticle[];
+  galleries: BlogGallery[];
+  source: "cms" | "unavailable";
+};
+
+const CMS_URL = String(import.meta.env.PUBLIC_CMS_URL || "http://127.0.0.1:1337").replace(/\/+$/, "");
+
+export function safeCategoryColor(value?: string): string {
+  return /^#[0-9a-f]{6}$/i.test(value || "") ? String(value).toUpperCase() : "#2CAAFF";
+}
+
+export function colorRgb(value: string): string {
+  const color = safeCategoryColor(value).slice(1);
+  return `${Number.parseInt(color.slice(0, 2), 16)} ${Number.parseInt(color.slice(2, 4), 16)} ${Number.parseInt(color.slice(4, 6), 16)}`;
+}
+
+export function formatBlogDate(value: string): string {
+  const date = new Date(`${value}T12:00:00Z`);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("es-GT", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
+
+function compactSeoText(value?: string | null): string {
+  return String(value || "").replace(/\s+/g, " ").trim();
+}
+
+function truncateSeoText(value: string, maximum: number): string {
+  if (value.length <= maximum) return value;
+  const shortened = value.slice(0, maximum + 1);
+  const lastSpace = shortened.lastIndexOf(" ");
+  const end = lastSpace > maximum * 0.7 ? lastSpace : maximum;
+  return `${shortened.slice(0, end).trim()}…`;
+}
+
+export function blogSeoTitle(
+  preferred: string | null | undefined,
+  fallback: string,
+): string {
+  let title = compactSeoText(preferred) || compactSeoText(fallback);
+  if (title.length < 30 && !/campuslands/i.test(title)) {
+    title = `${title} | Campuslands Guatemala`;
+  }
+  return truncateSeoText(title, 64);
+}
+
+export function blogSeoDescription(
+  preferred: string | null | undefined,
+  fallback: string,
+): string {
+  let description = compactSeoText(preferred);
+  if (description.length < 80) description = compactSeoText(fallback);
+  if (description.length < 100) {
+    description = `${description} Conoce la información completa en Campuslands Guatemala.`;
+  }
+  return truncateSeoText(description, 165);
+}
+
+function mediaUrl(url?: string | null): string {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  if (!url.startsWith("/")) return "";
+  return `${CMS_URL}${url}`;
+}
+
+function normalizeMedia(value: any): BlogMedia | null {
+  if (!value?.url) return null;
+  return {
+    url: mediaUrl(value.url),
+    alternativeText: value.alternativeText,
+    caption: value.caption,
+    width: Number(value.width) || null,
+    height: Number(value.height) || null,
+    mime: value.mime ? String(value.mime) : null,
+    name: value.name ? String(value.name) : null,
+  };
+}
+
+function normalizeArticleLinks(value: unknown): BlogArticleLink[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item: any) => {
+    const url = safeLink(String(item?.url || ""));
+    const label = String(item?.label || item?.buttonName || item?.button_name || "").trim();
+    if (!url || !label) return [];
+    return [{
+      label,
+      url,
+      description: String(item?.description || ""),
+      image: normalizeMedia(item?.image),
+      openInNewTab: Boolean(item?.openInNewTab ?? item?.open_in_new_tab),
+      active: item?.active !== false,
+    }];
+  });
+}
+
+function normalizeSettings(value: any): BlogSettings | null {
+  if (!value?.publicationName || !value?.heroTitle) return null;
+  const stringValue = (key: string) => String(value[key] || "");
+  return {
+    publicationName: stringValue("publicationName"),
+    eyebrow: stringValue("eyebrow"),
+    heroTitle: stringValue("heroTitle"),
+    heroDescription: stringValue("heroDescription"),
+    filterLabel: stringValue("filterLabel"),
+    allCategoriesLabel: stringValue("allCategoriesLabel"),
+    categoryIntro: stringValue("categoryIntro"),
+    featuredLabel: stringValue("featuredLabel"),
+    readArticleLabel: stringValue("readArticleLabel"),
+    archiveEyebrow: stringValue("archiveEyebrow"),
+    archiveTitle: stringValue("archiveTitle"),
+    emptyTitle: stringValue("emptyTitle"),
+    emptyDescription: stringValue("emptyDescription"),
+    emptyButtonLabel: stringValue("emptyButtonLabel"),
+    footerTitle: stringValue("footerTitle"),
+    footerDescription: stringValue("footerDescription"),
+    articleFooterTitle: stringValue("articleFooterTitle"),
+    articleFooterDescription: stringValue("articleFooterDescription"),
+    contentsLabel: stringValue("contentsLabel"),
+    tagsLabel: stringValue("tagsLabel"),
+    resourcesLabel: stringValue("resourcesLabel") || "RECURSOS PARA CONTINUAR",
+    attachmentsLabel: stringValue("attachmentsLabel") || "ARCHIVOS DE LA PUBLICACIÓN",
+    galleriesLabel: stringValue("galleriesLabel") || "GALERÍAS",
+    galleriesTitle: stringValue("galleriesTitle") || "Historias que también se recorren con la mirada",
+    galleriesDescription: stringValue("galleriesDescription") || "Colecciones visuales de la comunidad Campuslands.",
+    viewGalleryLabel: stringValue("viewGalleryLabel") || "Abrir galería",
+    galleryImagesLabel: stringValue("galleryImagesLabel") || "IMÁGENES DE LA GALERÍA",
+    relatedEyebrow: stringValue("relatedEyebrow"),
+    relatedTitle: stringValue("relatedTitle"),
+    viewAllLabel: stringValue("viewAllLabel"),
+    seoTitle: stringValue("seoTitle"),
+    seoDescription: stringValue("seoDescription"),
+  };
+}
+
+function normalizeCategory(value: any): BlogCategory | null {
+  if (!value?.slug || !value?.name) return null;
+  return {
+    id: String(value.documentId || value.id || value.slug),
+    name: String(value.name),
+    slug: String(value.slug),
+    description: String(value.description || ""),
+    color: safeCategoryColor(value.color),
+    order: Number(value.order) || 0,
+  };
+}
+
+function normalizeArticle(value: any): BlogArticle | null {
+  const category = normalizeCategory(value?.category);
+  if (!value?.slug || !value?.title || !category) return null;
+  return {
+    id: String(value.documentId || value.id || value.slug),
+    title: String(value.title),
+    slug: String(value.slug),
+    excerpt: String(value.excerpt || ""),
+    content: Array.isArray(value.content) ? value.content : [],
+    coverImage: normalizeMedia(value.coverImage),
+    coverAlt: String(value.coverAlt || value.coverImage?.alternativeText || ""),
+    category,
+    authorName: String(value.authorName || ""),
+    featured: Boolean(value.featured),
+    readingTime: Math.max(1, Number(value.readingTime) || 1),
+    publishDate: String(value.publishDate || value.publishedAt || "").slice(0, 10),
+    tags: Array.isArray(value.tags) ? value.tags.filter((tag: unknown) => typeof tag === "string") : [],
+    links: normalizeArticleLinks(value.links),
+    attachments: Array.isArray(value.attachments)
+      ? value.attachments.map(normalizeMedia).filter(Boolean) as BlogMedia[]
+      : [],
+    seo: value.seo
+      ? {
+          metaTitle: value.seo.metaTitle,
+          metaDescription: value.seo.metaDescription,
+          keywords: value.seo.keywords,
+          shareImage: normalizeMedia(value.seo.shareImage),
+        }
+      : null,
+  };
+}
+
+function normalizeGallery(value: any): BlogGallery | null {
+  const category = normalizeCategory(value?.category);
+  if (!value?.slug || !value?.title || !category) return null;
+  const mediaById = new Map((Array.isArray(value.images) ? value.images : []).map((image: any) => [Number(image?.id), image]));
+  const ordered = Array.isArray(value.imageDetails) && value.imageDetails.length ? value.imageDetails : value.images;
+  const images = (Array.isArray(ordered) ? ordered : []).flatMap((item: any) => {
+    const base = mediaById.get(Number(item?.id)) || item;
+    const image = normalizeMedia({ ...base, alternativeText: item?.alternativeText ?? base?.alternativeText, caption: item?.caption ?? base?.caption });
+    return image ? [image] : [];
+  });
+  return {
+    id: String(value.documentId || value.id || value.slug),
+    title: String(value.title),
+    slug: String(value.slug),
+    description: String(value.description || ""),
+    images,
+    category,
+    tags: Array.isArray(value.tags) ? value.tags.filter((tag: unknown) => typeof tag === "string") : [],
+    featured: Boolean(value.featured),
+    publishDate: String(value.publishDate || value.publishedAt || "").slice(0, 10),
+    seo: value.seo ? {
+      metaTitle: value.seo.metaTitle,
+      metaDescription: value.seo.metaDescription,
+      keywords: value.seo.keywords,
+      shareImage: normalizeMedia(value.seo.shareImage),
+    } : null,
+  };
+}
+
+async function fetchJson(path: string) {
+  const response = await fetch(`${CMS_URL}${path}`, {
+    headers: { Accept: "application/json" },
+    signal: AbortSignal.timeout(4500),
+  });
+  if (!response.ok) throw new Error(`CMS respondió HTTP ${response.status}`);
+  return response.json();
+}
+
+export async function getBlogData(): Promise<BlogData> {
+  try {
+    const [settingsResponse, categoriesResponse, articlesResponse, galleriesResponse] = await Promise.all([
+      fetchJson("/api/blog-setting"),
+      fetchJson("/api/categories?filters[visible][$eq]=true&sort=order:asc&pagination[pageSize]=100"),
+      fetchJson("/api/articles?populate[category]=true&populate[coverImage]=true&populate[attachments]=true&populate[seo][populate][shareImage]=true&sort=publishDate:desc&pagination[pageSize]=100"),
+      fetchJson("/api/galleries?populate[category]=true&populate[images]=true&populate[seo][populate][shareImage]=true&sort=publishDate:desc&pagination[pageSize]=100"),
+    ]);
+
+    const categories = (categoriesResponse.data || []).map(normalizeCategory).filter(Boolean) as BlogCategory[];
+    const visibleCategorySlugs = new Set(categories.map((category) => category.slug));
+    const articles = ((articlesResponse.data || []).map(normalizeArticle).filter(Boolean) as BlogArticle[])
+      .filter((article) => visibleCategorySlugs.has(article.category.slug));
+    const galleries = ((galleriesResponse.data || []).map(normalizeGallery).filter(Boolean) as BlogGallery[])
+      .filter((gallery) => visibleCategorySlugs.has(gallery.category.slug));
+
+    return {
+      settings: normalizeSettings(settingsResponse.data),
+      categories,
+      articles,
+      galleries,
+      source: "cms",
+    };
+  } catch (error) {
+    console.warn(`[Blog] El CMS no está disponible: ${String(error)}`);
+    return { settings: null, categories: [], articles: [], galleries: [], source: "unavailable" };
+  }
+}
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function safeLink(value?: string): string {
+  if (!value) return "";
+  if (value.startsWith("/") || value.startsWith("#")) return value;
+  try {
+    const url = new URL(value);
+    return ["http:", "https:", "mailto:"].includes(url.protocol) ? url.toString() : "";
+  } catch {
+    return "";
+  }
+}
+
+function renderInline(nodes: BlogTextNode[] = []): string {
+  return nodes.map((node) => {
+    if (node.type === "link") {
+      const href = safeLink(node.url);
+      const content = renderInline(node.children);
+      if (!href) return content;
+      const external = /^https?:\/\//i.test(href) ? ' target="_blank" rel="noopener noreferrer"' : "";
+      return `<a href="${escapeHtml(href)}"${external}>${content}</a>`;
+    }
+
+    let content = escapeHtml(node.text || renderInline(node.children));
+    if (node.code) content = `<code>${content}</code>`;
+    if (node.bold) content = `<strong>${content}</strong>`;
+    if (node.italic) content = `<em>${content}</em>`;
+    if (node.underline) content = `<u>${content}</u>`;
+    if (node.strikethrough) content = `<s>${content}</s>`;
+    return content;
+  }).join("");
+}
+
+function plainText(nodes: BlogTextNode[] = []): string {
+  return nodes.map((node) => node.text || plainText(node.children)).join("").trim();
+}
+
+function headingId(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "seccion";
+}
+
+export function getBlogHeadings(blocks: BlogBlock[] = []) {
+  return blocks
+    .filter((block) => block.type === "heading")
+    .map((block) => {
+      const label = plainText(block.children);
+      return { id: headingId(label), label };
+    })
+    .filter((heading) => heading.label);
+}
+
+function videoEmbed(value?: string, provider?: string): string {
+  const safe = safeLink(value);
+  if (!safe || !/^https?:\/\//i.test(safe)) return "";
+  try {
+    const url = new URL(safe);
+    if (provider === "youtube" || /(^|\.)youtube\.com$|(^|\.)youtu\.be$/i.test(url.hostname)) {
+      const id = url.hostname.includes("youtu.be")
+        ? url.pathname.split("/").filter(Boolean)[0]
+        : url.searchParams.get("v") || url.pathname.split("/").filter(Boolean).pop();
+      return /^[\w-]{6,20}$/.test(id || "") ? `https://www.youtube-nocookie.com/embed/${id}` : "";
+    }
+    if (provider === "vimeo" || /(^|\.)vimeo\.com$/i.test(url.hostname)) {
+      const id = url.pathname.split("/").filter(Boolean).pop();
+      return /^\d{5,15}$/.test(id || "") ? `https://player.vimeo.com/video/${id}` : "";
+    }
+  } catch {
+    return "";
+  }
+  return "";
+}
+
+export function renderBlogBlocks(blocks: BlogBlock[] = []): string {
+  return blocks.map((block) => {
+    if (block.type === "paragraph") return `<p class="article-align--${["center", "right"].includes(block.alignment || "") ? block.alignment : "left"}">${renderInline(block.children)}</p>`;
+    if (block.type === "heading") {
+      const level = Math.min(4, Math.max(2, Number(block.level) || 2));
+      const id = headingId(plainText(block.children));
+      return `<h${level} class="article-align--${["center", "right"].includes(block.alignment || "") ? block.alignment : "left"}" id="${id}">${renderInline(block.children)}</h${level}>`;
+    }
+    if (block.type === "quote") return `<blockquote class="article-align--${["center", "right"].includes(block.alignment || "") ? block.alignment : "left"}">${renderInline(block.children)}</blockquote>`;
+    if (block.type === "list") {
+      const tag = block.format === "ordered" ? "ol" : "ul";
+      const items = (block.children || []).map((item) => `<li>${renderInline(item.children)}</li>`).join("");
+      return `<${tag}>${items}</${tag}>`;
+    }
+    if (block.type === "code") return `<pre><code>${escapeHtml(block.children?.map((child) => child.text || "").join("") || block.text || "")}</code></pre>`;
+    if (block.type === "image" && block.image?.url) {
+      const url = mediaUrl(block.image.url);
+      if (!url) return "";
+      const label = block.image.alternativeText || block.image.caption || "Imagen de la publicación";
+      const caption = block.image.caption ? `<figcaption>${escapeHtml(block.image.caption)}</figcaption>` : "";
+      const alignment = ["wide", "full", "left", "right"].includes(block.alignment || "") ? block.alignment : "wide";
+      return `<figure class="article-image article-image--${alignment}"><div class="article-inline-image" role="img" aria-label="${escapeHtml(label)}" style="background-image:url('${escapeHtml(url)}')"></div>${caption}</figure>`;
+    }
+    if (block.type === "gallery" && Array.isArray(block.images) && block.images.length) {
+      const layout = ["grid", "masonry", "carousel"].includes(block.layout || "") ? block.layout : "grid";
+      const title = block.title ? `<h3>${escapeHtml(block.title)}</h3>` : "";
+      const caption = block.caption ? `<figcaption>${escapeHtml(block.caption)}</figcaption>` : "";
+      const images = block.images.flatMap((image, index) => {
+        const url = mediaUrl(image.url);
+        if (!url) return [];
+        const alt = image.alternativeText || image.caption || `Imagen ${index + 1}`;
+        return [`<button type="button" data-article-gallery-image data-src="${escapeHtml(url)}" data-alt="${escapeHtml(alt)}" data-caption="${escapeHtml(image.caption || "")}"><img src="${escapeHtml(url)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" /><span>${String(index + 1).padStart(2, "0")}</span></button>`];
+      }).join("");
+      return `<figure class="article-gallery article-gallery--${layout}" data-article-gallery${block.autoplay ? ' data-autoplay="true"' : ""}>${title}<div>${images}</div>${caption}</figure>`;
+    }
+    if (block.type === "callout") {
+      const tone = ["info", "success", "warning", "note"].includes(block.tone || "") ? block.tone : "info";
+      const title = block.title ? `<strong>${escapeHtml(block.title)}</strong>` : "";
+      return `<aside class="article-callout article-callout--${tone}">${title}<p>${renderInline(block.children)}</p></aside>`;
+    }
+    if (block.type === "button") {
+      const href = safeLink(block.url);
+      if (!href || !block.label) return "";
+      const external = block.openInNewTab || /^https?:\/\//i.test(href) ? ' target="_blank" rel="noopener noreferrer"' : "";
+      const variant = block.variant === "secondary" ? "secondary" : "primary";
+      return `<p class="article-inline-cta"><a class="article-inline-cta--${variant}" href="${escapeHtml(href)}"${external}>${escapeHtml(block.label)} <span aria-hidden="true">↗</span></a></p>`;
+    }
+    if (block.type === "video") {
+      const href = safeLink(block.url);
+      if (!href) return "";
+      const caption = block.caption ? `<figcaption>${escapeHtml(block.caption)}</figcaption>` : "";
+      const embed = videoEmbed(href, block.provider);
+      if (embed) {
+        return `<figure class="article-video"><div><iframe src="${escapeHtml(embed)}" title="${escapeHtml(block.caption || "Video de la publicación")}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>${caption}</figure>`;
+      }
+      return `<figure class="article-video"><video controls preload="metadata" src="${escapeHtml(href)}"></video>${caption}</figure>`;
+    }
+    if (block.type === "embed") {
+      const href = safeLink(block.url);
+      if (!href) return "";
+      const platform = String(block.platform || "recurso").toUpperCase();
+      return `<aside class="article-embed"><span>${escapeHtml(platform)}</span><div><strong>${escapeHtml(block.caption || "Contenido relacionado")}</strong><a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">Abrir publicación <span aria-hidden="true">↗</span></a></div></aside>`;
+    }
+    if (block.type === "table") {
+      const headers = Array.isArray(block.headers) ? block.headers : [];
+      const rows = Array.isArray(block.rows) ? block.rows : [];
+      if (!headers.length && !rows.length) return "";
+      const head = headers.length ? `<thead><tr>${headers.map((cell) => `<th>${escapeHtml(cell)}</th>`).join("")}</tr></thead>` : "";
+      const body = `<tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`).join("")}</tbody>`;
+      const caption = block.caption ? `<figcaption>${escapeHtml(block.caption)}</figcaption>` : "";
+      return `<figure class="article-table"><div><table>${head}${body}</table></div>${caption}</figure>`;
+    }
+    if (block.type === "divider") return '<hr class="article-divider" />';
+    return "";
+  }).join("");
+}
+
+export function coverStyle(article: BlogArticle): string {
+  const color = safeCategoryColor(article.category.color);
+  const rgb = colorRgb(color);
+  const image = mediaUrl(article.coverImage?.url);
+  const backgroundImage = image ? `url('${image.replaceAll("'", "%27")}'), ` : "";
+  return `--category-color:${color};--category-rgb:${rgb};--cover-image:${backgroundImage}radial-gradient(circle at 76% 22%, rgb(${rgb} / 0.72), transparent 26%),linear-gradient(135deg, rgb(${rgb} / 0.34), #07102b 58%, #000051);`;
+}

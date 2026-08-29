@@ -1,0 +1,509 @@
+---
+import type { BlogArticle } from "../../lib/blog";
+import { coverStyle } from "../../lib/blog";
+
+interface Props {
+  article: BlogArticle;
+  variant?: "hero" | "card" | "detail";
+  index?: number;
+}
+
+const { article, variant = "card", index = 1 } = Astro.props;
+const label = article.coverAlt || `Portada de ${article.title}`;
+const hasImage = Boolean(article.coverImage?.url);
+const visualVariant = ({
+  "inteligencia-artificial": "ai",
+  programacion: "code",
+  "comunidad-camper": "community",
+  "carrera-empleabilidad": "career",
+} as Record<string, string>)[article.category.slug] || "notes";
+const signalLabel = ({
+  ai: "IA APLICADA",
+  code: "CÓDIGO EN PRÁCTICA",
+  community: "APRENDER JUNTOS",
+  career: "SIGUIENTE NIVEL",
+  notes: "NUEVA IDEA",
+} as Record<string, string>)[visualVariant];
+---
+
+<div
+  class:list={[
+    "blog-cover",
+    `blog-cover--${variant}`,
+    `blog-cover--${visualVariant}`,
+    { "blog-cover--photo": hasImage },
+  ]}
+  style={coverStyle(article)}
+  role="img"
+  aria-label={label}
+>
+  <span class="blog-cover__grid" aria-hidden="true"></span>
+  <span class="blog-cover__glow" aria-hidden="true"></span>
+  <span class="blog-cover__streak blog-cover__streak--one" aria-hidden="true"></span>
+  <span class="blog-cover__streak blog-cover__streak--two" aria-hidden="true"></span>
+
+  {!hasImage && (
+    <div class:list={["blog-cover__scene", `blog-cover__scene--${visualVariant}`]} aria-hidden="true">
+      {visualVariant === "code" && (
+        <>
+          <div class="code-note">
+            <div class="code-note__topbar">
+              <span class="code-note__dots"><i></i><i></i><i></i></span>
+              <span>camper.js</span>
+              <em>● LIVE</em>
+            </div>
+            <div class="code-note__body">
+              <p><i>01</i><span class="syntax-purple">const</span> ruta = <span class="syntax-green">"practicar"</span>;</p>
+              <p><i>02</i><span class="syntax-purple">while</span> (curiosidad) &#123;</p>
+              <p><i>03</i><span class="syntax-blue">crear</span>(idea);<b class="code-cursor"></b></p>
+              <p><i>04</i>&#125;</p>
+            </div>
+            <span class="code-note__scan"></span>
+          </div>
+          <div class="code-note__badge"><span>&lt;/&gt;</span> IDEA → PROYECTO</div>
+          <span class="code-note__spark code-note__spark--one">+</span>
+          <span class="code-note__spark code-note__spark--two">&#123; &#125;</span>
+        </>
+      )}
+
+      {visualVariant === "ai" && (
+        <>
+          <div class="ai-note">
+            <div class="ai-note__topbar"><span>✦</span> CAMPUS IA <i></i></div>
+            <p>¿Qué podemos construir hoy?</p>
+            <strong><span>idea</span> + criterio</strong>
+            <div class="ai-note__answer"><i></i> Prototipo en marcha <b></b></div>
+          </div>
+          <div class="ai-brain">
+            <span class="ai-brain__ring"></span>
+            <span class="ai-brain__core">AI</span>
+            <i class="ai-node ai-node--one"></i>
+            <i class="ai-node ai-node--two"></i>
+            <i class="ai-node ai-node--three"></i>
+          </div>
+        </>
+      )}
+
+      {visualVariant === "community" && (
+        <>
+          <div class="community-board">
+            <div class="community-board__topbar"><span>●</span> SALA / CAMPERS <i>EN VIVO</i></div>
+            <div class="community-people">
+              <span class="community-person community-person--one">C</span>
+              <span class="community-person community-person--two">L</span>
+              <span class="community-person community-person--three">+</span>
+              <span class="community-link community-link--one"></span>
+              <span class="community-link community-link--two"></span>
+            </div>
+            <strong>Una duda.<br /><span>Muchas ideas.</span></strong>
+          </div>
+          <span class="community-message community-message--one">¡Lo resolvimos! ✦</span>
+          <span class="community-message community-message--two">compartir()</span>
+        </>
+      )}
+
+      {visualVariant === "career" && (
+        <>
+          <div class="career-note">
+            <div class="career-note__topbar"><span>↗</span> RUTA PROFESIONAL</div>
+            <div class="career-roadmap">
+              <span class="career-roadmap__line"></span>
+              <div><i>✓</i><span>PORTAFOLIO</span></div>
+              <div><i>✓</i><span>ENTREVISTA</span></div>
+              <div class="is-current"><i>01</i><span>OPORTUNIDAD</span></div>
+            </div>
+          </div>
+          <div class="career-launch"><span>PRÓXIMO NIVEL</span><strong>↗</strong></div>
+        </>
+      )}
+
+      {visualVariant === "notes" && (
+        <>
+          <div class="paper-note paper-note--back"></div>
+          <div class="paper-note">
+            <div class="paper-note__pin"></div>
+            <small>APUNTE / CAMPUSLANDS</small>
+            <strong>Una idea<br />que merece crecer.</strong>
+            <span></span><span></span><span></span>
+          </div>
+        </>
+      )}
+    </div>
+  )}
+
+  <span class="blog-cover__code" aria-hidden="true">{String(index).padStart(2, "0")}</span>
+  <span class="blog-cover__signal" aria-hidden="true"><i></i>{signalLabel}</span>
+</div>
+
+<style>
+  .blog-cover {
+    position: relative;
+    isolation: isolate;
+    min-height: 15rem;
+    overflow: hidden;
+    border: 1px solid rgb(var(--category-rgb) / 48%);
+    border-radius: 1.45rem;
+    background-image: var(--cover-image);
+    background-position: center;
+    background-size: cover;
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 6%),
+      inset 0 -5rem 9rem rgb(0 0 25 / 28%),
+      0 1.5rem 4rem rgb(0 0 26 / 34%);
+  }
+
+  .blog-cover::before,
+  .blog-cover::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+  }
+
+  .blog-cover::before {
+    z-index: 0;
+    background:
+      linear-gradient(180deg, transparent 48%, rgb(0 0 30 / 82%)),
+      linear-gradient(90deg, rgb(7 16 43 / 46%), transparent 52%);
+  }
+
+  .blog-cover::after {
+    z-index: 4;
+    opacity: 0.22;
+    background: repeating-linear-gradient(180deg, transparent 0 3px, rgb(255 255 255 / 3%) 4px);
+    mix-blend-mode: overlay;
+  }
+
+  .blog-cover--photo::before { background: linear-gradient(180deg, rgb(0 0 25 / 8%), rgb(0 0 35 / 82%)); }
+  .blog-cover--hero { min-height: clamp(20rem, 48vw, 33rem); }
+  .blog-cover--detail { min-height: clamp(22rem, 48vw, 38rem); border-radius: clamp(1.5rem, 4vw, 2.5rem); }
+
+  .blog-cover__grid {
+    position: absolute;
+    inset: -2.5rem;
+    z-index: 1;
+    opacity: 0.28;
+    background-image:
+      linear-gradient(rgb(var(--category-rgb) / 20%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--category-rgb) / 20%) 1px, transparent 1px);
+    background-position: 0 0;
+    background-size: 2.4rem 2.4rem;
+    mask-image: linear-gradient(140deg, black, transparent 78%);
+  }
+
+  .blog-cover__glow {
+    position: absolute;
+    top: -24%;
+    right: -12%;
+    z-index: 1;
+    width: 70%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: rgb(var(--category-rgb) / 28%);
+    filter: blur(3rem);
+  }
+
+  .blog-cover__streak {
+    position: absolute;
+    z-index: 1;
+    width: 42%;
+    height: 1px;
+    opacity: 0.55;
+    background: linear-gradient(90deg, transparent, rgb(var(--category-rgb) / 90%), transparent);
+    transform: rotate(-36deg);
+  }
+
+  .blog-cover__streak--one { top: 17%; right: -10%; }
+  .blog-cover__streak--two { right: 7%; bottom: 16%; width: 25%; }
+  .blog-cover--photo .blog-cover__grid,
+  .blog-cover--photo .blog-cover__glow,
+  .blog-cover--photo .blog-cover__streak { opacity: 0.12; }
+
+  .blog-cover__scene {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .blog-cover__code,
+  .blog-cover__signal {
+    position: absolute;
+    z-index: 5;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .blog-cover__code {
+    top: 1.1rem;
+    left: 1.15rem;
+    color: rgb(255 255 255 / 34%);
+    font-size: clamp(2.8rem, 8vw, 6.2rem);
+    font-weight: 800;
+    line-height: 0.85;
+    letter-spacing: -0.1em;
+  }
+
+  .blog-cover__signal {
+    right: 1rem;
+    bottom: 0.9rem;
+    display: inline-flex;
+    max-width: calc(100% - 2rem);
+    min-height: 2rem;
+    padding: 0.45rem 0.72rem;
+    overflow: hidden;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgb(var(--category-rgb) / 56%);
+    border-radius: 999px;
+    color: rgb(255 255 255 / 82%);
+    background: rgb(3 10 35 / 78%);
+    box-shadow: 0 0.7rem 2rem rgb(0 0 30 / 28%);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    backdrop-filter: blur(12px);
+  }
+
+  .blog-cover__signal i { width: 0.43rem; height: 0.43rem; flex: 0 0 auto; border-radius: 50%; background: var(--category-color); box-shadow: 0 0 0.75rem var(--category-color); }
+
+  /* Programación: editor vivo. */
+  .code-note {
+    position: absolute;
+    top: 47%;
+    right: 5%;
+    width: min(68%, 26rem);
+    overflow: hidden;
+    border: 1px solid rgb(var(--category-rgb) / 68%);
+    border-radius: 0.95rem;
+    background: rgb(3 10 36 / 88%);
+    box-shadow: 0 1.5rem 3.5rem rgb(0 0 25 / 42%), 0 0 2.8rem rgb(var(--category-rgb) / 24%), inset 0 0 0 1px rgb(255 255 255 / 5%);
+    transform: translateY(-50%) rotate(-3deg);
+    transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 550ms ease;
+  }
+
+  .code-note__topbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    min-height: 2rem;
+    padding: 0 0.65rem;
+    align-items: center;
+    border-bottom: 1px solid rgb(var(--category-rgb) / 22%);
+    color: rgb(255 255 255 / 48%);
+    background: rgb(255 255 255 / 4%);
+    font: 500 0.47rem/1 ui-monospace, monospace;
+    letter-spacing: 0.06em;
+  }
+
+  .code-note__topbar em { justify-self: end; color: rgb(var(--category-rgb) / 92%); font-size: 0.4rem; font-style: normal; letter-spacing: 0.1em; }
+  .code-note__dots { display: flex; gap: 0.22rem; }
+  .code-note__dots i { width: 0.28rem; height: 0.28rem; border-radius: 50%; background: rgb(255 255 255 / 22%); }
+  .code-note__dots i:first-child { background: #ff6b77; }
+  .code-note__dots i:nth-child(2) { background: #ffca5b; }
+  .code-note__dots i:last-child { background: #35d39e; }
+
+  .code-note__body { position: relative; padding: 0.75rem 0.55rem 0.85rem; color: rgb(255 255 255 / 70%); font: 500 clamp(0.48rem, 1.55vw, 0.75rem)/1.8 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .code-note__body p { margin: 0; white-space: nowrap; }
+  .code-note__body p:nth-child(3) { margin-left: 0.85rem; }
+  .code-note__body p i { display: inline-block; width: 1.65rem; color: rgb(255 255 255 / 24%); font-style: normal; }
+  .syntax-purple { color: #c79cff; }
+  .syntax-green { color: #75e6b7; }
+  .syntax-blue { color: #6ec7ff; }
+  .code-cursor { display: inline-block; width: 0.32rem; height: 0.85em; margin-left: 0.16rem; vertical-align: -0.08em; background: var(--category-color); box-shadow: 0 0 0.65rem var(--category-color); }
+  .code-note__scan { position: absolute; inset: 2rem 0 auto; height: 1px; opacity: 0; background: linear-gradient(90deg, transparent, rgb(var(--category-rgb) / 90%), transparent); }
+
+  .code-note__badge {
+    position: absolute;
+    right: 2%;
+    bottom: 19%;
+    display: flex;
+    padding: 0.4rem 0.65rem;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid rgb(255 255 255 / 16%);
+    border-radius: 0.55rem;
+    color: white;
+    background: rgb(var(--category-rgb) / 22%);
+    box-shadow: 0 0.8rem 2rem rgb(0 0 30 / 26%);
+    font: 700 0.47rem/1 ui-monospace, monospace;
+    letter-spacing: 0.09em;
+    transform: rotate(3deg);
+    backdrop-filter: blur(10px);
+  }
+
+  .code-note__badge span { color: var(--category-color); font-size: 0.72rem; }
+  .code-note__spark { position: absolute; color: rgb(var(--category-rgb) / 76%); font: 700 0.8rem/1 ui-monospace, monospace; text-shadow: 0 0 0.8rem var(--category-color); }
+  .code-note__spark--one { top: 18%; right: 4%; }
+  .code-note__spark--two { right: 41%; bottom: 16%; font-size: 0.55rem; }
+
+  /* IA: conversación que se vuelve prototipo. */
+  .ai-note {
+    position: absolute;
+    top: 48%;
+    right: 6%;
+    width: min(64%, 25rem);
+    padding: 0.8rem;
+    border: 1px solid rgb(var(--category-rgb) / 64%);
+    border-radius: 1rem;
+    background: linear-gradient(145deg, rgb(12 13 52 / 92%), rgb(var(--category-rgb) / 18%));
+    box-shadow: 0 1.5rem 4rem rgb(0 0 25 / 46%), 0 0 3rem rgb(var(--category-rgb) / 24%);
+    transform: translateY(-50%) rotate(2deg);
+    transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ai-note__topbar { display: flex; align-items: center; gap: 0.35rem; color: rgb(255 255 255 / 54%); font: 700 0.47rem/1 ui-monospace, monospace; letter-spacing: 0.1em; }
+  .ai-note__topbar span { color: #d7c3ff; font-size: 0.8rem; }
+  .ai-note__topbar i { width: 0.38rem; height: 0.38rem; margin-left: auto; border-radius: 50%; background: #00d9a4; box-shadow: 0 0 0.65rem #00d9a4; }
+  .ai-note > p { margin: 0.9rem 0 0; color: rgb(255 255 255 / 55%); font-size: clamp(0.56rem, 1.7vw, 0.78rem); }
+  .ai-note > strong { display: block; margin-top: 0.2rem; color: white; font-size: clamp(1rem, 3.8vw, 2rem); line-height: 1.05; letter-spacing: -0.04em; }
+  .ai-note > strong span { color: #c7a9ff; }
+  .ai-note__answer { display: flex; margin-top: 0.9rem; padding: 0.5rem 0.6rem; align-items: center; gap: 0.42rem; border-radius: 0.55rem; color: rgb(255 255 255 / 78%); background: rgb(255 255 255 / 7%); font: 600 0.5rem/1 ui-monospace, monospace; }
+  .ai-note__answer i { width: 0.35rem; height: 0.35rem; border-radius: 50%; background: #00d9a4; }
+  .ai-note__answer b { width: 0.3rem; height: 0.75rem; background: rgb(255 255 255 / 75%); }
+
+  .ai-brain { position: absolute; top: 21%; right: 3%; width: 4.4rem; aspect-ratio: 1; }
+  .ai-brain__ring { position: absolute; inset: 0; border: 1px dashed rgb(var(--category-rgb) / 74%); border-radius: 50%; }
+  .ai-brain__core { position: absolute; inset: 1.1rem; display: grid; place-items: center; border: 1px solid rgb(255 255 255 / 38%); border-radius: 38% 62% 57% 43%; color: white; background: rgb(var(--category-rgb) / 68%); box-shadow: 0 0 1.5rem rgb(var(--category-rgb) / 76%); font: 800 0.65rem/1 ui-monospace, monospace; transform: rotate(12deg); }
+  .ai-node { position: absolute; width: 0.42rem; aspect-ratio: 1; border-radius: 50%; background: white; box-shadow: 0 0 0.75rem white; }
+  .ai-node--one { top: 2%; left: 45%; }
+  .ai-node--two { right: 3%; bottom: 19%; }
+  .ai-node--three { bottom: 7%; left: 12%; }
+
+  /* Comunidad: personas y conversación. */
+  .community-board {
+    position: absolute;
+    top: 48%;
+    right: 6%;
+    width: min(64%, 24rem);
+    padding: 0.7rem 0.8rem 0.85rem;
+    border: 1px solid rgb(var(--category-rgb) / 62%);
+    border-radius: 1rem;
+    background: rgb(4 27 39 / 88%);
+    box-shadow: 0 1.5rem 4rem rgb(0 0 25 / 42%), 0 0 2.8rem rgb(var(--category-rgb) / 22%);
+    transform: translateY(-50%) rotate(-2deg);
+    transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .community-board__topbar { display: flex; align-items: center; gap: 0.35rem; color: rgb(255 255 255 / 48%); font: 700 0.46rem/1 ui-monospace, monospace; letter-spacing: 0.09em; }
+  .community-board__topbar span { color: #00e7ad; text-shadow: 0 0 0.7rem #00e7ad; }
+  .community-board__topbar i { margin-left: auto; color: rgb(var(--category-rgb) / 90%); font-size: 0.39rem; font-style: normal; }
+  .community-people { position: relative; width: 6.8rem; height: 3.4rem; margin: 0.75rem auto 0.15rem; }
+  .community-person { position: absolute; z-index: 2; display: grid; width: 2.35rem; aspect-ratio: 1; place-items: center; border: 1px solid rgb(255 255 255 / 48%); border-radius: 50%; color: white; background: rgb(var(--category-rgb) / 82%); box-shadow: 0 0 1.3rem rgb(var(--category-rgb) / 55%); font: 800 0.65rem/1 ui-monospace, monospace; }
+  .community-person--one { top: 0.55rem; left: 0; }
+  .community-person--two { top: 0; left: 2.25rem; width: 2.8rem; background: #07516a; }
+  .community-person--three { top: 0.65rem; right: 0; background: #162f56; }
+  .community-link { position: absolute; z-index: 1; top: 1.6rem; height: 1px; background: rgb(var(--category-rgb) / 76%); box-shadow: 0 0 0.6rem rgb(var(--category-rgb) / 66%); }
+  .community-link--one { left: 1.7rem; width: 1.4rem; transform: rotate(-15deg); }
+  .community-link--two { right: 1.7rem; width: 1.5rem; transform: rotate(16deg); }
+  .community-board > strong { display: block; color: white; font-size: clamp(0.9rem, 3.1vw, 1.45rem); line-height: 1.05; text-align: center; letter-spacing: -0.035em; }
+  .community-board > strong span { color: #53e4ba; }
+  .community-message { position: absolute; padding: 0.42rem 0.6rem; border: 1px solid rgb(var(--category-rgb) / 46%); border-radius: 0.7rem 0.7rem 0.7rem 0.18rem; color: white; background: rgb(3 19 34 / 86%); box-shadow: 0 0.8rem 2rem rgb(0 0 25 / 32%); font: 600 0.45rem/1 ui-monospace, monospace; backdrop-filter: blur(10px); }
+  .community-message--one { top: 7%; right: 3%; }
+  .community-message--two { right: 36%; bottom: 17%; color: #53e4ba; }
+
+  /* Carrera: progreso concreto. */
+  .career-note {
+    position: absolute;
+    top: 47%;
+    right: 6%;
+    width: min(63%, 23rem);
+    padding: 0.8rem;
+    border: 1px solid rgb(var(--category-rgb) / 65%);
+    border-radius: 1rem;
+    background: rgb(42 27 20 / 88%);
+    box-shadow: 0 1.5rem 4rem rgb(0 0 25 / 42%), 0 0 2.8rem rgb(var(--category-rgb) / 20%);
+    transform: translateY(-50%) rotate(2.5deg);
+    transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .career-note__topbar { display: flex; align-items: center; gap: 0.35rem; color: rgb(255 255 255 / 56%); font: 700 0.47rem/1 ui-monospace, monospace; letter-spacing: 0.1em; }
+  .career-note__topbar span { display: grid; width: 1.15rem; aspect-ratio: 1; place-items: center; border-radius: 0.3rem; color: #2a1b14; background: var(--category-color); }
+  .career-roadmap { position: relative; display: grid; margin-top: 0.8rem; grid-template-columns: repeat(3, 1fr); gap: 0.3rem; }
+  .career-roadmap__line { position: absolute; top: 0.72rem; left: 12%; width: 74%; height: 2px; background: linear-gradient(90deg, var(--category-color) 0 62%, rgb(255 255 255 / 14%) 62%); box-shadow: 0 0 0.75rem rgb(var(--category-rgb) / 40%); }
+  .career-roadmap div { position: relative; z-index: 1; display: flex; align-items: center; flex-direction: column; gap: 0.38rem; color: rgb(255 255 255 / 55%); font: 700 0.37rem/1 ui-monospace, monospace; letter-spacing: 0.04em; }
+  .career-roadmap div i { display: grid; width: 1.45rem; aspect-ratio: 1; place-items: center; border: 1px solid rgb(var(--category-rgb) / 72%); border-radius: 50%; color: #2a1b14; background: var(--category-color); box-shadow: 0 0 0.8rem rgb(var(--category-rgb) / 45%); font-size: 0.48rem; font-style: normal; }
+  .career-roadmap div.is-current { color: white; }
+  .career-roadmap div.is-current i { color: white; background: #422b1e; }
+  .career-launch { position: absolute; right: 3%; bottom: 17%; display: flex; padding: 0.42rem 0.55rem 0.42rem 0.7rem; align-items: center; gap: 0.55rem; border: 1px solid rgb(var(--category-rgb) / 52%); border-radius: 999px; color: white; background: rgb(26 18 21 / 88%); box-shadow: 0 0.8rem 2rem rgb(0 0 25 / 28%); font: 700 0.43rem/1 ui-monospace, monospace; letter-spacing: 0.09em; }
+  .career-launch strong { display: grid; width: 1.25rem; aspect-ratio: 1; place-items: center; border-radius: 50%; color: #2a1b14; background: var(--category-color); font-size: 0.7rem; }
+
+  /* Fallback editorial para categorías nuevas del CMS. */
+  .paper-note { position: absolute; top: 49%; right: 8%; width: min(58%, 21rem); padding: 1rem; border: 1px solid rgb(var(--category-rgb) / 58%); border-radius: 0.9rem; color: white; background: linear-gradient(145deg, rgb(8 18 47 / 94%), rgb(var(--category-rgb) / 18%)); box-shadow: 0 1.5rem 4rem rgb(0 0 25 / 42%); transform: translateY(-50%) rotate(2deg); }
+  .paper-note--back { height: 67%; opacity: 0.4; transform: translate(0.8rem, -46%) rotate(7deg); }
+  .paper-note__pin { position: absolute; top: -0.35rem; right: 1rem; width: 1.8rem; height: 0.7rem; border-radius: 0.2rem; background: rgb(var(--category-rgb) / 75%); transform: rotate(7deg); }
+  .paper-note small { color: var(--category-color); font: 700 0.44rem/1 ui-monospace, monospace; letter-spacing: 0.1em; }
+  .paper-note strong { display: block; margin: 0.75rem 0; font-size: clamp(0.9rem, 3vw, 1.45rem); line-height: 1.08; }
+  .paper-note > span { display: block; width: 100%; height: 1px; margin-top: 0.45rem; background: rgb(255 255 255 / 16%); }
+  .paper-note > span:last-child { width: 62%; }
+
+  .blog-cover:hover .code-note,
+  .blog-cover:hover .community-board { transform: translateY(-52%) rotate(0deg) scale(1.035); }
+  .blog-cover:hover .ai-note,
+  .blog-cover:hover .career-note { transform: translateY(-52%) rotate(0deg) scale(1.035); }
+  .blog-cover:hover .blog-cover__scene { transform: translateY(-0.2rem); }
+
+  @media (max-width: 640px) {
+    .blog-cover--hero,
+    .blog-cover--detail { min-height: 19rem; }
+    .blog-cover__code { font-size: clamp(2.8rem, 18vw, 4.5rem); }
+    .code-note,
+    .ai-note,
+    .community-board,
+    .career-note { right: 4%; width: 70%; }
+    .code-note__badge,
+    .community-message--two,
+    .career-launch { bottom: 18%; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .blog-cover__grid { animation: cover-grid-drift 14s linear infinite; }
+    .blog-cover__glow { animation: cover-glow-breathe 5s ease-in-out infinite alternate; }
+    .blog-cover__streak--one { animation: cover-streak 4.8s ease-in-out infinite; }
+    .blog-cover__streak--two { animation: cover-streak 4.8s 1.4s ease-in-out infinite; }
+    .code-note { animation: visual-float-left 6s ease-in-out infinite; }
+    .code-note__scan { animation: code-scan 3.8s ease-in-out infinite; }
+    .code-cursor,
+    .ai-note__answer b { animation: cursor-blink 0.9s steps(1) infinite; }
+    .code-note__spark--one { animation: spark-pulse 2.4s ease-in-out infinite; }
+    .code-note__spark--two { animation: spark-pulse 2.4s 0.8s ease-in-out infinite; }
+    .ai-note { animation: visual-float-right 6.4s ease-in-out infinite; }
+    .ai-brain__ring { animation: spin 9s linear infinite; }
+    .ai-brain__core { animation: core-think 3.2s ease-in-out infinite alternate; }
+    .ai-node { animation: node-pulse 1.8s ease-in-out infinite alternate; }
+    .ai-node--two { animation-delay: 0.6s; }
+    .ai-node--three { animation-delay: 1.1s; }
+    .community-board { animation: visual-float-left 6.2s ease-in-out infinite; }
+    .community-person--one { animation: person-bob 2.8s ease-in-out infinite; }
+    .community-person--two { animation: person-bob 2.8s 0.5s ease-in-out infinite; }
+    .community-person--three { animation: person-bob 2.8s 1s ease-in-out infinite; }
+    .community-message--one { animation: message-pop 4.4s ease-in-out infinite; }
+    .community-message--two { animation: message-pop 4.4s 1.5s ease-in-out infinite; }
+    .career-note { animation: visual-float-right 6.2s ease-in-out infinite; }
+    .career-roadmap div.is-current i { animation: career-pulse 2s ease-in-out infinite; }
+    .career-launch strong { animation: launch-arrow 2s ease-in-out infinite; }
+    .paper-note { animation: visual-float-right 6s ease-in-out infinite; }
+  }
+
+  @keyframes cover-grid-drift { to { background-position: 2.4rem 2.4rem; } }
+  @keyframes cover-glow-breathe { to { opacity: 0.58; transform: scale(1.14) translate(-4%, 5%); } }
+  @keyframes cover-streak { 0%, 100% { opacity: 0.2; transform: translateX(2rem) rotate(-36deg); } 48% { opacity: 0.8; } 60% { transform: translateX(-4rem) rotate(-36deg); } }
+  @keyframes visual-float-left { 0%, 100% { translate: 0 0; rotate: 0deg; } 50% { translate: 0 -0.35rem; rotate: 0.5deg; } }
+  @keyframes visual-float-right { 0%, 100% { translate: 0 0; rotate: 0deg; } 50% { translate: 0 -0.35rem; rotate: -0.5deg; } }
+  @keyframes code-scan { 0%, 16% { opacity: 0; transform: translateY(0); } 28% { opacity: 0.85; } 70%, 100% { opacity: 0; transform: translateY(6.2rem); } }
+  @keyframes cursor-blink { 0%, 54% { opacity: 1; } 55%, 100% { opacity: 0; } }
+  @keyframes spark-pulse { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.18); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes core-think { to { border-radius: 62% 38% 43% 57%; transform: rotate(-10deg) scale(1.08); } }
+  @keyframes node-pulse { to { opacity: 0.35; transform: scale(0.65); } }
+  @keyframes person-bob { 50% { transform: translateY(-0.18rem); } }
+  @keyframes message-pop { 0%, 18%, 100% { opacity: 0.3; transform: translateY(0.3rem) scale(0.92); } 28%, 76% { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes career-pulse { 50% { box-shadow: 0 0 0 0.35rem rgb(var(--category-rgb) / 12%), 0 0 1.1rem rgb(var(--category-rgb) / 60%); transform: scale(1.08); } }
+  @keyframes launch-arrow { 50% { transform: translate(0.14rem, -0.14rem); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blog-cover *,
+    .blog-cover *::before,
+    .blog-cover *::after { animation: none !important; transition-duration: 0.01ms !important; }
+  }
+</style>

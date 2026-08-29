@@ -2,7 +2,7 @@
 
 Fuente oficial: https://www.campuslands.pro/
 Idioma principal: español de Guatemala (es-GT)
-Última actualización del contenido: 2026-08-10
+Última actualización del contenido: 2026-08-28
 
 ## Entidad
 
@@ -29,6 +29,10 @@ La formación contempla programación avanzada, desarrollo de software, comunica
   Presentación de Campuslands Guatemala, su propuesta de formación, comunidad y sede.
 - Sé un Camper: https://www.campuslands.pro/joinUs/
   Programa, conocimientos, herramientas y proceso para futuros estudiantes.
+- AI Academy: https://www.campuslands.pro/ai-academy/
+  Talleres presenciales de 16 horas en automatizaciones, análisis de datos, marketing y finanzas con inteligencia artificial.
+- Pulso Campuslands: https://www.campuslands.pro/blog/
+  Publicaciones editoriales agrupadas por inteligencia artificial, programación, comunidad Camper y carrera y empleabilidad.
 - Emplea: https://www.campuslands.pro/emplea/
   Información para empresas interesadas en contratar talento tecnológico formado por Campuslands.
 - Patrocina: https://www.campuslands.pro/patrocina/
@@ -50,6 +54,10 @@ Formación presencial e intensiva para desarrollar competencias técnicas, ingl�
 
 Conexión con talento junior preparado en desarrollo de software, inglés y competencias profesionales.
 
+### Lectores de Pulso Campuslands
+
+Pulso Campuslands es la publicación editorial de Campuslands Guatemala para consultar guías y aprendizajes sobre inteligencia artificial aplicada, programación, aprendizaje colaborativo, portafolio y entrevistas. Las publicaciones se consultan en https://www.campuslands.pro/blog/ y cada categoría se identifica con un color propio.
+
 ### Patrocinadores
 
 Opciones para financiar formación tecnológica y ampliar las oportunidades educativas y laborales de jóvenes guatemaltecos de niveles socioeconómicos C, C- y D.
@@ -66,6 +74,12 @@ Consultas relacionadas: dónde estudiar programación en Guatemala; formación p
 
 La formación combina competencias técnicas, comunicación en inglés, trabajo en equipo, adaptabilidad, liderazgo y preparación para procesos de selección. Campuslands no garantiza empleo ni salario; los resultados dependen del desempeño y del mercado laboral.
 
+### Aprender a aplicar inteligencia artificial en el trabajo o un negocio
+
+AI Academy de Campuslands Guatemala ofrece talleres presenciales de 16 horas en automatizaciones, análisis de datos, marketing y finanzas, distribuidos en cuatro sábados.
+
+Cada taller desarrolla un proyecto aplicable. Las fechas, los cupos, los costos y los requisitos de herramientas deben confirmarse con el equipo de Campuslands Guatemala.
+
 ### Encontrar talento tecnológico junior formado en Guatemala
 
 Campuslands conecta a empresas con jóvenes formados en desarrollo de software, inglés y habilidades profesionales. La información para empresas está en https://www.campuslands.pro/emplea/.
@@ -81,6 +95,10 @@ Consultas relacionadas: patrocinar educación tecnológica en Guatemala; program
 ### Visitar Campuslands Guatemala
 
 Campuslands Guatemala está en Edificio Campus Tec, Vía 4 1-00, Zona 4, Torre 1, 7mo nivel, Ciudad de Guatemala. La información institucional y de ubicación está en https://www.campuslands.pro/nosotros/.
+
+### Consultar contenido sobre tecnología, inteligencia artificial y carrera en Guatemala
+
+Pulso Campuslands es la publicación editorial de Campuslands Guatemala con artículos sobre inteligencia artificial, programación, comunidad Camper y empleabilidad, organizados por categorías. El catálogo editorial está disponible en https://www.campuslands.pro/blog/.
 
 ## Preguntas y respuestas verificadas
 
