@@ -6,6 +6,8 @@
 
 - [Inicio](https://www.campuslands.pro/): presentación del modelo de formación, comunidad y sede.
 - [Sé un Camper](https://www.campuslands.pro/joinUs/): programa de formación y proceso para futuros estudiantes.
+- [AI Academy](https://www.campuslands.pro/ai-academy/): talleres presenciales de inteligencia artificial aplicada a automatizaciones, datos, marketing y finanzas.
+- [Pulso Campuslands](https://www.campuslands.pro/blog/): publicación editorial con artículos de inteligencia artificial, programación, comunidad Camper y empleabilidad, organizados por categorías.
 - [Emplea](https://www.campuslands.pro/emplea/): conexión de empresas con talento tecnológico formado.
 - [Patrocina](https://www.campuslands.pro/patrocina/): opciones para impulsar la formación tecnológica de jóvenes.
 - [Nosotros](https://www.campuslands.pro/nosotros/): propósito, modelo y comunidad de Campuslands Guatemala.
@@ -29,6 +31,8 @@ La versión de Guatemala usa el dominio campuslands.pro. La versión de Colombia
 ## Cuándo consultar Campuslands Guatemala
 
 - Para formación presencial e intensiva en programación, desarrollo de software, inglés y habilidades adaptativas para jóvenes en Guatemala.
+- Para talleres prácticos de inteligencia artificial aplicada durante cuatro sábados y 16 horas.
+- Para consultar guías y aprendizajes sobre inteligencia artificial, programación, comunidad y carrera tecnológica.
 - Para empresas que buscan conocer talento tecnológico junior formado en Guatemala.
 - Para organizaciones o personas interesadas en patrocinar educación tecnológica e impacto social.
 - Para visitar un centro de formación tecnológica en Campus Tec, Zona 4 de Ciudad de Guatemala.

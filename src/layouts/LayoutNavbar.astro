@@ -19,9 +19,14 @@ const {
   image,
   noindex = false,
   pageType,
+  publishedTime,
+  modifiedTime,
+  author,
   structuredData,
 } = Astro.props;
 const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isAiAcademy = currentPath === "/ai-academy";
+const isBlog = currentPath === "/blog" || currentPath.startsWith("/blog/");
 const curryear = new Date().getFullYear();
 ---
 
@@ -30,12 +35,22 @@ const curryear = new Date().getFullYear();
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="preload"
+      href="/fonts/Poppins-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
     <SeoHead
       title={title}
       description={description}
       image={image}
       noindex={noindex}
       pageType={pageType}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      author={author}
       structuredData={structuredData}
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -198,7 +213,12 @@ const curryear = new Date().getFullYear();
       });
     </script>
   </head>
-  <body class="relative flex flex-col overflow-x-hidden">
+  <body
+    class:list={[
+      "relative flex flex-col overflow-x-hidden",
+      { "ai-academy-route": isAiAcademy },
+    ]}
+  >
     <a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
     <CodeAtmosphere />
     <div
@@ -242,7 +262,7 @@ const curryear = new Date().getFullYear();
         class="py-6 w-[13rem] lg:p-0 lg:w-[15rem]"
         loading="eager"
       />
-      <div class="content-redirects items-center hidden md:flex h-full">
+      <div class="content-redirects items-center hidden lg:flex h-full">
         <a
           href="/"
           aria-label="Inicio"
@@ -256,6 +276,14 @@ const curryear = new Date().getFullYear();
           aria-current={currentPath === "/joinUs" ? "page" : undefined}
           class={currentPath === "/joinUs" ? "active" : ""}
           >Sé un Camper</a
+        >
+        <a
+          href="/ai-academy/"
+          aria-label="AI Academy: talleres de inteligencia artificial"
+          aria-current={currentPath === "/ai-academy" ? "page" : undefined}
+          class={currentPath === "/ai-academy"
+            ? "active"
+            : "text-white hover:text-gray-200"}>AI Academy</a
         >
         <a
           href="/emplea/"
@@ -280,20 +308,30 @@ const curryear = new Date().getFullYear();
             ? "active"
             : "text-white hover:text-gray-200"}>Nosotros</a
         >
+        <a
+          href="/blog/"
+          data-section="blog"
+          aria-label="Blog de Campuslands Guatemala"
+          aria-current={isBlog ? "page" : undefined}
+          class={isBlog ? "active" : "text-white hover:text-gray-200"}
+          >Blog</a
+        >
         <!-- <a href="#" class={ currentPath === '#' ? 'active' : 'text-white hover:text-gray-200' }>Comunidad</a> -->
       </div>
-      <div slot="menuMobile" class="md:hidden">
+      <div slot="menuMobile" class="lg:hidden">
         <div class="mobile-menu-links flex flex-col items-center gap-y-2 px-5 py-6">
           <a href="/" class="mobile-menu-link">Inicio</a>
           <a href="/joinUs/" class="mobile-menu-link"
             >Sé un Camper</a
           >
+          <a href="/ai-academy/" class="mobile-menu-link">AI Academy</a>
           <a href="/emplea/" class="mobile-menu-link">Emplea</a>
           <a href="/patrocina/" class="mobile-menu-link"
             >Patrocina</a
           >
           <a href="/nosotros/" class="mobile-menu-link">Nosotros</a
           >
+          <a href="/blog/" data-section="blog" class="mobile-menu-link">Blog</a>
         </div>
       </div>
     </MenuResponsive>
@@ -335,7 +373,7 @@ const curryear = new Date().getFullYear();
       </div>
       <div class="flex flex-col gap-y-4 px-14 pb-4">
         <div
-          class="flex items-center border-b border-[transparent] md:border-white flex-col md:flex-row justify-between px-6"
+          class="flex items-center border-b border-[transparent] md:border-white flex-col semilg:flex-row justify-between px-6"
         >
           <div class="text-white font-bold mb-7 md:m-0">
             <a href="/">
@@ -347,7 +385,7 @@ const curryear = new Date().getFullYear();
             </a>
           </div>
           <div
-            class="flex flex-col w-full gap-6 md:w-fit md:flex-row md:gap-0 items-center space-x-6"
+            class="flex flex-col w-full gap-6 md:flex-row md:flex-wrap md:justify-center md:gap-x-2 md:gap-y-3 semilg:w-fit semilg:flex-nowrap semilg:gap-0 items-center"
           >
             <a
               href="/"
@@ -360,6 +398,12 @@ const curryear = new Date().getFullYear();
               class="text-white hover:text-gray-200 !mx-4 break-keep"
               >Sé un Camper</a
             >
+            <a
+              href="/ai-academy/"
+              aria-label="AI Academy: talleres de inteligencia artificial"
+              class="text-white hover:text-gray-200 !mx-4 break-keep"
+              >AI Academy</a
+            >
             <a href="/emplea/" class="text-white hover:text-gray-200 !mx-4"
               >Emplea</a
             >
@@ -370,6 +414,12 @@ const curryear = new Date().getFullYear();
             >
             <a href="/nosotros/" class="text-white hover:text-gray-200 !mx-4"
               >Nosotros</a
+            >
+            <a
+              href="/blog/"
+              aria-label="Blog de Campuslands Guatemala"
+              class="text-white hover:text-gray-200 !mx-4"
+              >Blog</a
             >
           </div>
         </div>
@@ -506,12 +556,13 @@ const curryear = new Date().getFullYear();
   function updateActiveLinks() {
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll(
-      ".content-redirects a, .md\\:hidden a"
+      ".content-redirects a, .mobile-menu-links a"
     );
 
     navLinks.forEach((link) => {
       const href = link.getAttribute("href");
-      if (href === currentPath) {
+      const isSectionMatch = link.getAttribute("data-section") === "blog" && currentPath.startsWith("/blog/");
+      if (href === currentPath || isSectionMatch) {
         link.classList.add("active");
         link.classList.remove("text-white", "hover:text-gray-200");
       } else {
@@ -1592,11 +1643,20 @@ const curryear = new Date().getFullYear();
         align-items: center;
         padding: 1.1rem 0.9rem 1.1rem 0.9rem;
         font-weight: 600;
+        white-space: nowrap;
       }
       a.active {
         color: var(--color-brand-cyan);
         border-bottom: 3px solid var(--color-brand-cyan);
       }
+    }
+  }
+
+  @media (min-width: 1024px) and (max-width: 1199px) {
+    nav.navbar .content-redirects a {
+      padding-right: 0.55rem;
+      padding-left: 0.55rem;
+      font-size: 0.78rem;
     }
   }
 

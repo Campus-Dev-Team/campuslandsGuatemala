@@ -10,7 +10,7 @@
       </a>
     </div>
     <slot />
-    <div class="md:hidden flex items-center">
+    <div class="lg:hidden flex items-center">
       <button
         id="menu-principal-boton"
         type="button"
@@ -29,7 +29,7 @@
   </div>
   <div
     id="menu-principal-movil"
-    class="mobile-menu-shell md:hidden"
+    class="mobile-menu-shell lg:hidden"
     data-open="false"
     aria-hidden="true"
     inert
@@ -203,6 +203,14 @@
 
   :global(.mobile-menu-shell[data-open="true"] .mobile-menu-links > a:nth-child(5)) {
     animation-delay: 180ms;
+  }
+
+  :global(.mobile-menu-shell[data-open="true"] .mobile-menu-links > a:nth-child(6)) {
+    animation-delay: 225ms;
+  }
+
+  :global(.mobile-menu-shell[data-open="true"] .mobile-menu-links > a:nth-child(7)) {
+    animation-delay: 270ms;
   }
 
   @keyframes menu-link-reveal {

@@ -3,7 +3,19 @@ import { SERVICE_CATALOG } from "./recommendation.mjs";
 export const SITE_URL = "https://www.campuslands.pro";
 export const COLOMBIA_URL = "https://campuslands.com";
 export const DEFAULT_IMAGE = `${SITE_URL}/img/og-campuslands-guatemala.jpg`;
-export const LAST_CONTENT_UPDATE = "2026-08-10";
+export const LAST_CONTENT_UPDATE = "2026-08-29";
+
+// Solo se publican alternos regionales cuando existe una página equivalente
+// comprobada en Colombia. Un hreflang hacia una URL inexistente o no equivalente
+// envía señales contradictorias a los buscadores.
+export const COLOMBIA_ALTERNATES = {
+  "/": `${COLOMBIA_URL}/`,
+  "/joinUs/": `${COLOMBIA_URL}/joinUs/`,
+  "/emplea/": `${COLOMBIA_URL}/servicios/emplea`,
+  "/patrocina/": `${COLOMBIA_URL}/patrocina/`,
+  "/nosotros/": `${COLOMBIA_URL}/nosotros/`,
+  "/politica-de-privacidad/": `${COLOMBIA_URL}/privacidad`,
+};
 
 export const SITE = {
   name: "Campuslands Guatemala",
@@ -37,6 +49,41 @@ export const PAGE_SEO = {
       "Conviértete en Camper y fórmate en desarrollo de software, inglés y habilidades profesionales con Campuslands Guatemala.",
     keywords: ["estudiar programación", "curso de programación Guatemala", "Campuslands"],
   },
+  "/ai-academy/": {
+    title: "Talleres de Inteligencia Artificial en Guatemala | Campuslands",
+    description:
+      "Aprende IA aplicada en talleres presenciales de automatización, análisis de datos, marketing y finanzas: cuatro sábados y 16 horas.",
+    keywords: [
+      "talleres de inteligencia artificial Guatemala",
+      "curso IA Guatemala",
+      "automatización con IA",
+      "AI Academy Campuslands",
+    ],
+  },
+  "/blog/": {
+    title: "Pulso Campuslands | Tecnología, comunidad y carrera",
+    description:
+      "Publicaciones de Campuslands Guatemala sobre inteligencia artificial, programación, comunidad y empleabilidad.",
+    dynamic: true,
+    keywords: [
+      "Pulso Campuslands",
+      "blog de tecnología Guatemala",
+      "inteligencia artificial",
+      "aprender programación",
+      "empleabilidad tecnológica",
+    ],
+  },
+  "/blog/galerias/": {
+    title: "Galerías de Campuslands Guatemala | Comunidad Tech",
+    description:
+      "Explora galerías de Campuslands Guatemala con experiencias, actividades y momentos de nuestra comunidad de formación tecnológica en Campus Tec.",
+    dynamic: true,
+    keywords: [
+      "galerías Campuslands Guatemala",
+      "comunidad tecnológica Guatemala",
+      "Campus Tec",
+    ],
+  },
   "/emplea/": {
     title: "Contrata Talento Tecnológico en Guatemala | Campuslands",
     description:
@@ -62,9 +109,9 @@ export const PAGE_SEO = {
     keywords: ["términos Campuslands", "condiciones de participación"],
   },
   "/politica-de-privacidad/": {
-    title: "Política de privacidad y seguridad de datos | Campuslands Guatemala",
+    title: "Política de privacidad y datos | Campuslands Guatemala",
     description:
-      "Política de tratamiento, privacidad y seguridad de datos personales de Campuslands Guatemala.",
+      "Consulta cómo Campuslands Guatemala recopila, utiliza, protege y administra los datos personales de estudiantes, familias, aliados y visitantes.",
     keywords: ["privacidad Campuslands", "protección de datos Guatemala"],
   },
 };
@@ -81,11 +128,16 @@ export function absoluteUrl(base, pathname = "/") {
   return new URL(normalizePathname(pathname), base).toString();
 }
 
+export function colombiaAlternateFor(pathname = "/") {
+  return COLOMBIA_ALTERNATES[normalizePathname(pathname)] ?? null;
+}
+
 export function organizationSchema() {
   return {
     "@type": "EducationalOrganization",
     "@id": `${SITE_URL}/#organization`,
     name: SITE.name,
+    legalName: "Campuslands Sociedad Anonima",
     alternateName: "Campuslands 502",
     url: `${SITE_URL}/`,
     logo: {
@@ -122,6 +174,7 @@ export function organizationSchema() {
     knowsAbout: [
       "Desarrollo de software",
       "Programación",
+      "Inteligencia artificial aplicada",
       "Inglés",
       "Habilidades adaptativas",
       "Empleabilidad tecnológica",

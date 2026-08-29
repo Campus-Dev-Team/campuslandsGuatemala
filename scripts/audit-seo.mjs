@@ -1,5 +1,9 @@
 import { readFile } from "node:fs/promises";
-import { PAGE_SEO, SITE_URL } from "../src/config/seo.mjs";
+import {
+  colombiaAlternateFor,
+  PAGE_SEO,
+  SITE_URL,
+} from "../src/config/seo.mjs";
 
 const errors = [];
 const seenTitles = new Map();
@@ -20,6 +24,14 @@ function registerUnique(map, value, pathname, label) {
 
 function routeFile(pathname) {
   return pathname === "/" ? "dist/index.html" : `dist${pathname}index.html`;
+}
+
+function countOccurrences(source, value) {
+  return source.split(value).length - 1;
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 const sitemapIndex = await readFile("dist/sitemap-index.xml", "utf8");
@@ -43,21 +55,67 @@ for (const [pathname, expected] of Object.entries(PAGE_SEO)) {
     /<meta\s+name="robots"\s+content="([^"]+)"/i,
   );
   const h1Count = (html.match(/<h1\b/gi) ?? []).length;
+  const h2Count = (html.match(/<h2\b/gi) ?? []).length;
   const mainCount = (html.match(/<main\b/gi) ?? []).length;
   const images = [...html.matchAll(/<img\b[^>]*>/gi)].map(([tag]) => tag);
   const imagesWithoutAlt = images.filter((tag) => !/\salt=("[^"]*"|'[^']*')/i.test(tag));
   const jsonScripts = [...html.matchAll(/<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)];
   const expectedCanonical = new URL(pathname, `${SITE_URL}/`).toString();
+  const colombiaAlternate = colombiaAlternateFor(pathname);
+  const sitemapEntry = sitemap.match(
+    new RegExp(`<url><loc>${escapeRegExp(expectedCanonical)}<\\/loc>[\\s\\S]*?<\\/url>`),
+  )?.[0] ?? "";
+  const graph = jsonScripts.flatMap(([, source]) => {
+    try {
+      const data = JSON.parse(source);
+      return Array.isArray(data?.["@graph"]) ? data["@graph"] : [data];
+    } catch {
+      return [];
+    }
+  });
+  const graphTypes = new Set(graph.map((item) => item?.["@type"]));
+  const titleIsValid = expected.dynamic
+    ? title.length >= 30 && title.length <= 65 && title.includes("Campuslands")
+    : title === expected.title;
+  const descriptionIsValid = expected.dynamic
+    ? description.length >= 80 && description.length <= 170
+    : description === expected.description;
   const checks = [
-    [title === expected.title, "título esperado"],
-    [description === expected.description, "descripción esperada"],
+    [titleIsValid, expected.dynamic ? "título CMS descriptivo" : "título esperado"],
+    [title.length >= 30 && title.length <= 65, `longitud de título entre 30 y 65 (${title.length})`],
+    [descriptionIsValid, expected.dynamic ? "descripción CMS descriptiva" : "descripción esperada"],
+    [description.length >= 100 && description.length <= 170, `longitud de descripción entre 100 y 170 (${description.length})`],
     [canonical === expectedCanonical, "URL canónica"],
     [robots.includes("index") && robots.includes("follow"), "directiva index/follow"],
     [h1Count === 1, `un solo H1 (encontrados: ${h1Count})`],
+    [h2Count >= 1, `jerarquía con H2 (encontrados: ${h2Count})`],
     [mainCount === 1, `un solo main (encontrados: ${mainCount})`],
     [imagesWithoutAlt.length === 0, `texto alternativo en imágenes (faltan: ${imagesWithoutAlt.length})`],
     [jsonScripts.length > 0, "datos estructurados JSON-LD"],
+    [graphTypes.has("EducationalOrganization"), "entidad educativa estructurada"],
+    [graphTypes.has("WebSite"), "sitio estructurado"],
+    [/<html\b[^>]*lang="es-GT"/i.test(html), "idioma es-GT"],
+    [html.includes(`rel="alternate" hreflang="es-GT" href="${expectedCanonical}"`), "hreflang propio es-GT"],
+    [
+      colombiaAlternate
+        ? html.includes(`rel="alternate" hreflang="es-CO" href="${colombiaAlternate}"`)
+        : !html.includes('hreflang="es-CO"'),
+      colombiaAlternate ? "hreflang Colombia equivalente" : "sin hreflang Colombia inexistente",
+    ],
+    [html.includes(`<meta property="og:title" content="${title}"`), "Open Graph title"],
+    [html.includes(`<meta property="og:description" content="${description}"`), "Open Graph description"],
+    [html.includes(`<meta property="og:url" content="${expectedCanonical}"`), "Open Graph URL"],
+    [/<meta property="og:image" content="https:\/\//i.test(html), "Open Graph image absoluta"],
+    [html.includes(`<meta name="twitter:title" content="${title}"`), "Twitter title"],
+    [/<meta name="twitter:image:alt" content="[^\"]+"/i.test(html), "Twitter image alt"],
     [sitemap.includes(`<loc>${expectedCanonical}</loc>`), "inclusión en sitemap"],
+    [countOccurrences(sitemap, `<loc>${expectedCanonical}</loc>`) === 1, "URL única en sitemap"],
+    [
+      colombiaAlternate
+        ? sitemapEntry.includes(`hreflang="es-CO" href="${colombiaAlternate}"`)
+        : !sitemapEntry.includes('hreflang="es-CO"'),
+      colombiaAlternate ? "alterno Colombia en sitemap" : "sitemap sin alterno Colombia inválido",
+    ],
   ];
 
   for (const [, script] of jsonScripts) {
