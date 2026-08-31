@@ -5,6 +5,7 @@ import { PAGE_SEO, SITE, SITE_URL } from "../../../config/seo.mjs";
 import "~/styles/index.css";
 
 const { settings, galleries } = await getBlogData();
+const latestGalleryUpdate = galleries.map((gallery) => gallery.modifiedDate).filter(Boolean).sort().at(-1);
 const fallbackSeo = PAGE_SEO["/blog/galerias/"];
 const title = blogSeoTitle(
   settings ? `${settings.galleriesTitle} | ${settings.publicationName}` : undefined,
@@ -17,6 +18,7 @@ const structuredData = settings ? [{
   "@id": `${SITE_URL}/blog/galerias/#collection`,
   name: settings.galleriesTitle,
   description: settings.galleriesDescription,
+  dateModified: latestGalleryUpdate,
   inLanguage: SITE.language,
   mainEntity: {
     "@type": "ItemList",
@@ -31,7 +33,7 @@ const structuredData = settings ? [{
 }] : undefined;
 ---
 
-<LayoutNavbar dataFooter={dataFooter} title={title} description={description} pageType="CollectionPage" structuredData={structuredData}>
+<LayoutNavbar dataFooter={dataFooter} title={title} description={description} pageType="CollectionPage" modifiedTime={latestGalleryUpdate} structuredData={structuredData}>
   <div class="gallery-index">
     {settings ? (
       <>

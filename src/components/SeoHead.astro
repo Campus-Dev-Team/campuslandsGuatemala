@@ -47,6 +47,7 @@ const canonical = absoluteUrl(SITE_URL, pathname);
 const colombiaAlternate = colombiaAlternateFor(pathname);
 const socialImage = image.startsWith("http") ? image : new URL(image, SITE_URL).toString();
 const usesDefaultSocialImage = socialImage === DEFAULT_IMAGE;
+const pageModifiedTime = modifiedTime || publishedTime || LAST_CONTENT_UPDATE;
 const robots = noindex
   ? "noindex,nofollow"
   : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
@@ -60,7 +61,7 @@ if (!noindex) {
     url: canonical,
     name: pageTitle,
     description: pageDescription,
-    dateModified: LAST_CONTENT_UPDATE,
+    dateModified: pageModifiedTime,
     inLanguage: SITE.language,
     isAccessibleForFree: true,
     isPartOf: { "@id": `${SITE_URL}/#website` },
@@ -120,6 +121,7 @@ const jsonLd = JSON.stringify({
 <meta name="robots" content={robots} />
 <meta name="googlebot" content={robots} />
 <link rel="canonical" href={canonical} />
+{pathname.startsWith("/blog/") && <link rel="alternate" type="application/rss+xml" href={`${SITE_URL}/blog/feed.xml`} title="Pulso Campuslands — publicaciones recientes" />}
 <link rel="alternate" type="text/plain" href={`${SITE_URL}/llms.txt`} title="Resumen para asistentes" />
 <link rel="alternate" type="text/markdown" href={`${SITE_URL}/informacion-campuslands.md`} title="Información oficial en Markdown" />
 <link rel="alternate" type="application/json" href={`${SITE_URL}/informacion-campuslands.json`} title="Información oficial en JSON" />
@@ -139,7 +141,7 @@ const jsonLd = JSON.stringify({
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={pageDescription} />
 <meta property="og:url" content={canonical} />
-<meta property="og:updated_time" content={LAST_CONTENT_UPDATE} />
+<meta property="og:updated_time" content={pageModifiedTime} />
 <meta property="og:image" content={socialImage} />
 <meta property="og:image:alt" content={`Campuslands Guatemala — ${pageTitle}`} />
 {usesDefaultSocialImage && <meta property="og:image:type" content="image/jpeg" />}

@@ -7,10 +7,15 @@ import {
   getBlogData,
   safeCategoryColor,
 } from "../../lib/blog";
-import { SITE, SITE_URL } from "../../config/seo.mjs";
+import { DEFAULT_IMAGE, SITE, SITE_URL } from "../../config/seo.mjs";
 import "~/styles/index.css";
 
 const { settings, categories, articles, galleries, source } = await getBlogData();
+const latestBlogUpdate = [...articles, ...galleries]
+  .map((entry) => entry.modifiedDate)
+  .filter(Boolean)
+  .sort()
+  .at(-1);
 
 const dataFooter = settings
   ? {
@@ -29,6 +34,7 @@ const structuredData = settings
         name: settings.publicationName,
         headline: settings.heroTitle,
         description: settings.seoDescription,
+        dateModified: latestBlogUpdate,
         inLanguage: SITE.language,
         publisher: { "@id": `${SITE_URL}/#organization` },
         blogPost: articles.map((article) => ({
@@ -36,13 +42,19 @@ const structuredData = settings
           "@id": `${SITE_URL}/blog/${article.slug}/#article`,
           headline: article.title,
           description: article.excerpt,
-          datePublished: article.publishDate,
+          datePublished: article.publishedDate || article.publishDate,
+          dateModified: article.modifiedDate || article.publishDate,
           url: `${SITE_URL}/blog/${article.slug}/`,
           articleSection: article.category.name,
+          keywords: article.tags.join(", "),
           author: {
             "@type": "Organization",
             name: article.authorName,
+            url: `${SITE_URL}/nosotros/`,
           },
+          publisher: { "@id": `${SITE_URL}/#organization` },
+          mainEntityOfPage: { "@id": `${SITE_URL}/blog/${article.slug}/#webpage` },
+          image: [article.coverImage?.url || DEFAULT_IMAGE],
         })),
       },
       {
@@ -67,6 +79,7 @@ const structuredData = settings
   title={settings?.seoTitle}
   description={settings?.seoDescription}
   pageType="CollectionPage"
+  modifiedTime={latestBlogUpdate}
   structuredData={structuredData}
 >
   <div class="blog-index">

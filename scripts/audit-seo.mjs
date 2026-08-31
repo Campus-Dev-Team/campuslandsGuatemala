@@ -4,6 +4,7 @@ import {
   PAGE_SEO,
   SITE_URL,
 } from "../src/config/seo.mjs";
+import { readSitemapBundle } from "./sitemap-utils.mjs";
 
 const errors = [];
 const seenTitles = new Map();
@@ -34,10 +35,8 @@ function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-const sitemapIndex = await readFile("dist/sitemap-index.xml", "utf8");
-const sitemapLocation = textMatch(sitemapIndex, /<loc>([^<]+)<\/loc>/i);
-const sitemapName = new URL(sitemapLocation).pathname.split("/").filter(Boolean).at(-1);
-const sitemap = await readFile(`dist/${sitemapName}`, "utf8");
+const sitemapBundle = await readSitemapBundle();
+const sitemap = sitemapBundle.combined;
 
 for (const [pathname, expected] of Object.entries(PAGE_SEO)) {
   const html = await readFile(routeFile(pathname), "utf8");
@@ -142,6 +141,13 @@ const llmsFullTxt = await readFile("dist/llms-full.txt", "utf8");
 
 if (!robotsTxt.includes(`Sitemap: ${SITE_URL}/sitemap-index.xml`)) {
   errors.push("robots.txt: falta la URL oficial del sitemap");
+}
+if (!sitemapBundle.locations.includes(`${SITE_URL}/sitemap-pages.xml`) || !sitemapBundle.locations.includes(`${SITE_URL}/sitemap-blog.xml`)) {
+  errors.push("sitemap-index.xml: faltan los mapas separados de páginas y blog");
+}
+const urlList = await readFile("dist/sitemap-urls.txt", "utf8");
+if (!urlList.includes(`${SITE_URL}/blog/`)) {
+  errors.push("sitemap-urls.txt: falta la portada del blog");
 }
 if (!llmsTxt.includes(`${SITE_URL}/llms-full.txt`)) {
   errors.push("llms.txt: falta el enlace al contenido ampliado");

@@ -204,12 +204,15 @@ campuslandsGuatemala/
 ## Configuración y datos
 
 - `PUBLIC_CMS_URL` indica la URL pública del backend Strapi. Su valor local predeterminado es `http://127.0.0.1:1337`.
+- `REQUIRE_CMS_FOR_BUILD=true` debe configurarse en producción para impedir un despliegue que omita publicaciones activas por una falla temporal del CMS.
 - El archivo `.env.example` documenta la conexión; no se utiliza ningún token secreto en el navegador.
 - `/blog-admin/` inicia sesión con una cuenta del rol `blog-editor`. El JWT se
   mantiene únicamente durante la sesión de la pestaña y la ruta está marcada
   `noindex,nofollow` y excluida del sitemap.
 - El dominio canónico y los metadatos SEO se definen en `src/config/seo.mjs`.
 - El sitemap se genera automáticamente durante `npm run build`.
+- `sitemap-index.xml` es la única URL que debe registrarse en Google Search Console. Referencia `sitemap-pages.xml` y `sitemap-blog.xml`.
+- `sitemap-urls.txt` expone todas las URLs canónicas, una por línea, y `blog/feed.xml` publica las entradas recientes en RSS.
 - La configuración exige rutas con barra final, por ejemplo
   `/terminos-condiciones/` o `/politica-de-privacidad/`.
 - Los enlaces externos a WhatsApp, redes sociales, correo y portales conservan
@@ -226,6 +229,11 @@ El proyecto genera archivos estáticos y está preparado para Vercel:
 Configura `PUBLIC_CMS_URL` en Vercel con la URL desplegada del backend. Para que
 una publicación nueva aparezca automáticamente, crea un Deploy Hook de Vercel y
 guárdalo como `FRONTEND_DEPLOY_HOOK_URL` en el backend.
+
+Activa también `REQUIRE_CMS_FOR_BUILD=true`. Durante la compilación se consulta
+`/api/seo/content-index` del backend y se comprueba que cada artículo o galería
+publicada tenga una página HTML canónica y una entrada en el sitemap. Si falta
+alguna, el despliegue se detiene antes de publicar un mapa incompleto.
 
 La interfaz editorial necesita que `PUBLIC_CMS_URL` sea accesible desde el
 navegador del editor y que el backend permita el dominio administrativo dentro

@@ -13,7 +13,7 @@ import {
   type BlogArticle,
   type BlogSettings,
 } from "../../lib/blog";
-import { SITE, SITE_URL } from "../../config/seo.mjs";
+import { DEFAULT_IMAGE, SITE, SITE_URL } from "../../config/seo.mjs";
 import "~/styles/index.css";
 
 export async function getStaticPaths() {
@@ -43,6 +43,7 @@ const otherArticles = allArticles.filter((candidate) => candidate.id !== article
 const related = [...sameCategory, ...otherArticles].slice(0, 3);
 const articleUrl = `${SITE_URL}/blog/${article.slug}/`;
 const socialImage = article.seo?.shareImage?.url || article.coverImage?.url;
+const articleImages = [...new Set([article.seo?.shareImage?.url, article.coverImage?.url, DEFAULT_IMAGE].filter(Boolean))];
 const seoTitle = blogSeoTitle(article.seo?.metaTitle, `${article.title} | ${settings.publicationName}`);
 const seoDescription = blogSeoDescription(article.seo?.metaDescription, article.excerpt);
 
@@ -56,10 +57,11 @@ const structuredData = [
   {
     "@type": "BlogPosting",
     "@id": `${articleUrl}#article`,
+    url: articleUrl,
     headline: article.title,
     description: article.excerpt,
-    datePublished: article.publishDate,
-    dateModified: article.publishDate,
+    datePublished: article.publishedDate || article.publishDate,
+    dateModified: article.modifiedDate || article.publishDate,
     inLanguage: SITE.language,
     isAccessibleForFree: true,
     articleSection: article.category.name,
@@ -68,10 +70,12 @@ const structuredData = [
     author: {
       "@type": "Organization",
       name: article.authorName,
+      url: `${SITE_URL}/nosotros/`,
     },
     publisher: { "@id": `${SITE_URL}/#organization` },
+    isPartOf: { "@id": `${SITE_URL}/blog/#blog` },
     mainEntityOfPage: { "@id": `${articleUrl}#webpage` },
-    ...(socialImage ? { image: socialImage } : {}),
+    ...(articleImages.length ? { image: articleImages } : {}),
   },
   {
     "@type": "BreadcrumbList",
@@ -91,8 +95,8 @@ const structuredData = [
   description={seoDescription}
   image={socialImage}
   pageType="Article"
-  publishedTime={article.publishDate}
-  modifiedTime={article.publishDate}
+  publishedTime={article.publishedDate || article.publishDate}
+  modifiedTime={article.modifiedDate || article.publishDate}
   author={article.authorName}
   structuredData={structuredData}
 >

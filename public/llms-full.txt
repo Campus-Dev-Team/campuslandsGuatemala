@@ -136,6 +136,9 @@ Este contenido corresponde a Campuslands Guatemala y al dominio campuslands.pro.
 ## Recursos técnicos
 
 - Sitemap: https://www.campuslands.pro/sitemap-index.xml
+- Sitemap del blog: https://www.campuslands.pro/sitemap-blog.xml
+- Lista completa de URLs: https://www.campuslands.pro/sitemap-urls.txt
+- Feed RSS del blog: https://www.campuslands.pro/blog/feed.xml
 - Robots: https://www.campuslands.pro/robots.txt
 - Manifiesto web: https://www.campuslands.pro/site.webmanifest
 - Información oficial en Markdown: https://www.campuslands.pro/informacion-campuslands.md
