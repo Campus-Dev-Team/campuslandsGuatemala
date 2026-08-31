@@ -1,301 +1,411 @@
-# Campuslands Guatemala
+<!--
+contentType: How-to
+goal: Montar, conectar y desplegar el frontend con su backend editorial.
+audience: Desarrollo, infraestructura y mantenimiento técnico de Campuslands Guatemala.
+-->
 
-Sitio web público de Campuslands Guatemala. El proyecto presenta los programas
-de formación, vinculación laboral, patrocinio, información institucional, blog
-editorial y la política de privacidad de la sede de Guatemala.
+# Monta el frontend de Campuslands Guatemala
 
-Está construido como un sitio estático con Astro, Vue y Tailwind CSS. El blog
-consume exclusivamente el CMS independiente `campuslands-guatemala-backend` y
-se administra desde una interfaz propia del sitio, sin utilizar el panel de
-Strapi como herramienta editorial cotidiana.
+Este repositorio contiene el sitio público de Campuslands Guatemala. Astro genera las páginas estáticas, Vue aporta los componentes interactivos y Tailwind CSS define la interfaz.
 
-## Rama consolidada
+El blog y la mesa editorial dependen del CMS Strapi del repositorio [`campuslands-guatemala-backend`](https://github.com/anndreloopez012/campuslands-guatemala-backend). Monta y comprueba ese backend antes de iniciar o desplegar el frontend completo.
 
-La rama que reúne los cambios actuales del fork es:
+## Respeta el orden de montaje
 
-```text
-feat/readme-ejecucion-local
-```
+Sigue este orden en local y producción:
 
-Esta rama incluye las mejoras visuales, navegación con transiciones, contenido
-para Guatemala, política de privacidad, SEO, sitemap y documentación local.
+1. Monta `campuslands-guatemala-backend`
+2. Comprueba el healthcheck y el índice editorial
+3. Configura `PUBLIC_CMS_URL` en el frontend
+4. Instala, compila y publica este frontend
+5. Configura el Deploy Hook del frontend en el backend
+6. Publica una entrada de prueba y comprueba la reconstrucción
 
-## Requisitos
+El frontend puede mostrar las páginas institucionales sin el CMS. Sin embargo, el blog, las galerías, las imágenes editoriales y `/blog-admin/` necesitan el backend.
 
-Antes de comenzar, instala:
+## Identifica los repositorios
 
-- Git.
-- Node.js 20 LTS.
-- npm 10 o una versión compatible incluida con Node.js 20.
+| Componente | Repositorio | Función |
+| --- | --- | --- |
+| Frontend | [`campuslandsGuatemala`](https://github.com/anndreloopez012/campuslandsGuatemala) | Sitio público, blog estático, mesa editorial, SEO y sitemaps |
+| Backend | [`campuslands-guatemala-backend`](https://github.com/anndreloopez012/campuslands-guatemala-backend) | Contenido, autenticación, API, PostgreSQL y archivos editoriales |
 
-El repositorio incluye un archivo `.nvmrc`. Si utilizas
-[nvm](https://github.com/nvm-sh/nvm), puedes seleccionar automáticamente la
-versión recomendada:
+Usa `main` para producción y `dev` como rama de integración.
+
+## Prepara el equipo
+
+Instala estas herramientas:
+
+- Git
+- Node.js 20 LTS
+- npm 10 o superior
+- Docker Desktop o Docker Engine con Compose v2 si montarás el backend en contenedores
+
+El archivo `.nvmrc` selecciona la versión recomendada de Node.js:
 
 ```bash
 nvm install
 nvm use
-```
-
-Comprueba las versiones instaladas:
-
-```bash
 node --version
 npm --version
 git --version
 ```
 
-## Instalación desde cero
+## Monta todo en local
 
-### 1. Clonar el fork
+### 1. Monta primero el backend
+
+Clona el repositorio del CMS:
+
+```bash
+git clone https://github.com/anndreloopez012/campuslands-guatemala-backend.git
+cd campuslands-guatemala-backend
+git switch main
+```
+
+Elige una de estas opciones.
+
+#### Backend local con SQLite
+
+```bash
+cp .env.example .env
+npm ci
+npm run build
+npm run develop
+```
+
+Reemplaza antes los valores cuyo prefijo sea `replace_` dentro de `.env`. La guía del backend explica cómo generar secretos y provisionar las cuentas.
+
+#### Backend con Docker y PostgreSQL
+
+```bash
+cp .env.docker.example .env.docker
+docker compose --env-file .env.docker config --quiet
+docker compose --env-file .env.docker up --build -d
+docker compose --env-file .env.docker ps
+```
+
+Reemplaza los valores de ejemplo en `.env.docker`. Espera hasta que `database` y `cms` aparezcan como `healthy`.
+
+Consulta las instrucciones completas en el [README del backend](https://github.com/anndreloopez012/campuslands-guatemala-backend#readme).
+
+### 2. Comprueba el backend
+
+Ejecuta desde otra terminal:
+
+```bash
+curl --fail http://127.0.0.1:1337/_health
+curl --fail http://127.0.0.1:1337/api/seo/content-index
+```
+
+No continúes si alguna comprobación falla. Revisa los logs del proceso o ejecuta:
+
+```bash
+docker compose --env-file .env.docker logs --tail=200 cms
+```
+
+### 3. Clona y configura el frontend
 
 ```bash
 git clone https://github.com/anndreloopez012/campuslandsGuatemala.git
 cd campuslandsGuatemala
+git switch main
+cp .env.example .env
 ```
 
-### 2. Cambiar a la rama consolidada
+Mantén esta configuración para desarrollo local:
 
-```bash
-git fetch origin
-git switch feat/readme-ejecucion-local
+```env
+PUBLIC_CMS_URL=http://127.0.0.1:1337
+REQUIRE_CMS_FOR_BUILD=false
 ```
 
-### 3. Instalar las dependencias
+`PUBLIC_CMS_URL` no debe terminar con `/`. Esta variable es pública y no debe contener tokens ni credenciales.
 
-Utiliza `npm ci` para instalar exactamente las versiones registradas en
-`package-lock.json`:
+### 4. Instala e inicia el frontend
 
 ```bash
 npm ci
-```
-
-### 4. Iniciar el entorno de desarrollo
-
-```bash
 npm run dev
 ```
 
-Abre la dirección mostrada en la terminal. De forma predeterminada es:
+Abre [http://localhost:4321/](http://localhost:4321/) y comprueba:
 
-[http://localhost:4321/](http://localhost:4321/)
+- [sitio principal](http://localhost:4321/)
+- [Órbita](http://localhost:4321/blog/)
+- [mesa editorial](http://localhost:4321/blog-admin/)
 
-Los cambios realizados en los archivos se reflejan automáticamente en el
-navegador.
+La mesa editorial inicia sesión con la cuenta `blog-editor` provisionada por el backend.
 
-### 5. Detener el servicio
+### 5. Detén los servicios
 
-En la terminal donde se está ejecutando el proyecto, presiona:
-
-```text
-Ctrl + C
-```
-
-## Actualizar una instalación existente
-
-Si el repositorio ya está clonado:
+Presiona `Ctrl + C` en los procesos locales. Si usaste Docker para el backend, conserva sus datos con:
 
 ```bash
-cd campuslandsGuatemala
-git fetch origin
-git switch feat/readme-ejecucion-local
+docker compose --env-file .env.docker down
+```
+
+No agregues `-v` salvo que quieras eliminar la base PostgreSQL y los archivos cargados.
+
+## Actualiza una instalación existente
+
+Actualiza primero el backend:
+
+```bash
+cd campuslands-guatemala-backend
+git switch main
 git pull --ff-only
 npm ci
-npm run dev
-```
-
-## Abrir el sitio desde otro dispositivo
-
-Para revisarlo desde un teléfono o una computadora conectada a la misma red
-local:
-
-```bash
-npm run dev:host
-```
-
-La terminal mostrará una dirección de red similar a:
-
-```text
-http://192.168.1.25:4321/
-```
-
-Abre esa dirección en el otro dispositivo. Si no responde, verifica que ambos
-equipos estén en la misma red y que el firewall permita conexiones entrantes
-para Node.js.
-
-## Probar la versión de producción localmente
-
-La vista de producción permite comprobar los archivos optimizados que se
-publicarán.
-
-### 1. Generar el sitio
-
-```bash
 npm run build
 ```
 
-El resultado se guarda en `dist/`.
-
-### 2. Iniciar la vista previa
+Si usas Docker, reconstruye el servicio:
 
 ```bash
+docker compose --env-file .env.docker up --build -d
+```
+
+Comprueba `/_health` y actualiza después el frontend:
+
+```bash
+cd campuslandsGuatemala
+git switch main
+git pull --ff-only
+npm ci
+npm run build
+```
+
+## Prueba la compilación de producción
+
+Mantén el backend en ejecución. Activa la validación estricta en `.env`:
+
+```env
+PUBLIC_CMS_URL=http://127.0.0.1:1337
+REQUIRE_CMS_FOR_BUILD=true
+```
+
+Compila y abre el resultado:
+
+```bash
+npm run build
 npm run preview
 ```
 
-Abre [http://localhost:4321/](http://localhost:4321/).
+Abre [http://localhost:4321/](http://localhost:4321/). La compilación falla si el backend no responde o si una publicación no genera HTML y sitemap.
 
-Para compartir la vista de producción en la red local:
+## Despliega en producción
+
+### 1. Publica el backend
+
+Despliega `campuslands-guatemala-backend` con PostgreSQL y almacenamiento persistente para `public/uploads`.
+
+Configura como mínimo:
+
+- secretos de Strapi
+- conexión PostgreSQL
+- `CORS_ORIGINS` con el dominio HTTPS del frontend
+- `PUBLIC_SITE_URL` con el dominio canónico del sitio
+- cuentas `BLOG_EDITOR_*` y `STRAPI_SUPER_ADMIN_*` durante el primer arranque
+
+Puedes dejar `FRONTEND_DEPLOY_HOOK_URL` vacío durante el primer despliegue del backend.
+
+Comprueba la URL pública antes de desplegar el frontend:
 
 ```bash
-npm run preview:host
+curl --fail https://backend.example.com/_health
+curl --fail https://backend.example.com/api/seo/content-index
 ```
 
-## Comandos disponibles
+### 2. Configura el frontend
 
-| Comando | Función |
+Importa este repositorio en Vercel o en otro servicio capaz de publicar archivos estáticos.
+
+Configura estas variables de producción:
+
+```env
+PUBLIC_CMS_URL=https://backend.example.com
+REQUIRE_CMS_FOR_BUILD=true
+```
+
+Usa estos valores de compilación:
+
+| Configuración | Valor |
 | --- | --- |
-| `npm run dev` | Inicia el entorno de desarrollo local. |
-| `npm run dev:host` | Expone el entorno de desarrollo en la red local. |
-| `npm run build` | Genera el sitio estático optimizado en `dist/`. |
-| `npm run preview` | Sirve localmente el resultado de producción. |
-| `npm run preview:host` | Comparte la vista de producción en la red local. |
-| `npm run astro -- --help` | Muestra las opciones disponibles de Astro. |
+| Rama | `main` |
+| Node.js | 20 LTS |
+| Comando | `npm run build` |
+| Directorio de salida | `dist` |
 
-## Rutas principales
+Astro incorpora `PUBLIC_CMS_URL` durante la compilación. Vuelve a desplegar el frontend después de cambiarla.
 
-Astro está configurado para utilizar una barra final en las rutas.
+### 3. Conecta la publicación automática
+
+Crea un Deploy Hook para la rama `main` del frontend. Guarda su URL en `FRONTEND_DEPLOY_HOOK_URL` dentro del backend y reinicia el CMS.
+
+Cuando el equipo publica, modifica o retira contenido, el backend solicita una nueva compilación. El frontend actualiza el HTML, RSS y los sitemaps.
+
+### 4. Valida el flujo completo
+
+1. Inicia sesión en `/blog-admin/`
+2. Publica o modifica una entrada de prueba
+3. Confirma que el proveedor inició una compilación
+4. Comprueba la URL canónica de la entrada
+5. Comprueba que la URL aparezca en `sitemap-blog.xml`
+6. Comprueba `sitemap-index.xml` y `blog/feed.xml`
+
+## Configura la conexión entre proyectos
+
+### Variables del frontend
+
+| Variable | Ambiente | Uso |
+| --- | --- | --- |
+| `PUBLIC_CMS_URL` | Local y producción | URL accesible del backend Strapi |
+| `REQUIRE_CMS_FOR_BUILD` | Producción | Detiene la compilación si falta contenido publicado |
+
+### Variables relacionadas del backend
+
+| Variable | Uso |
+| --- | --- |
+| `CORS_ORIGINS` | Autoriza el dominio que consume la API y abre `/blog-admin/` |
+| `PUBLIC_SITE_URL` | Construye las rutas canónicas del índice editorial |
+| `FRONTEND_DEPLOY_HOOK_URL` | Solicita una nueva compilación del frontend |
+| `BLOG_EDITOR_*` | Provisiona la cuenta de edición cotidiana |
+| `STRAPI_SUPER_ADMIN_*` | Provisiona la cuenta de mantenimiento técnico |
+
+El navegador usa `PUBLIC_CMS_URL` para autenticación, edición y multimedia. La plataforma de compilación usa la misma URL para generar el blog y verificar su cobertura.
+
+## Ejecuta las comprobaciones
+
+| Comando | Resultado |
+| --- | --- |
+| `npm run dev` | Inicia el frontend en `127.0.0.1:4321` |
+| `npm run dev:host` | Expone el frontend dentro de la red local |
+| `npm run build` | Genera el sitio, RSS y sitemaps en `dist/` |
+| `npm run preview` | Sirve la compilación local |
+| `npm run audit:seo` | Revisa metadatos y estructura SEO |
+| `npm run audit:blog` | Revisa contenido editorial y descubrimiento |
+| `npm run audit:images` | Revisa imágenes y atributos descriptivos |
+| `npm run audit:links` | Revisa enlaces internos y externos |
+| `npm run audit:scraping` | Revisa consumo mediante crawlers |
+| `npm run audit:recommendations` | Revisa señales para sistemas de recomendación |
+| `npm run audit:quality` | Ejecuta toda la batería de auditorías |
+
+Ejecuta `npm run audit:quality` con el backend disponible y `REQUIRE_CMS_FOR_BUILD=true` antes de publicar una versión.
+
+## Consulta las rutas principales
+
+Astro exige una barra final en las rutas.
 
 | Ruta | Contenido |
 | --- | --- |
-| `/` | Inicio. |
-| `/joinUs/` | Información para futuros campers. |
-| `/ai-academy/` | Talleres presenciales de inteligencia artificial aplicada. |
-| `/blog/` | Portada editorial y filtros por categoría. |
-| `/blog/[slug]/` | Detalle estático de cada publicación del CMS. |
-| `/blog-admin/` | Mesa editorial privada para publicaciones, categorías, imágenes y SEO. |
-| `/emplea/` | Contratación de talento tecnológico. |
-| `/patrocina/` | Programa de patrocinio. |
-| `/nosotros/` | Información institucional. |
-| `/terminos-condiciones/` | Términos y condiciones de participación. |
-| `/politica-de-privacidad/` | Política de privacidad y seguridad de datos. |
-| `/patrocinar/` | Formulario de patrocinio. |
-| `/contactanos/` | Ruta de contacto reservada. |
+| `/` | Inicio |
+| `/joinUs/` | Información para futuros campers |
+| `/ai-academy/` | Talleres presenciales de inteligencia artificial aplicada |
+| `/blog/` | Portada editorial Órbita |
+| `/blog/[slug]/` | Publicación estática generada desde el CMS |
+| `/blog/galerias/` | Índice de galerías editoriales |
+| `/blog-admin/` | Mesa editorial privada |
+| `/emplea/` | Contratación de talento tecnológico |
+| `/patrocina/` | Programa de patrocinio |
+| `/nosotros/` | Información institucional |
+| `/terminos-condiciones/` | Términos y condiciones |
+| `/politica-de-privacidad/` | Política de privacidad y seguridad de datos |
 
-## Estructura del proyecto
+## Comprende la estructura
 
 ```text
 campuslandsGuatemala/
 ├── public/                 Archivos públicos, robots, manifiesto y seguridad
+├── scripts/                Sitemaps y auditorías automáticas
 ├── src/
 │   ├── assets/             Imágenes, iconos y recursos procesados
 │   ├── components/         Componentes reutilizables
 │   ├── config/             Configuración SEO y datos compartidos
 │   ├── content/            Contenido legal y editorial
-│   ├── layouts/            Plantillas comunes del sitio
+│   ├── layouts/            Plantillas comunes
+│   ├── lib/                Cliente y contratos del CMS
 │   ├── pages/              Rutas generadas por Astro
 │   ├── partials/           Formularios y secciones parciales
-│   └── styles/             Tema, variables y estilos globales
-├── astro.config.mjs        Configuración de Astro y sitemap
-├── tailwind.config.mjs     Configuración visual de Tailwind
-├── vercel.json             Configuración de despliegue en Vercel
-└── package.json            Dependencias y comandos
+│   └── styles/             Tema y estilos globales
+├── .env.example            Variables públicas de conexión
+├── astro.config.mjs        Configuración de Astro
+├── package.json            Dependencias y comandos
+├── tailwind.config.mjs     Configuración de Tailwind CSS
+└── vercel.json             Rutas, seguridad y caché de Vercel
 ```
 
-## Configuración y datos
+## Mantén la indexación actualizada
 
-- `PUBLIC_CMS_URL` indica la URL pública del backend Strapi. Su valor local predeterminado es `http://127.0.0.1:1337`.
-- `REQUIRE_CMS_FOR_BUILD=true` debe configurarse en producción para impedir un despliegue que omita publicaciones activas por una falla temporal del CMS.
-- El archivo `.env.example` documenta la conexión; no se utiliza ningún token secreto en el navegador.
-- `/blog-admin/` inicia sesión con una cuenta del rol `blog-editor`. El JWT se
-  mantiene únicamente durante la sesión de la pestaña y la ruta está marcada
-  `noindex,nofollow` y excluida del sitemap.
-- El dominio canónico y los metadatos SEO se definen en `src/config/seo.mjs`.
-- El sitemap se genera automáticamente durante `npm run build`.
-- `sitemap-index.xml` es la única URL que debe registrarse en Google Search Console. Referencia `sitemap-pages.xml` y `sitemap-blog.xml`.
-- `sitemap-urls.txt` expone todas las URLs canónicas, una por línea, y `blog/feed.xml` publica las entradas recientes en RSS.
-- La configuración exige rutas con barra final, por ejemplo
-  `/terminos-condiciones/` o `/politica-de-privacidad/`.
-- Los enlaces externos a WhatsApp, redes sociales, correo y portales conservan
-  su navegación normal.
+`npm run build` genera estos recursos:
 
-## Despliegue
+- `sitemap-index.xml`: URL que debes registrar en Google Search Console
+- `sitemap-pages.xml`: páginas institucionales
+- `sitemap-blog.xml`: publicaciones y galerías
+- `sitemap-urls.txt`: listado legible de URLs canónicas
+- `blog/feed.xml`: feed RSS de Órbita
 
-El proyecto genera archivos estáticos y está preparado para Vercel:
+El índice editorial del backend permite comprobar que todo contenido publicado tenga HTML y una entrada en el sitemap.
 
-- Comando de construcción: `npm run build`
-- Directorio de salida: `dist`
-- Versión recomendada de Node.js: 20
+## Resuelve fallos comunes
 
-Configura `PUBLIC_CMS_URL` en Vercel con la URL desplegada del backend. Para que
-una publicación nueva aparezca automáticamente, crea un Deploy Hook de Vercel y
-guárdalo como `FRONTEND_DEPLOY_HOOK_URL` en el backend.
+### La compilación no puede consultar el CMS
 
-Activa también `REQUIRE_CMS_FOR_BUILD=true`. Durante la compilación se consulta
-`/api/seo/content-index` del backend y se comprueba que cada artículo o galería
-publicada tenga una página HTML canónica y una entrada en el sitemap. Si falta
-alguna, el despliegue se detiene antes de publicar un mapa incompleto.
+Comprueba la variable y el backend:
 
-La interfaz editorial necesita que `PUBLIC_CMS_URL` sea accesible desde el
-navegador del editor y que el backend permita el dominio administrativo dentro
-de `CORS_ORIGINS`.
+```bash
+printenv PUBLIC_CMS_URL
+curl --fail "$PUBLIC_CMS_URL/_health"
+curl --fail "$PUBLIC_CMS_URL/api/seo/content-index"
+```
 
-En Vercel, importa el repositorio, selecciona la rama que se desea publicar y
-confirma los valores anteriores. `vercel.json` ya contiene la configuración de
-rutas, cabeceras de seguridad y caché.
+En local, confirma también el contenido de `.env`. Reinicia Astro después de modificarlo.
 
-El proceso de construcción también copia `public/.htaccess` a `dist/.htaccess`
-para servidores compatibles con Apache.
+### El blog aparece sin publicaciones
 
-## Solución de problemas
+Comprueba que los documentos estén publicados y consulta:
+
+```bash
+curl --fail "$PUBLIC_CMS_URL/api/articles"
+curl --fail "$PUBLIC_CMS_URL/api/seo/content-index"
+```
+
+Una entrada guardada como borrador no genera una página pública.
+
+### La mesa editorial devuelve 401 o 403
+
+Confirma la cuenta en el backend. Debe estar activa y asociada al rol `blog-editor`. Verifica también que `CORS_ORIGINS` incluya el origen exacto del frontend.
+
+### Una publicación nueva no aparece en producción
+
+Comprueba `FRONTEND_DEPLOY_HOOK_URL` y los logs del backend. Después revisa el historial de compilaciones del frontend.
+
+### Una ruta devuelve 404
+
+Agrega la barra final. Por ejemplo:
+
+```text
+http://localhost:4321/politica-de-privacidad/
+```
 
 ### El puerto 4321 está ocupado
-
-Inicia el proyecto en otro puerto:
 
 ```bash
 npm run dev -- --port 4322
 ```
 
-### Una ruta devuelve 404
+## Sigue el flujo de ramas
 
-Comprueba que la URL termine con `/`. Por ejemplo:
-
-```text
-http://localhost:4321/terminos-condiciones/
-```
-
-### Las dependencias no coinciden
-
-Verifica que utilizas Node.js 20 y reinstala desde el archivo de bloqueo:
+Crea una rama por cambio desde `dev`:
 
 ```bash
-nvm use
-npm ci
-```
-
-### Los cambios no aparecen
-
-Confirma que estás en la rama correcta:
-
-```bash
-git branch --show-current
-git status
-```
-
-Después reinicia el servicio con `Ctrl + C` y `npm run dev`.
-
-## Flujo recomendado de cambios
-
-Cada solicitud debe desarrollarse en una rama independiente. Antes de crearla,
-actualiza la rama consolidada:
-
-```bash
-git switch feat/readme-ejecucion-local
-git pull --ff-only
+git switch dev
+git pull --ff-only origin dev
 git switch -c feat/nombre-del-cambio
 ```
 
-Los commits del proyecto siguen esta estructura:
+Integra y valida primero en `dev`. Después integra el cambio aprobado en `main` para producción.
+
+Usa commits con este formato:
 
 ```text
 feat(area): describe la funcionalidad agregada
