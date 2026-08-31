@@ -61,7 +61,7 @@
       ]
     },
     {
-      "source": "/(llms.txt|llms-full.txt|robots.txt|informacion-campuslands.md|informacion-campuslands.json|sitemap-(.*).xml)",
+      "source": "/(llms.txt|llms-full.txt|robots.txt|informacion-campuslands.md|informacion-campuslands.json|sitemap-(.*).xml|sitemap-urls.txt|blog/feed.xml)",
       "headers": [
         {
           "key": "Cache-Control",
