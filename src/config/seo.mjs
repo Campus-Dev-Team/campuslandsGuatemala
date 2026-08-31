@@ -3,7 +3,7 @@ import { SERVICE_CATALOG } from "./recommendation.mjs";
 export const SITE_URL = "https://www.campuslands.pro";
 export const COLOMBIA_URL = "https://campuslands.com";
 export const DEFAULT_IMAGE = `${SITE_URL}/img/og-campuslands-guatemala.jpg`;
-export const LAST_CONTENT_UPDATE = "2026-08-29";
+export const LAST_CONTENT_UPDATE = "2026-08-31";
 
 // Solo se publican alternos regionales cuando existe una página equivalente
 // comprobada en Colombia. Un hreflang hacia una URL inexistente o no equivalente
