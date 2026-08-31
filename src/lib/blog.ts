@@ -59,6 +59,8 @@ export type BlogGallery = {
   tags: string[];
   featured: boolean;
   publishDate: string;
+  publishedDate: string;
+  modifiedDate: string;
   seo: BlogSeo | null;
 };
 
@@ -91,6 +93,8 @@ export type BlogArticle = {
   featured: boolean;
   readingTime: number;
   publishDate: string;
+  publishedDate: string;
+  modifiedDate: string;
   tags: string[];
   links: BlogArticleLink[];
   attachments: BlogMedia[];
@@ -174,15 +178,21 @@ function truncateSeoText(value: string, maximum: number): string {
   return `${shortened.slice(0, end).trim()}…`;
 }
 
+function normalizeDateTime(value?: string | null): string {
+  const date = new Date(value || 0);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString();
+}
+
 export function blogSeoTitle(
   preferred: string | null | undefined,
   fallback: string,
 ): string {
-  let title = compactSeoText(preferred) || compactSeoText(fallback);
-  if (title.length < 30 && !/campuslands/i.test(title)) {
-    title = `${title} | Campuslands Guatemala`;
+  let title = truncateSeoText(compactSeoText(preferred) || compactSeoText(fallback), 64);
+  if (!/campuslands/i.test(title)) {
+    const suffix = " | Campuslands";
+    title = `${truncateSeoText(title, 64 - suffix.length)}${suffix}`;
   }
-  return truncateSeoText(title, 64);
+  return title;
 }
 
 export function blogSeoDescription(
@@ -301,6 +311,8 @@ function normalizeArticle(value: any): BlogArticle | null {
     featured: Boolean(value.featured),
     readingTime: Math.max(1, Number(value.readingTime) || 1),
     publishDate: String(value.publishDate || value.publishedAt || "").slice(0, 10),
+    publishedDate: normalizeDateTime(value.publishedAt || value.publishDate),
+    modifiedDate: normalizeDateTime(value.updatedAt || value.publishedAt || value.publishDate),
     tags: Array.isArray(value.tags) ? value.tags.filter((tag: unknown) => typeof tag === "string") : [],
     links: normalizeArticleLinks(value.links),
     attachments: Array.isArray(value.attachments)
@@ -337,6 +349,8 @@ function normalizeGallery(value: any): BlogGallery | null {
     tags: Array.isArray(value.tags) ? value.tags.filter((tag: unknown) => typeof tag === "string") : [],
     featured: Boolean(value.featured),
     publishDate: String(value.publishDate || value.publishedAt || "").slice(0, 10),
+    publishedDate: normalizeDateTime(value.publishedAt || value.publishDate),
+    modifiedDate: normalizeDateTime(value.updatedAt || value.publishedAt || value.publishDate),
     seo: value.seo ? {
       metaTitle: value.seo.metaTitle,
       metaDescription: value.seo.metaDescription,
@@ -355,20 +369,36 @@ async function fetchJson(path: string) {
   return response.json();
 }
 
-export async function getBlogData(): Promise<BlogData> {
+async function fetchCollection(path: string) {
+  const data: any[] = [];
+  let page = 1;
+  let pageCount = 1;
+
+  do {
+    const separator = path.includes("?") ? "&" : "?";
+    const response = await fetchJson(`${path}${separator}pagination[page]=${page}&pagination[pageSize]=100`);
+    data.push(...(Array.isArray(response?.data) ? response.data : []));
+    pageCount = Math.max(1, Number(response?.meta?.pagination?.pageCount) || 1);
+    page += 1;
+  } while (page <= pageCount);
+
+  return data;
+}
+
+async function loadBlogData(): Promise<BlogData> {
   try {
-    const [settingsResponse, categoriesResponse, articlesResponse, galleriesResponse] = await Promise.all([
+    const [settingsResponse, categoryData, articleData, galleryData] = await Promise.all([
       fetchJson("/api/blog-setting"),
-      fetchJson("/api/categories?filters[visible][$eq]=true&sort=order:asc&pagination[pageSize]=100"),
-      fetchJson("/api/articles?populate[category]=true&populate[coverImage]=true&populate[attachments]=true&populate[seo][populate][shareImage]=true&sort=publishDate:desc&pagination[pageSize]=100"),
-      fetchJson("/api/galleries?populate[category]=true&populate[images]=true&populate[seo][populate][shareImage]=true&sort=publishDate:desc&pagination[pageSize]=100"),
+      fetchCollection("/api/categories?status=published&filters[visible][$eq]=true&sort=order:asc"),
+      fetchCollection("/api/articles?status=published&populate[category]=true&populate[coverImage]=true&populate[attachments]=true&populate[seo][populate][shareImage]=true&sort=publishDate:desc"),
+      fetchCollection("/api/galleries?status=published&populate[category]=true&populate[images]=true&populate[seo][populate][shareImage]=true&sort=publishDate:desc"),
     ]);
 
-    const categories = (categoriesResponse.data || []).map(normalizeCategory).filter(Boolean) as BlogCategory[];
+    const categories = categoryData.map(normalizeCategory).filter(Boolean) as BlogCategory[];
     const visibleCategorySlugs = new Set(categories.map((category) => category.slug));
-    const articles = ((articlesResponse.data || []).map(normalizeArticle).filter(Boolean) as BlogArticle[])
+    const articles = (articleData.map(normalizeArticle).filter(Boolean) as BlogArticle[])
       .filter((article) => visibleCategorySlugs.has(article.category.slug));
-    const galleries = ((galleriesResponse.data || []).map(normalizeGallery).filter(Boolean) as BlogGallery[])
+    const galleries = (galleryData.map(normalizeGallery).filter(Boolean) as BlogGallery[])
       .filter((gallery) => visibleCategorySlugs.has(gallery.category.slug));
 
     return {
@@ -382,6 +412,16 @@ export async function getBlogData(): Promise<BlogData> {
     console.warn(`[Blog] El CMS no está disponible: ${String(error)}`);
     return { settings: null, categories: [], articles: [], galleries: [], source: "unavailable" };
   }
+}
+
+let productionBlogData: Promise<BlogData> | undefined;
+
+export async function getBlogData(): Promise<BlogData> {
+  if (import.meta.env.PROD) {
+    productionBlogData ||= loadBlogData();
+    return productionBlogData;
+  }
+  return loadBlogData();
 }
 
 function escapeHtml(value: unknown): string {

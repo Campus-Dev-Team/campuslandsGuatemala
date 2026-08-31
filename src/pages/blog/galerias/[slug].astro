@@ -24,10 +24,19 @@ const structuredData = [{
   "@id": `${pageUrl}#gallery`,
   name: gallery.title,
   description: gallery.description,
-  datePublished: gallery.publishDate,
+  datePublished: gallery.publishedDate || gallery.publishDate,
+  dateModified: gallery.modifiedDate || gallery.publishDate,
   inLanguage: SITE.language,
   url: pageUrl,
-  associatedMedia: gallery.images.map((item) => ({ "@type": "ImageObject", contentUrl: item.url, caption: item.caption || item.alternativeText })),
+  isPartOf: { "@id": `${SITE_URL}/blog/#blog` },
+  mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+  associatedMedia: gallery.images.map((item) => ({
+    "@type": "ImageObject",
+    contentUrl: item.url,
+    caption: item.caption || item.alternativeText,
+    width: item.width || undefined,
+    height: item.height || undefined,
+  })),
   publisher: { "@id": `${SITE_URL}/#organization` },
 }, {
   "@type": "BreadcrumbList",
@@ -40,13 +49,14 @@ const structuredData = [{
 }];
 ---
 
-<LayoutNavbar dataFooter={dataFooter} title={seoTitle} description={seoDescription} image={image} pageType="Article" publishedTime={gallery.publishDate} structuredData={structuredData}>
+<LayoutNavbar dataFooter={dataFooter} title={seoTitle} description={seoDescription} image={image} pageType="Article" publishedTime={gallery.publishedDate || gallery.publishDate} modifiedTime={gallery.modifiedDate || gallery.publishDate} structuredData={structuredData}>
   <div class="gallery-page" style={`--category:${category};--category-rgb:${rgb}`}>
     <header class="gallery-page__hero sections">
       <nav aria-label="Migas de pan"><a href="/">Inicio</a><span>/</span><a href="/blog/">{settings.publicationName}</a><span>/</span><a href="/blog/galerias/">{settings.galleriesLabel}</a></nav>
       <div><p><i></i>{gallery.category.name}</p><h1>{gallery.title}</h1><span>{gallery.description}</span><footer><small>{formatBlogDate(gallery.publishDate)}</small><b>{String(gallery.images.length).padStart(2, "0")} imágenes</b></footer></div>
     </header>
     <section class="gallery-page__collection sections" aria-labelledby="gallery-images-label">
+      <h2 class="sr-only">Imágenes de {gallery.title}</h2>
       <div class="gallery-page__label"><span id="gallery-images-label">{settings.galleryImagesLabel}</span><p>Selecciona una imagen para abrir la presentación. Usa ← → para recorrerla.</p></div>
       <div class="gallery-page__grid" data-public-gallery>
         {gallery.images.map((item, index) => (

@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { readSitemapBundle } from "./sitemap-utils.mjs";
 
 const distDirectory = path.resolve("dist");
 const failures = [];
@@ -59,18 +60,11 @@ for (const file of htmlFiles) {
   }
 }
 
-const sitemapIndex = fs.readFileSync(path.join(distDirectory, "sitemap-index.xml"), "utf8");
-const sitemapLocation = sitemapIndex.match(/<loc>([^<]+)<\/loc>/i)?.[1];
-if (!sitemapLocation) {
-  failures.push("sitemap-index.xml: no contiene un sitemap hijo");
-} else {
-  const sitemapFile = path.join(distDirectory, path.basename(new URL(sitemapLocation).pathname));
-  const sitemap = fs.readFileSync(sitemapFile, "utf8");
-  const routes = [...sitemap.matchAll(/<loc>https:\/\/www\.campuslands\.pro([^<]*)<\/loc>/g)]
-    .map((match) => match[1] || "/");
-  for (const route of routes) {
-    if (route !== "/" && !inbound.has(route)) failures.push(`${route}: página huérfana sin enlace interno`);
-  }
+const sitemapBundle = await readSitemapBundle(distDirectory);
+const routes = sitemapBundle.urls
+  .map(({ url }) => new URL(url).pathname || "/");
+for (const route of routes) {
+  if (route !== "/" && !inbound.has(route)) failures.push(`${route}: página huérfana sin enlace interno`);
 }
 
 if (failures.length) {

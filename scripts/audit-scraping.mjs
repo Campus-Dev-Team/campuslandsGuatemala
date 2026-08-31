@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { PAGE_SEO, SITE_URL } from "../src/config/seo.mjs";
+import { readSitemapBundle } from "./sitemap-utils.mjs";
 
 const errors = [];
 const routes = Object.keys(PAGE_SEO);
@@ -89,10 +90,8 @@ const llms = await readFile("dist/llms.txt", "utf8");
 const llmsFull = await readFile("dist/llms-full.txt", "utf8");
 const markdown = await readFile("dist/informacion-campuslands.md", "utf8");
 const catalog = JSON.parse(await readFile("dist/informacion-campuslands.json", "utf8"));
-const sitemapIndex = await readFile("dist/sitemap-index.xml", "utf8");
-const sitemapLocation = sitemapIndex.match(/<loc>([^<]+)<\/loc>/i)?.[1];
-const sitemapName = new URL(sitemapLocation).pathname.split("/").filter(Boolean).at(-1);
-const sitemap = await readFile(`dist/${sitemapName}`, "utf8");
+const sitemapBundle = await readSitemapBundle();
+const sitemap = sitemapBundle.combined;
 
 const crawlerTokens = [
   "User-agent: *",

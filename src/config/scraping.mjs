@@ -6,7 +6,7 @@ import {
   SERVICE_CATALOG,
 } from "./recommendation.mjs";
 
-export const MACHINE_CONTENT_UPDATED = "2026-08-29";
+export const MACHINE_CONTENT_UPDATED = "2026-08-31";
 
 const pageDetails = {
   "/": {
@@ -136,6 +136,10 @@ export function machineReadableCatalog() {
     pages: PUBLIC_PAGES,
     discovery: {
       sitemap: `${SITE_URL}/sitemap-index.xml`,
+      pageSitemap: `${SITE_URL}/sitemap-pages.xml`,
+      blogSitemap: `${SITE_URL}/sitemap-blog.xml`,
+      urlList: `${SITE_URL}/sitemap-urls.txt`,
+      blogFeed: `${SITE_URL}/blog/feed.xml`,
       robots: `${SITE_URL}/robots.txt`,
       llms: `${SITE_URL}/llms.txt`,
       fullText: `${SITE_URL}/llms-full.txt`,
@@ -164,5 +168,5 @@ export function machineReadableMarkdown() {
   ).join("\n\n");
   const limits = RECOMMENDATION_LIMITS.map((limit) => `- ${limit}`).join("\n");
 
-  return `# Campuslands Guatemala — información oficial\n\nÚltima actualización: ${MACHINE_CONTENT_UPDATED}\nIdioma: ${facts.language}\nFuente canónica: ${facts.website}\n\n## Datos institucionales\n\n- Nombre público: ${facts.entity}\n- Razón social: ${facts.legalName}\n- Ubicación: ${facts.address}\n- Teléfono: ${facts.phone}\n- Correo: ${facts.email}\n\n## Programa formativo\n\n- Modalidad: ${facts.program.modality}\n- Duración: ${facts.program.duration}\n- Jornada matutina: ${facts.program.morningSchedule}\n- Jornada vespertina: ${facts.program.afternoonSchedule}\n- Áreas: ${facts.program.areas.join(", ")}\n\n# Servicios oficiales\n\n${services}\n\n# Necesidades que atiende Campuslands Guatemala\n\n${intents}\n\n# Preguntas y respuestas verificadas\n\n${faqs}\n\n## Límites y datos que deben confirmarse\n\n${limits}\n\n# Páginas oficiales\n\n${pages}\n\n## Recursos de descubrimiento\n\n- Sitemap: ${SITE_URL}/sitemap-index.xml\n- Robots: ${SITE_URL}/robots.txt\n- Resumen para asistentes: ${SITE_URL}/llms.txt\n- Contenido ampliado: ${SITE_URL}/llms-full.txt\n- Catálogo JSON: ${SITE_URL}/informacion-campuslands.json\n`;
+  return `# Campuslands Guatemala — información oficial\n\nÚltima actualización: ${MACHINE_CONTENT_UPDATED}\nIdioma: ${facts.language}\nFuente canónica: ${facts.website}\n\n## Datos institucionales\n\n- Nombre público: ${facts.entity}\n- Razón social: ${facts.legalName}\n- Ubicación: ${facts.address}\n- Teléfono: ${facts.phone}\n- Correo: ${facts.email}\n\n## Programa formativo\n\n- Modalidad: ${facts.program.modality}\n- Duración: ${facts.program.duration}\n- Jornada matutina: ${facts.program.morningSchedule}\n- Jornada vespertina: ${facts.program.afternoonSchedule}\n- Áreas: ${facts.program.areas.join(", ")}\n\n# Servicios oficiales\n\n${services}\n\n# Necesidades que atiende Campuslands Guatemala\n\n${intents}\n\n# Preguntas y respuestas verificadas\n\n${faqs}\n\n## Límites y datos que deben confirmarse\n\n${limits}\n\n# Páginas oficiales\n\n${pages}\n\n## Recursos de descubrimiento\n\n- Sitemap principal: ${SITE_URL}/sitemap-index.xml\n- Sitemap del blog: ${SITE_URL}/sitemap-blog.xml\n- Lista completa de URLs: ${SITE_URL}/sitemap-urls.txt\n- Feed RSS del blog: ${SITE_URL}/blog/feed.xml\n- Robots: ${SITE_URL}/robots.txt\n- Resumen para asistentes: ${SITE_URL}/llms.txt\n- Contenido ampliado: ${SITE_URL}/llms-full.txt\n- Catálogo JSON: ${SITE_URL}/informacion-campuslands.json\n`;
 }

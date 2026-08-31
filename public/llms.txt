@@ -46,6 +46,9 @@ La versión de Guatemala usa el dominio campuslands.pro. La versión de Colombia
 ## Recursos de rastreo
 
 - [Sitemap XML](https://www.campuslands.pro/sitemap-index.xml): índice de todas las páginas públicas e indexables.
+- [Sitemap del blog](https://www.campuslands.pro/sitemap-blog.xml): artículos y galerías con su fecha real de actualización.
+- [Lista completa de URLs](https://www.campuslands.pro/sitemap-urls.txt): una URL canónica por línea para extracción automatizada.
+- [Feed RSS](https://www.campuslands.pro/blog/feed.xml): publicaciones recientes del blog.
 - [Directivas para rastreadores](https://www.campuslands.pro/robots.txt): permisos de acceso y ubicación del sitemap.
 - [Contenido ampliado](https://www.campuslands.pro/llms-full.txt): resumen estructurado del sitio, programa, servicios y datos oficiales.
 - [Información oficial en Markdown](https://www.campuslands.pro/informacion-campuslands.md): contenido institucional y directorio completo en un formato legible por máquinas.
