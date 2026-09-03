@@ -17,6 +17,8 @@ import {
 
 type WorkspaceTab = "posts" | "galleries" | "categories" | "settings";
 type AppState = "checking" | "login" | "workspace";
+type ArticleSearchScope = "all" | "title" | "author" | "category" | "tags";
+type ArticleSortOrder = "recent" | "oldest" | "title-asc" | "title-desc";
 type ResourceLinkDraft = {
   key: string;
   label: string;
@@ -44,8 +46,10 @@ const loginForm = reactive({ identifier: "", password: "" });
 const loginLoading = ref(false);
 const loginError = ref("");
 const search = ref("");
+const searchScope = ref<ArticleSearchScope>("all");
 const statusFilter = ref("all");
 const categoryFilter = ref("all");
+const sortOrder = ref<ArticleSortOrder>("recent");
 
 const editorOpen = ref(false);
 const editorLoading = ref(false);
@@ -161,16 +165,76 @@ const articleStats = computed(() => ({
   pending: dashboard.value.articles.filter((article) => article.publicationState === "modified").length,
 }));
 
+function searchableText(value: unknown) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function articleSearchValues(article: EditorArticle) {
+  const values: Record<ArticleSearchScope, unknown[]> = {
+    all: [
+      article.title,
+      article.slug,
+      article.excerpt,
+      article.authorName,
+      article.category?.name,
+      ...(article.tags || []),
+      article.seo?.metaTitle,
+      article.seo?.keywords,
+    ],
+    title: [article.title, article.seo?.metaTitle],
+    author: [article.authorName],
+    category: [article.category?.name],
+    tags: article.tags || [],
+  };
+  return values[searchScope.value];
+}
+
 const filteredArticles = computed(() => {
-  const term = search.value.trim().toLowerCase();
-  return dashboard.value.articles.filter((article) => {
-    const matchesSearch = !term || [article.title, article.excerpt, article.authorName, article.category?.name]
-      .some((value) => String(value || "").toLowerCase().includes(term));
+  const term = searchableText(search.value);
+  const articles = dashboard.value.articles.filter((article) => {
+    const matchesSearch = !term || articleSearchValues(article)
+      .some((value) => searchableText(value).includes(term));
     const matchesStatus = statusFilter.value === "all" || article.publicationState === statusFilter.value;
     const matchesCategory = categoryFilter.value === "all" || article.category?.documentId === categoryFilter.value;
     return matchesSearch && matchesStatus && matchesCategory;
   });
+
+  return [...articles].sort((first, second) => {
+    if (sortOrder.value === "title-asc") return first.title.localeCompare(second.title, "es", { sensitivity: "base" });
+    if (sortOrder.value === "title-desc") return second.title.localeCompare(first.title, "es", { sensitivity: "base" });
+    const firstDate = new Date(first.publishDate || first.updatedAt || 0).getTime();
+    const secondDate = new Date(second.publishDate || second.updatedAt || 0).getTime();
+    return sortOrder.value === "oldest" ? firstDate - secondDate : secondDate - firstDate;
+  });
 });
+
+const hasActiveArticleFilters = computed(() => Boolean(
+  search.value.trim()
+  || searchScope.value !== "all"
+  || statusFilter.value !== "all"
+  || categoryFilter.value !== "all"
+  || sortOrder.value !== "recent",
+));
+
+const articleSearchPlaceholder = computed(() => ({
+  all: "Buscar por título, autor, categoría, etiqueta o slug",
+  title: "Escribe el título de la nota",
+  author: "Escribe el nombre del autor",
+  category: "Escribe el nombre de la categoría",
+  tags: "Escribe una etiqueta",
+}[searchScope.value]));
+
+function clearArticleFilters() {
+  search.value = "";
+  searchScope.value = "all";
+  statusFilter.value = "all";
+  categoryFilter.value = "all";
+  sortOrder.value = "recent";
+}
 
 function collectText(value: any): string[] {
   if (Array.isArray(value)) return value.flatMap(collectText);
@@ -877,24 +941,44 @@ onBeforeUnmount(() => {
 
             <section class="content-console">
               <div class="console-filters">
-                <label class="search-field"><span>⌕</span><input v-model="search" type="search" placeholder="Buscar por título, categoría o autor" /></label>
+                <label class="search-field">
+                  <span class="search-field__icon" aria-hidden="true">⌕</span>
+                  <span class="sr-only">Buscar publicaciones</span>
+                  <input v-model="search" type="search" :placeholder="articleSearchPlaceholder" autocomplete="off" />
+                  <button v-if="search" type="button" aria-label="Limpiar búsqueda" title="Limpiar búsqueda" @click="search = ''">×</button>
+                </label>
+                <select v-model="searchScope" aria-label="Campo de búsqueda">
+                  <option value="all">Buscar en todo</option>
+                  <option value="title">Buscar por título</option>
+                  <option value="author">Buscar por autor</option>
+                  <option value="category">Buscar por categoría</option>
+                  <option value="tags">Buscar por etiqueta</option>
+                </select>
                 <select v-model="statusFilter" aria-label="Filtrar por estado"><option value="all">Todos los estados</option><option value="published">Publicadas</option><option value="draft">Borradores</option><option value="modified">Cambios pendientes</option></select>
                 <select v-model="categoryFilter" aria-label="Filtrar por categoría"><option value="all">Todas las categorías</option><option v-for="category in dashboard.categories" :key="category.documentId" :value="category.documentId">{{ category.name }}</option></select>
-                <span class="result-count">{{ filteredArticles.length }} resultados</span>
+                <select v-model="sortOrder" aria-label="Ordenar publicaciones"><option value="recent">Más recientes</option><option value="oldest">Más antiguas</option><option value="title-asc">Título A–Z</option><option value="title-desc">Título Z–A</option></select>
+                <span class="result-count">{{ filteredArticles.length }} {{ filteredArticles.length === 1 ? "resultado" : "resultados" }}</span>
               </div>
 
               <div v-if="filteredArticles.length" class="article-list">
                 <article v-for="(article, index) in filteredArticles" :key="article.documentId" class="article-row" :style="`--category:${article.category?.color || '#2CAAFF'}`">
-                  <button class="article-row__main" @click="editArticle(article)">
+                  <button class="article-row__main" :aria-label="`Editar la nota ${article.title}`" @click="editArticle(article)">
                     <span class="article-index">{{ String(index + 1).padStart(2, "0") }}</span>
                     <span class="article-category"><i></i>{{ article.category?.name }}</span>
-                    <strong>{{ article.title }}</strong>
-                    <small>{{ article.excerpt }}</small>
+                    <span class="article-title-label">Título de la nota</span>
+                    <strong>{{ article.title || "Nota sin título" }}</strong>
+                    <small>{{ article.excerpt || "Esta nota todavía no tiene un resumen editorial." }}</small>
+                    <span class="article-facts">
+                      <span><b>Autor</b>{{ article.authorName || "Sin autor" }}</span>
+                      <span><b>Ruta</b>/blog/{{ article.slug }}/</span>
+                      <span v-if="article.tags?.length"><b>Etiquetas</b>{{ article.tags.slice(0, 3).join(" · ") }}</span>
+                    </span>
                   </button>
                   <div class="article-row__meta">
                     <span class="status-pill" :class="statusMeta(article.publicationState).className">{{ statusMeta(article.publicationState).label }}</span>
-                    <span>{{ formatDate(article.publishDate) }}</span>
-                    <span>{{ article.readingTime }} min</span>
+                    <span><b>Publicación</b>{{ formatDate(article.publishDate) }}</span>
+                    <span><b>Actualización</b>{{ formatDate(article.updatedAt) }}</span>
+                    <span><b>Lectura</b>{{ article.readingTime }} min</span>
                   </div>
                   <div class="article-row__actions">
                     <button title="Editar" @click="editArticle(article)">Editar</button>
@@ -906,7 +990,7 @@ onBeforeUnmount(() => {
                   </div>
                 </article>
               </div>
-              <div v-else class="empty-console"><span>{ 00 }</span><h2>No encontramos publicaciones.</h2><p>Cambia los filtros o crea una nueva entrada editorial.</p><button @click="newArticle">Crear publicación</button></div>
+              <div v-else class="empty-console"><span>{ 00 }</span><h2>No encontramos publicaciones.</h2><p>Cambia los filtros o crea una nueva entrada editorial.</p><button v-if="hasActiveArticleFilters" @click="clearArticleFilters">Limpiar búsqueda y filtros</button><button v-else @click="newArticle">Crear publicación</button></div>
             </section>
           </section>
         </template>
@@ -1079,23 +1163,33 @@ onBeforeUnmount(() => {
 .stat-grid article:nth-child(3) i { background: #a26bff; box-shadow: 0 0 12px #a26bff; }
 .stat-grid article:nth-child(4) i { background: #ffb547; box-shadow: 0 0 12px #ffb547; }
 .content-console { margin-top: 24px; border: 1px solid var(--line); border-radius: 22px; background: rgba(4,13,43,.58); overflow: hidden; }
-.console-filters { display: grid; padding: 13px; grid-template-columns: minmax(260px,1fr) 190px 210px auto; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.console-filters { display: grid; padding: 13px; grid-template-columns: minmax(240px,1fr) 145px 155px 175px 145px auto; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
 .search-field { display: flex; min-height: 42px; padding: 0 12px; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,.09); border-radius: 11px; background: rgba(0,0,20,.2); }
-.search-field span { color: var(--blue); font-size: 20px; }
-.search-field input { width: 100%; border: 0; outline: 0; color: white; background: transparent; font-size: 11px; }
+.search-field:focus-within { border-color: rgba(87,187,255,.45); box-shadow: 0 0 0 3px rgba(87,187,255,.07); }
+.search-field__icon { color: var(--blue); font-size: 20px; }
+.search-field input { width: 100%; min-width: 0; border: 0; outline: 0; color: white; background: transparent; font-size: 11px; }
+.search-field button { width: 24px; height: 24px; padding: 0; flex: 0 0 auto; border: 1px solid rgba(255,255,255,.1); border-radius: 50%; color: rgba(255,255,255,.55); background: rgba(255,255,255,.04); cursor: pointer; }
+.search-field button:hover { border-color: rgba(87,187,255,.35); color: white; }
 .console-filters select { min-height: 42px; padding-block: 8px; font-size: 10px; }
 .result-count { color: rgba(255,255,255,.35); font: 600 9px/1 ui-monospace,monospace; white-space: nowrap; }
 .article-list { display: grid; }
-.article-row { display: grid; min-width: 0; grid-template-columns: minmax(0,1fr) 170px 220px; border-bottom: 1px solid rgba(255,255,255,.065); }
+.article-row { display: grid; min-width: 0; grid-template-columns: minmax(0,1fr) 180px 220px; border-bottom: 1px solid rgba(255,255,255,.065); }
 .article-row:last-child { border: 0; }
 .article-row:hover { background: linear-gradient(90deg,color-mix(in srgb,var(--category),transparent 94%),transparent); }
 .article-row__main { display: grid; position: relative; min-width: 0; padding: 21px 20px 20px 64px; grid-template-columns: auto 1fr; gap: 7px 12px; border: 0; color: inherit; background: transparent; text-align: left; cursor: pointer; }
 .article-index { position: absolute; top: 22px; left: 20px; color: rgba(255,255,255,.25); font: 700 10px/1 ui-monospace,monospace; }
 .article-category { display: flex; grid-column: 1/-1; align-items: center; gap: 7px; color: var(--category); font: 700 8px/1 ui-monospace,monospace; letter-spacing: .09em; text-transform: uppercase; }
 .article-category i { width: 16px; height: 1px; background: var(--category); box-shadow: 0 0 8px var(--category); }
-.article-row__main strong { grid-column: 1/-1; overflow: hidden; font-size: 14px; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
-.article-row__main small { grid-column: 1/-1; overflow: hidden; color: rgba(255,255,255,.42); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.article-title-label { grid-column: 1/-1; margin-top: 2px; color: rgba(255,255,255,.34); font: 700 7px/1 ui-monospace,monospace; letter-spacing: .12em; text-transform: uppercase; }
+.article-row__main > strong { display: -webkit-box; grid-column: 1/-1; overflow: hidden; color: #fff; font-size: 16px; line-height: 1.35; letter-spacing: -.015em; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.article-row__main > small { grid-column: 1/-1; overflow: hidden; color: rgba(255,255,255,.48); font-size: 10px; line-height: 1.45; text-overflow: ellipsis; white-space: nowrap; }
+.article-facts { display: flex; grid-column: 1/-1; min-width: 0; margin-top: 3px; align-items: center; gap: 7px 15px; flex-wrap: wrap; color: rgba(255,255,255,.44); font: 500 8px/1.35 ui-monospace,monospace; }
+.article-facts > span { display: inline-flex; min-width: 0; align-items: baseline; gap: 5px; }
+.article-facts b { color: rgba(87,187,255,.72); font-size: 7px; letter-spacing: .08em; text-transform: uppercase; }
 .article-row__meta { display: grid; padding: 18px 14px; align-content: center; gap: 7px; border-left: 1px solid rgba(255,255,255,.055); color: rgba(255,255,255,.38); font-size: 9px; }
+.article-row__meta > span:not(.status-pill) { display: grid; gap: 2px; }
+.article-row__meta > span > b { color: rgba(255,255,255,.24); font: 700 7px/1 ui-monospace,monospace; letter-spacing: .08em; text-transform: uppercase; }
 .status-pill { width: fit-content; padding: 5px 8px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; color: rgba(255,255,255,.6); font: 700 8px/1 ui-monospace,monospace; text-transform: uppercase; }
 .status-pill.is-published { border-color: rgba(0,217,164,.25); color: #62e7c7; background: rgba(0,217,164,.07); }
 .status-pill.is-modified { border-color: rgba(255,181,71,.3); color: #ffd18e; background: rgba(255,181,71,.07); }
@@ -1256,7 +1350,7 @@ onBeforeUnmount(() => {
 @media (max-width: 1180px) {
   .workspace-shell { grid-template-columns: 210px minmax(0,1fr); }
   .workspace-main { padding: 34px 28px; }
-  .console-filters { grid-template-columns: 1fr 170px; }
+  .console-filters { grid-template-columns: minmax(240px,1fr) repeat(2,minmax(150px,.55fr)); }
   .result-count { text-align: right; }
   .article-row { grid-template-columns: minmax(0,1fr) 145px; }
   .article-row__actions { grid-column: 1/-1; padding: 8px 14px 12px; border: 0; justify-content: flex-start; }
