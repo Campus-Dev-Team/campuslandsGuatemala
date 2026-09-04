@@ -28,6 +28,7 @@ export type EditorCategory = {
   color: string;
   order: number;
   visible: boolean;
+  visualStyle: "ai" | "code" | "community" | "career" | "notes";
 };
 
 export type EditorSeo = {
@@ -75,6 +76,7 @@ export type EditorArticle = {
   category: EditorCategory;
   coverImage?: EditorMedia | null;
   coverAlt: string;
+  coverMode?: "category-animation" | "cover-image";
   authorName: string;
   featured: boolean;
   readingTime: number;

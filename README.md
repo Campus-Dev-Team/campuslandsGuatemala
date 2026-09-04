@@ -253,6 +253,8 @@ Cuando el equipo publica, modifica o retira contenido, el backend solicita una n
 5. Comprueba que la URL aparezca en `sitemap-blog.xml`
 6. Comprueba `sitemap-index.xml` y `blog/feed.xml`
 
+En la mesa editorial, cada categoría selecciona una plantilla animada y cada publicación decide si muestra esa animación o su imagen de portada. La selección queda guardada en el CMS y se aplica durante la siguiente compilación.
+
 ## Configura la conexión entre proyectos
 
 ### Variables del frontend

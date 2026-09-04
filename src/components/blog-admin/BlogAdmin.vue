@@ -19,6 +19,7 @@ type WorkspaceTab = "posts" | "galleries" | "categories" | "settings";
 type AppState = "checking" | "login" | "workspace";
 type ArticleSearchScope = "all" | "title" | "author" | "category" | "tags";
 type ArticleSortOrder = "recent" | "oldest" | "title-asc" | "title-desc";
+type BlogVisualStyle = EditorCategory["visualStyle"];
 type ResourceLinkDraft = {
   key: string;
   label: string;
@@ -64,6 +65,18 @@ const lastAutosavedAt = ref("");
 const LOCAL_DRAFT_KEY = "campuslands_blog_editor_local_draft";
 let autosaveTimer: number | undefined;
 
+const visualStyleOptions: { value: BlogVisualStyle; label: string; description: string }[] = [
+  { value: "ai", label: "Idea + criterio", description: "Órbita de inteligencia artificial" },
+  { value: "code", label: "Código en práctica", description: "Editor de programación animado" },
+  { value: "community", label: "Aprender juntos", description: "Red colaborativa de campers" },
+  { value: "career", label: "Siguiente nivel", description: "Ruta profesional y empleabilidad" },
+  { value: "notes", label: "Nueva idea", description: "Plantilla editorial adaptable" },
+];
+
+function visualStyleLabel(value?: BlogVisualStyle) {
+  return visualStyleOptions.find((option) => option.value === value)?.label || "Nueva idea";
+}
+
 function today() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -82,6 +95,7 @@ function emptyArticle() {
     categoryDocumentId: "",
     coverImage: null as EditorMedia | null,
     coverAlt: "",
+    coverMode: "category-animation" as "category-animation" | "cover-image",
     authorName: "Equipo Campuslands",
     featured: false,
     readingTime: 5,
@@ -94,7 +108,7 @@ function emptyArticle() {
 }
 
 const articleForm = reactive(emptyArticle());
-const newCategory = reactive({ name: "", slug: "", description: "", color: "#2CAAFF", order: 0, visible: true });
+const newCategory = reactive({ name: "", slug: "", description: "", color: "#2CAAFF", order: 0, visible: true, visualStyle: "notes" as BlogVisualStyle });
 const categorySavingId = ref("");
 const settingsDraft = reactive<Record<string, any>>({});
 const settingsSaving = ref(false);
@@ -253,7 +267,7 @@ const editorialChecks = computed(() => [
   { label: "Título claro (35–65 caracteres)", ok: articleForm.title.trim().length >= 35 && articleForm.title.trim().length <= 65 },
   { label: "Resumen completo", ok: articleForm.excerpt.trim().length >= 90 },
   { label: "Contenido desarrollado", ok: articleWordCount.value >= 250 || activeLinks.value.length > 0 },
-  { label: "Portada con texto alternativo", ok: Boolean(coverPreview.value && articleForm.coverAlt.trim()) },
+  { label: "Visual de portada configurado", ok: articleForm.coverMode === "category-animation" || Boolean(coverPreview.value && articleForm.coverAlt.trim()) },
   { label: "Jerarquía con al menos un H2", ok: articleForm.content.some((block: any) => block.type === "heading" && Number(block.level) === 2) },
   { label: "SEO listo para publicar", ok: articleForm.seo.metaTitle.trim().length >= 30 && articleForm.seo.metaDescription.trim().length >= 120 },
 ]);
@@ -367,6 +381,7 @@ function applyArticleDetail(detail: EditorArticle, asCopy = false) {
     categoryDocumentId: detail.category?.documentId || "",
     coverImage: detail.coverImage || null,
     coverAlt: detail.coverAlt || "",
+    coverMode: detail.coverMode || (detail.coverImage ? "cover-image" : "category-animation"),
     authorName: detail.authorName || "Equipo Campuslands",
     featured: asCopy ? false : Boolean(detail.featured),
     readingTime: detail.readingTime || 5,
@@ -576,6 +591,7 @@ async function saveArticle(publish: boolean) {
       categoryDocumentId: articleForm.categoryDocumentId,
       coverImageId: cover?.id || null,
       coverAlt: articleForm.coverAlt,
+      coverMode: articleForm.coverMode,
       authorName: articleForm.authorName,
       featured: articleForm.featured,
       readingTime: articleForm.readingTime,
@@ -644,7 +660,7 @@ async function saveCategory(category: Partial<EditorCategory>, create = false) {
   try {
     if (create) {
       await api.createCategory(category);
-      Object.assign(newCategory, { name: "", slug: "", description: "", color: "#2CAAFF", order: dashboard.value.categories.length + 1, visible: true });
+      Object.assign(newCategory, { name: "", slug: "", description: "", color: "#2CAAFF", order: dashboard.value.categories.length + 1, visible: true, visualStyle: "notes" });
     } else if (category.documentId) {
       await api.updateCategory(category.documentId, category);
     }
@@ -886,6 +902,16 @@ onBeforeUnmount(() => {
 
                 <section class="inspector-card">
                   <div class="inspector-card__title"><span>PORTADA</span><i></i></div>
+                  <div class="cover-mode" role="radiogroup" aria-label="Visual de la publicación">
+                    <label :class="{ active: articleForm.coverMode === 'category-animation' }">
+                      <input v-model="articleForm.coverMode" type="radio" value="category-animation" />
+                      <span><strong>Animación de categoría</strong><small>{{ selectedCategory?.name || "Selecciona una categoría" }} · {{ visualStyleLabel(selectedCategory?.visualStyle) }}</small></span>
+                    </label>
+                    <label :class="{ active: articleForm.coverMode === 'cover-image' }">
+                      <input v-model="articleForm.coverMode" type="radio" value="cover-image" />
+                      <span><strong>Imagen de portada</strong><small>Usa la fotografía cargada en la tarjeta y la nota.</small></span>
+                    </label>
+                  </div>
                   <label class="cover-drop" :class="{ 'has-image': coverPreview }">
                     <img v-if="coverPreview" :src="coverPreview" alt="Vista previa de portada" />
                     <template v-else><b>＋</b><strong>Cargar imagen</strong><small>JPG, PNG, WebP o AVIF · máx. 10 MB</small></template>
@@ -1014,6 +1040,7 @@ onBeforeUnmount(() => {
               <label class="field"><span>Nombre</span><input v-model="newCategory.name" required maxlength="80" @input="newCategory.slug = slugify(newCategory.name)" /></label>
               <label class="field"><span>Slug</span><input v-model="newCategory.slug" required maxlength="80" /></label>
               <label class="field"><span>Descripción</span><textarea v-model="newCategory.description" rows="4" required maxlength="280"></textarea></label>
+              <label class="field"><span>Animación para sus tarjetas</span><select v-model="newCategory.visualStyle"><option v-for="option in visualStyleOptions" :key="option.value" :value="option.value">{{ option.label }} · {{ option.description }}</option></select><small>Las publicaciones podrán usar esta animación o su propia portada.</small></label>
               <div class="field-grid field-grid--two"><label class="field"><span>Color</span><div class="color-field"><input v-model="newCategory.color" type="color" /><input v-model="newCategory.color" pattern="^#[0-9A-Fa-f]{6}$" /></div></label><label class="field"><span>Orden</span><input v-model.number="newCategory.order" type="number" min="0" /></label></div>
               <button class="primary-action primary-action--small" :disabled="categorySavingId === 'new'"><span>{{ categorySavingId === "new" ? "Creando…" : "Crear categoría" }}</span><b>＋</b></button>
             </form>
@@ -1023,6 +1050,7 @@ onBeforeUnmount(() => {
                 <header><span>{{ String(index + 1).padStart(2, "0") }}</span><i></i><label class="switch-field switch-field--compact"><input v-model="category.visible" type="checkbox" /><span><i></i></span><div><strong>{{ category.visible ? "Visible" : "Oculta" }}</strong></div></label></header>
                 <div class="field-grid field-grid--two"><label class="field"><span>Nombre</span><input v-model="category.name" maxlength="80" /></label><label class="field"><span>Slug</span><input v-model="category.slug" maxlength="80" /></label></div>
                 <label class="field"><span>Descripción</span><textarea v-model="category.description" rows="3" maxlength="280"></textarea></label>
+                <label class="field"><span>Animación para sus tarjetas</span><select v-model="category.visualStyle"><option v-for="option in visualStyleOptions" :key="option.value" :value="option.value">{{ option.label }} · {{ option.description }}</option></select><small>Se aplicará a las notas configuradas para usar la animación de categoría.</small></label>
                 <div class="field-grid field-grid--two"><label class="field"><span>Color distintivo</span><div class="color-field"><input v-model="category.color" type="color" /><input v-model="category.color" /></div></label><label class="field"><span>Orden</span><input v-model.number="category.order" type="number" min="0" /></label></div>
                 <footer><button class="text-action text-action--danger" @click="removeCategory(category)">Eliminar</button><button class="secondary-action" :disabled="categorySavingId === category.documentId" @click="saveCategory(category)">{{ categorySavingId === category.documentId ? "Guardando…" : "Guardar cambios" }}</button></footer>
               </article>
@@ -1058,7 +1086,8 @@ onBeforeUnmount(() => {
           <h1>{{ articleForm.title || "Título de la publicación" }}</h1>
           <p class="preview-excerpt">{{ articleForm.excerpt || "El resumen de la publicación aparecerá en este espacio." }}</p>
           <div class="preview-meta"><span>{{ articleForm.authorName }}</span><span>{{ formatDate(articleForm.publishDate) }}</span><span>{{ articleForm.readingTime }} min de lectura</span></div>
-          <img v-if="coverPreview" class="preview-cover" :src="coverPreview" :alt="articleForm.coverAlt || ''" />
+          <img v-if="articleForm.coverMode === 'cover-image' && coverPreview" class="preview-cover" :src="coverPreview" :alt="articleForm.coverAlt || ''" />
+          <div v-else class="preview-animation" :data-visual="selectedCategory?.visualStyle || 'notes'"><span>{{ visualStyleLabel(selectedCategory?.visualStyle) }}</span><strong>{{ selectedCategory?.name || "Animación editorial" }}</strong><i></i></div>
           <div class="preview-body" v-html="previewHtml"></div>
           <section v-if="activeLinks.length" class="preview-resources"><span>{{ settingsDraft.resourcesLabel || "RECURSOS PARA CONTINUAR" }}</span><a v-for="link in activeLinks" :key="link.key" :href="link.url" target="_blank" rel="noopener"><img v-if="link.imagePreview" :src="link.imagePreview" :alt="link.label" /><div><strong>{{ link.label }}</strong><small v-if="link.description">{{ link.description }}</small></div><b>↗</b></a></section>
           <section v-if="articleForm.attachments.length || attachmentFiles.length" class="preview-resources"><span>{{ settingsDraft.attachmentsLabel || "ARCHIVOS DE LA PUBLICACIÓN" }}</span><a v-for="attachment in articleForm.attachments" :key="attachment.id" :href="mediaUrl(cmsUrl, attachment)" target="_blank" rel="noopener"><div><strong>{{ attachmentLabel(attachment) }}</strong><small>Archivo adjunto</small></div><b>↓</b></a><div v-for="file in attachmentFiles" :key="file.name" class="preview-file"><div><strong>{{ file.name }}</strong><small>Se publicará al guardar</small></div><b>↑</b></div></section>
@@ -1248,6 +1277,13 @@ onBeforeUnmount(() => {
 .switch-field strong { font-size: 10px; }
 .switch-field small { color: var(--muted); font-size: 8px; }
 .switch-field--compact { margin: 0 0 0 auto; }
+.cover-mode { display: grid; margin-bottom: 14px; gap: 8px; }
+.cover-mode > label { display: grid; grid-template-columns: 18px 1fr; padding: 11px 12px; align-items: start; gap: 8px; border: 1px solid rgba(87,187,255,.14); border-radius: 12px; color: rgba(255,255,255,.48); background: rgba(3,10,35,.42); cursor: pointer; transition: border-color .2s ease,background .2s ease,color .2s ease; }
+.cover-mode > label.active { border-color: rgba(0,217,164,.48); color: #fff; background: linear-gradient(135deg,rgba(0,217,164,.1),rgba(44,170,255,.06)); box-shadow: inset 0 0 0 1px rgba(0,217,164,.05); }
+.cover-mode input { margin-top: 2px; accent-color: var(--green); }
+.cover-mode span { display: grid; gap: 4px; }
+.cover-mode strong { font-size: 10px; }
+.cover-mode small { color: rgba(255,255,255,.38); font-size: 8px; line-height: 1.45; }
 .cover-drop { display: grid; min-height: 170px; place-content: center; justify-items: center; gap: 6px; border: 1px dashed rgba(87,187,255,.28); border-radius: 14px; color: rgba(255,255,255,.55); background: rgba(87,187,255,.035); text-align: center; cursor: pointer; overflow: hidden; }
 .cover-drop input { display: none; }
 .cover-drop > b { display: grid; width: 38px; height: 38px; place-content: center; border-radius: 50%; color: var(--green); background: rgba(0,217,164,.08); font-size: 22px; }
@@ -1311,6 +1347,12 @@ onBeforeUnmount(() => {
 .preview-excerpt { margin: 24px 0 0; color: rgba(255,255,255,.62); font-size: clamp(15px,2vw,19px); line-height: 1.7; }
 .preview-meta { display: flex; margin-top: 22px; gap: 18px; color: rgba(255,255,255,.38); font: 600 9px/1 ui-monospace,monospace; flex-wrap: wrap; }
 .preview-cover { display: block; width: 100%; margin-top: 32px; aspect-ratio: 16/9; border-radius: 18px; object-fit: cover; }
+.preview-animation { position: relative; display: grid; min-height: 230px; margin-top: 32px; padding: 28px; align-content: end; overflow: hidden; border: 1px solid color-mix(in srgb,var(--preview-color),transparent 48%); border-radius: 18px; background: radial-gradient(circle at 74% 24%,color-mix(in srgb,var(--preview-color),transparent 42%),transparent 28%),linear-gradient(135deg,color-mix(in srgb,var(--preview-color),transparent 72%),#07102b 58%,#000051); box-shadow: inset 0 0 45px rgba(0,0,20,.35); }
+.preview-animation::before { position: absolute; inset: -30%; background-image: linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size: 28px 28px; content: ""; transform: rotate(-8deg); }
+.preview-animation span,.preview-animation strong { position: relative; z-index: 1; }
+.preview-animation span { color: var(--preview-color); font: 700 9px/1 ui-monospace,monospace; letter-spacing: .13em; text-transform: uppercase; }
+.preview-animation strong { max-width: 72%; margin-top: 9px; color: #fff; font-size: clamp(22px,4vw,34px); line-height: 1.05; }
+.preview-animation i { position: absolute; top: 24%; right: 14%; width: 78px; aspect-ratio: 1; border: 1px dashed var(--preview-color); border-radius: 50%; box-shadow: 0 0 42px color-mix(in srgb,var(--preview-color),transparent 46%); }
 .preview-body { margin-top: 40px; color: rgba(255,255,255,.76); font-size: 16px; line-height: 1.85; }
 .preview-body :deep(h2),.preview-body :deep(h3),.preview-body :deep(h4) { margin: 2em 0 .65em; color: white; line-height: 1.2; letter-spacing: -.035em; }
 .preview-body :deep(h2) { font-size: 32px; }.preview-body :deep(h3) { font-size: 24px; }.preview-body :deep(h4) { font-size: 19px; }

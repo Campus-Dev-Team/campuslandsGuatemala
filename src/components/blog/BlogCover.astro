@@ -9,18 +9,15 @@ interface Props {
 }
 
 const { article, variant = "card", index = 1 } = Astro.props;
-const label = article.coverAlt || `Portada de ${article.title}`;
-const hasImage = Boolean(article.coverImage?.url);
+const hasImage = article.coverMode === "cover-image" && Boolean(article.coverImage?.url);
+const label = hasImage
+  ? article.coverAlt || `Portada de ${article.title}`
+  : `Ilustración animada de la categoría ${article.category.name}`;
 const imageSrcset = blogMediaSrcset(article.coverImage);
 const imageSizes = variant === "card"
   ? "(max-width: 640px) 100vw, (max-width: 1080px) 50vw, 360px"
   : "(max-width: 1240px) 100vw, 1180px";
-const visualVariant = ({
-  "inteligencia-artificial": "ai",
-  programacion: "code",
-  "comunidad-camper": "community",
-  "carrera-empleabilidad": "career",
-} as Record<string, string>)[article.category.slug] || "notes";
+const visualVariant = article.category.visualStyle || "notes";
 const signalLabel = ({
   ai: "IA APLICADA",
   code: "CÓDIGO EN PRÁCTICA",

@@ -79,7 +79,10 @@ export type BlogCategory = {
   description: string;
   color: string;
   order: number;
+  visualStyle: BlogVisualStyle;
 };
+
+export type BlogVisualStyle = "ai" | "code" | "community" | "career" | "notes";
 
 export type BlogSeo = {
   metaTitle?: string;
@@ -96,6 +99,7 @@ export type BlogArticle = {
   content: BlogBlock[];
   coverImage: BlogMedia | null;
   coverAlt: string;
+  coverMode: "category-animation" | "cover-image";
   category: BlogCategory;
   authorName: string;
   featured: boolean;
@@ -330,6 +334,12 @@ function normalizeSettings(value: any): BlogSettings | null {
 
 function normalizeCategory(value: any): BlogCategory | null {
   if (!value?.slug || !value?.name) return null;
+  const legacyVisualStyles: Record<string, BlogVisualStyle> = {
+    "inteligencia-artificial": "ai",
+    programacion: "code",
+    "comunidad-camper": "community",
+    "carrera-empleabilidad": "career",
+  };
   return {
     id: String(value.documentId || value.id || value.slug),
     name: String(value.name),
@@ -337,6 +347,9 @@ function normalizeCategory(value: any): BlogCategory | null {
     description: String(value.description || ""),
     color: safeCategoryColor(value.color),
     order: Number(value.order) || 0,
+    visualStyle: ["ai", "code", "community", "career", "notes"].includes(value.visualStyle)
+      ? value.visualStyle
+      : legacyVisualStyles[String(value.slug)] || "notes",
   };
 }
 
@@ -351,6 +364,9 @@ function normalizeArticle(value: any): BlogArticle | null {
     content: Array.isArray(value.content) ? value.content : [],
     coverImage: normalizeMedia(value.coverImage),
     coverAlt: String(value.coverAlt || value.coverImage?.alternativeText || ""),
+    coverMode: value.coverMode === "cover-image" || (!value.coverMode && value.coverImage?.url)
+      ? "cover-image"
+      : "category-animation",
     category,
     authorName: String(value.authorName || ""),
     featured: Boolean(value.featured),
