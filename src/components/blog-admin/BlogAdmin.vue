@@ -263,6 +263,14 @@ const suggestedReadingTime = computed(() => Math.max(1, Math.ceil(articleWordCou
 const previewHtml = computed(() => renderBlogBlocks(articleForm.content as any[]));
 const selectedCategory = computed(() => dashboard.value.categories.find((category) => category.documentId === articleForm.categoryDocumentId));
 const activeLinks = computed(() => articleForm.links.filter((link) => link.active && link.label.trim() && link.url.trim()));
+const visibleStoredAttachments = computed(() => articleForm.attachments.filter((attachment) => (
+  Number(attachment.id) !== Number(articleForm.coverImage?.id)
+)));
+const visibleAttachmentFiles = computed(() => {
+  if (!coverFile.value) return attachmentFiles.value;
+  const coverKey = `${coverFile.value.name}:${coverFile.value.size}:${coverFile.value.lastModified}`;
+  return attachmentFiles.value.filter((file) => `${file.name}:${file.size}:${file.lastModified}` !== coverKey);
+});
 const editorialChecks = computed(() => [
   { label: "Título claro (35–65 caracteres)", ok: articleForm.title.trim().length >= 35 && articleForm.title.trim().length <= 65 },
   { label: "Resumen completo", ok: articleForm.excerpt.trim().length >= 90 },
@@ -478,6 +486,9 @@ function chooseCover(event: Event) {
   if (!file) return;
   if (coverPreview.value.startsWith("blob:")) URL.revokeObjectURL(coverPreview.value);
   coverFile.value = file;
+  attachmentFiles.value = attachmentFiles.value.filter((attachment) => (
+    `${attachment.name}:${attachment.size}:${attachment.lastModified}` !== `${file.name}:${file.size}:${file.lastModified}`
+  ));
   coverPreview.value = URL.createObjectURL(file);
   if (!articleForm.coverAlt) articleForm.coverAlt = `Portada de ${articleForm.title || "la publicación"}`;
 }
@@ -533,7 +544,13 @@ function chooseAttachments(event: Event) {
   input.value = "";
   if (!selected.length) return;
   const known = new Set(attachmentFiles.value.map((file) => `${file.name}:${file.size}:${file.lastModified}`));
-  attachmentFiles.value.push(...selected.filter((file) => !known.has(`${file.name}:${file.size}:${file.lastModified}`)));
+  const coverKey = coverFile.value
+    ? `${coverFile.value.name}:${coverFile.value.size}:${coverFile.value.lastModified}`
+    : "";
+  attachmentFiles.value.push(...selected.filter((file) => {
+    const key = `${file.name}:${file.size}:${file.lastModified}`;
+    return key !== coverKey && !known.has(key);
+  }));
 }
 
 function removePendingAttachment(index: number) {
@@ -571,7 +588,8 @@ async function saveArticle(publish: boolean) {
     let cover = articleForm.coverImage;
     if (coverFile.value) cover = await api.upload(coverFile.value);
     const uploadedAttachments = attachmentFiles.value.length ? await api.uploadMany(attachmentFiles.value) : [];
-    const attachments = [...articleForm.attachments, ...uploadedAttachments];
+    const attachments = [...articleForm.attachments, ...uploadedAttachments]
+      .filter((attachment) => Number(attachment.id) !== Number(cover?.id));
     const links = await Promise.all(articleForm.links.map(async (link) => {
       const image = link.imageFile ? await api.upload(link.imageFile) : link.image;
       return {
@@ -929,9 +947,9 @@ onBeforeUnmount(() => {
                 <section class="inspector-card">
                   <div class="inspector-card__title"><span>ARCHIVOS ADJUNTOS</span><i></i></div>
                   <label class="attachment-drop">＋ Seleccionar archivos<input type="file" multiple @change="chooseAttachments" /></label>
-                  <div v-if="articleForm.attachments.length || attachmentFiles.length" class="attachment-list">
-                    <article v-for="(attachment, index) in articleForm.attachments" :key="`stored-${attachment.id}`"><span>✓</span><div><strong>{{ attachmentLabel(attachment) }}</strong><small>Ya cargado</small></div><button type="button" aria-label="Quitar archivo" @click="removeStoredAttachment(index)">×</button></article>
-                    <article v-for="(file, index) in attachmentFiles" :key="`new-${file.name}-${file.lastModified}`"><span>↑</span><div><strong>{{ file.name }}</strong><small>{{ Math.max(1, Math.round(file.size / 1024)) }} KB · se subirá al guardar</small></div><button type="button" aria-label="Quitar archivo" @click="removePendingAttachment(index)">×</button></article>
+                  <div v-if="visibleStoredAttachments.length || visibleAttachmentFiles.length" class="attachment-list">
+                    <article v-for="attachment in visibleStoredAttachments" :key="`stored-${attachment.id}`"><span>✓</span><div><strong>{{ attachmentLabel(attachment) }}</strong><small>Ya cargado</small></div><button type="button" aria-label="Quitar archivo" @click="removeStoredAttachment(articleForm.attachments.indexOf(attachment))">×</button></article>
+                    <article v-for="file in visibleAttachmentFiles" :key="`new-${file.name}-${file.lastModified}`"><span>↑</span><div><strong>{{ file.name }}</strong><small>{{ Math.max(1, Math.round(file.size / 1024)) }} KB · se subirá al guardar</small></div><button type="button" aria-label="Quitar archivo" @click="removePendingAttachment(attachmentFiles.indexOf(file))">×</button></article>
                   </div>
                   <p v-else class="attachment-empty">Puedes adjuntar PDF, hojas de cálculo, presentaciones, imágenes, audio o video.</p>
                 </section>
@@ -1090,7 +1108,7 @@ onBeforeUnmount(() => {
           <div v-else class="preview-animation" :data-visual="selectedCategory?.visualStyle || 'notes'"><span>{{ visualStyleLabel(selectedCategory?.visualStyle) }}</span><strong>{{ selectedCategory?.name || "Animación editorial" }}</strong><i></i></div>
           <div class="preview-body" v-html="previewHtml"></div>
           <section v-if="activeLinks.length" class="preview-resources"><span>{{ settingsDraft.resourcesLabel || "RECURSOS PARA CONTINUAR" }}</span><a v-for="link in activeLinks" :key="link.key" :href="link.url" target="_blank" rel="noopener"><img v-if="link.imagePreview" :src="link.imagePreview" :alt="link.label" /><div><strong>{{ link.label }}</strong><small v-if="link.description">{{ link.description }}</small></div><b>↗</b></a></section>
-          <section v-if="articleForm.attachments.length || attachmentFiles.length" class="preview-resources"><span>{{ settingsDraft.attachmentsLabel || "ARCHIVOS DE LA PUBLICACIÓN" }}</span><a v-for="attachment in articleForm.attachments" :key="attachment.id" :href="mediaUrl(cmsUrl, attachment)" target="_blank" rel="noopener"><div><strong>{{ attachmentLabel(attachment) }}</strong><small>Archivo adjunto</small></div><b>↓</b></a><div v-for="file in attachmentFiles" :key="file.name" class="preview-file"><div><strong>{{ file.name }}</strong><small>Se publicará al guardar</small></div><b>↑</b></div></section>
+          <section v-if="visibleStoredAttachments.length || visibleAttachmentFiles.length" class="preview-resources"><span>{{ settingsDraft.attachmentsLabel || "ARCHIVOS DE LA PUBLICACIÓN" }}</span><a v-for="attachment in visibleStoredAttachments" :key="attachment.id" :href="mediaUrl(cmsUrl, attachment)" target="_blank" rel="noopener"><div><strong>{{ attachmentLabel(attachment) }}</strong><small>Archivo adjunto</small></div><b>↓</b></a><div v-for="file in visibleAttachmentFiles" :key="file.name" class="preview-file"><div><strong>{{ file.name }}</strong><small>Se publicará al guardar</small></div><b>↑</b></div></section>
         </div>
       </article>
     </div>
@@ -1359,6 +1377,27 @@ onBeforeUnmount(() => {
 .preview-body :deep(p),.preview-body :deep(ul),.preview-body :deep(ol),.preview-body :deep(blockquote) { margin: 0 0 1.35em; }
 .preview-body :deep(a) { color: #72ccff; }.preview-body :deep(img) { max-width: 100%; border-radius: 14px; }
 .preview-body :deep(.article-image) { margin: 28px 0; }.preview-body :deep(.article-inline-image) { min-height: 360px; border-radius: 14px; background-position: center; background-size: cover; }
+.preview-body :deep(.article-gallery) { width: 100%; margin: 32px 0; padding: 10px; border: 1px solid color-mix(in srgb,var(--preview-color),transparent 72%); border-radius: 18px; background: rgba(2,6,23,.62); overflow: hidden; }
+.preview-body :deep(.article-gallery > h3) { margin: 4px 4px 12px; }
+.preview-body :deep(.article-gallery__viewport) { width: 100%; border-radius: 13px; overflow: hidden; }
+.preview-body :deep(.article-gallery__items) { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.preview-body :deep(.article-gallery__item) { display: grid; position: relative; width: 100%; height: auto; min-width: 0; padding: 0; border: 1px solid rgba(255,255,255,.1); border-radius: 13px; color: white; background: #020617; overflow: hidden; }
+.preview-body :deep(.article-gallery__media) { display: grid; width: 100%; aspect-ratio: 4/3; place-items: center; overflow: hidden; }
+.preview-body :deep(.article-gallery__item img) { display: block; width: 100%; height: 100%; border-radius: 0; object-fit: contain; }
+.preview-body :deep(.article-gallery__item > b) { position: absolute; top: 8px; left: 8px; padding: 5px 7px; border-radius: 999px; color: #031326; background: var(--preview-color); font: 800 8px/1 ui-monospace,monospace; }
+.preview-body :deep(.article-gallery__caption) { padding: 8px 10px; color: rgba(255,255,255,.58); font-size: 10px; }
+.preview-body :deep(.article-gallery--masonry .article-gallery__viewport) { overflow: visible; }
+.preview-body :deep(.article-gallery--masonry .article-gallery__items) { display: block; columns: 2; column-gap: 8px; }
+.preview-body :deep(.article-gallery--masonry .article-gallery__item) { display: inline-grid; margin-bottom: 8px; break-inside: avoid; }
+.preview-body :deep(.article-gallery--masonry .article-gallery__media) { aspect-ratio: auto; }
+.preview-body :deep(.article-gallery--masonry img) { height: auto; }
+.preview-body :deep(.article-gallery--carousel .article-gallery__viewport) { overflow-x: auto; scroll-snap-type: x mandatory; }
+.preview-body :deep(.article-gallery--carousel .article-gallery__items) { display: flex; width: max-content; gap: 9px; }
+.preview-body :deep(.article-gallery--carousel .article-gallery__item) { flex: 0 0 min(70vw,620px); scroll-snap-align: start; }
+.preview-body :deep(.article-gallery--carousel .article-gallery__media) { aspect-ratio: 16/9; }
+.preview-body :deep(.article-gallery__controls) { display: flex; margin-top: 8px; align-items: center; justify-content: flex-end; gap: 7px; }
+.preview-body :deep(.article-gallery__controls span) { margin-right: auto; color: rgba(255,255,255,.4); font: 700 8px/1 ui-monospace,monospace; }
+.preview-body :deep(.article-gallery__controls button) { display: grid; width: 32px; height: 32px; padding: 0; place-items: center; border: 1px solid color-mix(in srgb,var(--preview-color),transparent 68%); border-radius: 50%; color: white; background: color-mix(in srgb,var(--preview-color),transparent 92%); }
 .preview-body :deep(pre) { padding: 18px; border: 1px solid rgba(87,187,255,.16); border-radius: 13px; background: rgba(0,0,15,.38); overflow-x: auto; }
 .preview-body :deep(.article-callout) { margin: 24px 0; padding: 18px; border: 1px solid color-mix(in srgb,var(--preview-color),transparent 62%); border-radius: 14px; background: color-mix(in srgb,var(--preview-color),transparent 93%); }
 .preview-body :deep(.article-callout strong) { display: block; margin-bottom: 6px; color: var(--preview-color); }

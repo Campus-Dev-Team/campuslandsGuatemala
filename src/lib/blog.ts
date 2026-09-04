@@ -31,6 +31,8 @@ export type BlogBlock = BlogTextNode & {
 };
 
 export type BlogMedia = {
+  id?: number | string | null;
+  hash?: string | null;
   url: string;
   alternativeText?: string | null;
   caption?: string | null;
@@ -243,6 +245,8 @@ function normalizeMedia(value: any): BlogMedia | null {
       )
     : null;
   return {
+    id: value.id ?? null,
+    hash: value.hash ? String(value.hash) : null,
     url: mediaUrl(value.url),
     alternativeText: value.alternativeText,
     caption: value.caption,
@@ -620,9 +624,28 @@ export function renderBlogBlocks(blocks: BlogBlock[] = []): string {
         const url = mediaUrl(image.url);
         if (!url) return [];
         const alt = image.alternativeText || image.caption || `Imagen ${index + 1}`;
-        return [`<button type="button" data-article-gallery-image data-src="${escapeHtml(url)}" data-alt="${escapeHtml(alt)}" data-caption="${escapeHtml(image.caption || "")}"><img src="${escapeHtml(url)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" /><span>${String(index + 1).padStart(2, "0")}</span></button>`];
+        const normalized = normalizeMedia(image);
+        const srcset = blogMediaSrcset(normalized);
+        const dimensions = normalized?.width && normalized?.height
+          ? ` width="${normalized.width}" height="${normalized.height}"`
+          : "";
+        const responsive = srcset
+          ? ` srcset="${escapeHtml(srcset)}" sizes="${layout === "carousel" ? "(max-width: 640px) 88vw, 760px" : "(max-width: 640px) 100vw, 480px"}"`
+          : "";
+        const orientation = Number(normalized?.height) > Number(normalized?.width) * 1.08
+          ? "portrait"
+          : Number(normalized?.width) > Number(normalized?.height) * 1.35
+            ? "landscape"
+            : "square";
+        const itemCaption = image.caption
+          ? `<small class="article-gallery__caption">${escapeHtml(image.caption)}</small>`
+          : "";
+        return [`<button class="article-gallery__item article-gallery__item--${orientation}" type="button" data-article-gallery-image data-src="${escapeHtml(url)}" data-alt="${escapeHtml(alt)}" data-caption="${escapeHtml(image.caption || "")}" aria-label="Abrir imagen ${index + 1}: ${escapeHtml(alt)}"><span class="article-gallery__media"><img src="${escapeHtml(url)}"${responsive} alt="${escapeHtml(alt)}"${dimensions} loading="lazy" decoding="async" /></span><b>${String(index + 1).padStart(2, "0")}</b>${itemCaption}</button>`];
       }).join("");
-      return `<figure class="article-gallery article-gallery--${layout}" data-article-gallery${block.autoplay ? ' data-autoplay="true"' : ""}>${title}<div>${images}</div>${caption}</figure>`;
+      const controls = layout === "carousel"
+        ? '<nav class="article-gallery__controls" aria-label="Controles del carrusel"><button type="button" data-gallery-scroll="previous" aria-label="Ver imágenes anteriores">←</button><span>Desliza para explorar</span><button type="button" data-gallery-scroll="next" aria-label="Ver imágenes siguientes">→</button></nav>'
+        : "";
+      return `<figure class="article-gallery article-gallery--${layout}" data-article-gallery${block.autoplay ? ' data-autoplay="true"' : ""}>${title}<div class="article-gallery__viewport"><div class="article-gallery__items">${images}</div></div>${controls}${caption}</figure>`;
     }
     if (block.type === "callout") {
       const tone = ["info", "success", "warning", "note"].includes(block.tone || "") ? block.tone : "info";

@@ -466,7 +466,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", handleShortcut));
               <label class="inline-check"><input v-model="block.autoplay" type="checkbox" @change="publishValue" /> Avance automático en carrusel</label>
               <label class="span-three"><span>Descripción o crédito general</span><input v-model="block.caption" maxlength="320" @input="publishValue" /></label>
             </div>
-            <div v-if="block.images?.length" class="gallery-block-grid">
+            <div v-if="block.images?.length" :class="['gallery-block-grid', `gallery-block-grid--${block.layout || 'grid'}`]">
               <article v-for="(image, imageIndex) in block.images" :key="`${image.id}-${imageIndex}`">
                 <img :src="imageUrl(image)" :alt="image.alternativeText || ''" />
                 <span>{{ String(imageIndex + 1).padStart(2, '0') }}</span>
@@ -590,7 +590,13 @@ onBeforeUnmount(() => window.removeEventListener("keydown", handleShortcut));
 .gallery-block-editor { padding-bottom: 14px; }
 .gallery-block-grid { display: grid; padding: 0 14px 12px; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
 .gallery-block-grid article { position: relative; border-radius: 10px; background: rgba(0,0,20,.28); overflow: hidden; }
-.gallery-block-grid img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+.gallery-block-grid img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: contain; background: #020617; }
+.gallery-block-grid--masonry { display: block; columns: 3; column-gap: 8px; }
+.gallery-block-grid--masonry article { display: inline-block; width: 100%; margin-bottom: 8px; break-inside: avoid; }
+.gallery-block-grid--masonry img { height: auto; aspect-ratio: auto; }
+.gallery-block-grid--carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+.gallery-block-grid--carousel article { flex: 0 0 min(82%,420px); scroll-snap-align: start; }
+.gallery-block-grid--carousel img { aspect-ratio: 16/9; }
 .gallery-block-grid > article > span { position: absolute; top: 6px; left: 6px; padding: 4px 6px; border-radius: 99px; color: #001a21; background: #00d9a4; font: 800 7px/1 ui-monospace,monospace; }
 .gallery-block-grid footer { display: flex; padding: 5px; justify-content: flex-end; gap: 4px; }
 .gallery-block-grid button { width: 25px; height: 25px; border: 1px solid rgba(255,255,255,.09); border-radius: 7px; color: rgba(255,255,255,.7); background: rgba(255,255,255,.04); cursor: pointer; }
@@ -611,6 +617,8 @@ onBeforeUnmount(() => window.removeEventListener("keydown", handleShortcut));
   .editor-block__rail { padding-inline: 4px; }
   .image-fields,.structured-fields--three { grid-template-columns: 1fr; }
   .gallery-block-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .gallery-block-grid--masonry { columns: 2; }
+  .gallery-block-grid--carousel { display: flex; }
   .structured-fields .span-two,.structured-fields .span-three { grid-column: auto; }
 }
 </style>
