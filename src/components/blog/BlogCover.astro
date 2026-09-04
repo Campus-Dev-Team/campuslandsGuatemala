@@ -1,6 +1,6 @@
 ---
 import type { BlogArticle } from "../../lib/blog";
-import { coverStyle } from "../../lib/blog";
+import { blogMediaSrcset, coverStyle } from "../../lib/blog";
 
 interface Props {
   article: BlogArticle;
@@ -11,6 +11,10 @@ interface Props {
 const { article, variant = "card", index = 1 } = Astro.props;
 const label = article.coverAlt || `Portada de ${article.title}`;
 const hasImage = Boolean(article.coverImage?.url);
+const imageSrcset = blogMediaSrcset(article.coverImage);
+const imageSizes = variant === "card"
+  ? "(max-width: 640px) 100vw, (max-width: 1080px) 50vw, 360px"
+  : "(max-width: 1240px) 100vw, 1180px";
 const visualVariant = ({
   "inteligencia-artificial": "ai",
   programacion: "code",
@@ -34,9 +38,26 @@ const signalLabel = ({
     { "blog-cover--photo": hasImage },
   ]}
   style={coverStyle(article)}
-  role="img"
-  aria-label={label}
+  role={!hasImage ? "img" : undefined}
+  aria-label={!hasImage ? label : undefined}
 >
+  {hasImage && (
+    <>
+      <span class="blog-cover__photo-ambient" aria-hidden="true"></span>
+      <img
+        class="blog-cover__photo"
+        src={article.coverImage!.url}
+        srcset={imageSrcset}
+        sizes={imageSizes}
+        alt={label}
+        width={article.coverImage?.width || undefined}
+        height={article.coverImage?.height || undefined}
+        loading={variant === "card" ? "lazy" : "eager"}
+        decoding="async"
+        fetchpriority={variant === "detail" || variant === "hero" ? "high" : "auto"}
+      />
+    </>
+  )}
   <span class="blog-cover__grid" aria-hidden="true"></span>
   <span class="blog-cover__glow" aria-hidden="true"></span>
   <span class="blog-cover__streak blog-cover__streak--one" aria-hidden="true"></span>
@@ -177,6 +198,42 @@ const signalLabel = ({
   .blog-cover--photo::before { background: linear-gradient(180deg, rgb(0 0 25 / 8%), rgb(0 0 35 / 82%)); }
   .blog-cover--hero { min-height: clamp(20rem, 48vw, 33rem); }
   .blog-cover--detail { min-height: clamp(22rem, 48vw, 38rem); border-radius: clamp(1.5rem, 4vw, 2.5rem); }
+
+  .blog-cover__photo-ambient,
+  .blog-cover__photo {
+    position: absolute;
+    inset: 0;
+  }
+
+  .blog-cover__photo-ambient {
+    z-index: 0;
+    background-image: var(--cover-photo);
+    background-position: center;
+    background-size: cover;
+    filter: blur(1.5rem) saturate(1.08);
+    opacity: 0.42;
+    transform: scale(1.08);
+  }
+
+  .blog-cover__photo {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    filter: saturate(1.02) contrast(1.01);
+  }
+
+  .blog-cover--photo.blog-cover--detail::before,
+  .blog-cover--photo.blog-cover--hero::before {
+    background:
+      linear-gradient(180deg, rgb(0 0 25 / 3%), transparent 68%, rgb(0 0 35 / 48%)),
+      linear-gradient(90deg, rgb(4 8 35 / 12%), transparent 22% 78%, rgb(4 8 35 / 12%));
+  }
+
+  .blog-cover--photo.blog-cover--card::before {
+    background: linear-gradient(180deg, transparent 66%, rgb(0 0 35 / 58%));
+  }
 
   .blog-cover__grid {
     position: absolute;

@@ -411,7 +411,7 @@ const structuredData = [
   .article-richtext :global(pre) { margin: 1.75rem 0; padding: 1.25rem; overflow-x: auto; border: 1px solid rgb(87 187 255 / 20%); border-radius: 1rem; background: #04091b; color: #bde8ff; }
   .article-richtext :global(code) { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
   .article-richtext :global(figure) { margin: 2.5rem 0; }
-  .article-richtext :global(.article-inline-image) { min-height: clamp(18rem, 45vw, 34rem); border: 1px solid rgb(var(--category-rgb) / 30%); border-radius: 1.3rem; background-position: center; background-size: cover; }
+  .article-richtext :global(.article-inline-image) { display: block; width: 100%; height: auto; max-height: min(72vh, 54rem); border: 1px solid rgb(var(--category-rgb) / 30%); border-radius: 1.3rem; background: rgb(3 10 35 / 74%); box-shadow: 0 1.4rem 3.5rem rgb(0 0 28 / 24%); object-fit: contain; }
   .article-richtext :global(figcaption) { margin-top: 0.7rem; color: rgb(255 255 255 / 44%); font-size: 0.72rem; text-align: center; }
   .article-richtext :global(.article-image--full) { width: min(100vw - 2.25rem, 1050px); margin-left: 50%; transform: translateX(-50%); }
   .article-richtext :global(.article-image--left),
@@ -419,7 +419,7 @@ const structuredData = [
   .article-richtext :global(.article-image--left) { float: left; margin: 0.6rem 1.4rem 1rem 0; }
   .article-richtext :global(.article-image--right) { float: right; margin: 0.6rem 0 1rem 1.4rem; }
   .article-richtext :global(.article-image--left .article-inline-image),
-  .article-richtext :global(.article-image--right .article-inline-image) { min-height: 17rem; }
+  .article-richtext :global(.article-image--right .article-inline-image) { max-height: 28rem; }
   .article-richtext :global(.article-callout) { --callout: var(--category-color); margin: 2rem 0; padding: 1.25rem 1.4rem; border: 1px solid color-mix(in srgb, var(--callout) 32%, transparent); border-radius: 1rem; background: color-mix(in srgb, var(--callout) 8%, rgb(7 16 43 / 72%)); }
   .article-richtext :global(.article-callout--success) { --callout: #00d9a4; }
   .article-richtext :global(.article-callout--warning) { --callout: #ffbd59; }

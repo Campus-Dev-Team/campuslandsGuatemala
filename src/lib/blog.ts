@@ -38,6 +38,14 @@ export type BlogMedia = {
   height?: number | null;
   mime?: string | null;
   name?: string | null;
+  formats?: Record<string, BlogMediaVariant> | null;
+};
+
+export type BlogMediaVariant = {
+  url: string;
+  width?: number | null;
+  height?: number | null;
+  mime?: string | null;
 };
 
 export type BlogArticleLink = {
@@ -216,6 +224,20 @@ function mediaUrl(url?: string | null): string {
 
 function normalizeMedia(value: any): BlogMedia | null {
   if (!value?.url) return null;
+  const formats = value.formats && typeof value.formats === "object"
+    ? Object.fromEntries(
+        Object.entries(value.formats).flatMap(([key, format]: [string, any]) => {
+          const url = mediaUrl(format?.url);
+          if (!url) return [];
+          return [[key, {
+            url,
+            width: Number(format?.width) || null,
+            height: Number(format?.height) || null,
+            mime: format?.mime ? String(format.mime) : null,
+          }]];
+        }),
+      )
+    : null;
   return {
     url: mediaUrl(value.url),
     alternativeText: value.alternativeText,
@@ -224,7 +246,30 @@ function normalizeMedia(value: any): BlogMedia | null {
     height: Number(value.height) || null,
     mime: value.mime ? String(value.mime) : null,
     name: value.name ? String(value.name) : null,
+    formats,
   };
+}
+
+function mediaVariants(value?: BlogMedia | null): BlogMediaVariant[] {
+  if (!value?.url) return [];
+  const candidates = [
+    ...Object.values(value.formats || {}),
+    { url: mediaUrl(value.url), width: value.width, height: value.height, mime: value.mime },
+  ];
+  const unique = new Map<string, BlogMediaVariant>();
+  candidates.forEach((candidate) => {
+    const url = mediaUrl(candidate?.url);
+    const width = Number(candidate?.width) || 0;
+    if (url && width) unique.set(`${url}:${width}`, { ...candidate, url, width });
+  });
+  return [...unique.values()].sort((left, right) => Number(left.width) - Number(right.width));
+}
+
+export function blogMediaSrcset(value?: BlogMedia | null): string | undefined {
+  const variants = mediaVariants(value);
+  return variants.length > 1
+    ? variants.map((variant) => `${variant.url} ${variant.width}w`).join(", ")
+    : undefined;
 }
 
 function normalizeArticleLinks(value: unknown): BlogArticleLink[] {
@@ -361,12 +406,23 @@ function normalizeGallery(value: any): BlogGallery | null {
 }
 
 async function fetchJson(path: string) {
-  const response = await fetch(`${CMS_URL}${path}`, {
-    headers: { Accept: "application/json" },
-    signal: AbortSignal.timeout(4500),
-  });
-  if (!response.ok) throw new Error(`CMS respondió HTTP ${response.status}`);
-  return response.json();
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      const response = await fetch(`${CMS_URL}${path}`, {
+        headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(15000),
+      });
+      if (!response.ok) throw new Error(`CMS respondió HTTP ${response.status}`);
+      return response.json();
+    } catch (error) {
+      lastError = error;
+      if (attempt < 3) await new Promise((resolve) => setTimeout(resolve, attempt * 350));
+    }
+  }
+
+  throw lastError;
 }
 
 async function fetchCollection(path: string) {
@@ -409,6 +465,9 @@ async function loadBlogData(): Promise<BlogData> {
       source: "cms",
     };
   } catch (error) {
+    if (String(import.meta.env.REQUIRE_CMS_FOR_BUILD || "").toLowerCase() === "true") {
+      throw new Error(`[Blog] No se puede compilar sin contenido válido del CMS: ${String(error)}`);
+    }
     console.warn(`[Blog] El CMS no está disponible: ${String(error)}`);
     return { settings: null, categories: [], articles: [], galleries: [], source: "unavailable" };
   }
@@ -529,7 +588,13 @@ export function renderBlogBlocks(blocks: BlogBlock[] = []): string {
       const label = block.image.alternativeText || block.image.caption || "Imagen de la publicación";
       const caption = block.image.caption ? `<figcaption>${escapeHtml(block.image.caption)}</figcaption>` : "";
       const alignment = ["wide", "full", "left", "right"].includes(block.alignment || "") ? block.alignment : "wide";
-      return `<figure class="article-image article-image--${alignment}"><div class="article-inline-image" role="img" aria-label="${escapeHtml(label)}" style="background-image:url('${escapeHtml(url)}')"></div>${caption}</figure>`;
+      const normalized = normalizeMedia(block.image);
+      const srcset = blogMediaSrcset(normalized);
+      const dimensions = normalized?.width && normalized?.height
+        ? ` width="${normalized.width}" height="${normalized.height}"`
+        : "";
+      const responsive = srcset ? ` srcset="${escapeHtml(srcset)}" sizes="${alignment === "full" ? "(max-width: 1050px) 100vw, 1050px" : alignment === "left" || alignment === "right" ? "(max-width: 640px) 100vw, 352px" : "(max-width: 760px) 100vw, 760px"}"` : "";
+      return `<figure class="article-image article-image--${alignment}"><img class="article-inline-image" src="${escapeHtml(url)}"${responsive} alt="${escapeHtml(label)}"${dimensions} loading="lazy" decoding="async" />${caption}</figure>`;
     }
     if (block.type === "gallery" && Array.isArray(block.images) && block.images.length) {
       const layout = ["grid", "masonry", "carousel"].includes(block.layout || "") ? block.layout : "grid";
@@ -589,6 +654,6 @@ export function coverStyle(article: BlogArticle): string {
   const color = safeCategoryColor(article.category.color);
   const rgb = colorRgb(color);
   const image = mediaUrl(article.coverImage?.url);
-  const backgroundImage = image ? `url('${image.replaceAll("'", "%27")}'), ` : "";
-  return `--category-color:${color};--category-rgb:${rgb};--cover-image:${backgroundImage}radial-gradient(circle at 76% 22%, rgb(${rgb} / 0.72), transparent 26%),linear-gradient(135deg, rgb(${rgb} / 0.34), #07102b 58%, #000051);`;
+  const photo = image ? `url('${image.replaceAll("'", "%27")}')` : "none";
+  return `--category-color:${color};--category-rgb:${rgb};--cover-photo:${photo};--cover-image:radial-gradient(circle at 76% 22%, rgb(${rgb} / 0.72), transparent 26%),linear-gradient(135deg, rgb(${rgb} / 0.34), #07102b 58%, #000051);`;
 }
