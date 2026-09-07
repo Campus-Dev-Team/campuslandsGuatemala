@@ -4,6 +4,9 @@ import { blogSeoDescription, blogSeoTitle, colorRgb, formatBlogDate, getBlogData
 import { PAGE_SEO, SITE, SITE_URL } from "../../../config/seo.mjs";
 import "~/styles/index.css";
 
+export const prerender = false;
+Astro.response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
+
 const { settings, galleries } = await getBlogData();
 const latestGalleryUpdate = galleries.map((gallery) => gallery.modifiedDate).filter(Boolean).sort().at(-1);
 const fallbackSeo = PAGE_SEO["/blog/galerias/"];

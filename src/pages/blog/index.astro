@@ -10,6 +10,9 @@ import {
 import { DEFAULT_IMAGE, SITE, SITE_URL } from "../../config/seo.mjs";
 import "~/styles/index.css";
 
+export const prerender = false;
+Astro.response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
+
 const { settings, categories, articles, galleries, source } = await getBlogData();
 const latestBlogUpdate = [...articles, ...galleries]
   .map((entry) => entry.modifiedDate)

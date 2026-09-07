@@ -158,7 +158,10 @@ export type BlogData = {
   source: "cms" | "unavailable";
 };
 
-const CMS_URL = String(import.meta.env.PUBLIC_CMS_URL || "http://127.0.0.1:1337").replace(/\/+$/, "");
+const runtimeCmsUrl = import.meta.env.SSR && typeof process !== "undefined"
+  ? process.env.PUBLIC_CMS_URL
+  : undefined;
+const CMS_URL = String(runtimeCmsUrl || import.meta.env.PUBLIC_CMS_URL || "http://127.0.0.1:1337").replace(/\/+$/, "");
 
 export function safeCategoryColor(value?: string): string {
   return /^#[0-9a-f]{6}$/i.test(value || "") ? String(value).toUpperCase() : "#2CAAFF";
@@ -461,6 +464,8 @@ async function fetchCollection(path: string) {
   return data;
 }
 
+let lastSuccessfulBlogData: BlogData | undefined;
+
 async function loadBlogData(): Promise<BlogData> {
   try {
     const [settingsResponse, categoryData, articleData, galleryData] = await Promise.all([
@@ -477,29 +482,26 @@ async function loadBlogData(): Promise<BlogData> {
     const galleries = (galleryData.map(normalizeGallery).filter(Boolean) as BlogGallery[])
       .filter((gallery) => visibleCategorySlugs.has(gallery.category.slug));
 
-    return {
+    const currentBlogData: BlogData = {
       settings: normalizeSettings(settingsResponse.data),
       categories,
       articles,
       galleries,
       source: "cms",
     };
+    lastSuccessfulBlogData = currentBlogData;
+    return currentBlogData;
   } catch (error) {
     if (String(import.meta.env.REQUIRE_CMS_FOR_BUILD || "").toLowerCase() === "true") {
       throw new Error(`[Blog] No se puede compilar sin contenido válido del CMS: ${String(error)}`);
     }
     console.warn(`[Blog] El CMS no está disponible: ${String(error)}`);
+    if (lastSuccessfulBlogData) return lastSuccessfulBlogData;
     return { settings: null, categories: [], articles: [], galleries: [], source: "unavailable" };
   }
 }
 
-let productionBlogData: Promise<BlogData> | undefined;
-
 export async function getBlogData(): Promise<BlogData> {
-  if (import.meta.env.PROD) {
-    productionBlogData ||= loadBlogData();
-    return productionBlogData;
-  }
   return loadBlogData();
 }
 

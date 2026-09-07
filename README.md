@@ -6,7 +6,7 @@ audience: Desarrollo, infraestructura y mantenimiento técnico de Campuslands Gu
 
 # Monta el frontend de Campuslands Guatemala
 
-Este repositorio contiene el sitio público de Campuslands Guatemala. Astro genera las páginas estáticas, Vue aporta los componentes interactivos y Tailwind CSS define la interfaz.
+Este repositorio contiene el sitio público de Campuslands Guatemala. Astro preconstruye las páginas institucionales y sirve Órbita dinámicamente con Node; Vue aporta los componentes interactivos y Tailwind CSS define la interfaz.
 
 El blog y la mesa editorial dependen del CMS Strapi del repositorio [`campuslands-guatemala-backend`](https://github.com/anndreloopez012/campuslands-guatemala-backend). Monta y comprueba ese backend antes de iniciar o desplegar el frontend completo.
 
@@ -18,8 +18,8 @@ Sigue este orden en local y producción:
 2. Comprueba el healthcheck y el índice editorial
 3. Configura `PUBLIC_CMS_URL` en el frontend
 4. Instala, compila y publica este frontend
-5. Configura el Deploy Hook del frontend en el backend
-6. Publica una entrada de prueba y comprueba la reconstrucción
+5. Despliega el contenedor Node del frontend
+6. Publica una entrada de prueba y comprueba su aparición inmediata
 
 El frontend puede mostrar las páginas institucionales sin el CMS. Sin embargo, el blog, las galerías, las imágenes editoriales y `/blog-admin/` necesitan el backend.
 
@@ -27,7 +27,7 @@ El frontend puede mostrar las páginas institucionales sin el CMS. Sin embargo, 
 
 | Componente | Repositorio | Función |
 | --- | --- | --- |
-| Frontend | [`campuslandsGuatemala`](https://github.com/anndreloopez012/campuslandsGuatemala) | Sitio público, blog estático, mesa editorial, SEO y sitemaps |
+| Frontend | [`campuslandsGuatemala`](https://github.com/anndreloopez012/campuslandsGuatemala) | Sitio público, Órbita dinámica, mesa editorial, SEO y sitemaps |
 | Backend | [`campuslands-guatemala-backend`](https://github.com/anndreloopez012/campuslands-guatemala-backend) | Contenido, autenticación, API, PostgreSQL y archivos editoriales |
 
 Usa `main` para producción y `dev` como rama de integración.
@@ -191,7 +191,7 @@ npm run build
 npm run preview
 ```
 
-Abre [http://localhost:4321/](http://localhost:4321/). La compilación falla si el backend no responde o si una publicación no genera HTML y sitemap.
+Abre [http://localhost:4321/](http://localhost:4321/). Las rutas de Órbita consultan el CMS al recibir cada solicitud; no quedan congeladas durante la compilación.
 
 ## Despliega en producción
 
@@ -218,42 +218,41 @@ curl --fail https://backend.example.com/api/seo/content-index
 
 ### 2. Configura el frontend
 
-Importa este repositorio en Vercel o en otro servicio capaz de publicar archivos estáticos.
+En Dokploy crea una aplicación desde este repositorio y selecciona despliegue mediante `Dockerfile`.
 
 Configura estas variables de producción:
 
 ```env
-PUBLIC_CMS_URL=https://backend.example.com
-REQUIRE_CMS_FOR_BUILD=true
+PUBLIC_CMS_URL=https://orbita.campuslands.pro
+REQUIRE_CMS_FOR_BUILD=false
 ```
 
 Usa estos valores de compilación:
 
 | Configuración | Valor |
 | --- | --- |
-| Rama | `main` |
-| Node.js | 20 LTS |
-| Comando | `npm run build` |
-| Directorio de salida | `dist` |
+| Rama | rama aprobada para producción |
+| Build type | Dockerfile |
+| Container Port | `4321` |
+| Healthcheck | `/health.json` |
 
-Astro incorpora `PUBLIC_CMS_URL` durante la compilación. Vuelve a desplegar el frontend después de cambiarla.
+Configura `PUBLIC_CMS_URL` tanto como variable de build como de runtime. El servidor escucha en `0.0.0.0:4321`; Dokploy/Traefik debe dirigir el dominio público a ese puerto del contenedor.
 
-### 3. Conecta la publicación automática
+### 3. Publicación dinámica
 
-Crea un Deploy Hook para la rama `main` del frontend. Guarda su URL en `FRONTEND_DEPLOY_HOOK_URL` dentro del backend y reinicia el CMS.
+Deja `FRONTEND_DEPLOY_HOOK_URL` vacío. Ese hook solo es necesario para frontends puramente estáticos y ya no participa en el flujo editorial de esta implementación.
 
-Cuando el equipo publica, modifica o retira contenido, el backend solicita una nueva compilación. El frontend actualiza el HTML, RSS y los sitemaps.
+Cuando el equipo publica, modifica o retira contenido, el frontend consulta el estado vigente en Strapi. La portada, la URL individual, las categorías, el RSS y los sitemaps se actualizan sin recompilar ni desplegar nuevamente.
 
 ### 4. Valida el flujo completo
 
 1. Inicia sesión en `/blog-admin/`
 2. Publica o modifica una entrada de prueba
-3. Confirma que el proveedor inició una compilación
-4. Comprueba la URL canónica de la entrada
-5. Comprueba que la URL aparezca en `sitemap-blog.xml`
-6. Comprueba `sitemap-index.xml` y `blog/feed.xml`
+3. Abre la URL canónica de la entrada sin lanzar otro despliegue
+4. Comprueba que la URL aparezca en `sitemap-blog.xml`
+5. Comprueba `sitemap-index.xml` y `blog/feed.xml`
 
-En la mesa editorial, cada categoría selecciona una plantilla animada y cada publicación decide si muestra esa animación o su imagen de portada. La selección queda guardada en el CMS y se aplica durante la siguiente compilación.
+En la mesa editorial, cada categoría selecciona una plantilla animada y cada publicación decide si muestra esa animación o su imagen de portada. La selección queda guardada en el CMS y se aplica en la siguiente solicitud pública.
 
 ## Configura la conexión entre proyectos
 
@@ -262,7 +261,7 @@ En la mesa editorial, cada categoría selecciona una plantilla animada y cada pu
 | Variable | Ambiente | Uso |
 | --- | --- | --- |
 | `PUBLIC_CMS_URL` | Local y producción | URL accesible del backend Strapi |
-| `REQUIRE_CMS_FOR_BUILD` | Producción | Detiene la compilación si falta contenido publicado |
+| `REQUIRE_CMS_FOR_BUILD` | Compatibilidad | No es necesario para el renderizado dinámico |
 
 ### Variables relacionadas del backend
 
@@ -270,11 +269,11 @@ En la mesa editorial, cada categoría selecciona una plantilla animada y cada pu
 | --- | --- |
 | `CORS_ORIGINS` | Autoriza el dominio que consume la API y abre `/blog-admin/` |
 | `PUBLIC_SITE_URL` | Construye las rutas canónicas del índice editorial |
-| `FRONTEND_DEPLOY_HOOK_URL` | Solicita una nueva compilación del frontend |
+| `FRONTEND_DEPLOY_HOOK_URL` | Opcional; debe quedar vacío con este frontend dinámico |
 | `BLOG_EDITOR_*` | Provisiona la cuenta de edición cotidiana |
 | `STRAPI_SUPER_ADMIN_*` | Provisiona la cuenta de mantenimiento técnico |
 
-El navegador usa `PUBLIC_CMS_URL` para autenticación, edición y multimedia. La plataforma de compilación usa la misma URL para generar el blog y verificar su cobertura.
+El navegador usa `PUBLIC_CMS_URL` para autenticación, edición y multimedia. El servidor Node usa la misma URL para leer las publicaciones vigentes en cada solicitud.
 
 ## Ejecuta las comprobaciones
 
@@ -282,7 +281,7 @@ El navegador usa `PUBLIC_CMS_URL` para autenticación, edición y multimedia. La
 | --- | --- |
 | `npm run dev` | Inicia el frontend en `127.0.0.1:4321` |
 | `npm run dev:host` | Expone el frontend dentro de la red local |
-| `npm run build` | Genera el sitio, RSS y sitemaps en `dist/` |
+| `npm run build` | Genera el servidor híbrido y las páginas institucionales en `dist/` |
 | `npm run preview` | Sirve la compilación local |
 | `npm run audit:seo` | Revisa metadatos y estructura SEO |
 | `npm run audit:blog` | Revisa contenido editorial y descubrimiento |
@@ -304,7 +303,7 @@ Astro exige una barra final en las rutas.
 | `/joinUs/` | Información para futuros campers |
 | `/ai-academy/` | Talleres presenciales de inteligencia artificial aplicada |
 | `/blog/` | Portada editorial Órbita |
-| `/blog/[slug]/` | Publicación estática generada desde el CMS |
+| `/blog/[slug]/` | Publicación dinámica leída desde el CMS |
 | `/blog/galerias/` | Índice de galerías editoriales |
 | `/blog-admin/` | Mesa editorial privada |
 | `/emplea/` | Contratación de talento tecnológico |
@@ -338,7 +337,7 @@ campuslandsGuatemala/
 
 ## Mantén la indexación actualizada
 
-`npm run build` genera estos recursos:
+El servidor genera estos recursos en cada solicitud:
 
 - `sitemap-index.xml`: URL que debes registrar en Google Search Console
 - `sitemap-pages.xml`: páginas institucionales
@@ -346,7 +345,7 @@ campuslandsGuatemala/
 - `sitemap-urls.txt`: listado legible de URLs canónicas
 - `blog/feed.xml`: feed RSS de Órbita
 
-El índice editorial del backend permite comprobar que todo contenido publicado tenga HTML y una entrada en el sitemap.
+El índice editorial del backend permite comprobar que todo contenido publicado tenga una ruta HTML y una entrada en el sitemap sin un nuevo despliegue.
 
 ## Resuelve fallos comunes
 
@@ -379,7 +378,7 @@ Confirma la cuenta en el backend. Debe estar activa y asociada al rol `blog-edit
 
 ### Una publicación nueva no aparece en producción
 
-Comprueba `FRONTEND_DEPLOY_HOOK_URL` y los logs del backend. Después revisa el historial de compilaciones del frontend.
+Comprueba `PUBLIC_CMS_URL`, la respuesta del CMS y que Dokploy esté ejecutando el servidor Node del `Dockerfile`, no una carpeta estática antigua. `FRONTEND_DEPLOY_HOOK_URL` debe permanecer vacío.
 
 ### Una ruta devuelve 404
 

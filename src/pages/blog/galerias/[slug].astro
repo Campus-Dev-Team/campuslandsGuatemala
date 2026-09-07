@@ -1,17 +1,15 @@
 ---
 import LayoutNavbar from "../../../layouts/LayoutNavbar.astro";
-import { blogSeoDescription, blogSeoTitle, colorRgb, formatBlogDate, getBlogData, safeCategoryColor, type BlogGallery, type BlogSettings } from "../../../lib/blog";
+import { blogSeoDescription, blogSeoTitle, colorRgb, formatBlogDate, getBlogData, safeCategoryColor } from "../../../lib/blog";
 import { SITE, SITE_URL } from "../../../config/seo.mjs";
 import "~/styles/index.css";
 
-export async function getStaticPaths() {
-  const { galleries, settings } = await getBlogData();
-  if (!settings) return [];
-  return galleries.map((gallery) => ({ params: { slug: gallery.slug }, props: { gallery, settings } }));
-}
+export const prerender = false;
+Astro.response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
 
-interface Props { gallery: BlogGallery; settings: BlogSettings }
-const { gallery, settings } = Astro.props;
+const { galleries, settings } = await getBlogData();
+const gallery = galleries.find((candidate) => candidate.slug === Astro.params.slug);
+if (!gallery || !settings) return Astro.redirect("/404/", 302);
 const category = safeCategoryColor(gallery.category.color);
 const rgb = colorRgb(category);
 const pageUrl = `${SITE_URL}/blog/galerias/${gallery.slug}/`;

@@ -10,28 +10,16 @@ import {
   getBlogHeadings,
   renderBlogBlocks,
   safeCategoryColor,
-  type BlogArticle,
-  type BlogSettings,
 } from "../../lib/blog";
 import { DEFAULT_IMAGE, SITE, SITE_URL } from "../../config/seo.mjs";
 import "~/styles/index.css";
 
-export async function getStaticPaths() {
-  const { articles, settings } = await getBlogData();
-  if (!settings) return [];
-  return articles.map((article) => ({
-    params: { slug: article.slug },
-    props: { article, allArticles: articles, settings },
-  }));
-}
+export const prerender = false;
+Astro.response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
 
-interface Props {
-  article: BlogArticle;
-  allArticles: BlogArticle[];
-  settings: BlogSettings;
-}
-
-const { article, allArticles, settings } = Astro.props;
+const { articles: allArticles, settings } = await getBlogData();
+const article = allArticles.find((candidate) => candidate.slug === Astro.params.slug);
+if (!article || !settings) return Astro.redirect("/404/", 302);
 const categoryColor = safeCategoryColor(article.category.color);
 const categoryRgb = colorRgb(categoryColor);
 const headings = getBlogHeadings(article.content);

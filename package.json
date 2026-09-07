@@ -9,8 +9,8 @@
     "scripts": {
         "dev": "astro dev",
         "dev:host": "astro dev --host 0.0.0.0",
-        "start": "astro dev",
-        "build": "astro build && node scripts/generate-sitemaps.mjs && cp public/.htaccess dist/.htaccess",
+        "start": "node ./dist/server/entry.mjs",
+        "build": "astro build",
         "audit:seo": "npm run build && node scripts/audit-seo.mjs",
         "audit:images": "npm run build && node scripts/audit-images.mjs",
         "audit:scraping": "npm run build && node scripts/audit-scraping.mjs",
@@ -23,6 +23,7 @@
         "astro": "astro"
     },
     "dependencies": {
+        "@astrojs/node": "^8.3.4",
         "@astrojs/tailwind": "^5.1.2",
         "@astrojs/vue": "^4.5.2",
         "astro": "^4.16.10",
