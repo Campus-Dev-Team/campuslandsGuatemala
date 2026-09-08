@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import type { EditorMedia } from "../../lib/blog-admin";
+import { renderBlogBlocks } from "../../lib/blog";
 
 type BlockType = "paragraph" | "heading" | "quote" | "list" | "code" | "image" | "gallery" | "callout" | "button" | "video" | "embed" | "table" | "divider";
 type EditorBlock = {
@@ -124,6 +125,124 @@ function cells(value = "") {
   return value.split("|").map((cell) => cell.trim());
 }
 
+function listLine(value: string) {
+  const ordered = value.match(/^\s*\d+[.)]\s+(.+)$/);
+  if (ordered) return { format: "ordered" as const, text: ordered[1].trim() };
+  const unordered = value.match(/^\s*(?:[-+*]|[•‣▪◦])\s+(.+)$/);
+  if (unordered) return { format: "unordered" as const, text: unordered[1].trim() };
+  return null;
+}
+
+function isTableSeparator(value: string) {
+  const columns = cells(value).filter(Boolean);
+  return columns.length > 0 && columns.every((column) => /^:?-{3,}:?$/.test(column));
+}
+
+function markdownTable(lines: string[], start: number) {
+  if (start + 1 >= lines.length || !lines[start].includes("|") || !isTableSeparator(lines[start + 1])) return null;
+  const headers = cells(lines[start]).filter((cell, index, all) => cell || (index > 0 && index < all.length - 1));
+  if (headers.length < 2) return null;
+  const rows: string[][] = [];
+  let cursor = start + 2;
+  while (cursor < lines.length && lines[cursor].trim() && lines[cursor].includes("|")) {
+    const row = cells(lines[cursor]).filter((cell, index, all) => cell || (index > 0 && index < all.length - 1));
+    rows.push(row);
+    cursor += 1;
+  }
+  return { block: { type: "table", headers, rows, caption: "" }, next: cursor };
+}
+
+function paragraphContent(block: EditorBlock) {
+  const source = block.text.replace(/\r\n?/g, "\n").trim();
+  if (!source) return [];
+
+  if (block.type === "heading") return [{ type: "heading", level: block.level || 2, alignment: ["center", "right"].includes(block.alignment || "") ? block.alignment : "left", children: parseInline(source) }];
+  if (block.type === "quote") return [{ type: "quote", alignment: ["center", "right"].includes(block.alignment || "") ? block.alignment : "left", children: parseInline(source.replace(/^>\s?/gm, "")) }];
+  if (block.type === "callout") return [{ type: "callout", tone: block.tone || "info", title: block.title || "", children: parseInline(source) }];
+
+  const lines = source.split("\n");
+  const content: any[] = [];
+  let paragraph: string[] = [];
+  const alignment = ["center", "right"].includes(block.alignment || "") ? block.alignment : "left";
+  const flushParagraph = () => {
+    const text = paragraph.join("\n").trim();
+    if (text) content.push({ type: "paragraph", alignment, children: parseInline(text) });
+    paragraph = [];
+  };
+
+  for (let cursor = 0; cursor < lines.length;) {
+    const line = lines[cursor];
+    if (!line.trim()) {
+      flushParagraph();
+      cursor += 1;
+      continue;
+    }
+
+    if (/^\s*```/.test(line)) {
+      flushParagraph();
+      const language = line.trim().slice(3).trim() || "text";
+      const code: string[] = [];
+      cursor += 1;
+      while (cursor < lines.length && !/^\s*```/.test(lines[cursor])) code.push(lines[cursor++]);
+      if (cursor < lines.length) cursor += 1;
+      const text = code.join("\n");
+      content.push({ type: "code", language, text, children: [{ type: "text", text }] });
+      continue;
+    }
+
+    const table = markdownTable(lines, cursor);
+    if (table) {
+      flushParagraph();
+      content.push(table.block);
+      cursor = table.next;
+      continue;
+    }
+
+    const heading = line.match(/^\s*(#{1,6})\s+(.+)$/);
+    if (heading) {
+      flushParagraph();
+      content.push({ type: "heading", level: Math.min(4, Math.max(2, heading[1].length)), alignment, children: parseInline(heading[2].trim()) });
+      cursor += 1;
+      continue;
+    }
+
+    if (/^\s*>\s?/.test(line)) {
+      flushParagraph();
+      const quote: string[] = [];
+      while (cursor < lines.length && /^\s*>\s?/.test(lines[cursor])) quote.push(lines[cursor++].replace(/^\s*>\s?/, ""));
+      content.push({ type: "quote", alignment, children: parseInline(quote.join("\n").trim()) });
+      continue;
+    }
+
+    const item = listLine(line);
+    if (item) {
+      flushParagraph();
+      const items: any[] = [];
+      const format = item.format;
+      while (cursor < lines.length) {
+        const current = listLine(lines[cursor]);
+        if (!current || current.format !== format) break;
+        items.push({ type: "list-item", children: parseInline(current.text) });
+        cursor += 1;
+      }
+      content.push({ type: "list", format, children: items });
+      continue;
+    }
+
+    if (/^\s*(?:-{3,}|\*{3,}|_{3,})\s*$/.test(line)) {
+      flushParagraph();
+      content.push({ type: "divider" });
+      cursor += 1;
+      continue;
+    }
+
+    paragraph.push(line);
+    cursor += 1;
+  }
+  flushParagraph();
+  return content;
+}
+
 function toContent() {
   return blocks.value.flatMap((block) => {
     if (block.type === "image" && block.image) return [{
@@ -141,8 +260,8 @@ function toContent() {
       images: block.images,
     }];
     if (block.type === "list") {
-      const items = block.text.split("\n").map((item) => item.trim()).filter(Boolean);
-      return items.length ? [{ type: "list", format: block.format || "unordered", children: items.map((item) => ({ type: "list-item", children: parseInline(item) })) }] : [];
+      const parsed = block.text.split("\n").map((item) => listLine(item)?.text || item.trim()).filter(Boolean);
+      return parsed.length ? [{ type: "list", format: block.format || "unordered", children: parsed.map((item) => ({ type: "list-item", children: parseInline(item) })) }] : [];
     }
     if (block.type === "code") return block.text.trim() ? [{ type: "code", language: block.language || "text", text: block.text, children: [{ type: "text", text: block.text }] }] : [];
     if (block.type === "callout") return block.text.trim() || block.title?.trim() ? [{ type: "callout", tone: block.tone || "info", title: block.title || "", children: parseInline(block.text) }] : [];
@@ -155,26 +274,16 @@ function toContent() {
       return headers.length || rows.length ? [{ type: "table", headers, rows, caption: block.caption || "" }] : [];
     }
     if (block.type === "divider") return [{ type: "divider" }];
-    if (!block.text.trim()) return [];
-    return [{ type: block.type, ...(block.type === "heading" ? { level: block.level || 2 } : {}), alignment: ["center", "right"].includes(block.alignment || "") ? block.alignment : "left", children: parseInline(block.text) }];
+    return paragraphContent(block);
   });
 }
 
-function escapePreview(value: unknown) {
-  return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-}
-
-function renderInlinePreview(value: string) {
-  return parseInline(value).map((node: any) => {
-    if (node.type === "link") return `<a>${node.children.map((child: any) => escapePreview(child.text)).join("")}</a>`;
-    let content = escapePreview(node.text);
-    if (node.code) content = `<code>${content}</code>`;
-    if (node.bold) content = `<strong>${content}</strong>`;
-    if (node.italic) content = `<em>${content}</em>`;
-    if (node.underline) content = `<u>${content}</u>`;
-    if (node.strikethrough) content = `<s>${content}</s>`;
-    return content;
-  }).join("");
+function renderBlockPreview(block: EditorBlock) {
+  if (block.type === "list") {
+    const items = block.text.split("\n").map((item) => listLine(item)?.text || item.trim()).filter(Boolean);
+    return renderBlogBlocks(items.length ? [{ type: "list", format: block.format || "unordered", children: items.map((item) => ({ type: "list-item", children: parseInline(item) })) }] as any[] : []);
+  }
+  return renderBlogBlocks(paragraphContent(block) as any[]);
 }
 
 function remember() {
@@ -513,7 +622,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", handleShortcut));
               :placeholder="block.type === 'heading' ? 'Título de la sección' : block.type === 'list' ? 'Un elemento por línea' : block.type === 'code' ? 'Código o ejemplo técnico' : block.type === 'callout' ? 'Explica el dato, consejo o advertencia' : 'Escribe el contenido del bloque…'"
               @input="publishValue"
             ></textarea>
-            <div v-if="['paragraph','heading','quote','callout'].includes(block.type) && block.text.trim()" class="formatted-preview" :style="`text-align:${block.alignment || 'left'}`"><span>VISTA ENRIQUECIDA</span><p v-html="renderInlinePreview(block.text)"></p></div>
+            <div v-if="['paragraph','heading','quote','list','callout'].includes(block.type) && block.text.trim()" class="formatted-preview"><span>VISTA ENRIQUECIDA · FORMATO FINAL</span><div class="formatted-preview__content" v-html="renderBlockPreview(block)"></div></div>
           </template>
         </div>
       </article>
@@ -569,7 +678,17 @@ onBeforeUnmount(() => window.removeEventListener("keydown", handleShortcut));
 .editor-block[data-type="callout"] { box-shadow: inset 3px 0 0 #57bbff; }
 .formatted-preview { margin: 0 14px 14px; padding: 11px 12px; border: 1px solid rgba(0,217,164,.12); border-radius: 9px; color: rgba(255,255,255,.72); background: rgba(0,217,164,.025); }
 .formatted-preview > span { display: block; margin-bottom: 7px; color: rgba(0,217,164,.55); font: 700 7px/1 ui-monospace,monospace; letter-spacing: .11em; text-align: left; }
-.formatted-preview p { margin: 0; line-height: 1.6; }
+.formatted-preview__content { font-size: 13px; line-height: 1.65; }
+.formatted-preview :deep(p),.formatted-preview :deep(blockquote),.formatted-preview :deep(ul),.formatted-preview :deep(ol) { margin: 0 0 .9em; }
+.formatted-preview :deep(p:last-child),.formatted-preview :deep(blockquote:last-child),.formatted-preview :deep(ul:last-child),.formatted-preview :deep(ol:last-child) { margin-bottom: 0; }
+.formatted-preview :deep(ul),.formatted-preview :deep(ol) { display: grid; padding-left: 1.5rem; gap: .35rem; }
+.formatted-preview :deep(li::marker) { color: #00d9a4; }
+.formatted-preview :deep(h2),.formatted-preview :deep(h3),.formatted-preview :deep(h4) { margin: 1.1em 0 .5em; color: white; line-height: 1.25; }
+.formatted-preview :deep(h2:first-child),.formatted-preview :deep(h3:first-child),.formatted-preview :deep(h4:first-child) { margin-top: 0; }
+.formatted-preview :deep(blockquote) { padding-left: .9rem; border-left: 2px solid #00d9a4; color: #bdeee2; }
+.formatted-preview :deep(pre) { padding: .8rem; overflow-x: auto; border-radius: 7px; background: rgba(0,0,10,.26); }
+.formatted-preview :deep(table) { width: 100%; border-collapse: collapse; }
+.formatted-preview :deep(th),.formatted-preview :deep(td) { padding: .45rem; border: 1px solid rgba(255,255,255,.1); text-align: left; }
 .formatted-preview :deep(a) { color: #72ccff; text-decoration: underline; }
 .formatted-preview :deep(code) { padding: 1px 4px; border-radius: 4px; color: #bde8ff; background: rgba(87,187,255,.09); }
 .editor-block__image { margin: 0; padding: 12px; }

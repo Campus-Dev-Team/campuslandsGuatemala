@@ -535,7 +535,9 @@ function renderInline(nodes: BlogTextNode[] = []): string {
       return `<a href="${escapeHtml(href)}"${external}>${content}</a>`;
     }
 
-    let content = escapeHtml(node.text || renderInline(node.children));
+    let content = node.text !== undefined
+      ? escapeHtml(node.text).replace(/\r?\n/g, "<br />")
+      : renderInline(node.children);
     if (node.code) content = `<code>${content}</code>`;
     if (node.bold) content = `<strong>${content}</strong>`;
     if (node.italic) content = `<em>${content}</em>`;
