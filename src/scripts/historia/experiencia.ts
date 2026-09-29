@@ -278,6 +278,16 @@ export function mountHistoria(root: HTMLElement): () => void {
       { once: true },
     );
     video.addEventListener("loadeddata", () => (layer.ready = true), { once: true });
+    video.addEventListener(
+      "error",
+      () => {
+        const fallback = video.dataset.srcSd;
+        if (!fallback || video.getAttribute("src") === fallback) return;
+        video.src = fallback;
+        video.load();
+      },
+      { once: true },
+    );
     video.load();
   };
 
