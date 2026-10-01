@@ -29,10 +29,11 @@ const pageDetails = {
     ],
     topics: [
       "inteligencia artificial aplicada",
-      "automatizaciones",
-      "análisis de datos",
+      "IA de cero a agentes",
       "marketing",
       "finanzas",
+      "análisis de datos",
+      "automatizaciones",
     ],
   },
   "/blog/": {

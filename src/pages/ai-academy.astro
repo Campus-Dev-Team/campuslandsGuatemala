@@ -10,86 +10,58 @@ const whatsappMessage = encodeURIComponent(
 );
 const whatsappUrl = `https://wa.me/50232705200?text=${whatsappMessage}`;
 
+const getWorkshopWhatsappUrl = (title: string, isFromZero = false) => {
+  const text = isFromZero
+    ? "¡Hola! Escribo IA para recibir la información de inscripción, fechas y consultar las opciones de pago con tarjeta para el Taller Práctico: IA de cero a Agentes de Campuslands Guatemala."
+    : `¡Hola! Me interesa el taller "${title}" de AI Academy en Campuslands Guatemala. ¿Podrían compartirme fechas, disponibilidad y costos?`;
+  return `https://wa.me/50232705200?text=${encodeURIComponent(text)}`;
+};
+
 const workshops = [
   {
-    id: "automatizaciones",
-    code: "AUTO.01",
-    title: "Automatizaciones IA",
+    id: "ia-cero-agentes",
+    code: "IA.01",
+    cohort: "INICIA 24 DE OCTUBRE",
+    eyebrow: "Taller Práctico:",
+    title: "IA de cero a Agentes",
+    fullName: "Taller Práctico: IA de cero a Agentes",
     promise:
-      "Convierte tareas repetitivas en flujos que trabajan contigo y dejan tiempo para decisiones de mayor valor.",
+      "Aprende a utilizar la inteligencia artificial con un método claro, desde la configuración inicial hasta la creación de agentes y subagentes.",
     audience:
-      "Emprendedores, estudiantes y equipos administrativos, comerciales u operativos.",
-    tools: ["Make", "n8n", "Zapier", "IA generativa"],
+      "Profesionales, emprendedores y estudiantes sin experiencia previa en programación que desean dirigir la IA.",
+    tools: ["ChatGPT", "Claude", "Gemini", "Skills & Agentes"],
     sessions: [
       {
-        title: "Detecta oportunidades",
+        title: "Configuración y fundamentos",
         description:
-          "Mapea procesos, identifica cuellos de botella y crea un kit de prompts para la operación diaria.",
-        output: "Mapa de proceso + SOP",
+          "Configurarás correctamente ChatGPT, Claude y Gemini. Conocerás sus funciones principales, diferencias, límites, comandos y buenas prácticas para utilizarlas de manera segura y efectiva.",
+        output: "Cuentas configuradas + kit base",
       },
       {
-        title: "Conecta sin código",
+        title: "Prompts que generan mejores resultados",
         description:
-          "Integra formularios, hojas de cálculo, correo, Notion, Airtable y mensajería.",
-        output: "3 automatizaciones diseñadas",
+          "Aprenderás a darle instrucciones claras a la IA utilizando objetivos, contexto, roles, restricciones, formatos, ejemplos, hooks y loops. Practicarás estructuras reutilizables para tareas reales.",
+        output: "Biblioteca de prompts reutilizables",
       },
       {
-        title: "Activa la inteligencia",
+        title: "Creación de Skills",
         description:
-          "Clasifica información, resume documentos y genera reportes con salidas estructuradas.",
-        output: "Flujo con IA validado",
+          "Convertirás tareas repetitivas en instrucciones organizadas y reutilizables. Diseñarás una skill paso a paso, la probarás y aprenderás a mejorarla (requiere plan de pago en ChatGPT, Claude o Gemini).",
+        output: "Skill funcional creada",
       },
       {
-        title: "Lanza tu sistema",
+        title: "Agentes y subagentes",
         description:
-          "Construye, prueba y presenta una automatización completa con control humano y manejo de errores.",
-        output: "Automatización funcional",
+          "Construirás un agente capaz de ejecutar tareas con un objetivo definido. También aprenderás a utilizar subagentes especializados, coordinar responsabilidades, establecer límites y verificar sus resultados.",
+        output: "Agente coordinador con subagentes",
       },
     ],
     final:
-      "Una automatización implementada, checklist de validación y presentación ejecutiva.",
-  },
-  {
-    id: "datos",
-    code: "DATA.02",
-    title: "Análisis de Datos IA",
-    promise:
-      "Pasa de datos dispersos a hallazgos confiables, visualizaciones claras y decisiones accionables.",
-    audience:
-      "Analistas y equipos de negocio, operaciones, ventas, finanzas o marketing.",
-    tools: ["Copilot", "Excel", "KPIs", "Storytelling"],
-    sessions: [
-      {
-        title: "Pregunta y prepara",
-        description:
-          "Define la pregunta de negocio, limpia datos y establece criterios de validación.",
-        output: "Dataset listo para analizar",
-      },
-      {
-        title: "Encuentra patrones",
-        description:
-          "Explora tendencias, formula hipótesis y convierte hallazgos en visualizaciones comprensibles.",
-        output: "Resumen de insights",
-      },
-      {
-        title: "Diseña KPIs",
-        description:
-          "Construye métricas útiles y un flujo de análisis reutilizable con Copilot.",
-        output: "Sistema de KPIs",
-      },
-      {
-        title: "Influye con evidencia",
-        description:
-          "Crea una narrativa ejecutiva y un sistema de decisión que conecte insight, acción y seguimiento.",
-        output: "Blueprint de decisión",
-      },
-    ],
-    final:
-      "Un flujo de análisis reproducible con KPIs, visualización y narrativa ejecutiva.",
+      "Un agente coordinador con subagentes especializados, biblioteca de prompts reutilizables y skill funcional para tus metas.",
   },
   {
     id: "marketing",
-    code: "MKT.03",
+    code: "MKT.02",
     title: "Marketing IA",
     promise:
       "Construye un sistema de marketing que investiga, crea, distribuye y aprende con mayor velocidad.",
@@ -127,7 +99,7 @@ const workshops = [
   },
   {
     id: "finanzas",
-    code: "FIN.04",
+    code: "FIN.03",
     title: "Finanzas IA",
     promise:
       "Lleva finanzas de la operación transaccional a una función estratégica que recomienda y decide.",
@@ -163,23 +135,99 @@ const workshops = [
     final:
       "Un blueprint financiero con procesos, escenarios, KPIs y narrativa para dirección.",
   },
+  {
+    id: "datos",
+    code: "DATA.04",
+    title: "Análisis de Datos IA",
+    promise:
+      "Pasa de datos dispersos a hallazgos confiables, visualizaciones claras y decisiones accionables.",
+    audience:
+      "Analistas y equipos de negocio, operaciones, ventas, finanzas o marketing.",
+    tools: ["Copilot", "Excel", "KPIs", "Storytelling"],
+    sessions: [
+      {
+        title: "Pregunta y prepara",
+        description:
+          "Define la pregunta de negocio, limpia datos y establece criterios de validación.",
+        output: "Dataset listo para analizar",
+      },
+      {
+        title: "Encuentra patrones",
+        description:
+          "Explora tendencias, formula hipótesis y convierte hallazgos en visualizaciones comprensibles.",
+        output: "Resumen de insights",
+      },
+      {
+        title: "Diseña KPIs",
+        description:
+          "Construye métricas útiles y un flujo de análisis reutilizable con Copilot.",
+        output: "Sistema de KPIs",
+      },
+      {
+        title: "Influye con evidencia",
+        description:
+          "Crea una narrativa ejecutiva y un sistema de decisión que conecte insight, acción y seguimiento.",
+        output: "Blueprint de decisión",
+      },
+    ],
+    final:
+      "Un flujo de análisis reproducible con KPIs, visualización y narrativa ejecutiva.",
+  },
+  {
+    id: "automatizaciones",
+    code: "AUTO.05",
+    title: "Automatizaciones IA",
+    promise:
+      "Convierte tareas repetitivas en flujos que trabajan contigo y dejan tiempo para decisiones de mayor valor.",
+    audience:
+      "Emprendedores, estudiantes y equipos administrativos, comerciales u operativos.",
+    tools: ["Make", "n8n", "Zapier", "IA generativa"],
+    sessions: [
+      {
+        title: "Detecta oportunidades",
+        description:
+          "Mapea procesos, identifica cuellos de botella y crea un kit de prompts para la operación diaria.",
+        output: "Mapa de proceso + SOP",
+      },
+      {
+        title: "Conecta sin código",
+        description:
+          "Integra formularios, hojas de cálculo, correo, Notion, Airtable y mensajería.",
+        output: "3 automatizaciones diseñadas",
+      },
+      {
+        title: "Activa la inteligencia",
+        description:
+          "Clasifica información, resume documentos y genera reportes con salidas estructuradas.",
+        output: "Flujo con IA validado",
+      },
+      {
+        title: "Lanza tu sistema",
+        description:
+          "Construye, prueba y presenta una automatización completa con control humano y manejo de errores.",
+        output: "Automatización funcional",
+      },
+    ],
+    final:
+      "Una automatización implementada, checklist de validación y presentación ejecutiva.",
+  },
 ];
 
 const faqs = [
   {
     question: "¿Necesito experiencia previa usando inteligencia artificial?",
     answer:
-      "No. Los talleres parten de fundamentos prácticos y avanzan mediante ejercicios guiados. Sí ayuda sentir curiosidad, estar dispuesto a experimentar y conocer lo básico de tu área de interés.",
+      "No. Los talleres parten de fundamentos prácticos y avanzan mediante ejercicios guiados. No necesitas saber programación ni tener experiencia previa, solamente curiosidad y ganas de experimentar con situaciones reales.",
   },
   {
     question: "¿Necesito saber programar?",
     answer:
-      "No para los talleres iniciales. Automatizaciones se trabaja principalmente con herramientas no-code y los demás talleres se enfocan en aplicar IA a situaciones reales de negocio.",
+      "No. No necesitas saber programación ni tener experiencia previa. Talleres como 'IA de cero a Agentes' y 'Automatizaciones IA' parten desde los fundamentos prácticos, configuración y herramientas no-code para aplicar la inteligencia artificial a tus metas.",
   },
   {
     question: "¿Cómo se distribuyen las 16 horas?",
     answer:
-      "Cada taller se desarrolla en cuatro sábados consecutivos, con una sesión de cuatro horas por sábado. En cada encuentro se construye una parte del proyecto final.",
+      "Cada taller se desarrolla en cuatro sesiones de 4 horas (16 horas en total), combinando un 50% de fundamentos y método con un 50% de práctica individual donde construyes tu proyecto paso a paso.",
   },
   {
     question: "¿Los talleres son presenciales?",
@@ -194,17 +242,17 @@ const faqs = [
   {
     question: "¿Las herramientas de IA están incluidas?",
     answer:
-      "Algunas ofrecen planes gratuitos y otras pueden requerir una cuenta o licencia. Antes de cada cohorte te compartiremos la lista vigente para que puedas prepararte.",
+      "Algunas ofrecen planes gratuitos y otras pueden requerir suscripción activa. Para el taller 'IA de cero a Agentes', la clase de creación de Skills requiere una cuenta de pago en ChatGPT, Claude o Gemini. Antes de cada cohorte te compartiremos la lista detallada para que puedas prepararte.",
   },
   {
     question: "¿Con qué termino el taller?",
     answer:
-      "Terminas con un proyecto aplicado a tu realidad: una automatización, un sistema de análisis, un sistema de marketing o un blueprint financiero, según el taller elegido.",
+      "Terminas con un proyecto aplicado a tu realidad: un agente coordinador con subagentes y biblioteca de prompts, un sistema de marketing, un blueprint financiero, un análisis de datos o una automatización funcional, según el taller elegido.",
   },
   {
     question: "¿Cuándo inicia la próxima cohorte y cuál es el costo?",
     answer:
-      "Las fechas, cupos y costos se confirman directamente con el equipo de Campuslands Guatemala. Escríbenos por WhatsApp y te compartiremos la información vigente.",
+      "Iniciamos el 24 de octubre. Las fechas, cupos y costos se confirman directamente con el equipo de Campuslands Guatemala. Escribe 'IA' por mensaje directo o WhatsApp para recibir la información de inscripción y consultar las opciones de pago con tarjeta.",
   },
 ];
 
@@ -227,7 +275,7 @@ const structuredData = [
       item: {
         "@type": "Course",
         "@id": `${SITE_URL}/ai-academy/#${workshop.id}`,
-        name: `Taller de ${workshop.title}`,
+        name: workshop.fullName || `Taller de ${workshop.title}`,
         description: workshop.promise,
         url: `${SITE_URL}/ai-academy/#${workshop.id}`,
         inLanguage: "es-GT",
@@ -278,10 +326,10 @@ const structuredData = [
             <span>Construye algo real.</span>
           </h1>
           <p class="ai-hero__lead">
-            Cuatro talleres presenciales para aplicar inteligencia artificial
-            a automatización, análisis de datos, marketing y finanzas. Menos
-            teoría y más manos a la obra para aprender. Convierte la IA en
-            sistemas que puedes usar en tu profesión.
+            Cinco talleres presenciales para aplicar inteligencia artificial a
+            fundamentos y agentes, marketing, finanzas, análisis de datos y
+            automatización. Menos teoría y más manos a la obra para aprender. Convierte
+            la IA en sistemas que puedes usar en tu profesión.
           </p>
           <div class="ai-actions">
             <a class="ai-button ai-button--primary" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
@@ -303,7 +351,7 @@ const structuredData = [
               <dd>horas</dd>
             </div>
             <div class="ai-metrics__workshops">
-              <dt>04</dt>
+              <dt>05</dt>
               <dd>
                 <span>talleres</span>
                 <strong>distintos</strong>
@@ -376,7 +424,7 @@ const structuredData = [
         <div class="ai-section-head" data-ai-reveal>
           <div>
             <p class="ai-section-code">02 / ELIGE TU MISIÓN</p>
-            <h2 id="ai-workshops-title">Cuatro rutas. Un resultado aplicable.</h2>
+            <h2 id="ai-workshops-title">Cinco rutas. Un resultado aplicable.</h2>
           </div>
           <div class="ai-section-head__aside">
             <p>
@@ -386,7 +434,7 @@ const structuredData = [
               <button type="button" data-ai-track-prev aria-label="Ver taller anterior">
                 ←
               </button>
-              <span data-ai-track-count aria-live="polite">01 / 04</span>
+              <span data-ai-track-count aria-live="polite">01 / 05</span>
               <button type="button" data-ai-track-next aria-label="Ver taller siguiente">
                 →
               </button>
@@ -411,14 +459,22 @@ const structuredData = [
             >
               <div class="ai-workshop-card__top">
                 <p>{workshop.code}</p>
-                <span>16H · PRESENCIAL</span>
+                <span>
+                  {workshop.cohort ? <strong>{workshop.cohort} · </strong> : null}
+                  16H · PRESENCIAL
+                </span>
               </div>
               <div class="ai-workshop-card__intro">
                 <div>
                   <span class="ai-workshop-card__number" aria-hidden="true">
                     {String(workshopIndex + 1).padStart(2, "0")}
                   </span>
-                  <h3 id={`workshop-${workshop.id}`}>{workshop.title}</h3>
+                  <h3 id={`workshop-${workshop.id}`}>
+                    {workshop.eyebrow && (
+                      <span class="ai-workshop-card__eyebrow">{workshop.eyebrow}</span>
+                    )}
+                    {workshop.title}
+                  </h3>
                 </div>
                 <p>{workshop.promise}</p>
               </div>
@@ -446,7 +502,11 @@ const structuredData = [
 
               <div class="ai-workshop-card__final">
                 <p><span>Proyecto final</span>{workshop.final}</p>
-                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={getWorkshopWhatsappUrl(workshop.title, workshop.id === "ia-cero-agentes")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Consultar este taller <span aria-hidden="true">↗</span>
                 </a>
               </div>
@@ -1428,6 +1488,11 @@ const structuredData = [
     color: rgb(223 245 255 / 46%);
   }
 
+  .ai-workshop-card__top span strong {
+    color: #7fffdc;
+    font-weight: 700;
+  }
+
   .ai-workshop-card__intro {
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(17rem, 0.6fr);
@@ -1446,8 +1511,17 @@ const structuredData = [
     -webkit-text-stroke: 1px rgb(185 151 255 / 25%);
   }
 
+  .ai-workshop-card__eyebrow {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--ai-glow);
+    font: 700 0.72rem/1.2 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
   .ai-workshop-card h3 {
-    max-width: 12ch;
+    max-width: 14ch;
     font-size: clamp(2rem, 4.2vw, 3.5rem);
     font-weight: 800;
     line-height: 0.96;

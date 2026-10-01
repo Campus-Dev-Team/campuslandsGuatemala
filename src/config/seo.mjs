@@ -52,10 +52,12 @@ export const PAGE_SEO = {
   "/ai-academy/": {
     title: "Talleres de Inteligencia Artificial en Guatemala | Campuslands",
     description:
-      "Aprende IA aplicada en talleres presenciales de automatización, análisis de datos, marketing y finanzas: cuatro sábados y 16 horas.",
+      "Aprende IA aplicada en talleres presenciales de agentes, marketing, finanzas, análisis de datos y automatización: cuatro sábados y 16 horas.",
     keywords: [
       "talleres de inteligencia artificial Guatemala",
       "curso IA Guatemala",
+      "taller IA de cero a agentes",
+      "agentes de inteligencia artificial",
       "automatización con IA",
       "AI Academy Campuslands",
     ],
