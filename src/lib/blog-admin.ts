@@ -91,6 +91,29 @@ export type EditorArticle = {
   updatedAt?: string;
 };
 
+export type EditorWorkshopCurriculum = {
+  id: number;
+  name: string;
+  url: string;
+  size: number;
+  mime: string;
+  updatedAt: string;
+};
+
+export type EditorWorkshop = {
+  key: string;
+  slug: string;
+  code: string;
+  title: string;
+  order: number;
+  isOpen: boolean;
+  startDate: string;
+  updatedAt: string;
+  curriculum: EditorWorkshopCurriculum | null;
+};
+
+export type EditorWorkshopChanges = Partial<{ isOpen: boolean; startDate: string; curriculum: number | null }>;
+
 export type EditorDashboard = {
   articles: EditorArticle[];
   galleries: EditorGallery[];
@@ -243,6 +266,17 @@ export class BlogAdminApi {
 
   updateSettings(data: Record<string, unknown>) {
     return this.request<Record<string, unknown>>("/editor/settings", {
+      method: "PUT",
+      body: JSON.stringify({ data }),
+    });
+  }
+
+  workshops() {
+    return this.request<EditorWorkshop[]>("/editor/workshops");
+  }
+
+  updateWorkshop(key: string, data: EditorWorkshopChanges) {
+    return this.request<EditorWorkshop>(`/editor/workshops/${encodeURIComponent(key)}`, {
       method: "PUT",
       body: JSON.stringify({ data }),
     });

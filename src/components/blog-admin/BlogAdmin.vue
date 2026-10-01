@@ -1084,7 +1084,7 @@ onBeforeUnmount(() => {
           v-else-if="activeTab === 'academy'"
           :api="api"
           :cms-url="cmsUrl"
-          @notice="showNotice($event)"
+          @notice="(message, type) => showNotice(message, type)"
         />
 
         <section v-else>

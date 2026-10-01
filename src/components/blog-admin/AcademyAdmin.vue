@@ -1,16 +1,7 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from "vue";
-import type { BlogAdminApi } from "../../lib/blog-admin";
-
-interface WorkshopAdminItem {
-  id: string;
-  code: string;
-  title: string;
-  isOpen: boolean;
-  startDate: string;
-  curriculumUrl: string;
-  uploading?: boolean;
-}
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { AI_ACADEMY_WORKSHOPS } from "../../content/aiAcademy";
+import type { BlogAdminApi, EditorWorkshop, EditorWorkshopChanges, EditorWorkshopCurriculum } from "../../lib/blog-admin";
 
 const props = defineProps<{
   api: BlogAdminApi;
@@ -21,777 +12,488 @@ const emit = defineEmits<{
   (e: "notice", message: string, type?: "success" | "error"): void;
 }>();
 
+const MAX_PDF_MB = 20;
+
+type Draft = { isOpen: boolean; startDate: string; curriculum: EditorWorkshopCurriculum | null };
+type Card = {
+  base: EditorWorkshop;
+  draft: Draft;
+  saving: boolean;
+  uploading: boolean;
+  progress: number;
+  dragging: boolean;
+  error: string;
+  savedAt: number;
+  copied: boolean;
+};
+
 const loading = ref(true);
-const saving = ref(false);
-const errorMessage = ref("");
+const loadError = ref("");
+const cards = ref<Card[]>([]);
+const savingAll = ref(false);
+const now = ref(Date.now());
+let clock = 0;
 
-const workshopDefinitions = [
-  { id: "ia-cero-agentes", code: "IA.01", title: "Taller Práctico: IA de cero a Agentes" },
-  { id: "marketing", code: "MKT.02", title: "Marketing IA" },
-  { id: "finanzas", code: "FIN.03", title: "Finanzas IA" },
-  { id: "datos", code: "DATA.04", title: "Análisis de Datos IA" },
-  { id: "automatizaciones", code: "AUTO.05", title: "Automatizaciones IA" },
-];
+const accentFor = (key: string) => AI_ACADEMY_WORKSHOPS.find((item) => item.id === key)?.accent ?? "#57bbff";
+const promiseFor = (key: string) => AI_ACADEMY_WORKSHOPS.find((item) => item.id === key)?.promise ?? "";
+const pagePath = (card: Card) => `/ai-academy/${card.base.slug}/`;
 
-const workshops = reactive<WorkshopAdminItem[]>([
-  { id: "ia-cero-agentes", code: "IA.01", title: "Taller Práctico: IA de cero a Agentes", isOpen: true, startDate: "24 de octubre", curriculumUrl: "" },
-  { id: "marketing", code: "MKT.02", title: "Marketing IA", isOpen: false, startDate: "Próximamente", curriculumUrl: "" },
-  { id: "finanzas", code: "FIN.03", title: "Finanzas IA", isOpen: false, startDate: "Próximamente", curriculumUrl: "" },
-  { id: "datos", code: "DATA.04", title: "Análisis de Datos IA", isOpen: false, startDate: "Próximamente", curriculumUrl: "" },
-  { id: "automatizaciones", code: "AUTO.05", title: "Automatizaciones IA", isOpen: false, startDate: "Próximamente", curriculumUrl: "" },
-]);
+function draftOf(workshop: EditorWorkshop): Draft {
+  return { isOpen: workshop.isOpen, startDate: workshop.startDate || "Próximamente", curriculum: workshop.curriculum };
+}
 
-async function loadConfig() {
+function isDirty(card: Card) {
+  return (
+    card.draft.isOpen !== card.base.isOpen ||
+    card.draft.startDate.trim() !== (card.base.startDate || "Próximamente") ||
+    (card.draft.curriculum?.id ?? null) !== (card.base.curriculum?.id ?? null)
+  );
+}
+
+const dirtyCards = computed(() => cards.value.filter(isDirty));
+const openCount = computed(() => cards.value.filter((card) => card.base.isOpen).length);
+const pdfCount = computed(() => cards.value.filter((card) => card.base.curriculum).length);
+
+async function load() {
   loading.value = true;
-  errorMessage.value = "";
+  loadError.value = "";
   try {
-    const res = await fetch("/api/ai-academy/config", {
-      headers: { Accept: "application/json" },
-    });
-    if (!res.ok) throw new Error("No se pudo cargar la configuración de AI Academy.");
-    const data = await res.json();
-    if (data?.workshops) {
-      workshops.forEach((item) => {
-        const stored = data.workshops[item.id];
-        if (stored) {
-          item.isOpen = Boolean(stored.isOpen);
-          item.startDate = typeof stored.startDate === "string" ? stored.startDate : "Próximamente";
-          item.curriculumUrl = typeof stored.curriculumUrl === "string" ? stored.curriculumUrl : "";
-        }
-      });
-    }
+    const workshops = await props.api.workshops();
+    cards.value = workshops.map((workshop) => ({
+      base: workshop,
+      draft: draftOf(workshop),
+      saving: false,
+      uploading: false,
+      progress: 0,
+      dragging: false,
+      error: "",
+      savedAt: 0,
+      copied: false,
+    }));
   } catch (error) {
-    console.error("[AcademyAdmin] Error:", error);
-    errorMessage.value = error instanceof Error ? error.message : "Error al cargar configuración.";
+    loadError.value = error instanceof Error ? error.message : "No se pudieron cargar los talleres.";
   } finally {
     loading.value = false;
   }
 }
 
-async function handleFileUpload(workshop: WorkshopAdminItem, event: Event) {
-  const target = event.target as HTMLInputElement;
-  const file = target.files?.[0];
+function formatSize(kilobytes: number) {
+  if (!kilobytes) return "";
+  return kilobytes >= 1024 ? `${(kilobytes / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(kilobytes))} KB`;
+}
+
+function formatDate(value: string) {
+  const date = value ? new Date(value) : null;
+  if (!date || Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat("es-GT", { day: "numeric", month: "short", year: "numeric" }).format(date);
+}
+
+function savedLabel(card: Card) {
+  if (!card.savedAt) return "";
+  const seconds = Math.round((now.value - card.savedAt) / 1000);
+  return seconds < 60 ? "Guardado hace un momento" : `Guardado hace ${Math.round(seconds / 60)} min`;
+}
+
+function fileUrl(file: EditorWorkshopCurriculum) {
+  return /^https?:\/\//.test(file.url) ? file.url : `${props.cmsUrl.replace(/\/+$/, "")}${file.url}`;
+}
+
+// Subida con progreso real (fetch no lo informa). El archivo queda en la biblioteca del CMS y se
+// asigna al taller al guardar.
+function uploadWithProgress(file: File, onProgress: (value: number) => void) {
+  return new Promise<EditorWorkshopCurriculum>((resolve, reject) => {
+    const request = new XMLHttpRequest();
+    request.open("POST", `${props.cmsUrl.replace(/\/+$/, "")}/api/upload`);
+    request.setRequestHeader("Authorization", `Bearer ${props.api.token}`);
+    request.setRequestHeader("Accept", "application/json");
+    request.upload.onprogress = (event) => {
+      if (event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
+    };
+    request.onload = () => {
+      let payload: any = null;
+      try { payload = JSON.parse(request.responseText); } catch { /* respuesta vacía */ }
+      if (request.status >= 200 && request.status < 300 && Array.isArray(payload) && payload[0]) {
+        resolve(payload[0] as EditorWorkshopCurriculum);
+      } else {
+        reject(new Error(payload?.error?.message || "El CMS no aceptó el archivo."));
+      }
+    };
+    request.onerror = () => reject(new Error("No hay conexión con el CMS."));
+    const form = new FormData();
+    form.append("files", file);
+    request.send(form);
+  });
+}
+
+async function attachPdf(card: Card, file: File | undefined | null) {
+  card.error = "";
   if (!file) return;
-
-  workshop.uploading = true;
+  const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+  if (!isPdf) {
+    card.error = "Solo se aceptan archivos PDF.";
+    return;
+  }
+  if (file.size > MAX_PDF_MB * 1024 * 1024) {
+    card.error = `El PDF pesa ${(file.size / 1048576).toFixed(1)} MB; el máximo es ${MAX_PDF_MB} MB.`;
+    return;
+  }
+  card.uploading = true;
+  card.progress = 0;
   try {
-    let uploadedUrl = "";
-
-    // 1. Try uploading to Astro backend endpoint
-    try {
-      const form = new FormData();
-      form.append("file", file);
-      const res = await fetch("/api/ai-academy/upload", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${props.api.token}`,
-        },
-        body: form,
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.url) uploadedUrl = data.url;
-      }
-    } catch (e) {
-      console.warn("Direct upload fallback to Strapi:", e);
-    }
-
-    // 2. If Astro direct upload was not successful, fallback to Strapi CMS upload
-    if (!uploadedUrl) {
-      const media = await props.api.upload(file);
-      if (media?.url) {
-        uploadedUrl = media.url.startsWith("http") ? media.url : `${props.cmsUrl}${media.url}`;
-      }
-    }
-
-    if (!uploadedUrl) throw new Error("No se pudo obtener la URL del archivo cargado.");
-
-    workshop.curriculumUrl = uploadedUrl;
-    emit("notice", `Malla curricular para "${workshop.title}" subida con éxito.`);
-  } catch (err) {
-    console.error("[AcademyAdmin] Upload error:", err);
-    emit("notice", err instanceof Error ? err.message : "Error al subir archivo.", "error");
+    const media = await uploadWithProgress(file, (value) => { card.progress = value; });
+    if (media.mime !== "application/pdf") throw new Error("El archivo no es un PDF válido.");
+    card.draft.curriculum = media;
+    emit("notice", `PDF listo para "${card.base.title}". Guarda el taller para publicarlo.`);
+  } catch (error) {
+    card.error = error instanceof Error ? error.message : "No se pudo subir el PDF.";
   } finally {
-    workshop.uploading = false;
-    target.value = "";
+    card.uploading = false;
   }
 }
 
-function clearCurriculum(workshop: WorkshopAdminItem) {
-  workshop.curriculumUrl = "";
+function onPick(card: Card, event: Event) {
+  const input = event.target as HTMLInputElement;
+  void attachPdf(card, input.files?.[0]);
+  input.value = "";
+}
+
+function onDrop(card: Card, event: DragEvent) {
+  card.dragging = false;
+  void attachPdf(card, event.dataTransfer?.files?.[0]);
+}
+
+function discard(card: Card) {
+  card.draft = draftOf(card.base);
+  card.error = "";
+}
+
+async function save(card: Card, quiet = false) {
+  if (!isDirty(card) || card.saving) return true;
+  const changes: EditorWorkshopChanges = {};
+  if (card.draft.isOpen !== card.base.isOpen) changes.isOpen = card.draft.isOpen;
+  const date = card.draft.startDate.trim() || "Próximamente";
+  if (date !== (card.base.startDate || "Próximamente")) changes.startDate = date;
+  if ((card.draft.curriculum?.id ?? null) !== (card.base.curriculum?.id ?? null)) changes.curriculum = card.draft.curriculum?.id ?? null;
+  card.saving = true;
+  card.error = "";
+  try {
+    const updated = await props.api.updateWorkshop(card.base.key, changes);
+    card.base = updated;
+    card.draft = draftOf(updated);
+    card.savedAt = Date.now();
+    if (!quiet) emit("notice", `"${updated.title}" quedó publicado en su página.`);
+    return true;
+  } catch (error) {
+    card.error = error instanceof Error ? error.message : "No se pudo guardar.";
+    if (!quiet) emit("notice", card.error, "error");
+    return false;
+  } finally {
+    card.saving = false;
+  }
 }
 
 async function saveAll() {
-  saving.value = true;
+  savingAll.value = true;
+  const pending = [...dirtyCards.value];
+  const results = await Promise.all(pending.map((card) => save(card, true)));
+  savingAll.value = false;
+  const failed = results.filter((ok) => !ok).length;
+  if (failed) emit("notice", `No se pudieron guardar ${failed} talleres. Revisa el mensaje en cada tarjeta.`, "error");
+  else emit("notice", pending.length === 1 ? "Taller guardado y publicado." : `${pending.length} talleres guardados y publicados.`);
+}
+
+async function copyLink(card: Card) {
+  const url = `${window.location.origin}${pagePath(card)}`;
   try {
-    const payloadWorkshops: Record<string, { isOpen: boolean; startDate: string; curriculumUrl: string }> = {};
-    workshops.forEach((item) => {
-      payloadWorkshops[item.id] = {
-        isOpen: item.isOpen,
-        startDate: item.startDate || "Próximamente",
-        curriculumUrl: item.curriculumUrl || "",
-      };
-    });
-
-    const res = await fetch("/api/ai-academy/config", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${props.api.token}`,
-      },
-      body: JSON.stringify({ workshops: payloadWorkshops }),
-    });
-
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error || "No se pudo guardar la configuración.");
-    }
-
-    emit("notice", "Configuración de AI Academy guardada y publicada en la web.");
-  } catch (error) {
-    emit("notice", error instanceof Error ? error.message : "Error al guardar.", "error");
-  } finally {
-    saving.value = false;
+    await navigator.clipboard.writeText(url);
+  } catch {
+    window.prompt("Copia el enlace del taller:", url);
   }
+  card.copied = true;
+  window.setTimeout(() => { card.copied = false; }, 2200);
+}
+
+function warnBeforeLeaving(event: BeforeUnloadEvent) {
+  if (!dirtyCards.value.length) return;
+  event.preventDefault();
+  event.returnValue = "";
 }
 
 onMounted(() => {
-  loadConfig();
+  void load();
+  clock = window.setInterval(() => { now.value = Date.now(); }, 15000);
+  window.addEventListener("beforeunload", warnBeforeLeaving);
+});
+
+onBeforeUnmount(() => {
+  window.clearInterval(clock);
+  window.removeEventListener("beforeunload", warnBeforeLeaving);
 });
 </script>
 
 <template>
-  <div class="academy-admin">
-    <header class="page-heading">
+  <section class="academy">
+    <header class="page-heading academy__heading">
       <div>
-        <p>PROGRAMAS DE FORMACIÓN · CAMPUSLANDS GUATEMALA</p>
-        <h1>AI Academy · Talleres</h1>
+        <p>AI ACADEMY / TALLERES</p>
+        <h1>Talleres y mallas curriculares</h1>
         <span>
-          Administra las fechas de inicio, disponibilidad de inscripciones y documentos de
-          malla curricular para los 5 talleres oficiales. Los cambios se reflejan al instante en la landing.
+          Abre o cierra inscripciones, define la fecha de inicio y sube la malla en PDF de cada taller.
+          Al guardar, la página pública del taller se actualiza al instante y el PDF queda listo para descargar.
         </span>
       </div>
-
-      <div class="heading-actions">
-        <a href="/ai-academy/" target="_blank" rel="noopener" class="secondary-action">
-          Ver landing pública ↗
-        </a>
-        <button
-          type="button"
-          class="primary-action"
-          :disabled="saving || loading"
-          @click="saveAll"
-        >
-          <span>{{ saving ? "Guardando…" : "Guardar cambios" }}</span>
-          <b>✓</b>
-        </button>
-      </div>
+      <a class="academy__public" href="/ai-academy/" target="_blank" rel="noopener">Ver AI Academy ↗</a>
     </header>
 
-    <div v-if="loading" class="academy-loading">
-      <i></i>
-      <p>Cargando configuración de AI Academy…</p>
+    <div v-if="loading" class="academy__state">
+      <i aria-hidden="true"></i>
+      <p>Cargando talleres…</p>
     </div>
 
-    <div v-else-if="errorMessage" class="academy-error">
-      <span>!</span>
-      <p>{{ errorMessage }}</p>
-      <button type="button" @click="loadConfig">Reintentar</button>
+    <div v-else-if="loadError" class="academy__state academy__state--error">
+      <span aria-hidden="true">!</span>
+      <p>{{ loadError }}</p>
+      <button type="button" @click="load">Reintentar</button>
     </div>
 
-    <div v-else class="academy-body">
-      <!-- Status Bar -->
-      <section class="academy-summary">
-        <div class="summary-metric">
-          <small>Total talleres</small>
-          <strong>5</strong>
-        </div>
-        <div class="summary-metric summary-metric--highlight">
-          <small>Inscripciones abiertas</small>
-          <strong>{{ workshops.filter(w => w.isOpen).length }}</strong>
-        </div>
-        <div class="summary-metric">
-          <small>Con documento de malla</small>
-          <strong>{{ workshops.filter(w => w.curriculumUrl).length }} / 5</strong>
-        </div>
-      </section>
+    <template v-else>
+      <dl class="academy__summary">
+        <div><dt>{{ cards.length }}</dt><dd>talleres</dd></div>
+        <div class="is-green"><dt>{{ openCount }}</dt><dd>con inscripciones abiertas</dd></div>
+        <div class="is-blue"><dt>{{ pdfCount }}<small>/{{ cards.length }}</small></dt><dd>con malla en PDF</dd></div>
+      </dl>
 
-      <!-- Workshop Cards Grid -->
-      <div class="workshop-grid">
+      <div class="academy__grid">
         <article
-          v-for="workshop in workshops"
-          :key="workshop.id"
-          class="workshop-admin-card"
-          :class="{ 'workshop-admin-card--open': workshop.isOpen }"
+          v-for="(card, index) in cards"
+          :key="card.base.key"
+          class="workshop"
+          :class="{ 'is-dirty': isDirty(card), 'is-open': card.draft.isOpen }"
+          :style="{ '--accent': accentFor(card.base.key) }"
         >
-          <!-- Card Header -->
-          <div class="card-header">
-            <div class="code-badge">{{ workshop.code }}</div>
-            <div class="card-title-group">
-              <h3>{{ workshop.title }}</h3>
-            </div>
-            <div
-              class="status-indicator"
-              :class="workshop.isOpen ? 'status-indicator--open' : 'status-indicator--upcoming'"
-            >
-              <span class="status-dot"></span>
-              <strong>{{ workshop.isOpen ? "INSCRIPCIONES ABIERTAS" : "PRÓXIMAMENTE" }}</strong>
-            </div>
+          <header class="workshop__top">
+            <span class="workshop__code">{{ card.base.code }}</span>
+            <span class="workshop__order">{{ String(index + 1).padStart(2, "0") }}/{{ String(cards.length).padStart(2, "0") }}</span>
+            <span v-if="isDirty(card)" class="workshop__badge">Sin guardar</span>
+            <span v-else-if="savedLabel(card)" class="workshop__badge workshop__badge--saved">✓ {{ savedLabel(card) }}</span>
+          </header>
+
+          <h2>{{ card.base.title }}</h2>
+          <p class="workshop__promise">{{ promiseFor(card.base.key) }}</p>
+
+          <div class="workshop__links">
+            <a :href="pagePath(card)" target="_blank" rel="noopener">Ver página ↗</a>
+            <button type="button" @click="copyLink(card)">{{ card.copied ? "¡Enlace copiado!" : "Copiar enlace para compartir" }}</button>
           </div>
 
-          <!-- Controls Body -->
-          <div class="card-controls">
-            <!-- 1. Check de Inscripciones abiertas -->
-            <div class="control-box control-box--toggle">
-              <label class="toggle-label">
-                <input
-                  v-model="workshop.isOpen"
-                  type="checkbox"
-                  class="toggle-checkbox"
-                />
-                <div class="toggle-switch"></div>
-                <div class="toggle-texts">
-                  <strong>Inscripciones abiertas</strong>
-                  <small v-if="workshop.isOpen">
-                    Tarjeta resaltada con glow verde/cyan y botón de inscripción directa.
-                  </small>
-                  <small v-else>
-                    Muestra badge "Próximamente" y botón de consulta/lista de espera.
-                  </small>
-                </div>
-              </label>
+          <fieldset class="workshop__field">
+            <legend>Inscripciones</legend>
+            <div class="workshop__switch" role="radiogroup" :aria-label="`Estado de ${card.base.title}`">
+              <button type="button" role="radio" :aria-checked="card.draft.isOpen" :class="{ active: card.draft.isOpen }" @click="card.draft.isOpen = true">
+                <i aria-hidden="true"></i> Abiertas
+              </button>
+              <button type="button" role="radio" :aria-checked="!card.draft.isOpen" :class="{ active: !card.draft.isOpen }" @click="card.draft.isOpen = false">
+                Próximamente
+              </button>
+            </div>
+          </fieldset>
+
+          <label class="workshop__field">
+            <span class="workshop__label">Fecha de inicio</span>
+            <div class="workshop__date">
+              <input v-model="card.draft.startDate" type="text" maxlength="60" placeholder="Ej. 24 de octubre" />
+              <button type="button" :class="{ active: card.draft.startDate === 'Próximamente' }" @click="card.draft.startDate = 'Próximamente'">Por confirmar</button>
+            </div>
+            <small>Se muestra tal cual en la página: «Inicia el 24 de octubre».</small>
+          </label>
+
+          <div class="workshop__field">
+            <span class="workshop__label">Malla curricular (PDF)</span>
+
+            <div v-if="card.uploading" class="pdf pdf--uploading">
+              <div class="pdf__icon">PDF</div>
+              <div class="pdf__info">
+                <strong>Subiendo… {{ card.progress }}%</strong>
+                <span class="pdf__bar"><i :style="{ width: `${card.progress}%` }"></i></span>
+              </div>
             </div>
 
-            <!-- 2. Fecha de inicio -->
-            <div class="control-box">
-              <label class="field-label">
-                <span>Fecha de inicio del taller</span>
-                <input
-                  v-model="workshop.startDate"
-                  type="text"
-                  placeholder="Ej. 24 de octubre"
-                  class="text-input"
-                />
-              </label>
-              <small class="field-tip">
-                Se mostrará en la cabecera de la tarjeta para que los aspirantes conozcan la convocatoria.
-              </small>
-            </div>
-
-            <!-- 3. Malla curricular -->
-            <div class="control-box control-box--curriculum">
-              <label class="field-label">
-                <span>Malla curricular (Documento PDF / Temario)</span>
-              </label>
-
-              <!-- Upload actions -->
-              <div class="curriculum-upload-row">
-                <label class="upload-btn" :class="{ disabled: workshop.uploading }">
-                  <input
-                    type="file"
-                    accept=".pdf,.doc,.docx,.png,.jpg"
-                    class="sr-only"
-                    :disabled="workshop.uploading"
-                    @change="handleFileUpload(workshop, $event)"
-                  />
-                  <span>{{ workshop.uploading ? "Subiendo archivo…" : "📄 Subir PDF del temario" }}</span>
+            <div v-else-if="card.draft.curriculum" class="pdf" :class="{ 'pdf--new': card.draft.curriculum.id !== card.base.curriculum?.id }">
+              <div class="pdf__icon">PDF</div>
+              <div class="pdf__info">
+                <strong :title="card.draft.curriculum.name">{{ card.draft.curriculum.name }}</strong>
+                <span>
+                  {{ formatSize(card.draft.curriculum.size) }}
+                  <template v-if="card.draft.curriculum.id !== card.base.curriculum?.id"> · nuevo, falta guardar</template>
+                  <template v-else-if="formatDate(card.draft.curriculum.updatedAt)"> · subido el {{ formatDate(card.draft.curriculum.updatedAt) }}</template>
+                </span>
+              </div>
+              <div class="pdf__actions">
+                <a :href="fileUrl(card.draft.curriculum)" target="_blank" rel="noopener" title="Abrir el PDF">Ver</a>
+                <label title="Reemplazar el PDF">
+                  Cambiar
+                  <input type="file" accept="application/pdf,.pdf" @change="onPick(card, $event)" />
                 </label>
-
-                <div v-if="workshop.curriculumUrl" class="curriculum-actions">
-                  <a
-                    :href="workshop.curriculumUrl"
-                    target="_blank"
-                    rel="noopener"
-                    class="curriculum-link"
-                  >
-                    Ver actual ↗
-                  </a>
-                  <button
-                    type="button"
-                    class="curriculum-clear"
-                    title="Quitar documento"
-                    @click="clearCurriculum(workshop)"
-                  >
-                    ✕
-                  </button>
-                </div>
-              </div>
-
-              <!-- Direct URL input -->
-              <div class="url-input-row">
-                <input
-                  v-model="workshop.curriculumUrl"
-                  type="url"
-                  placeholder="O pega aquí la URL del PDF (Google Drive, Canva, etc.)"
-                  class="text-input text-input--small"
-                />
-              </div>
-
-              <div v-if="workshop.curriculumUrl" class="curriculum-preview-badge">
-                <span class="check-icon">✓</span>
-                <span>Documento activo: botón habilitado en la tarjeta pública.</span>
-              </div>
-              <div v-else class="curriculum-preview-badge curriculum-preview-badge--missing">
-                <span>ℹ Sin PDF cargado: el botón abrirá el temario detallado en modal.</span>
+                <button type="button" title="Quitar el PDF del taller" @click="card.draft.curriculum = null">Quitar</button>
               </div>
             </div>
+
+            <label
+              v-else
+              class="drop"
+              :class="{ 'drop--over': card.dragging }"
+              @dragover.prevent="card.dragging = true"
+              @dragleave.prevent="card.dragging = false"
+              @drop.prevent="onDrop(card, $event)"
+            >
+              <input type="file" accept="application/pdf,.pdf" @change="onPick(card, $event)" />
+              <span class="drop__icon" aria-hidden="true">↑</span>
+              <strong>Arrastra el PDF aquí o <u>elígelo</u></strong>
+              <small>Solo PDF · hasta {{ MAX_PDF_MB }} MB</small>
+            </label>
           </div>
+
+          <p v-if="card.error" class="workshop__error" role="alert">{{ card.error }}</p>
+
+          <footer class="workshop__footer">
+            <button type="button" class="workshop__discard" :disabled="!isDirty(card) || card.saving" @click="discard(card)">Descartar</button>
+            <button type="button" class="primary-action primary-action--small" :disabled="!isDirty(card) || card.saving || card.uploading" @click="save(card)">
+              <span>{{ card.saving ? "Guardando…" : "Guardar y publicar" }}</span>
+              <b>✓</b>
+            </button>
+          </footer>
         </article>
       </div>
 
-      <!-- Sticky Save Bar -->
-      <footer class="academy-footer-bar">
-        <div class="footer-info">
-          <span>Recuerda guardar los cambios para aplicarlos en producción.</span>
+      <transition name="dock">
+        <div v-if="dirtyCards.length" class="academy__dock" role="status">
+          <span><i aria-hidden="true"></i>{{ dirtyCards.length === 1 ? "1 taller con cambios sin guardar" : `${dirtyCards.length} talleres con cambios sin guardar` }}</span>
+          <button type="button" class="primary-action primary-action--small" :disabled="savingAll" @click="saveAll">
+            <span>{{ savingAll ? "Guardando…" : "Guardar todo" }}</span>
+            <b>✓</b>
+          </button>
         </div>
-        <button
-          type="button"
-          class="primary-action"
-          :disabled="saving || loading"
-          @click="saveAll"
-        >
-          <span>{{ saving ? "Guardando…" : "Guardar configuración de AI Academy" }}</span>
-          <b>✓</b>
-        </button>
-      </footer>
-    </div>
-  </div>
+      </transition>
+    </template>
+  </section>
 </template>
 
 <style scoped>
-.academy-admin {
-  display: grid;
-  gap: 32px;
-  width: 100%;
+.academy { --card: linear-gradient(170deg, rgba(14, 30, 79, 0.82), rgba(5, 14, 47, 0.92)); padding-bottom: 96px; }
+/* Los estilos de encabezado y botones del editor son locales a BlogAdmin: se repiten aquí. */
+.page-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; }
+.page-heading p { margin: 0; color: var(--blue); font: 700 10px/1 ui-monospace, monospace; letter-spacing: 0.18em; }
+.page-heading h1 { margin: 10px 0 0; font-size: clamp(32px, 4vw, 58px); line-height: 1; letter-spacing: -0.05em; }
+.page-heading > div > span { display: block; max-width: 680px; margin-top: 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.primary-action { display: inline-flex; min-height: 48px; padding: 0 16px; align-items: center; justify-content: center; gap: 18px; border: 0; border-radius: 12px; color: #021a21; background: linear-gradient(90deg, #50c8ff, #00d9a4); box-shadow: 0 14px 30px rgba(0, 217, 164, 0.14); cursor: pointer; font-weight: 750; transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s; }
+.primary-action:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 18px 38px rgba(0, 217, 164, 0.22); }
+.primary-action b { font-size: 18px; }
+.primary-action--small { min-height: 43px; }
+.academy__heading { flex-wrap: wrap; }
+.academy__public { display: inline-flex; min-height: 43px; padding: 0 16px; align-items: center; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: rgba(87, 187, 255, 0.06); font-size: 13px; font-weight: 700; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+.academy__public:hover { border-color: rgba(87, 187, 255, 0.45); background: rgba(87, 187, 255, 0.12); }
+
+.academy__state { display: grid; min-height: 40vh; place-content: center; justify-items: center; gap: 14px; color: var(--muted); font-size: 13px; text-align: center; }
+.academy__state i { width: 36px; height: 36px; border: 2px solid rgba(87, 187, 255, 0.18); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.academy__state--error span { display: grid; width: 50px; height: 50px; place-content: center; border: 1px solid rgba(255, 100, 120, 0.3); border-radius: 50%; color: #ff6478; font-size: 24px; }
+.academy__state button { padding: 10px 16px; border: 1px solid var(--line); border-radius: 10px; color: white; background: rgba(87, 187, 255, 0.08); cursor: pointer; }
+
+.academy__summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 34px 0 26px; }
+.academy__summary div { padding: 18px 20px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); }
+.academy__summary dt { font: 800 34px/1 ui-monospace, monospace; letter-spacing: -0.04em; }
+.academy__summary dt small { color: var(--muted); font-size: 18px; }
+.academy__summary dd { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+.academy__summary .is-green dt { color: var(--green); }
+.academy__summary .is-blue dt { color: var(--blue); }
+
+.academy__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 18px; }
+
+.workshop { position: relative; display: flex; flex-direction: column; gap: 16px; padding: 24px; overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 42%), var(--card); box-shadow: 0 24px 60px rgba(0, 0, 30, 0.28); transition: border-color 0.25s, box-shadow 0.25s; }
+.workshop::before { position: absolute; top: 0; left: 24px; right: 24px; height: 2px; border-radius: 0 0 4px 4px; background: linear-gradient(90deg, var(--accent), transparent); content: ""; opacity: 0.8; }
+.workshop.is-dirty { border-color: rgba(255, 197, 107, 0.45); box-shadow: 0 24px 60px rgba(0, 0, 30, 0.28), 0 0 0 3px rgba(255, 197, 107, 0.06); }
+
+.workshop__top { display: flex; align-items: center; gap: 10px; }
+.workshop__code { padding: 6px 10px; border-radius: 999px; color: #030b28; background: var(--accent); font: 800 11px/1 ui-monospace, monospace; letter-spacing: 0.08em; }
+.workshop__order { color: var(--muted); font: 700 10px/1 ui-monospace, monospace; letter-spacing: 0.14em; }
+.workshop__badge { margin-left: auto; padding: 6px 10px; border: 1px solid rgba(255, 197, 107, 0.4); border-radius: 999px; color: #ffd591; background: rgba(255, 197, 107, 0.08); font: 700 10px/1 ui-monospace, monospace; letter-spacing: 0.06em; }
+.workshop__badge--saved { border-color: rgba(0, 217, 164, 0.35); color: #9ff5dd; background: rgba(0, 217, 164, 0.08); }
+
+.workshop h2 { margin: 2px 0 0; font-size: clamp(22px, 2.2vw, 27px); line-height: 1.12; letter-spacing: -0.035em; }
+.workshop__promise { margin: -6px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+.workshop__links { display: flex; flex-wrap: wrap; gap: 8px; }
+.workshop__links a, .workshop__links button { display: inline-flex; min-height: 34px; padding: 0 12px; align-items: center; border: 1px solid var(--line); border-radius: 10px; color: #bfe6ff; background: rgba(87, 187, 255, 0.05); font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+.workshop__links a:hover, .workshop__links button:hover { border-color: rgba(87, 187, 255, 0.45); background: rgba(87, 187, 255, 0.12); }
+
+.workshop__field { display: grid; gap: 9px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.workshop__field legend, .workshop__label { padding: 0; color: rgba(255, 255, 255, 0.67); font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
+.workshop__field legend { margin-bottom: 9px; }
+.workshop__field small { color: var(--muted); font-size: 11px; }
+
+.workshop__switch { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; background: rgba(2, 9, 34, 0.7); }
+.workshop__switch button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 10px; color: var(--muted); background: transparent; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.workshop__switch button.active { color: #fff; background: rgba(122, 60, 255, 0.28); box-shadow: inset 0 0 0 1px rgba(185, 151, 255, 0.35); }
+.workshop__switch button:first-child.active { color: #021a21; background: linear-gradient(90deg, #50c8ff, #00d9a4); box-shadow: none; }
+.workshop__switch i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.workshop__switch button:first-child.active i { background: #021a21; box-shadow: 0 0 0 3px rgba(2, 26, 33, 0.18); }
+
+.workshop__date { display: flex; gap: 8px; }
+.workshop__date input { flex: 1; min-width: 0; min-height: 44px; padding: 10px 13px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; outline: 0; color: white; background: rgba(2, 9, 34, 0.7); transition: border-color 0.2s, box-shadow 0.2s; }
+.workshop__date input:focus { border-color: rgba(0, 217, 164, 0.55); box-shadow: 0 0 0 3px rgba(0, 217, 164, 0.08); }
+.workshop__date button { padding: 0 12px; border: 1px solid var(--line); border-radius: 12px; color: var(--muted); background: transparent; font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+.workshop__date button.active { border-color: rgba(185, 151, 255, 0.45); color: #e3d7ff; background: rgba(122, 60, 255, 0.16); }
+
+.drop { position: relative; display: grid; min-height: 132px; place-content: center; justify-items: center; gap: 6px; padding: 18px; border: 1.5px dashed rgba(87, 187, 255, 0.32); border-radius: 18px; color: var(--ink); background: rgba(87, 187, 255, 0.03); text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.2s; }
+.drop:hover, .drop--over { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.drop--over { transform: scale(1.01); }
+.drop input, .pdf__actions label input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.drop__icon { display: grid; width: 40px; height: 40px; place-content: center; border-radius: 12px; color: #030b28; background: var(--accent); font-weight: 900; }
+.drop strong { font-size: 14px; }
+.drop u { color: var(--accent); text-underline-offset: 3px; }
+.drop small { color: var(--muted); font-size: 11px; }
+
+.pdf { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 14px; border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 16px; background: rgba(2, 9, 34, 0.6); }
+.pdf--new { border-color: rgba(255, 197, 107, 0.45); background: rgba(255, 197, 107, 0.05); }
+.pdf__icon { display: grid; width: 46px; height: 56px; place-content: center; border-radius: 8px 14px 8px 8px; color: #fff; background: linear-gradient(160deg, #ff5b61, #c4262c); box-shadow: 0 10px 24px rgba(229, 72, 77, 0.28); font: 800 11px/1 ui-monospace, monospace; letter-spacing: 0.06em; }
+.pdf__info { display: grid; gap: 5px; min-width: 0; }
+.pdf__info strong { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.pdf__info span { color: var(--muted); font-size: 12px; }
+.pdf__bar { display: block; height: 6px; overflow: hidden; border-radius: 999px; background: rgba(255, 255, 255, 0.08); }
+.pdf__bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #50c8ff, #00d9a4); transition: width 0.2s; }
+.pdf__actions { display: flex; gap: 6px; }
+.pdf__actions a, .pdf__actions label, .pdf__actions button { position: relative; display: inline-flex; min-height: 34px; padding: 0 11px; align-items: center; border: 1px solid var(--line); border-radius: 10px; color: #d8f0ff; background: rgba(87, 187, 255, 0.05); font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; }
+.pdf__actions a:hover, .pdf__actions label:hover { border-color: rgba(87, 187, 255, 0.45); }
+.pdf__actions button { color: #ffb3bd; border-color: rgba(255, 100, 120, 0.25); background: rgba(255, 67, 91, 0.06); }
+.pdf__actions button:hover { border-color: rgba(255, 100, 120, 0.55); }
+
+.workshop__error { margin: 0; padding: 10px 12px; border: 1px solid rgba(255, 98, 117, 0.25); border-radius: 10px; color: #ff9aa7; background: rgba(255, 67, 91, 0.08); font-size: 12px; }
+
+.workshop__footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: auto; padding-top: 6px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.workshop__discard { min-height: 43px; padding: 0 14px; border: 0; border-radius: 12px; color: var(--muted); background: transparent; font-weight: 700; cursor: pointer; }
+.workshop__discard:not(:disabled):hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+.workshop__discard:disabled { opacity: 0.4; cursor: default; }
+.workshop .primary-action:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+.academy__dock { position: fixed; bottom: 22px; left: 50%; z-index: 15; display: flex; align-items: center; gap: 18px; padding: 10px 10px 10px 20px; border: 1px solid rgba(255, 197, 107, 0.35); border-radius: 18px; color: #ffe2b0; background: rgba(12, 18, 52, 0.96); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45); font-size: 13px; font-weight: 600; transform: translateX(-50%); backdrop-filter: blur(16px); }
+.academy__dock span { display: inline-flex; align-items: center; gap: 10px; }
+.academy__dock i { width: 8px; height: 8px; border-radius: 50%; background: #ffc56b; box-shadow: 0 0 10px #ffc56b; animation: pulse 1.6s ease-in-out infinite; }
+.dock-enter-active, .dock-leave-active { transition: opacity 0.25s, transform 0.25s; }
+.dock-enter-from, .dock-leave-to { opacity: 0; transform: translate(-50%, 16px); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 50% { opacity: 0.45; transform: scale(1.3); } }
+
+@media (max-width: 720px) {
+  .academy__summary { grid-template-columns: 1fr; }
+  .workshop { padding: 20px; }
+  .pdf { grid-template-columns: auto minmax(0, 1fr); }
+  .pdf__actions { grid-column: 1 / -1; }
+  .academy__dock { right: 12px; left: 12px; justify-content: space-between; transform: none; }
+  .dock-enter-from, .dock-leave-to { transform: translateY(16px); }
 }
 
-.heading-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.academy-loading,
-.academy-error {
-  display: grid;
-  min-height: 40vh;
-  place-content: center;
-  justify-items: center;
-  gap: 16px;
-  text-align: center;
-}
-
-.academy-loading i {
-  width: 38px;
-  height: 38px;
-  border: 2px solid rgba(87, 187, 255, 0.2);
-  border-top-color: #00d9a4;
-  border-radius: 50%;
-  animation: academy-spin 0.8s linear infinite;
-}
-
-@keyframes academy-spin {
-  to { transform: rotate(360deg); }
-}
-
-.academy-error span {
-  display: grid;
-  width: 48px;
-  height: 48px;
-  place-content: center;
-  border: 1px solid rgba(255, 100, 120, 0.35);
-  border-radius: 50%;
-  color: #ff6478;
-  font-size: 22px;
-}
-
-.academy-error button {
-  padding: 8px 16px;
-  border: 1px solid rgba(87, 187, 255, 0.2);
-  border-radius: 8px;
-  color: white;
-  background: rgba(87, 187, 255, 0.1);
-  cursor: pointer;
-}
-
-.academy-summary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 18px 24px;
-  border: 1px solid rgba(87, 187, 255, 0.16);
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(14, 30, 79, 0.6), rgba(5, 14, 47, 0.8));
-}
-
-.summary-metric {
-  display: grid;
-  gap: 4px;
-  min-width: 140px;
-}
-
-.summary-metric small {
-  color: rgba(247, 249, 255, 0.6);
-  font: 700 10px/1 ui-monospace, monospace;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.summary-metric strong {
-  font-size: 24px;
-  color: #f7f9ff;
-}
-
-.summary-metric--highlight strong {
-  color: #00d9a4;
-  text-shadow: 0 0 16px rgba(0, 217, 164, 0.4);
-}
-
-.workshop-grid {
-  display: grid;
-  gap: 20px;
-}
-
-.workshop-admin-card {
-  padding: 24px 28px;
-  border: 1px solid rgba(87, 187, 255, 0.16);
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(14, 26, 68, 0.85), rgba(7, 14, 45, 0.95));
-  transition: all 0.3s ease;
-}
-
-.workshop-admin-card--open {
-  border-color: rgba(0, 217, 164, 0.4);
-  box-shadow: 0 0 30px rgba(0, 217, 164, 0.08), inset 0 1px rgba(0, 217, 164, 0.2);
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(87, 187, 255, 0.12);
-}
-
-.code-badge {
-  padding: 5px 10px;
-  border: 1px solid rgba(185, 151, 255, 0.3);
-  border-radius: 8px;
-  color: #c7a4ff;
-  background: rgba(122, 60, 255, 0.15);
-  font: 800 11px/1 ui-monospace, monospace;
-  letter-spacing: 0.1em;
-}
-
-.card-title-group h3 {
-  margin: 0;
-  font-size: 19px;
-  font-weight: 700;
-  color: #f7f9ff;
-}
-
-.status-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font: 700 10px/1 ui-monospace, monospace;
-  letter-spacing: 0.1em;
-}
-
-.status-indicator--open {
-  color: #7fffdc;
-  background: rgba(0, 217, 164, 0.12);
-  border: 1px solid rgba(0, 217, 164, 0.35);
-  box-shadow: 0 0 14px rgba(0, 217, 164, 0.2);
-}
-
-.status-indicator--open .status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #00d9a4;
-  box-shadow: 0 0 8px #00d9a4;
-  animation: academy-dot-pulse 2s infinite ease-in-out;
-}
-
-@keyframes academy-dot-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
-}
-
-.status-indicator--upcoming {
-  color: rgba(223, 245, 255, 0.6);
-  background: rgba(185, 151, 255, 0.08);
-  border: 1px solid rgba(185, 151, 255, 0.2);
-}
-
-.status-indicator--upcoming .status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #b997ff;
-}
-
-.card-controls {
-  display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(220px, 1fr) minmax(320px, 1.4fr);
-  gap: 20px;
-  margin-top: 22px;
-  align-items: start;
-}
-
-.control-box {
-  display: grid;
-  gap: 8px;
-}
-
-.control-box--toggle {
-  padding-right: 12px;
-  border-right: 1px solid rgba(87, 187, 255, 0.1);
-}
-
-.toggle-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.toggle-checkbox {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.toggle-switch {
-  position: relative;
-  width: 44px;
-  height: 24px;
-  margin-top: 2px;
-  flex-shrink: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.25s ease;
-}
-
-.toggle-switch::after {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #fff;
-  transition: transform 0.25s ease, background 0.25s ease;
-}
-
-.toggle-checkbox:checked + .toggle-switch {
-  background: #00d9a4;
-  border-color: #00d9a4;
-  box-shadow: 0 0 12px rgba(0, 217, 164, 0.4);
-}
-
-.toggle-checkbox:checked + .toggle-switch::after {
-  transform: translateX(20px);
-  background: #021a21;
-}
-
-.toggle-texts {
-  display: grid;
-  gap: 4px;
-}
-
-.toggle-texts strong {
-  font-size: 14px;
-  color: #f7f9ff;
-}
-
-.toggle-texts small {
-  color: rgba(223, 245, 255, 0.6);
-  font-size: 11px;
-  line-height: 1.45;
-}
-
-.field-label {
-  display: grid;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  color: rgba(223, 245, 255, 0.7);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-family: ui-monospace, monospace;
-}
-
-.text-input {
-  width: 100%;
-  min-height: 42px;
-  padding: 10px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-  outline: none;
-  color: #fff;
-  background: rgba(2, 9, 34, 0.75);
-  font-size: 13px;
-  transition: all 0.2s ease;
-}
-
-.text-input:focus {
-  border-color: #00d9a4;
-  box-shadow: 0 0 0 3px rgba(0, 217, 164, 0.12);
-}
-
-.text-input--small {
-  min-height: 36px;
-  font-size: 12px;
-  padding: 8px 12px;
-}
-
-.field-tip {
-  color: rgba(223, 245, 255, 0.45);
-  font-size: 11px;
-  line-height: 1.4;
-}
-
-.curriculum-upload-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.upload-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 14px;
-  border: 1px solid rgba(87, 187, 255, 0.3);
-  border-radius: 10px;
-  color: #57bbff;
-  background: rgba(87, 187, 255, 0.08);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.upload-btn:hover:not(.disabled) {
-  border-color: #57bbff;
-  background: rgba(87, 187, 255, 0.18);
-  color: #fff;
-}
-
-.upload-btn.disabled {
-  opacity: 0.5;
-  cursor: wait;
-}
-
-.curriculum-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.curriculum-link {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  border-radius: 8px;
-  color: #7fffdc;
-  background: rgba(0, 217, 164, 0.1);
-  border: 1px solid rgba(0, 217, 164, 0.3);
-  font-size: 12px;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.curriculum-link:hover {
-  background: rgba(0, 217, 164, 0.2);
-}
-
-.curriculum-clear {
-  display: grid;
-  place-content: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid rgba(255, 100, 120, 0.3);
-  border-radius: 8px;
-  color: #ff6478;
-  background: rgba(255, 100, 120, 0.08);
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.curriculum-clear:hover {
-  background: rgba(255, 100, 120, 0.2);
-}
-
-.url-input-row {
-  margin-top: 4px;
-}
-
-.curriculum-preview-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 2px;
-  font-size: 11px;
-  color: #7fffdc;
-}
-
-.curriculum-preview-badge--missing {
-  color: rgba(223, 245, 255, 0.5);
-}
-
-.check-icon {
-  font-weight: 800;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-
-.academy-footer-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 20px 24px;
-  border: 1px solid rgba(87, 187, 255, 0.2);
-  border-radius: 16px;
-  background: rgba(3, 11, 40, 0.95);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-}
-
-.footer-info {
-  color: rgba(223, 245, 255, 0.6);
-  font-size: 13px;
-}
-
-@media (max-width: 1024px) {
-  .card-controls {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  .control-box--toggle {
-    border-right: none;
-    border-bottom: 1px solid rgba(87, 187, 255, 0.1);
-    padding-right: 0;
-    padding-bottom: 16px;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .workshop, .drop, .pdf__bar i { transition: none; }
+  .academy__dock i, .academy__state i { animation: none; }
 }
 </style>
