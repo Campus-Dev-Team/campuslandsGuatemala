@@ -1,4 +1,8 @@
 ---
+export const prerender = false;
+
+import fs from "node:fs";
+import path from "node:path";
 import { Image } from "astro:assets";
 import LayoutNavbar from "../layouts/LayoutNavbar.astro";
 import orbitAI from "../assets/img/ai-academy/orbit-ai-academy.png";
@@ -213,6 +217,69 @@ const workshops = [
   },
 ];
 
+interface WorkshopConfigItem {
+  isOpen: boolean;
+  startDate: string;
+  curriculumUrl: string;
+}
+
+const defaultWorkshopConfig: Record<string, WorkshopConfigItem> = {
+  "ia-cero-agentes": {
+    isOpen: true,
+    startDate: "24 de octubre",
+    curriculumUrl: "",
+  },
+  marketing: {
+    isOpen: false,
+    startDate: "Próximamente",
+    curriculumUrl: "",
+  },
+  finanzas: {
+    isOpen: false,
+    startDate: "Próximamente",
+    curriculumUrl: "",
+  },
+  datos: {
+    isOpen: false,
+    startDate: "Próximamente",
+    curriculumUrl: "",
+  },
+  automatizaciones: {
+    isOpen: false,
+    startDate: "Próximamente",
+    curriculumUrl: "",
+  },
+};
+
+let liveAcademyConfig: Record<string, WorkshopConfigItem> = { ...defaultWorkshopConfig };
+try {
+  const academyConfigFilePath = path.resolve(process.cwd(), "data/ai-academy-config.json");
+  if (fs.existsSync(academyConfigFilePath)) {
+    const rawData = fs.readFileSync(academyConfigFilePath, "utf-8");
+    const parsedData = JSON.parse(rawData);
+    liveAcademyConfig = { ...defaultWorkshopConfig, ...parsedData };
+  }
+} catch (configError) {
+  console.warn("No se pudo leer data/ai-academy-config.json:", configError);
+}
+
+const activeWorkshops = workshops.map((workshop) => {
+  const dynamicCfg = liveAcademyConfig[workshop.id] || {
+    isOpen: false,
+    startDate: "",
+    curriculumUrl: "",
+  };
+
+  const formattedStartDate = dynamicCfg.startDate || (workshop.cohort ? workshop.cohort.replace(/^INICIA\s+/i, "") : "");
+
+  return {
+    ...workshop,
+    isOpen: Boolean(dynamicCfg.isOpen),
+    startDate: formattedStartDate,
+    curriculumUrl: dynamicCfg.curriculumUrl || "",
+  };
+});
+
 const faqs = [
   {
     question: "¿Necesito experiencia previa usando inteligencia artificial?",
@@ -269,7 +336,7 @@ const structuredData = [
     "@type": "ItemList",
     "@id": `${SITE_URL}/ai-academy/#talleres`,
     name: "Talleres de AI Academy de Campuslands Guatemala",
-    itemListElement: workshops.map((workshop, index) => ({
+    itemListElement: activeWorkshops.map((workshop, index) => ({
       "@type": "ListItem",
       position: index + 1,
       item: {
@@ -450,20 +517,52 @@ const structuredData = [
         aria-label="Catálogo horizontal de talleres"
       >
         {
-          workshops.map((workshop, workshopIndex) => (
+          activeWorkshops.map((workshop, workshopIndex) => (
             <article
-              class="ai-workshop-card"
+              class:list={[
+                "ai-workshop-card",
+                workshop.isOpen ? "ai-workshop-card--open" : "ai-workshop-card--upcoming"
+              ]}
               id={workshop.id}
               data-ai-workshop-card
+              data-workshop-id={workshop.id}
+              data-workshop-open={workshop.isOpen ? "true" : "false"}
               aria-labelledby={`workshop-${workshop.id}`}
             >
               <div class="ai-workshop-card__top">
-                <p>{workshop.code}</p>
-                <span>
-                  {workshop.cohort ? <strong>{workshop.cohort} · </strong> : null}
-                  16H · PRESENCIAL
-                </span>
+                <div class="ai-workshop-card__top-lead">
+                  <p class="ai-workshop-card__code">{workshop.code}</p>
+                  <span
+                    class:list={[
+                      "ai-status-pill",
+                      workshop.isOpen ? "ai-status-pill--open" : "ai-status-pill--upcoming"
+                    ]}
+                    data-status-pill
+                  >
+                    <span class="ai-status-pill__dot" aria-hidden="true"></span>
+                    <span data-status-text>{workshop.isOpen ? "Inscripciones abiertas" : "Próximamente"}</span>
+                  </span>
+                </div>
+
+                <div class="ai-workshop-card__top-meta">
+                  {workshop.startDate ? (
+                    <span class="ai-workshop-card__date" data-date-pill>
+                      <svg class="ai-icon-cal" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <strong class="ai-date-label">Inicia:</strong>
+                      <span data-date-text>{workshop.startDate}</span>
+                    </span>
+                  ) : null}
+                  <span class="ai-workshop-card__format-tag">
+                    16H · PRESENCIAL
+                  </span>
+                </div>
               </div>
+
               <div class="ai-workshop-card__intro">
                 <div>
                   <span class="ai-workshop-card__number" aria-hidden="true">
@@ -502,13 +601,36 @@ const structuredData = [
 
               <div class="ai-workshop-card__final">
                 <p><span>Proyecto final</span>{workshop.final}</p>
-                <a
-                  href={getWorkshopWhatsappUrl(workshop.title, workshop.id === "ia-cero-agentes")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Consultar este taller <span aria-hidden="true">↗</span>
-                </a>
+                <div class="ai-workshop-card__actions">
+                  <button
+                    type="button"
+                    class="ai-btn-curriculum"
+                    data-ai-curriculum-trigger
+                    data-workshop-id={workshop.id}
+                    data-curriculum-url={workshop.curriculumUrl}
+                    data-workshop-title={workshop.fullName || workshop.title}
+                    title="Ver malla curricular completa del taller"
+                  >
+                    <svg class="ai-icon-doc" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                      <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>Ver malla curricular</span>
+                  </button>
+
+                  <a
+                    class="ai-workshop-card__cta"
+                    href={getWorkshopWhatsappUrl(workshop.title, workshop.id === "ia-cero-agentes")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>{workshop.isOpen ? "Inscribirme al taller" : "Consultar este taller"}</span>
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
               </div>
             </article>
           ))
@@ -638,6 +760,93 @@ const structuredData = [
         </a>
       </div>
     </section>
+
+    <!-- Modal para visualización de Malla Curricular -->
+    <div id="ai-curriculum-modal" class="ai-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+      <div class="ai-modal__backdrop" data-ai-modal-close tabindex="-1"></div>
+      <div class="ai-modal__dialog">
+        <header class="ai-modal__header">
+          <div class="ai-modal__top-row">
+            <div class="ai-modal__badge-wrap">
+              <span class="ai-modal__badge">MALLA CURRICULAR OFICIAL</span>
+              <span id="ai-modal-code" class="ai-modal__code">IA.01</span>
+            </div>
+            <button type="button" class="ai-modal__close-btn" data-ai-modal-close aria-label="Cerrar modal">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <h3 id="ai-modal-title" class="ai-modal__title">Malla Curricular</h3>
+          <p id="ai-modal-promise" class="ai-modal__subtitle"></p>
+        </header>
+
+        <div class="ai-modal__meta-bar">
+          <div class="ai-modal__meta-item">
+            <span class="ai-modal__meta-label">DURACIÓN</span>
+            <span class="ai-modal__meta-value">16 Horas · 4 Sesiones</span>
+          </div>
+          <div class="ai-modal__meta-item">
+            <span class="ai-modal__meta-label">MODALIDAD</span>
+            <span class="ai-modal__meta-value">Presencial (Campus Tec, Z4)</span>
+          </div>
+          <div class="ai-modal__meta-item">
+            <span class="ai-modal__meta-label">MÉTODO</span>
+            <span class="ai-modal__meta-value">50% Teoría · 50% Práctica</span>
+          </div>
+          <div class="ai-modal__meta-item" id="ai-modal-status-item">
+            <span class="ai-modal__meta-label">FECHA & ESTADO</span>
+            <span id="ai-modal-status-pill" class="ai-status-pill ai-status-pill--open">
+              <span class="ai-status-pill__dot"></span>
+              <span id="ai-modal-status-text">Inscripciones abiertas</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="ai-modal__body">
+          <h4 class="ai-modal__body-heading">Ruta formativa sesión por sesión:</h4>
+          <ol id="ai-modal-sessions" class="ai-modal__sessions-list"></ol>
+
+          <div class="ai-modal__deliverable">
+            <span class="ai-modal__deliverable-badge">PROYECTO FINAL ENTREGABLE</span>
+            <p id="ai-modal-final"></p>
+          </div>
+        </div>
+
+        <footer class="ai-modal__footer">
+          <a
+            id="ai-modal-pdf-btn"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="ai-modal__btn-secondary"
+            style="display: none;"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Descargar Documento / PDF</span>
+          </a>
+
+          <a
+            id="ai-modal-whatsapp-btn"
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="ai-modal__btn-primary"
+          >
+            <span>Consultar inscripciones por WhatsApp</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Payload JSON seguro para modal en cliente -->
+    <script id="ai-workshops-payload" type="application/json" set:html={JSON.stringify(activeWorkshops)} />
   </div>
 </LayoutNavbar>
 
@@ -751,6 +960,164 @@ const structuredData = [
     window.addEventListener("resize", requestTrackUpdate, { passive: true });
     updateTrackState();
 
+    // Modal de Malla Curricular
+    const modal = document.getElementById("ai-curriculum-modal");
+    const modalCode = document.getElementById("ai-modal-code");
+    const modalTitle = document.getElementById("ai-modal-title");
+    const modalPromise = document.getElementById("ai-modal-promise");
+    const modalSessions = document.getElementById("ai-modal-sessions");
+    const modalFinal = document.getElementById("ai-modal-final");
+    const modalPdfBtn = document.getElementById("ai-modal-pdf-btn") as HTMLAnchorElement | null;
+    const modalWaBtn = document.getElementById("ai-modal-whatsapp-btn") as HTMLAnchorElement | null;
+    const modalStatusPill = document.getElementById("ai-modal-status-pill");
+    const modalStatusText = document.getElementById("ai-modal-status-text");
+
+    let workshopsData: any[] = [];
+    try {
+      const payloadEl = document.getElementById("ai-workshops-payload");
+      if (payloadEl && payloadEl.textContent) {
+        workshopsData = JSON.parse(payloadEl.textContent);
+      }
+    } catch (e) {
+      console.warn("Error leyendo ai-workshops-payload", e);
+    }
+
+    const openModal = (workshopId: string) => {
+      if (!modal) return;
+      const workshop = workshopsData.find((w) => w.id === workshopId);
+      if (!workshop) return;
+
+      if (modalCode) modalCode.textContent = workshop.code || "IA";
+      if (modalTitle) modalTitle.textContent = workshop.fullName || workshop.title || "Taller";
+      if (modalPromise) modalPromise.textContent = workshop.promise || "";
+      if (modalFinal) modalFinal.textContent = workshop.final || "";
+
+      if (modalStatusPill && modalStatusText) {
+        if (workshop.isOpen) {
+          modalStatusPill.className = "ai-status-pill ai-status-pill--open";
+          modalStatusText.textContent = workshop.startDate ? `Inicia: ${workshop.startDate} · Inscripciones abiertas` : "Inscripciones abiertas";
+        } else {
+          modalStatusPill.className = "ai-status-pill ai-status-pill--upcoming";
+          modalStatusText.textContent = workshop.startDate && workshop.startDate !== "Próximamente" ? `Inicio estimado: ${workshop.startDate}` : "Próximamente";
+        }
+      }
+
+      if (modalSessions) {
+        modalSessions.innerHTML = "";
+        (workshop.sessions || []).forEach((session: any, idx: number) => {
+          const li = document.createElement("li");
+          li.className = "ai-modal-session-card";
+          li.innerHTML = `
+            <div class="ai-modal-session-card__head">
+              <span class="ai-modal-session-card__tag">SESIÓN 0${idx + 1}</span>
+              <strong class="ai-modal-session-card__output">${session.output || ""}</strong>
+            </div>
+            <h5 class="ai-modal-session-card__title">${session.title}</h5>
+            <p class="ai-modal-session-card__desc">${session.description}</p>
+          `;
+          modalSessions.appendChild(li);
+        });
+      }
+
+      if (modalPdfBtn) {
+        if (workshop.curriculumUrl) {
+          modalPdfBtn.href = workshop.curriculumUrl;
+          modalPdfBtn.style.display = "inline-flex";
+        } else {
+          modalPdfBtn.style.display = "none";
+        }
+      }
+
+      if (modalWaBtn) {
+        const text = workshop.id === "ia-cero-agentes"
+          ? "¡Hola! Escribo IA para recibir la información de inscripción, fechas y consultar las opciones de pago con tarjeta para el Taller Práctico: IA de cero a Agentes de Campuslands Guatemala."
+          : `¡Hola! Me interesa la malla curricular y fechas del taller "${workshop.title}" de AI Academy en Campuslands Guatemala.`;
+        modalWaBtn.href = `https://wa.me/50232705200?text=${encodeURIComponent(text)}`;
+      }
+
+      modal.classList.add("ai-modal--active");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("ai-modal-open");
+    };
+
+    const closeModal = () => {
+      if (!modal) return;
+      modal.classList.remove("ai-modal--active");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("ai-modal-open");
+    };
+
+    const curriculumTriggers = Array.from(
+      document.querySelectorAll<HTMLButtonElement>("[data-ai-curriculum-trigger]")
+    );
+    curriculumTriggers.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const workshopId = btn.getAttribute("data-workshop-id");
+        if (workshopId) openModal(workshopId);
+      });
+    });
+
+    const closeButtons = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-ai-modal-close]")
+    );
+    closeButtons.forEach((btn) => {
+      btn.addEventListener("click", closeModal);
+    });
+
+    const handleModalKeydown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && modal?.classList.contains("ai-modal--active")) {
+        closeModal();
+      }
+    };
+    window.addEventListener("keydown", handleModalKeydown);
+
+    // Sincronización dinámica reactiva silenciosa
+    fetch("/api/ai-academy/config")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!data || !data.workshops) return;
+        Object.entries(data.workshops).forEach(([id, cfg]: [string, any]) => {
+          const card = document.getElementById(id);
+          const memoryItem = workshopsData.find((w) => w.id === id);
+          if (memoryItem) {
+            memoryItem.isOpen = Boolean(cfg.isOpen);
+            if (cfg.startDate) memoryItem.startDate = cfg.startDate;
+            if (cfg.curriculumUrl !== undefined) memoryItem.curriculumUrl = cfg.curriculumUrl;
+          }
+
+          if (!card) return;
+          const isOpen = Boolean(cfg.isOpen);
+          card.classList.toggle("ai-workshop-card--open", isOpen);
+          card.classList.toggle("ai-workshop-card--upcoming", !isOpen);
+          card.setAttribute("data-workshop-open", isOpen ? "true" : "false");
+
+          const statusPill = card.querySelector<HTMLElement>("[data-status-pill]");
+          const statusText = card.querySelector<HTMLElement>("[data-status-text]");
+          if (statusPill && statusText) {
+            statusPill.className = `ai-status-pill ${isOpen ? "ai-status-pill--open" : "ai-status-pill--upcoming"}`;
+            statusText.textContent = isOpen ? "Inscripciones abiertas" : "Próximamente";
+          }
+
+          const datePill = card.querySelector<HTMLElement>("[data-date-pill]");
+          const dateText = card.querySelector<HTMLElement>("[data-date-text]");
+          if (cfg.startDate && dateText) {
+            dateText.textContent = cfg.startDate;
+            if (datePill) datePill.style.display = "inline-flex";
+          }
+
+          const currBtn = card.querySelector<HTMLButtonElement>("[data-ai-curriculum-trigger]");
+          if (currBtn && cfg.curriculumUrl !== undefined) {
+            currBtn.setAttribute("data-curriculum-url", cfg.curriculumUrl);
+          }
+
+          const ctaLink = card.querySelector<HTMLAnchorElement>(".ai-workshop-card__cta span:first-child");
+          if (ctaLink) {
+            ctaLink.textContent = isOpen ? "Inscribirme al taller" : "Consultar este taller";
+          }
+        });
+      })
+      .catch(() => {});
+
     window.__aiAcademyCleanup = () => {
       revealObserver.disconnect();
       track.removeEventListener("scroll", requestTrackUpdate);
@@ -759,6 +1126,9 @@ const structuredData = [
       next?.removeEventListener("click", goNext);
       orbit?.removeEventListener("pointermove", handleOrbitPointer);
       window.removeEventListener("resize", requestTrackUpdate);
+      window.removeEventListener("keydown", handleModalKeydown);
+      closeButtons.forEach((btn) => btn.removeEventListener("click", closeModal));
+      document.body.classList.remove("ai-modal-open");
       if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
     };
   }
@@ -1455,6 +1825,34 @@ const structuredData = [
       radial-gradient(circle at 96% 4%, rgb(122 60 255 / 18%), transparent 22rem),
       linear-gradient(135deg, rgb(8 13 57 / 94%), rgb(5 5 7 / 96%));
     box-shadow: inset 0 1px rgb(255 255 255 / 5%), 0 2rem 5rem rgb(0 0 0 / 26%);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-workshop-card--open {
+    border-color: rgba(122, 60, 255, 0.48);
+    background:
+      radial-gradient(circle at 94% 6%, rgb(122 60 255 / 26%), transparent 24rem),
+      radial-gradient(circle at 6% 94%, rgb(0 240 180 / 8%), transparent 20rem),
+      linear-gradient(135deg, rgb(10 16 72 / 96%), rgb(5 5 8 / 98%));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 10%),
+      0 0 35px rgb(122 60 255 / 20%),
+      0 2rem 5rem rgb(0 0 0 / 32%);
+  }
+
+  .ai-workshop-card--open::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #2c67ba, var(--ai-purple), #7fffdc);
+    content: "";
+    z-index: 2;
+  }
+
+  .ai-workshop-card--upcoming {
+    opacity: 0.94;
   }
 
   .ai-workshop-card::after {
@@ -1479,18 +1877,107 @@ const structuredData = [
   }
 
   .ai-workshop-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
     color: rgb(185 151 255 / 72%);
     font: 700 0.65rem/1.2 Menlo, Monaco, Consolas, monospace;
     letter-spacing: 0.12em;
   }
 
-  .ai-workshop-card__top span {
-    color: rgb(223 245 255 / 46%);
+  .ai-workshop-card__top-lead {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
   }
 
-  .ai-workshop-card__top span strong {
+  .ai-workshop-card__code {
+    margin: 0;
+    color: rgb(185 151 255 / 90%);
+    font-weight: 800;
+  }
+
+  .ai-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.28rem 0.75rem;
+    border-radius: 999px;
+    font: 700 0.62rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+  }
+
+  .ai-status-pill--open {
+    background: rgba(0, 240, 180, 0.12);
+    border: 1px solid rgba(0, 240, 180, 0.38);
+    color: #7fffdc;
+    box-shadow: 0 0 12px rgba(0, 240, 180, 0.15);
+  }
+
+  .ai-status-pill--upcoming {
+    background: rgba(185, 151, 255, 0.1);
+    border: 1px solid rgba(185, 151, 255, 0.22);
+    color: #d6c6ff;
+  }
+
+  .ai-status-pill__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+  }
+
+  .ai-status-pill--open .ai-status-pill__dot {
+    background: #00f0b4;
+    box-shadow: 0 0 8px #00f0b4;
+    animation: ai-pulse-dot 1.8s ease-in-out infinite;
+  }
+
+  @keyframes ai-pulse-dot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.55; }
+  }
+
+  .ai-workshop-card__top-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .ai-workshop-card__date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.28rem 0.65rem;
+    border-radius: 0.5rem;
+    background: rgba(44, 103, 186, 0.2);
+    border: 1px solid rgba(87, 187, 255, 0.35);
+    color: #dff5ff;
+    font: 600 0.64rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .ai-icon-cal {
+    color: #7fffdc;
+    flex-shrink: 0;
+  }
+
+  .ai-date-label {
     color: #7fffdc;
     font-weight: 700;
+  }
+
+  .ai-workshop-card__format-tag {
+    color: rgb(223 245 255 / 46%);
+    font: 600 0.62rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.08em;
   }
 
   .ai-workshop-card__intro {
@@ -1626,24 +2113,361 @@ const structuredData = [
   }
 
   .ai-workshop-card__final {
+    display: flex;
+    justify-content: space-between;
     align-items: end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
   }
 
   .ai-workshop-card__final p {
-    max-width: 37rem;
+    max-width: 33rem;
     color: rgb(223 245 255 / 66%);
     font-size: 0.83rem;
     line-height: 1.6;
+    margin: 0;
   }
 
+  .ai-workshop-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .ai-btn-curriculum {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 0.75rem;
+    background: rgba(185, 151, 255, 0.08);
+    border: 1px solid rgba(185, 151, 255, 0.3);
+    color: #e5d9ff;
+    font: 700 0.74rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.22s ease;
+  }
+
+  .ai-btn-curriculum:hover {
+    background: rgba(122, 60, 255, 0.22);
+    border-color: rgba(185, 151, 255, 0.65);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(122, 60, 255, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .ai-btn-curriculum .ai-icon-doc {
+    color: var(--ai-glow);
+    flex-shrink: 0;
+  }
+
+  .ai-workshop-card__cta,
   .ai-workshop-card__final a,
   .ai-text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     flex: none;
     padding-bottom: 0.25rem;
-    border-bottom: 1px solid rgb(185 151 255 / 42%);
+    border-bottom: 1px solid rgb(185 151 255 / 45%);
     color: var(--ai-glow);
     font-size: 0.78rem;
     font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .ai-workshop-card__cta:hover,
+  .ai-workshop-card__final a:hover,
+  .ai-text-link:hover {
+    color: #ffffff;
+    border-bottom-color: #7fffdc;
+    transform: translateX(2px);
+  }
+
+  /* Modal de Malla Curricular */
+  body.ai-modal-open {
+    overflow: hidden;
+  }
+
+  .ai-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .ai-modal--active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ai-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 4, 15, 0.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .ai-modal__dialog {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 780px);
+    max-height: calc(100vh - 2.5rem);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(185, 151, 255, 0.28);
+    background:
+      radial-gradient(circle at 90% 10%, rgba(122, 60, 255, 0.22), transparent 28rem),
+      linear-gradient(145deg, #090e38 0%, #05050e 100%);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 45px rgba(122, 60, 255, 0.2);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    transform: translateY(18px) scale(0.97);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ai-modal--active .ai-modal__dialog {
+    transform: translateY(0) scale(1);
+  }
+
+  .ai-modal__top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.85rem;
+  }
+
+  .ai-modal__badge-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .ai-modal__badge {
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(122, 60, 255, 0.25);
+    border: 1px solid rgba(185, 151, 255, 0.4);
+    color: var(--ai-glow);
+    font: 800 0.62rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.08em;
+  }
+
+  .ai-modal__code {
+    color: #7fffdc;
+    font: 800 0.68rem/1 Menlo, Monaco, Consolas, monospace;
+  }
+
+  .ai-modal__close-btn {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    border: 1px solid rgba(185, 151, 255, 0.25);
+    background: rgba(185, 151, 255, 0.08);
+    color: #dff5ff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .ai-modal__close-btn:hover {
+    background: rgba(185, 151, 255, 0.25);
+    color: #ffffff;
+    transform: rotate(90deg);
+  }
+
+  .ai-modal__title {
+    font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #ffffff;
+    margin: 0 0 0.45rem;
+  }
+
+  .ai-modal__subtitle {
+    color: rgb(223 245 255 / 75%);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .ai-modal__meta-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.35rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: rgba(0, 0, 81, 0.35);
+    border: 1px solid rgba(185, 151, 255, 0.15);
+  }
+
+  .ai-modal__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .ai-modal__meta-label {
+    color: rgb(185 151 255 / 65%);
+    font: 700 0.58rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.08em;
+  }
+
+  .ai-modal__meta-value {
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .ai-modal__body {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .ai-modal__body-heading {
+    color: var(--ai-glow);
+    font: 700 0.74rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .ai-modal__sessions-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .ai-modal-session-card {
+    padding: 1rem;
+    border-radius: 0.85rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(185, 151, 255, 0.12);
+  }
+
+  .ai-modal-session-card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .ai-modal-session-card__tag {
+    color: var(--ai-glow);
+    font: 800 0.62rem/1 Menlo, Monaco, Consolas, monospace;
+  }
+
+  .ai-modal-session-card__output {
+    color: #7fffdc;
+    font: 700 0.64rem/1 Menlo, Monaco, Consolas, monospace;
+  }
+
+  .ai-modal-session-card__title {
+    margin: 0 0 0.35rem;
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .ai-modal-session-card__desc {
+    margin: 0;
+    color: rgb(223 245 255 / 68%);
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .ai-modal__deliverable {
+    padding: 1rem;
+    border-radius: 0.85rem;
+    background: rgba(122, 60, 255, 0.12);
+    border: 1px solid rgba(185, 151, 255, 0.28);
+  }
+
+  .ai-modal__deliverable-badge {
+    display: block;
+    color: #7fffdc;
+    font: 800 0.6rem/1 Menlo, Monaco, Consolas, monospace;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.35rem;
+  }
+
+  .ai-modal__deliverable p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .ai-modal__footer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(185, 151, 255, 0.15);
+  }
+
+  .ai-modal__btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.75rem 1.15rem;
+    border-radius: 0.75rem;
+    background: rgba(44, 103, 186, 0.2);
+    border: 1px solid rgba(87, 187, 255, 0.4);
+    color: #dff5ff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .ai-modal__btn-secondary:hover {
+    background: rgba(44, 103, 186, 0.4);
+    border-color: #7fffdc;
+    color: #ffffff;
+  }
+
+  .ai-modal__btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.75rem 1.35rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, var(--ai-purple), #965fff);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(122, 60, 255, 0.45);
+    transition: all 0.2s ease;
+  }
+
+  .ai-modal__btn-primary:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(122, 60, 255, 0.6);
   }
 
   .ai-track-progress {
@@ -2053,8 +2877,43 @@ const structuredData = [
       margin-bottom: 0.8rem;
     }
 
-    .ai-workshop-card__meta {
-      align-items: start;
+    .ai-workshop-card__top {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.65rem;
+    }
+
+    .ai-workshop-card__top-lead,
+    .ai-workshop-card__top-meta {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .ai-workshop-card__actions {
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .ai-btn-curriculum,
+    .ai-workshop-card__cta {
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+    }
+
+    .ai-modal__footer {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .ai-modal__btn-secondary,
+    .ai-modal__btn-primary {
+      justify-content: center;
+      text-align: center;
+      width: 100%;
     }
 
     .ai-timeline {
