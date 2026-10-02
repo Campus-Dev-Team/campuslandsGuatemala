@@ -146,7 +146,13 @@ function uploadWithProgress(file: File, onProgress: (value: number) => void) {
       if (request.status >= 200 && request.status < 300 && Array.isArray(payload) && payload[0]) {
         resolve(payload[0] as EditorWorkshopCurriculum);
       } else {
-        reject(new Error(payload?.error?.message || "El CMS no aceptó el archivo."));
+        let msg = payload?.error?.message || "El CMS no aceptó el archivo.";
+        if (msg.includes("not allowed")) {
+          msg = "Tipo de archivo no permitido en el servidor. Solo se admiten archivos PDF.";
+        } else if (msg.includes("too large") || msg.includes("exceeds") || request.status === 413) {
+          msg = `El archivo supera el tamaño máximo permitido (${MAX_PDF_MB} MB).`;
+        }
+        reject(new Error(msg));
       }
     };
     request.onerror = () => reject(new Error("No hay conexión con el CMS."));
@@ -159,7 +165,7 @@ function uploadWithProgress(file: File, onProgress: (value: number) => void) {
 async function attachPdf(card: Card, file: File | undefined | null) {
   card.error = "";
   if (!file) return;
-  const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+  const isPdf = file.type === "application/pdf" || file.type.includes("pdf") || file.name.toLowerCase().endsWith(".pdf");
   if (!isPdf) {
     card.error = "Solo se aceptan archivos PDF.";
     return;
@@ -172,7 +178,8 @@ async function attachPdf(card: Card, file: File | undefined | null) {
   card.progress = 0;
   try {
     const media = await uploadWithProgress(file, (value) => { card.progress = value; });
-    if (media.mime !== "application/pdf") throw new Error("El archivo no es un PDF válido.");
+    const isMediaPdf = (media.mime && media.mime.includes("pdf")) || (media.ext && media.ext.toLowerCase().includes("pdf"));
+    if (!isMediaPdf) throw new Error("El archivo subido no es un PDF válido.");
     card.draft.curriculum = media;
     emit("notice", `PDF listo para "${card.base.title}". Guarda el taller para publicarlo.`);
   } catch (error) {
