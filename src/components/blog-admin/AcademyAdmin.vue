@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { AI_ACADEMY_WORKSHOPS } from "../../content/aiAcademy";
+import { AI_ACADEMY_DEFAULT_STATE, AI_ACADEMY_WORKSHOPS } from "../../content/aiAcademy";
 import type { BlogAdminApi, EditorWorkshop, EditorWorkshopChanges, EditorWorkshopCurriculum } from "../../lib/blog-admin";
 
 const props = defineProps<{
@@ -38,6 +38,26 @@ const accentFor = (key: string) => AI_ACADEMY_WORKSHOPS.find((item) => item.id =
 const promiseFor = (key: string) => AI_ACADEMY_WORKSHOPS.find((item) => item.id === key)?.promise ?? "";
 const pagePath = (card: Card) => `/ai-academy/${card.base.slug}/`;
 
+function fallbackWorkshops(): EditorWorkshop[] {
+  return AI_ACADEMY_WORKSHOPS.map((workshop, index) => {
+    const defaultState = AI_ACADEMY_DEFAULT_STATE[workshop.id] ?? {
+      isOpen: false,
+      startDate: "Próximamente",
+    };
+    return {
+      key: workshop.id,
+      slug: workshop.slug,
+      code: workshop.code,
+      title: workshop.title,
+      order: index + 1,
+      isOpen: defaultState.isOpen,
+      startDate: defaultState.startDate,
+      updatedAt: new Date().toISOString(),
+      curriculum: null,
+    };
+  });
+}
+
 function draftOf(workshop: EditorWorkshop): Draft {
   return { isOpen: workshop.isOpen, startDate: workshop.startDate || "Próximamente", curriculum: workshop.curriculum };
 }
@@ -58,7 +78,18 @@ async function load() {
   loading.value = true;
   loadError.value = "";
   try {
-    const workshops = await props.api.workshops();
+    let workshops: EditorWorkshop[] = [];
+    try {
+      workshops = await props.api.workshops();
+    } catch (apiError) {
+      console.warn("[AI Academy Admin] Error al consultar talleres desde el CMS, usando respaldo local:", apiError);
+      workshops = fallbackWorkshops();
+    }
+
+    if (!Array.isArray(workshops) || workshops.length === 0) {
+      workshops = fallbackWorkshops();
+    }
+
     cards.value = workshops.map((workshop) => ({
       base: workshop,
       draft: draftOf(workshop),
