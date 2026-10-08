@@ -6,6 +6,9 @@ import type { BlogAdminApi, EditorWorkshop, EditorWorkshopChanges, EditorWorksho
 const props = defineProps<{
   api: BlogAdminApi;
   cmsUrl: string;
+  // Dentro del detalle de un taller: solo esa tarjeta y sin encabezado propio.
+  embedded?: boolean;
+  onlyKey?: string;
 }>();
 
 const emit = defineEmits<{
@@ -90,6 +93,7 @@ async function load() {
       workshops = fallbackWorkshops();
     }
 
+    if (props.onlyKey) workshops = workshops.filter((workshop) => workshop.key === props.onlyKey);
     cards.value = workshops.map((workshop) => ({
       base: workshop,
       draft: draftOf(workshop),
@@ -270,8 +274,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="academy">
-    <header class="page-heading academy__heading">
+  <section class="academy" :class="{ 'academy--embedded': embedded }">
+    <header v-if="!embedded" class="page-heading academy__heading">
       <div>
         <p>AI ACADEMY / TALLERES</p>
         <h1>Talleres y mallas curriculares</h1>
@@ -295,7 +299,7 @@ onBeforeUnmount(() => {
     </div>
 
     <template v-else>
-      <dl class="academy__summary">
+      <dl v-if="!embedded" class="academy__summary">
         <div><dt>{{ cards.length }}</dt><dd>talleres</dd></div>
         <div class="is-green"><dt>{{ openCount }}</dt><dd>con inscripciones abiertas</dd></div>
         <div class="is-blue"><dt>{{ pdfCount }}<small>/{{ cards.length }}</small></dt><dd>con malla en PDF</dd></div>
@@ -417,6 +421,8 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.academy--embedded { padding-bottom: 40px; }
+.academy--embedded .academy__grid { grid-template-columns: minmax(0, 720px); }
 .academy { --card: linear-gradient(170deg, rgba(14, 30, 79, 0.82), rgba(5, 14, 47, 0.92)); padding-bottom: 96px; }
 /* Los estilos de encabezado y botones del editor son locales a BlogAdmin: se repiten aquí. */
 .page-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; }
