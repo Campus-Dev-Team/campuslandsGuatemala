@@ -9,21 +9,33 @@ export const CMS_URL = String(runtimeCmsUrl || import.meta.env.PUBLIC_CMS_URL ||
 export const CAMPUS_COOKIE = "cl_ai_campus";
 const MAX_AGE = 60 * 60 * 24 * 7;
 
-export type CampusFile = { id: number; name: string; mime: string; size: number; url: string };
-export type CampusDiploma = { id: number; credentialId: string; title: string; issuedAt: string; hours: number; skills: string[]; status: string; file: CampusFile | null };
+export type CampusFile = { id: number; name: string; mime: string; size: number };
+export type CampusDiploma = {
+  id: number; credentialId: string; title: string; issuedAt: string; hours: number; skills: string[]; status: string; file: CampusFile | null;
+  design?: { issuer?: string; place: string; signer: string; signerRole: string } | null;
+};
 export type CampusTool = { id: number; title: string; url: string; description: string; category: string };
 export type CampusVideo = {
   id: number; title: string; description: string; session: number | null; source: "archivo" | "enlace"; externalUrl: string;
   durationSeconds: number | null; file: CampusFile | null; progress: { seconds: number; completed: boolean };
+  // true si el bloque del alumno aún no llega a ese sábado: se muestra con candado y sin archivo.
+  locked?: boolean;
+};
+// Bloque del alumno: su edición del taller. El avance lo define el administrador por sesión.
+export type CampusBlock = {
+  id: number; name: string; startDate: string; totalSessions: number; currentSession: number; progress: number;
+  status: "por-iniciar" | "en-curso" | "finalizado";
 };
 export type CampusWorkshop = {
   key: string; slug: string; code: string; title: string; accent: string; description: string; hours: number; isPublic: boolean;
   enrollment: { cohort: string; status: string; enrolledAt: string };
+  block: CampusBlock | null;
   diplomas: CampusDiploma[]; tools: CampusTool[]; videos: CampusVideo[];
 };
 export type CampusData = { student: { id: number; email: string; fullName: string; mustChangePassword: boolean }; workshops: CampusWorkshop[] };
 
-export const cmsFileUrl = (file: Pick<CampusFile, "url">) => (/^https?:\/\//.test(file.url) ? file.url : `${CMS_URL}${file.url}`);
+// Los archivos del campus solo se abren con la sesión del estudiante dueño (ver campus/archivo/[id].ts).
+export const campusFileUrl = (file: Pick<CampusFile, "id">, download = false) => `/ai-academy/campus/archivo/${file.id}/${download ? "?dl=1" : ""}`;
 
 export function setCampusSession(cookies: AstroCookies, token: string) {
   cookies.set(CAMPUS_COOKIE, token, { httpOnly: true, secure: import.meta.env.PROD, sameSite: "lax", path: "/", maxAge: MAX_AGE });

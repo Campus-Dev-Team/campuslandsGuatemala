@@ -49,23 +49,34 @@ watch(role, () => { search.value = ""; filter.value = "todos"; void load(); });
 
 // ---------------------------------------------------------------- crear y editar
 const creating = ref(false);
-const form = reactive({ fullName: "", email: "", phone: "", cohort: "", workshops: [] as string[] });
+const form = reactive({ fullName: "", email: "", phone: "", password: "", workshops: [] as string[], blocks: {} as Record<string, number> });
 const formError = ref("");
-const created = ref<{ fullName: string; email: string; password: string; phone: string; reset?: boolean } | null>(null);
+const showPassword = ref(false);
+const created = ref<{ fullName: string; email: string; password: string; phone: string; reset?: boolean; active?: boolean } | null>(null);
+
+// Misma regla que el backend y el cambio de contraseña del campus.
+const passwordProblem = (value: string) => (!value ? "" : value.length < 8 || !/[A-Za-z]/.test(value) || !/\d/.test(value) ? "La contraseña necesita al menos 8 caracteres, con letras y números." : "");
+function generatePassword() {
+  const letters = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
+  const pick = (source: string, count: number) => Array.from(crypto.getRandomValues(new Uint32Array(count)), (n) => source[n % source.length]).join("");
+  return `${pick(letters, 5)}-${pick("23456789", 3)}-${pick(letters, 4)}`;
+}
 
 function openCreate() {
-  Object.assign(form, { fullName: "", email: "", phone: "", cohort: "", workshops: [] });
+  Object.assign(form, { fullName: "", email: "", phone: "", password: "", workshops: [], blocks: {} });
+  showPassword.value = false;
   formError.value = "";
   created.value = null;
   creating.value = true;
 }
 
 async function create() {
-  formError.value = "";
+  formError.value = passwordProblem(form.password);
+  if (formError.value) return;
   busy.value = true;
   try {
     const result = await props.api.createAcademyUser({ ...form, role: role.value });
-    created.value = { fullName: result.fullName, email: result.email, password: result.temporaryPassword, phone: form.phone };
+    created.value = { fullName: result.fullName, email: result.email, password: result.temporaryPassword, phone: form.phone, active: result.active };
     say(role.value === "student" ? "Estudiante creado." : "Administrador creado.");
     emit("changed");
     await load();
@@ -77,18 +88,24 @@ async function create() {
 }
 
 const editing = ref<AcademyPerson | null>(null);
-const editForm = reactive({ fullName: "", phone: "" });
+const editForm = reactive({ fullName: "", phone: "", password: "" });
+const editError = ref("");
 function openEdit(person: AcademyPerson) {
   editing.value = person;
-  Object.assign(editForm, { fullName: person.fullName, phone: person.phone });
+  editError.value = "";
+  showPassword.value = false;
+  Object.assign(editForm, { fullName: person.fullName, phone: person.phone, password: "" });
 }
 async function saveEdit() {
   if (!editing.value) return;
+  editError.value = passwordProblem(editForm.password);
+  if (editError.value) return;
   busy.value = true;
   try {
-    await props.api.updateAcademyUser(editing.value.id, { ...editForm });
+    await props.api.updateAcademyUser(editing.value.id, { fullName: editForm.fullName, phone: editForm.phone });
+    if (editForm.password) await props.api.resetAcademyPassword(editing.value.id, editForm.password);
     editing.value = null;
-    say("Datos actualizados.");
+    say(editForm.password ? "Datos y contraseña actualizados: la cuenta queda activa con la nueva contraseña." : "Datos actualizados.");
     await load();
   } catch (value) {
     say(problem(value, "No se pudo guardar."), "error");
@@ -127,6 +144,7 @@ const welcome = computed(() => {
   if (!created.value) return "";
   const first = created.value.fullName.split(" ")[0];
   const where = role.value === "student" ? "tu campus de AI Academy" : "el administrador de Campuslands";
+  if (created.value.active) return `Hola ${first}, ya tienes acceso a ${where}.\n\nIngresa en: ${loginUrl.value}\nCorreo: ${created.value.email}\nContraseña: ${created.value.password}`;
   return `Hola ${first}, ya tienes acceso a ${where}.\n\nIngresa en: ${loginUrl.value}\nCorreo: ${created.value.email}\nContraseña temporal: ${created.value.password}\n\nAl entrar te pediremos crear tu propia contraseña.`;
 });
 const whatsappLink = computed(() => {
@@ -184,7 +202,7 @@ onMounted(load);
           <span v-if="person.blocked" class="chip chip--bad">Bloqueada</span>
           <span v-else-if="person.mustChangePassword" class="chip chip--warn">Debe cambiar contraseña</span>
           <span v-else class="chip chip--ok">Activa</span>
-          <span v-for="item in person.workshops ?? []" :key="item.key" class="chip" :style="{ '--accent': item.accent }">{{ item.code }}</span>
+          <span v-for="item in person.workshops ?? []" :key="item.key" class="chip" :style="{ '--accent': item.accent }" :title="`${item.title}${item.block ? ` · ${item.block.name}` : ''}`">{{ item.code }}<small v-if="item.block" class="chip__block">{{ item.block.name }}</small></span>
           <span v-if="role === 'student' && !(person.workshops ?? []).length" class="chip chip--soft">Sin talleres</span>
         </div>
         <footer>
@@ -201,7 +219,8 @@ onMounted(load);
         <div class="modal__card">
           <template v-if="created">
             <h3 id="nueva-cuenta">{{ created.reset ? "Contraseña restablecida" : role === "student" ? "¡Estudiante listo!" : "¡Administrador listo!" }}</h3>
-            <p>Comparte estos datos ahora: la contraseña temporal no se vuelve a mostrar. Al entrar, se le pedirá crear la suya.</p>
+            <p v-if="created.active">La cuenta ya está activa con la contraseña que definiste: puede entrar de una vez. Comparte estos datos ahora, no se vuelven a mostrar.</p>
+            <p v-else>Comparte estos datos ahora: la contraseña temporal no se vuelve a mostrar. Al entrar, se le pedirá crear la suya.</p>
             <div class="secret">
               <dl>
                 <dt>Nombre</dt><dd>{{ created.fullName }}</dd>
@@ -225,6 +244,14 @@ onMounted(load);
               <label class="field">Correo<input v-model="form.email" type="email" maxlength="160" required /></label>
             </div>
             <label class="field" style="margin-top: 12px">WhatsApp (opcional)<input v-model="form.phone" maxlength="30" placeholder="Ej. 5555 1234" /><small>Para enviarle el acceso con un clic.</small></label>
+            <div class="field" style="margin-top: 12px">Contraseña (opcional)
+              <div class="pass">
+                <input v-model="form.password" :type="showPassword ? 'text' : 'password'" maxlength="72" autocomplete="new-password" placeholder="Déjala vacía para generar una temporal" aria-label="Contraseña" />
+                <button type="button" class="ghost-action ghost-action--small" @click="showPassword = !showPassword">{{ showPassword ? "Ocultar" : "Ver" }}</button>
+                <button type="button" class="ghost-action ghost-action--small" @click="form.password = generatePassword(); showPassword = true">Generar</button>
+              </div>
+              <small>{{ form.password ? "La cuenta queda activa de una vez con esta contraseña." : "Sin contraseña, se genera una temporal y debe cambiarla al primer ingreso." }} Mínimo 8 caracteres, con letras y números.</small>
+            </div>
             <template v-if="role === 'student'">
               <div class="field" style="margin-top: 14px">Talleres
                 <div class="wpick">
@@ -232,10 +259,14 @@ onMounted(load);
                     <input v-model="form.workshops" type="checkbox" :value="workshop.key" />
                     <span class="chip">{{ workshop.code }}</span>
                     <span>{{ workshop.title }}</span>
+                    <select v-if="form.workshops.includes(workshop.key)" v-model.number="form.blocks[workshop.key]" class="wpick__block" aria-label="Bloque" @click.stop>
+                      <option :value="undefined">{{ workshop.blocks?.[0]?.name ?? "Bloque 1" }}</option>
+                      <option v-for="block in (workshop.blocks ?? []).slice(1)" :key="block.id" :value="block.id">{{ block.name }}</option>
+                    </select>
                   </label>
                 </div>
               </div>
-              <label class="field" style="margin-top: 12px">Cohorte (opcional)<input v-model="form.cohort" maxlength="80" placeholder="Ej. Cohorte octubre 2026" /></label>
+              <small class="wpick__hint">Cada taller entra al bloque que elijas; si no eliges, al más reciente.</small>
             </template>
             <p v-if="formError" class="error" style="margin-top: 12px">{{ formError }}</p>
             <div class="form-actions">
@@ -255,6 +286,15 @@ onMounted(load);
           <p>{{ editing.email }}</p>
           <label class="field">Nombre completo<input v-model="editForm.fullName" maxlength="120" required /></label>
           <label class="field" style="margin-top: 12px">WhatsApp<input v-model="editForm.phone" maxlength="30" /></label>
+          <div class="field" style="margin-top: 12px">Nueva contraseña (opcional)
+            <div class="pass">
+              <input v-model="editForm.password" :type="showPassword ? 'text' : 'password'" maxlength="72" autocomplete="new-password" placeholder="Déjala vacía para no cambiarla" aria-label="Nueva contraseña" />
+              <button type="button" class="ghost-action ghost-action--small" @click="showPassword = !showPassword">{{ showPassword ? "Ocultar" : "Ver" }}</button>
+              <button type="button" class="ghost-action ghost-action--small" @click="editForm.password = generatePassword(); showPassword = true">Generar</button>
+            </div>
+            <small>Si la escribes, reemplaza la actual y la cuenta queda activa sin pedir cambio.</small>
+          </div>
+          <p v-if="editError" class="error" style="margin-top: 12px">{{ editError }}</p>
           <div class="form-actions">
             <button type="button" class="ghost-action" @click="editing = null">Cancelar</button>
             <button type="submit" class="primary-action" :disabled="busy">Guardar</button>
@@ -272,18 +312,23 @@ onMounted(load);
 .users__search { flex: 1; min-width: 200px; }
 .users__filter { min-height: 44px; padding: 0 12px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #fff; background: var(--field); font: inherit; font-size: 13px; }
 .users__note { margin: 12px 0 0; color: #ffd591; font-size: 12px; }
+.pass { display: flex; gap: 8px; }
+.pass input { flex: 1; min-width: 0; }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 12px; margin-top: 18px; }
-.person { display: grid; gap: 14px; padding: 18px; border: 1px solid var(--line); border-radius: 20px; background: var(--card); transition: border-color 0.2s, transform 0.2s; }
+.person { display: flex; flex-direction: column; gap: 14px; padding: 18px; border: 1px solid var(--line); border-radius: 20px; background: var(--card); transition: border-color 0.2s, transform 0.2s; }
 .person:hover { border-color: rgba(87, 187, 255, 0.35); transform: translateY(-2px); }
 .person.is-blocked { opacity: 0.6; }
 .person header { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .person header div { display: grid; gap: 3px; min-width: 0; }
 .person strong { overflow: hidden; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
 .person header span:not(.avatar) { overflow: hidden; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.person__chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.person footer { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.person__chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.person footer { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
 .wpick { display: grid; gap: 6px; }
 .wpick__item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
 .wpick__item.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .wpick__item input { accent-color: var(--green); }
+.wpick__block { margin-left: auto; min-height: 32px; max-width: 200px; padding: 0 8px; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 9px; color: #fff; background: var(--field); font: inherit; font-size: 12px; }
+.wpick__hint { display: block; margin-top: 8px; color: var(--muted); font-size: 11px; }
+.chip__block { margin-left: 6px; padding-left: 6px; border-left: 1px solid rgba(3, 11, 40, 0.3); font: 700 9px/1 ui-monospace, monospace; text-transform: none; }
 </style>

@@ -138,7 +138,7 @@ export function slugify(value: string) {
 
 // ------------------------------------------------------------------ campus de AI Academy
 
-export type AcademyFile = { id: number; name: string; mime: string; size: number; url: string };
+export type AcademyFile = { id: number; name: string; mime: string; size: number; url: string; downloadUrl?: string };
 
 export type AcademyWorkshop = {
   id: number;
@@ -154,6 +154,7 @@ export type AcademyWorkshop = {
   isOpen: boolean;
   startDate: string;
   counts?: { students: number; diplomas: number; tools: number; videos: number };
+  blocks?: AcademyBlock[];
 };
 
 export type AcademyPerson = {
@@ -166,14 +167,26 @@ export type AcademyPerson = {
   isOwner: boolean;
   mustChangePassword: boolean;
   createdAt: string;
-  workshops?: { key: string; code: string; title: string; accent: string; enrollmentId: number; status: string }[];
+  workshops?: { key: string; code: string; title: string; accent: string; enrollmentId: number; status: string; block: AcademyBlockRef }[];
 };
 
-export type AcademyEnrollment = { id: number; cohort: string; status: "inscrito" | "en-curso" | "completado"; enrolledAt: string; student: AcademyPerson };
+// Bloque: cada vez que se imparte el taller. El avance (%) sale de la sesión actual que define el administrador.
+export type AcademyBlock = {
+  id: number; name: string; startDate: string; totalSessions: number; currentSession: number; progress: number;
+  status: "por-iniciar" | "en-curso" | "finalizado"; students?: number;
+};
+export type AcademyBlockRef = { id: number; name: string } | null;
+export type AcademyEnrollment = { id: number; block: AcademyBlockRef; cohort: string; status: "inscrito" | "en-curso" | "completado"; enrolledAt: string; student: AcademyPerson };
 export type AcademyDiploma = { id: number; credentialId: string; title: string; issuedAt: string; hours: number; skills: string[]; status: "emitido" | "revocado"; studentId: number | null; file: AcademyFile | null };
-export type AcademyTool = { id: number; title: string; url: string; description: string; category: string; order: number };
-export type AcademyVideo = { id: number; title: string; description: string; session: number | null; order: number; source: "archivo" | "enlace"; externalUrl: string; durationSeconds: number | null; file: AcademyFile | null };
-export type AcademyDetail = { workshop: AcademyWorkshop; enrollments: AcademyEnrollment[]; diplomas: AcademyDiploma[]; tools: AcademyTool[]; videos: AcademyVideo[] };
+export type AcademyTool = { id: number; title: string; url: string; description: string; category: string; order: number; block: AcademyBlockRef };
+export type AcademyVideo = { id: number; title: string; description: string; session: number | null; order: number; source: "archivo" | "enlace"; externalUrl: string; durationSeconds: number | null; file: AcademyFile | null; block: AcademyBlockRef };
+export type AcademyGenerateResult = {
+  results: { student: number; fullName?: string; state: "emitido" | "actualizado" | "omitido" | "error"; reason?: string; credentialId?: string }[];
+  emitted: number; updated: number; skipped: number; failed: number;
+};
+// Los diplomas con el diseño oficial se reconocen por el nombre del archivo.
+export const isGeneratedDiploma = (diploma: { file: { name: string } | null }) => Boolean(diploma.file?.name.startsWith("Diploma AI Academy - "));
+export type AcademyDetail = { workshop: AcademyWorkshop; diplomaDesign?: { issuer?: string; place: string; signer: string; signerRole: string }; blocks: AcademyBlock[]; enrollments: AcademyEnrollment[]; diplomas: AcademyDiploma[]; tools: AcademyTool[]; videos: AcademyVideo[] };
 export type AcademyOverview = { workshops: AcademyWorkshop[]; students: number; admins: number };
 
 export class BlogAdminApi {
@@ -356,11 +369,23 @@ export class BlogAdminApi {
     return this.request<AcademyWorkshop>(`/editor/academy/workshops/${encodeURIComponent(key)}`, { method: "PUT", body: JSON.stringify({ data }) });
   }
 
-  enroll(data: { workshop: string; students: number[]; cohort?: string; status?: string }) {
+  createBlock(data: { workshop: string; name: string; startDate?: string; totalSessions?: number }) {
+    return this.request<AcademyBlock>("/editor/academy/blocks", { method: "POST", body: JSON.stringify({ data }) });
+  }
+
+  updateBlock(id: number, data: Partial<Pick<AcademyBlock, "name" | "startDate" | "totalSessions" | "currentSession">>) {
+    return this.request<AcademyBlock>(`/editor/academy/blocks/${id}`, { method: "PUT", body: JSON.stringify({ data }) });
+  }
+
+  removeBlock(id: number) {
+    return this.request<void>(`/editor/academy/blocks/${id}`, { method: "DELETE" });
+  }
+
+  enroll(data: { workshop: string; students: number[]; block?: number; status?: string }) {
     return this.request<{ created: number }>("/editor/academy/enrollments", { method: "POST", body: JSON.stringify({ data }) });
   }
 
-  updateEnrollment(id: number, data: { cohort?: string; status?: string }) {
+  updateEnrollment(id: number, data: { block?: number; status?: string }) {
     return this.request<Partial<AcademyEnrollment>>(`/editor/academy/enrollments/${id}`, { method: "PUT", body: JSON.stringify({ data }) });
   }
 
@@ -374,6 +399,38 @@ export class BlogAdminApi {
 
   removeDiploma(id: number) {
     return this.request<void>(`/editor/academy/diplomas/${id}`, { method: "DELETE" });
+  }
+
+  // Diplomas con el diseño oficial: el servidor genera el PDF con nombre, taller, horas y fecha.
+  generateDiplomas(data: { workshop: string; students?: number[]; block?: number; issuedAt?: string; skills?: string; overwrite?: boolean }) {
+    return this.request<AcademyGenerateResult>("/editor/academy/diplomas/generate", { method: "POST", body: JSON.stringify({ data }) });
+  }
+
+  regenerateDiploma(id: number) {
+    return this.request<AcademyDiploma>(`/editor/academy/diplomas/${id}/regenerate`, { method: "POST" });
+  }
+
+  // Descarga en conjunto (ZIP): todos los emitidos del taller, los de un bloque o los elegidos.
+  async downloadDiplomasZip(data: { workshop: string; ids?: number[]; block?: number }) {
+    const headers = new Headers({ Accept: "application/zip", "Content-Type": "application/json" });
+    if (this.token) headers.set("Authorization", `Bearer ${this.token}`);
+    const response = await fetch(`${this.cmsUrl}/api/editor/academy/diplomas/zip`, { method: "POST", headers, body: JSON.stringify({ data }) });
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      throw new Error(payload?.error?.message || "No se pudieron descargar los diplomas.");
+    }
+    return response.blob();
+  }
+
+  async previewDiploma(data: { workshop: string; student?: number; fullName?: string; issuedAt?: string }) {
+    const headers = new Headers({ Accept: "application/pdf", "Content-Type": "application/json" });
+    if (this.token) headers.set("Authorization", `Bearer ${this.token}`);
+    const response = await fetch(`${this.cmsUrl}/api/editor/academy/diplomas/preview`, { method: "POST", headers, body: JSON.stringify({ data }) });
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      throw new Error(payload?.error?.message || "No se pudo generar la vista previa.");
+    }
+    return response.blob();
   }
 
   saveTool(data: Record<string, unknown>, id?: number) {
@@ -401,15 +458,16 @@ export class BlogAdminApi {
   }
 
   createAcademyUser(data: Record<string, unknown>) {
-    return this.request<{ id: number; email: string; fullName: string; temporaryPassword: string }>("/editor/academy/users", { method: "POST", body: JSON.stringify({ data }) });
+    return this.request<{ id: number; email: string; fullName: string; temporaryPassword: string; active: boolean }>("/editor/academy/users", { method: "POST", body: JSON.stringify({ data }) });
   }
 
   updateAcademyUser(id: number, data: Record<string, unknown>) {
     return this.request<AcademyPerson>(`/editor/academy/users/${id}`, { method: "PUT", body: JSON.stringify({ data }) });
   }
 
-  resetAcademyPassword(id: number) {
-    return this.request<{ temporaryPassword: string }>(`/editor/academy/users/${id}/password`, { method: "POST" });
+  // Sin contraseña genera una temporal; con contraseña la deja activa de una vez.
+  resetAcademyPassword(id: number, password = "") {
+    return this.request<{ temporaryPassword: string; active: boolean }>(`/editor/academy/users/${id}/password`, { method: "POST", body: JSON.stringify({ data: password ? { password } : {} }) });
   }
 
   // Subida al almacén privado con progreso real (los videos pueden pesar cientos de MB).
